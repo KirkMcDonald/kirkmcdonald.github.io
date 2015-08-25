@@ -139,6 +139,7 @@ var CATEGORY_SPEEDS = {
     chemistry: Factory("chemical-plant", 1.25),
     "oil-processing": Factory("oil-refinery", 1),
     smelting: Factory("furnace", 2),
+    "rocket-building": Factory("rocket-silo", 1),
 }
 
 var ASSEMBLY_1 = Factory("assembling-machine", 0.5);
