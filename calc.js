@@ -61,8 +61,32 @@ Resource.prototype.rate = function(factories) {
     return 1;
 }
 
+function MineableResource(name, hardness, time) {
+    Item.call(this, name)
+    this.hardness = hardness
+    this.time = time
+}
+MineableResource.prototype = Object.create(Item.prototype)
+MineableResource.prototype.baseRate = function() {
+    // Hardcoded values for basic mining drill, blah.
+    var mining_power = 3
+    var mining_speed = 0.5
+    return (mining_power - this.hardness) * mining_speed / this.time * 60
+}
+MineableResource.prototype.requirements = function(multiple) {
+    return [[], {}]
+}
+MineableResource.prototype.factories = function(rate) {
+    var real = rate / this.baseRate()
+    var factories = Math.ceil(real)
+    return [factories, real, "basic-mining-drill"]
+}
+MineableResource.prototype.rate = function(factories) {
+    return this.baseRate() * factories
+}
+
 function getItems(data) {
-    var categories = [];//["mining-tool", "repair-tool", "blueprint", "deconstruction-item", "item"];
+    var categories = [];
     for (var x in data.raw["item-subgroup"]) {
         if (!(x in data.raw)) {
             continue;
@@ -72,7 +96,12 @@ function getItems(data) {
     var categories = categories.concat(["mining-tool", "repair-tool", "blueprint", "deconstruction-item", "item"]);
     items = {};
     for (var name in data.raw.resource) {
-        items[name] = new Resource(name);
+        var resource = data.raw.resource[name]
+        if (resource.category) {
+            items[name] = new Resource(name);
+        } else {
+            items[name] = new MineableResource(name, resource.minable.hardness, resource.minable.mining_time)
+        }
     }
     items.water = new Resource("water");
     items["alien-artifact"] = new Resource("alien-artifact");
@@ -83,9 +112,6 @@ function getItems(data) {
                 continue;
             }
             items[name] = new Item(name);
-            /*if (items[name].recipes.length == 0) {
-                throw new Error("blah");
-            }*/
         }
     }
     return items;
