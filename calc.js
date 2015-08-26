@@ -93,7 +93,7 @@ function getItems(data) {
         }
         categories.push(x);
     }
-    var categories = categories.concat(["mining-tool", "repair-tool", "blueprint", "deconstruction-item", "item"]);
+    categories = categories.concat(["mining-tool", "repair-tool", "blueprint", "deconstruction-item", "item"]);
     items = {};
     for (var name in data.raw.resource) {
         var resource = data.raw.resource[name]
