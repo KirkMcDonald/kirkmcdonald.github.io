@@ -18,12 +18,11 @@
     <script src="sprintf.js"></script>
     <script src="calc.js"></script>
     
-    <select id="item" onchange="itemUpdate()"></select><br>
+    <select id="item" onchange="itemChanged()"></select><br>
     <label id="factory_label" class="bold" for="factories">Factories:</label> <input id="factories" type="text" value="1" size="3" onchange="factoryUpdate()">
     <label id="rate_label" for="rate">Rate:</label> <input id="rate" type="text" value="" size="5" onchange="rateUpdate()"><br>
     <input id="use_3" type="checkbox" onchange="threeUpdate()"><label for="use_3">Use Assembling Machine 3s only</label>
 
-    <p><tt id="total_rate">N/A</tt> <span id="main_item">N/A</span> per minute from <tt id="total_factories">N/A</tt> factories.</p>
     <ul id="steps"></ul>
     <p id="total_label">totals:</p>
     <table id="totals"></table>

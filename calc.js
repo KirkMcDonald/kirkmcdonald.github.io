@@ -29,7 +29,7 @@ Item.prototype = {
         var recipe = this.recipes[0];
         for (var i in recipe.inputs) {
             var ingredient = recipe.inputs[i];
-            var rate = ingredient.amount * multiple / recipe.gives(this);
+            var rate = ingredient.amount * multiple / recipe.gives(this)
             totals[ingredient.item.name] = (totals[ingredient.item.name] || 0) + rate;
             var reqs = ingredient.item.requirements(rate);
             result.push(Requirement(rate, ingredient.item, reqs[0]));
@@ -79,7 +79,7 @@ MineableResource.prototype.requirements = function(multiple) {
 MineableResource.prototype.factories = function(rate) {
     var real = rate / this.baseRate()
     var factories = Math.ceil(real)
-    return [factories, real, "basic-mining-drill"]
+    return [factories, real, MINER]
 }
 MineableResource.prototype.rate = function(factories) {
     return this.baseRate() * factories
@@ -127,7 +127,13 @@ function Recipe(name, time, inputs, outputs, factory) {
 Recipe.prototype = {
     constructor: Recipe,
     rate: function() {
-        return 60.0 / this.time * this.factory.speed;
+        var moduleEffects = moduleSpec[this.name]
+        var speed = 1
+        if (moduleEffects) {
+            var total = moduleEffects.total(this.factory)
+            speed = total.speed
+        }
+        return 60.0 / this.time * this.factory.speed * speed;
     },
     factories: function(target_rate) {
         var rate = this.rate();
@@ -137,13 +143,19 @@ Recipe.prototype = {
         if (fraction > 0) {
             factories += 1;
         }
-        return [factories, real, this.factory.name];
+        return [factories, real, this.factory];
     },
     gives: function(item) {
         for (var i in this.outputs) {
             var output = this.outputs[i]
             if (output.item == item) {
-                return output.amount;
+                var moduleEffects = moduleSpec[output.item.name]
+                var productivity = 1
+                if (moduleEffects) {
+                    var total = moduleEffects.total(this.factory)
+                    productivity = total.productivity
+                }
+                return output.amount * productivity;
             }
         }
     }
@@ -157,20 +169,47 @@ function makeIngredient(i, items) {
     }
 }
 
-function Factory(name, speed) {
-    return {name: name, speed: speed};
+function Factory(name, speed, modules) {
+    this.name = name
+    this.speed = speed
+    this.modules = modules
 }
 
 var CATEGORY_SPEEDS = {
-    chemistry: Factory("chemical-plant", 1.25),
-    "oil-processing": Factory("oil-refinery", 1),
-    smelting: Factory("furnace", 2),
-    "rocket-building": Factory("rocket-silo", 1),
+    chemistry: new Factory("chemical-plant", 1.25, 2),
+    "oil-processing": new Factory("oil-refinery", 1, 2),
+    smelting: new Factory("furnace", 2, 2),
+    "rocket-building": new Factory("rocket-silo", 1, 4),
 }
 
-var ASSEMBLY_1 = Factory("assembling-machine", 0.5);
-var ASSEMBLY_2 = Factory("assembling-machine-2", 0.75);
-var ASSEMBLY_3 = Factory("assembling-machine-3", 1.25);
+var ASSEMBLY_1 = new Factory("assembling-machine", 0.5, 0);
+var ASSEMBLY_2 = new Factory("assembling-machine-2", 0.75, 2);
+var ASSEMBLY_3 = new Factory("assembling-machine-3", 1.25, 4);
+
+var MINER = new Factory("basic-mining-drill", 1, 3)
+
+function Module(name, productivity, speed, limit) {
+    // Other module effects not modeled by this calculator.
+    this.name = name
+    this.productivity = productivity
+    this.speed = speed
+    this.limit = limit
+}
+
+function loadModules(data) {
+    modules = {}
+    for (var name in data.raw.module) {
+        var module = data.raw.module[name]
+        var effect = module.effect
+        if (!("speed" in effect) && !("productivity" in effect)) {
+            continue
+        }
+        var speed = (effect.speed || {}).bonus || 0
+        var productivity = (effect.productivity || {}).bonus || 0
+        var limit = module.limitation// || []
+        modules[name] = new Module(name, productivity, speed, limit)
+    }
+}
 
 function makeRecipe(d, items, useFastest) {
     var time = d.energy_required || 0.5;
@@ -248,8 +287,6 @@ function loadStuff(callback) {
     xobj.send(null);
 }
 
-var items;
-
 function displaySteps(reqs, steps) {
     reqs.sort(function(a, b) {
         if (a.item.name < b.item.name) {
@@ -280,6 +317,13 @@ function sorted(obj, compareFunc) {
     return keys
 }
 
+function ModuleHandler(item, index) {
+    console.log(item, index)
+    this.handleEvent = function(event) {
+        moduleUpdate(event, item, index)
+    }
+}
+
 function displayReqs(item_name, rate, factories) {
     var item = items[item_name];
     if (factories) {
@@ -293,15 +337,10 @@ function displayReqs(item_name, rate, factories) {
     }
 
     var reqs = item.requirements(rate);
-    var requirements = reqs[0];
+    var innerRequirements = reqs[0];
+    var requirements = [Requirement(rate, item, innerRequirements)]
     var totals = reqs[1];
-
-    var total_rate = document.getElementById("total_rate");
-    total_rate.innerHTML = sprintf("%.3f", rate);
-    var main_item = document.getElementById("main_item");
-    main_item.innerHTML = item_name;
-    var total_factories = document.getElementById("total_factories");
-    total_factories.innerHTML = factories;
+    totals[item_name] = rate
 
     var oldSteps = document.getElementById("steps");
     var newSteps = document.createElement("ul");
@@ -313,28 +352,83 @@ function displayReqs(item_name, rate, factories) {
     var oldTotals = document.getElementById("totals");
     var newTotals = document.createElement("table");
     newTotals.id = "totals";
+    var header = document.createElement("tr")
+    header.innerHTML = '<th>rate</th><th>item</th><th>factory count</th><th>real factory count</th><th colspan="4">modules</th>'
+    newTotals.appendChild(header)
     document.body.replaceChild(newTotals, oldTotals);
     
     var sorted_totals = sorted(totals)
     for (var i in sorted_totals) {
-        var item = sorted_totals[i];
-        var rate = totals[item];
-        var row = document.createElement("tr");
-        var rateCell = document.createElement("td");
-        rateCell.className = "right-align";
-        var nameCell = document.createElement("td");
-        nameCell.className = "right-align";
-        var factoryCell = document.createElement("td");
-        row.appendChild(rateCell);
-        row.appendChild(nameCell);
-        row.appendChild(factoryCell);
-        rateCell.innerHTML = sprintf("<tt>%.3f</tt>", rate);
-        nameCell.innerHTML = item;
-        
+        var item = sorted_totals[i]
+        var rate = totals[item]
+        var row = document.createElement("tr")
+
+        var rateCell = document.createElement("td")
+        rateCell.className = "right-align"
+        rateCell.innerHTML = sprintf("<tt>%.3f</tt>", rate)
+        row.appendChild(rateCell)
+
+        var nameCell = document.createElement("td")
+        nameCell.className = "right-align"
+        nameCell.innerHTML = item
+        row.appendChild(nameCell)
+
         factoryInfo = items[item].factories(rate);
         var factoryCount = factoryInfo[0];
         if (factoryCount) {
-            factoryCell.innerHTML = sprintf("(%s x%d %.3f real)", factoryInfo[2], factoryCount, factoryInfo[1])
+            var factory = factoryInfo[2]
+
+            var factoryCell = document.createElement("td")
+            factoryCell.className = "right-align"
+            factoryCell.innerHTML = sprintf("%s x%d", factory.name, factoryCount)
+            row.appendChild(factoryCell)
+
+            var realCell = document.createElement("td")
+            realCell.className = "right-align"
+            realCell.innerHTML = sprintf("<tt>%.3f</tt>", factoryInfo[1])
+            row.appendChild(realCell)
+
+            var currentModules = moduleSpec[item]
+
+            for (var j=0; j<factory.modules; j++) {
+                var currentSpec = null
+                if (currentModules) {
+                    currentSpec = currentModules.getModule(j)
+                }
+
+                var modCell = document.createElement("td")
+                row.appendChild(modCell)
+
+                var select = document.createElement("select")
+                select.addEventListener("change", new ModuleHandler(item, j))
+                modCell.appendChild(select)
+
+                var noMod = document.createElement("option")
+                noMod.innerHTML = "no module"
+                if (!currentSpec) {
+                    noMod.selected = true
+                }
+                select.appendChild(noMod)
+
+                modloop: for (var name in modules) {
+                    var module = modules[name]
+                    if (module.limit) {
+                        var valid = false
+                        for (var k=0; k < module.limit.length; k++) {
+                            if (module.limit[k] == item) {
+                                valid = true
+                            }
+                        }
+                        if (!valid) continue modloop
+                    }
+                    var option = document.createElement("option")
+                    option.innerHTML = name
+                    if (currentSpec && currentSpec.name == name) {
+                        option.selected = true
+                    }
+                    select.appendChild(option)
+                }
+            }
         }
         newTotals.appendChild(row);
     }
@@ -352,6 +446,11 @@ function itemUpdate() {
         var rate = document.getElementById("rate");
         displayReqs(item, rate.value, null);
     }
+}
+
+function itemChanged() {
+    moduleSpec = {}
+    itemUpdate()
 }
 
 function threeUpdate() {
@@ -379,9 +478,56 @@ function rateUpdate() {
     itemUpdate();
 }
 
+// {item: [modules]}
+var moduleSpec = {}
+
+function ModuleSet() {
+    this.modules = []
+}
+ModuleSet.prototype = {
+    constructor: ModuleSet,
+    setModule: function(x, module) {
+        this.modules[x] = module
+    },
+    getModule: function(x) {
+        return this.modules[x]
+    },
+    total: function(factory) {
+        var sum = {'speed': 1, 'productivity': 1}
+        for (var x in this.modules) {
+            var module = this.modules[x]
+            if (!module) continue
+            if (x >= factory.modules) {
+                break
+            }
+            console.log(module)
+            sum.speed += module.speed
+            sum.productivity += module.productivity
+        }
+        return sum
+    }
+}
+
+
+function moduleUpdate(event, item, x) {
+    var module = event.target.value
+    console.log(module, item, x)
+    if (!(item in moduleSpec)) {
+        moduleSpec[item] = new ModuleSet()
+    }
+    var moduleObj = modules[module]
+    moduleSpec[item].setModule(x, moduleObj)
+
+    itemUpdate()
+}
+
+var items
+var modules
+
 function init() {
     loadStuff(function(data) {
         var graph = getRecipeGraph(data, false);
+        loadModules(data)
 
         items = graph[0];
         
@@ -400,7 +546,6 @@ function init() {
             itemSelector.appendChild(option)
         }
 
-        //displayReqs(defaultItem);
         itemUpdate();
     });
 }
