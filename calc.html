@@ -22,9 +22,7 @@
     <script src="module.js"></script>
     <script src="calc.js"></script>
     
-    <select id="item" onchange="itemChanged()"></select><br>
-    <label id="factory_label" class="bold" for="factories">Factories:</label> <input id="factories" type="text" value="1" size="3" onchange="factoryUpdate()">
-    <label id="rate_label" for="rate">Rate:</label> <input id="rate" type="text" value="" size="5" onchange="rateUpdate()"><br>
+    <ul id="targets"><li><a onclick="addTarget()">+</a></li></ul>
     <input id="use_3" type="checkbox" onchange="threeUpdate()"><label for="use_3">Use Assembling Machine 3s only</label>
 
     <ul id="steps"></ul>

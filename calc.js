@@ -1,18 +1,3 @@
-var stuff
-
-function loadStuff(callback) {
-    var xobj = new XMLHttpRequest()
-    xobj.overrideMimeType("application/json")
-    xobj.open("GET", "stuff.json", true)
-    xobj.onreadystatechange = function() {
-        if (xobj.readyState == 4 && xobj.status == "200") {
-            stuff = JSON.parse(xobj.responseText)
-            callback(stuff)
-        }
-    }
-    xobj.send(null)
-}
-
 function displaySteps(reqs, steps) {
     reqs.sort(function(a, b) {
         if (a.item.name < b.item.name) {
@@ -43,29 +28,19 @@ function sorted(obj, compareFunc) {
     return keys
 }
 
-function ModuleHandler(item, index) {
-    this.handleEvent = function(event) {
-        moduleUpdate(event, item, index)
+function itemUpdate() {
+    var requirements = []
+    var totals = {}
+    for (var i=0; i<build_targets.length; i++) {
+        var target = build_targets[i]
+        var item = items[target.itemName]
+        var rate = target.getRate()
+        var reqs = item.requirements(rate)
+        var innerRequirements = reqs[0]
+        requirements.push(Requirement(rate, item, innerRequirements))
+        reqs[1][target.itemName] = rate
+        addCounts(totals, reqs[1])
     }
-}
-
-function displayReqs(item_name, rate, factories) {
-    var item = items[item_name]
-    if (factories) {
-        rate = item.rate(factories)
-        var rateBox = document.getElementById("rate")
-        rateBox.value = rate
-    } else {
-        factories = item.factories(rate)[0]
-        var factoryBox = document.getElementById("factories")
-        factoryBox.value = factories
-    }
-
-    var reqs = item.requirements(rate)
-    var innerRequirements = reqs[0]
-    var requirements = [Requirement(rate, item, innerRequirements)]
-    var totals = reqs[1]
-    totals[item_name] = rate
 
     var oldSteps = document.getElementById("steps")
     var newSteps = document.createElement("ul")
@@ -95,7 +70,7 @@ function displayReqs(item_name, rate, factories) {
 
         var nameCell = document.createElement("td")
         nameCell.className = "right-align"
-        nameCell.innerHTML = item
+        nameCell.textContent = item
         row.appendChild(nameCell)
 
         factoryInfo = items[item].factories(rate)
@@ -105,7 +80,7 @@ function displayReqs(item_name, rate, factories) {
 
             var factoryCell = document.createElement("td")
             factoryCell.className = "right-align"
-            factoryCell.innerHTML = sprintf("%s x%d", factory.name, factoryCount)
+            factoryCell.textContent = sprintf("%s x%d", factory.name, factoryCount)
             row.appendChild(factoryCell)
 
             var realCell = document.createElement("td")
@@ -129,7 +104,7 @@ function displayReqs(item_name, rate, factories) {
                 modCell.appendChild(select)
 
                 var noMod = document.createElement("option")
-                noMod.innerHTML = "no module"
+                noMod.textContent = "no module"
                 if (!currentSpec) {
                     noMod.selected = true
                 }
@@ -147,7 +122,7 @@ function displayReqs(item_name, rate, factories) {
                         if (!valid) continue modloop
                     }
                     var option = document.createElement("option")
-                    option.innerHTML = name
+                    option.textContent = name
                     if (currentSpec && currentSpec.name == name) {
                         option.selected = true
                     }
@@ -159,19 +134,132 @@ function displayReqs(item_name, rate, factories) {
     }
 }
 
-var changedFactory = true
+////
+// Event handling.
+////
 
-function itemUpdate() {
-    var itemSelector = document.getElementById("item")
-    var item = itemSelector.value
-    if (changedFactory) {
-        var factories = document.getElementById("factories")
-        displayReqs(item, null, factories.value)
-    } else {
-        var rate = document.getElementById("rate")
-        displayReqs(item, rate.value, null)
+var DEFAULT_ITEM = "advanced-circuit"
+
+var build_targets = []
+
+function addTarget() {
+    var target = new BuildTarget(build_targets.length)
+    build_targets.push(target)
+    var targetList = document.getElementById("targets")
+    var plus = targetList.replaceChild(target.element, targetList.lastChild)
+    targetList.appendChild(plus)
+    itemUpdate()
+}
+
+function ItemHandler(target) {
+    this.handleEvent = function(event) {
+        target.itemName = event.target.value
+        itemUpdate()
     }
 }
+
+function RemoveHandler(target) {
+    this.handleEvent = function(event) {
+        build_targets.splice(target.index, 1)
+        for (var i=target.index; i < build_targets.length; i++) {
+            build_targets[i].index--
+        }
+        target.element.remove()
+        itemUpdate()
+    }
+}
+
+function FactoryHandler(target) {
+    this.handleEvent = function(event) {
+        target.changedFactory = true
+        target.factoryLabel.className = "bold"
+        target.rateLabel.className = ""
+        itemUpdate()
+    }
+}
+
+function RateHandler(target) {
+    this.handleEvent = function(event) {
+        target.changedFactory = false
+        target.factoryLabel.className = ""
+        target.rateLabel.className = "bold"
+        itemUpdate()
+    }
+}
+
+function BuildTarget(index) {
+    this.index = index
+    this.itemName = DEFAULT_ITEM
+    this.changedFactory = true
+    this.element = document.createElement("li")
+
+    var itemSelector = document.createElement("select")
+    itemSelector.addEventListener("change", new ItemHandler(this))
+    this.element.appendChild(itemSelector)
+
+    var sortedItems = sorted(items)
+    for (var i=0; i<sortedItems.length; i++) {
+        var item = sortedItems[i]
+        var option = document.createElement("option")
+        option.textContent = item
+        option.value = item
+        if (item == this.item) {
+            option.selected = true
+        }
+        itemSelector.appendChild(option)
+    }
+
+    var remover = document.createElement("a")
+    remover.addEventListener("click", new RemoveHandler(this))
+    remover.textContent = "x"
+    this.element.appendChild(remover)
+
+    this.element.appendChild(document.createElement("br"))
+
+    this.factoryLabel = document.createElement("label")
+    this.factoryLabel.className = "bold"
+    // TODO: htmlFor
+    this.factoryLabel.textContent = "Factories:"
+    this.element.appendChild(this.factoryLabel)
+
+    this.factories = document.createElement("input")
+    this.factories.addEventListener("change", new FactoryHandler(this))
+    this.factories.type = "text"
+    this.factories.value = 1
+    this.factories.size = 3
+    this.element.appendChild(this.factories)
+
+    this.rateLabel = document.createElement("label")
+    this.rateLabel.textContent = "Rate:"
+    this.element.appendChild(this.rateLabel)
+
+    this.rate = document.createElement("input")
+    this.rate.addEventListener("change", new RateHandler(this))
+    this.rate.type = "text"
+    this.rate.value = ""
+    this.rate.size = 5
+    this.element.appendChild(this.rate)
+}
+BuildTarget.prototype = {
+    constructor: BuildTarget,
+    // Returns the rate at which this item is being requested. Also updates
+    // the text boxes in response to changes in options.
+    getRate: function() {
+        var item = items[this.itemName]
+        var rate = 0
+        if (this.changedFactory) {
+            rate = item.rate(this.factories.value)
+            this.rate.value = rate
+        } else {
+            rate = this.rate.value
+            var factories = item.factories(rate)[0]
+            this.factories.value = factories
+        }
+        return rate
+    }
+}
+
+var changedFactory = true
 
 function itemChanged() {
     moduleSpec = {}
@@ -185,24 +273,11 @@ function threeUpdate() {
     itemUpdate()
 }
 
-function factoryUpdate() {
-    changedFactory = true
-    var factories = document.getElementById("factory_label")
-    factories.className = "bold"
-    var rate = document.getElementById("rate_label")
-    rate.className = ""
-    itemUpdate()
+function ModuleHandler(item, index) {
+    this.handleEvent = function(event) {
+        moduleUpdate(event, item, index)
+    }
 }
-
-function rateUpdate() {
-    changedFactory = false
-    var factories = document.getElementById("factory_label")
-    factories.className = ""
-    var rate = document.getElementById("rate_label")
-    rate.className = "bold"
-    itemUpdate()
-}
-
 
 function moduleUpdate(event, item, x) {
     var module = event.target.value
@@ -215,8 +290,31 @@ function moduleUpdate(event, item, x) {
     itemUpdate()
 }
 
+////
+// Initialization
+////
+
+// Global mapping of item name to Item, Resource, or MineableResource object.
 var items
+
+// Global mapping of module name to Module object.
 var modules
+
+// Global containing game data source.
+var stuff
+
+function loadStuff(callback) {
+    var xobj = new XMLHttpRequest()
+    xobj.overrideMimeType("application/json")
+    xobj.open("GET", "stuff.json", true)
+    xobj.onreadystatechange = function() {
+        if (xobj.readyState == 4 && xobj.status == "200") {
+            stuff = JSON.parse(xobj.responseText)
+            callback(stuff)
+        }
+    }
+    xobj.send(null)
+}
 
 function init() {
     loadStuff(function(data) {
@@ -225,21 +323,6 @@ function init() {
 
         items = graph[0]
         
-        var defaultItem = "advanced-circuit"
-        
-        var itemSelector = document.getElementById("item")
-        var sortedItems = sorted(items)
-        for (var i=0; i<sortedItems.length; i++) {
-            var item = sortedItems[i]
-            var option = document.createElement("option")
-            option.innerHTML = item
-            option.value = item
-            if (item == defaultItem) {
-                option.selected = true
-            }
-            itemSelector.appendChild(option)
-        }
-
-        itemUpdate()
+        addTarget()
     })
 }
