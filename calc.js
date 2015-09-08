@@ -178,7 +178,7 @@ function RemoveHandler(target) {
 
 function FactoryHandler(target) {
     this.handleEvent = function(event) {
-        target.factoryChanged()
+        target.factoriesChanged()
         itemUpdate()
     }
 }
