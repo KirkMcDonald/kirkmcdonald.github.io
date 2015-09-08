@@ -24,6 +24,14 @@ function loadModules(data) {
 // {item: [modules]}
 var moduleSpec = {}
 
+function setModule(itemName, x, moduleName) {
+    if (!(itemName in moduleSpec)) {
+        moduleSpec[itemName] = new ModuleSet()
+    }
+    var moduleObj = modules[moduleName]
+    moduleSpec[itemName].setModule(x, moduleObj)
+}
+
 function ModuleSet() {
     this.modules = []
 }

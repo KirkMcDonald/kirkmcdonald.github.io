@@ -42,6 +42,8 @@ function itemUpdate() {
         addCounts(totals, reqs[1])
     }
 
+    window.location.hash = "#" + formatSettings()
+
     var oldSteps = document.getElementById("steps")
     var newSteps = document.createElement("ul")
     newSteps.id = "steps"
@@ -142,12 +144,17 @@ var DEFAULT_ITEM = "advanced-circuit"
 
 var build_targets = []
 
-function addTarget() {
-    var target = new BuildTarget(build_targets.length)
+function addTarget(itemName) {
+    var target = new BuildTarget(build_targets.length, itemName)
     build_targets.push(target)
     var targetList = document.getElementById("targets")
     var plus = targetList.replaceChild(target.element, targetList.lastChild)
     targetList.appendChild(plus)
+    return target
+}
+
+function plusHandler() {
+    addTarget()
     itemUpdate()
 }
 
@@ -171,25 +178,24 @@ function RemoveHandler(target) {
 
 function FactoryHandler(target) {
     this.handleEvent = function(event) {
-        target.changedFactory = true
-        target.factoryLabel.className = "bold"
-        target.rateLabel.className = ""
+        target.factoryChanged()
         itemUpdate()
     }
 }
 
 function RateHandler(target) {
     this.handleEvent = function(event) {
-        target.changedFactory = false
-        target.factoryLabel.className = ""
-        target.rateLabel.className = "bold"
+        target.rateChanged()
         itemUpdate()
     }
 }
 
-function BuildTarget(index) {
+function BuildTarget(index, itemName) {
+    if (!itemName) {
+        itemName = DEFAULT_ITEM
+    }
     this.index = index
-    this.itemName = DEFAULT_ITEM
+    this.itemName = itemName
     this.changedFactory = true
     this.element = document.createElement("li")
 
@@ -203,7 +209,7 @@ function BuildTarget(index) {
         var option = document.createElement("option")
         option.textContent = item
         option.value = item
-        if (item == this.item) {
+        if (item == this.itemName) {
             option.selected = true
         }
         itemSelector.appendChild(option)
@@ -251,11 +257,29 @@ BuildTarget.prototype = {
             rate = item.rate(this.factories.value)
             this.rate.value = rate
         } else {
-            rate = this.rate.value
+            rate = Number(this.rate.value)
             var factories = item.factories(rate)[0]
             this.factories.value = factories
         }
         return rate
+    },
+    factoriesChanged: function() {
+        this.changedFactory = true
+        this.factoryLabel.className = "bold"
+        this.rateLabel.className = ""
+    },
+    setFactories: function(factories) {
+        this.factories.value = factories
+        this.factoriesChanged()
+    },
+    rateChanged: function() {
+        this.changedFactory = false
+        this.factoryLabel.className = ""
+        this.rateLabel.className = "bold"
+    },
+    setRate: function(rate) {
+        this.rate.value = rate
+        this.rateChanged()
     }
 }
 
@@ -266,27 +290,26 @@ function itemChanged() {
     itemUpdate()
 }
 
-function threeUpdate() {
+function getThreeValue() {
     var checkbox = document.getElementById("use_3")
-    var graph = getRecipeGraph(stuff, checkbox.checked)
+    return checkbox.checked
+}
+
+function threeUpdate() {
+    var graph = getRecipeGraph(stuff, getThreeValue())
     items = graph[0]
     itemUpdate()
 }
 
-function ModuleHandler(item, index) {
+function ModuleHandler(itemName, index) {
     this.handleEvent = function(event) {
-        moduleUpdate(event, item, index)
+        moduleUpdate(event, itemName, index)
     }
 }
 
-function moduleUpdate(event, item, x) {
-    var module = event.target.value
-    if (!(item in moduleSpec)) {
-        moduleSpec[item] = new ModuleSet()
-    }
-    var moduleObj = modules[module]
-    moduleSpec[item].setModule(x, moduleObj)
-
+function moduleUpdate(event, itemName, x) {
+    var moduleName = event.target.value
+    setModule(itemName, x, moduleName)
     itemUpdate()
 }
 
@@ -318,11 +341,51 @@ function loadStuff(callback) {
 
 function init() {
     loadStuff(function(data) {
-        var graph = getRecipeGraph(data, false)
+        var useThree = false
+        var settings = loadSettings(window.location.hash)
+        if ("use_3" in settings && settings.use_3 == "true") {
+            useThree = true
+            var checkbox = document.getElementById("use_3")
+            checkbox.checked = true
+        }
+        var graph = getRecipeGraph(data, useThree)
         loadModules(data)
 
         items = graph[0]
         
-        addTarget()
+        if ("items" in settings && settings.items != "") {
+            var targets = settings.items.split(",")
+            for (var i=0; i < targets.length; i++) {
+                var targetString = targets[i]
+                var parts = targetString.split(":")
+                var name = parts[0]
+                var target = addTarget(name)
+                var type = parts[1]
+                if (type == "f") {
+                    target.setFactories(parts[2])
+                } else if (type == "r") {
+                    target.setRate(parts[2])
+                } else {
+                    throw new Error("unknown target type")
+                }
+            }
+        } else {
+            addTarget()
+        }
+        if ("modules" in settings && settings.modules != "") {
+            var moduleSettings = settings.modules.split(",")
+            for (var i=0; i < moduleSettings.length; i++) {
+                var singleModuleSettings = moduleSettings[i].split(":")
+                var itemName = singleModuleSettings[0]
+                var modules = singleModuleSettings.slice(1)
+                for (var j=0; j < modules.length; j++) {
+                    var moduleName = modules[j]
+                    if (moduleName && moduleName != "null") {
+                        setModule(itemName, j, modules[j])
+                    }
+                }
+            }
+        }
+        itemUpdate()
     })
 }
