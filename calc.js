@@ -30,7 +30,7 @@ function sorted(obj, compareFunc) {
 
 function itemUpdate() {
     var requirements = []
-    var totals = {}
+    var totals = new Totals()
     for (var i=0; i<build_targets.length; i++) {
         var target = build_targets[i]
         var item = items[target.itemName]
@@ -38,8 +38,8 @@ function itemUpdate() {
         var reqs = item.requirements(rate)
         var innerRequirements = reqs[0]
         requirements.push(Requirement(rate, item, innerRequirements))
-        reqs[1][target.itemName] = rate
-        addCounts(totals, reqs[1])
+        reqs[1].add(target.itemName, rate)
+        totals.merge(reqs[1])
     }
 
     window.location.hash = "#" + formatSettings()
@@ -59,10 +59,10 @@ function itemUpdate() {
     newTotals.appendChild(header)
     document.body.replaceChild(newTotals, oldTotals)
     
-    var sorted_totals = sorted(totals)
+    var sorted_totals = sorted(totals.totals)
     for (var i in sorted_totals) {
-        var item = sorted_totals[i]
-        var rate = totals[item]
+        var itemName = sorted_totals[i]
+        var rate = totals.get(itemName)
         var row = document.createElement("tr")
 
         var rateCell = document.createElement("td")
@@ -72,10 +72,10 @@ function itemUpdate() {
 
         var nameCell = document.createElement("td")
         nameCell.className = "right-align"
-        nameCell.textContent = item
+        nameCell.textContent = itemName
         row.appendChild(nameCell)
 
-        factoryInfo = items[item].factories(rate)
+        factoryInfo = items[itemName].factories(rate)
         var factoryCount = factoryInfo[0]
         if (factoryCount) {
             var factory = factoryInfo[2]
@@ -90,7 +90,7 @@ function itemUpdate() {
             realCell.innerHTML = sprintf("<tt>%.3f</tt>", factoryInfo[1])
             row.appendChild(realCell)
 
-            var currentModules = moduleSpec[item]
+            var currentModules = moduleSpec[itemName]
 
             for (var j=0; j<factory.modules; j++) {
                 var currentSpec = null
@@ -102,7 +102,7 @@ function itemUpdate() {
                 row.appendChild(modCell)
 
                 var select = document.createElement("select")
-                select.addEventListener("change", new ModuleHandler(item, j))
+                select.addEventListener("change", new ModuleHandler(itemName, j))
                 modCell.appendChild(select)
 
                 var noMod = document.createElement("option")
@@ -117,7 +117,7 @@ function itemUpdate() {
                     if (module.limit) {
                         var valid = false
                         for (var k=0; k < module.limit.length; k++) {
-                            if (module.limit[k] == item) {
+                            if (module.limit[k] == itemName) {
                                 valid = true
                             }
                         }
