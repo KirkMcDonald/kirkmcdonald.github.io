@@ -92,7 +92,13 @@ MineableResource.prototype.baseRate = function() {
     // Hardcoded values for basic mining drill, blah.
     var mining_power = 3
     var mining_speed = 0.5
-    return (mining_power - this.hardness) * mining_speed / this.time * 60
+    var moduleEffects = moduleSpec[this.name]
+    var speed = 1
+    if (moduleEffects) {
+        var total = moduleEffects.total(MINER)
+        speed = total.speed
+    }
+    return speed * (mining_power - this.hardness) * mining_speed / this.time * 60
 }
 MineableResource.prototype.requirements = function(multiple) {
     return [[], {}]
