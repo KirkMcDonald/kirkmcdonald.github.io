@@ -8,8 +8,8 @@ function Module(name, productivity, speed, limit) {
 
 function loadModules(data) {
     modules = {}
-    for (var name in data.raw.module) {
-        var module = data.raw.module[name]
+    for (var name in data.module) {
+        var module = data.module[name]
         var effect = module.effect
         if (!("speed" in effect) && !("productivity" in effect)) {
             continue

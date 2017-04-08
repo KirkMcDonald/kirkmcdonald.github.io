@@ -1,12 +1,13 @@
 function Ingredient(amount, item) {
-    return {amount: amount, item: item}
+    this.amount = amount
+    this.item = item
 }
 
 function makeIngredient(i, items) {
     if (i.amount) {
-        return Ingredient(i.amount, items[i.name])
+        return new Ingredient(i.amount, getItem(items, i.name))
     } else {
-        return Ingredient(i[1], items[i[0]])
+        return new Ingredient(i[1], getItem(items, i[0]))
     }
 }
 
@@ -15,6 +16,7 @@ function Requirement(rate, item, dependencies) {
 }
 
 function Totals() {
+    // Maps name to rate for necessary items
     this.totals = {}
 }
 Totals.prototype = {
@@ -29,6 +31,16 @@ Totals.prototype = {
         for (var name in other.totals) {
             this.add(name, other.totals[name])
         }
+    }
+}
+
+function getItem(items, name) {
+    if (name in items) {
+        return items[name]
+    } else {
+        var item = new Item(name)
+        items[name] = item
+        return item
     }
 }
 
@@ -73,7 +85,7 @@ function Resource(name) {
 }
 Resource.prototype = Object.create(Item.prototype)
 Resource.prototype.requirements = function(multiple) {
-    return [[], {}]
+    return [[], new Totals()]
 }
 Resource.prototype.factories = function(rate) {
     return [null, null, null]
@@ -101,7 +113,7 @@ MineableResource.prototype.baseRate = function() {
     return speed * (mining_power - this.hardness) * mining_speed / this.time * 60
 }
 MineableResource.prototype.requirements = function(multiple) {
-    return [[], {}]
+    return [[], new Totals()]
 }
 MineableResource.prototype.factories = function(rate) {
     var real = rate / this.baseRate()
@@ -114,16 +126,9 @@ MineableResource.prototype.rate = function(factories) {
 
 function getItems(data) {
     var categories = []
-    for (var x in data.raw["item-subgroup"]) {
-        if (!(x in data.raw)) {
-            continue
-        }
-        categories.push(x)
-    }
-    categories = categories.concat(["mining-tool", "repair-tool", "blueprint", "deconstruction-item", "item"])
     items = {}
-    for (var name in data.raw.resource) {
-        var resource = data.raw.resource[name]
+    for (var name in data.resource) {
+        var resource = data.resource[name]
         if (resource.category) {
             items[name] = new Resource(name)
         } else {
@@ -132,14 +137,5 @@ function getItems(data) {
     }
     items.water = new Resource("water")
     items["alien-artifact"] = new Resource("alien-artifact")
-    for (var i in categories) {
-        var category = categories[i]
-        for (var name in data.raw[category]) {
-            if (name in items) {
-                continue
-            }
-            items[name] = new Item(name)
-        }
-    }
     return items
 }

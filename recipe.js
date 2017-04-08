@@ -46,12 +46,12 @@ function makeRecipe(d, items, useFastest) {
     var time = d.energy_required || 0.5
     var outputs
     if ("result" in d) {
-        outputs = [Ingredient(d.result_count || 1, items[d.result])]
+        outputs = [new Ingredient(d.result_count || 1, getItem(items, d.result))]
     } else {
         outputs = []
         for (var i in d.results) {
             var x = d.results[i]
-            outputs.push(Ingredient(x.amount, items[x.name]))
+            outputs.push(new Ingredient(x.amount, getItem(items, x.name)))
         }
     }
     var inputs = []
@@ -68,13 +68,17 @@ function makeRecipe(d, items, useFastest) {
             factory = ASSEMBLY_2
         }
     }
-    return new Recipe(d.name, time, inputs, outputs, factory)
+    var r = new Recipe(d.name, time, inputs, outputs, factory)
+    for (var i in r.outputs) {
+        r.outputs[i].item.addRecipe(r)
+    }
+    return r
 }
 
 function getUnlockableRecipes(data) {
     var recipes = {}
-    for (var name in data.raw.technology) {
-        var info = data.raw.technology[name]
+    for (var name in data.technology) {
+        var info = data.technology[name]
         for (var i in info.effects) {
             var effect = info.effects[i]
             if (effect.type == "unlock-recipe") {
@@ -90,14 +94,11 @@ function getRecipeGraph(data, useFastest) {
     var recipes = {}
     var items = getItems(data)
 
-    for (var name in data.raw.recipe) {
-        var recipe = data.raw.recipe[name]
+    for (var name in data.recipe) {
+        var recipe = data.recipe[name]
         if (recipe.enabled != "false" || recipe.name in unlockable) {
             var r = makeRecipe(recipe, items, useFastest)
             recipes[recipe.name] = r
-            for (var i in r.outputs) {
-                r.outputs[i].item.addRecipe(r)
-            }
         }
     }
     return [items, recipes]
