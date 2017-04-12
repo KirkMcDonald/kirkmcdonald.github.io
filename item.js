@@ -4,11 +4,7 @@ function Ingredient(amount, item) {
 }
 
 function makeIngredient(i, items) {
-    if (i.amount) {
-        return new Ingredient(i.amount, getItem(items, i.name))
-    } else {
-        return new Ingredient(i[1], getItem(items, i[0]))
-    }
+    return new Ingredient(i.amount, getItem(items, i.name))
 }
 
 function Requirement(rate, item, dependencies) {
@@ -57,7 +53,7 @@ Item.prototype = {
         var totals = new Totals()
         var result = []
         if (this.recipes.length == 0) {
-            throw new Error("no recipes")
+            return [result, totals]
         }
         var recipe = this.recipes[0]
         for (var i in recipe.inputs) {
@@ -71,10 +67,16 @@ Item.prototype = {
         return [result, totals]
     },
     factories: function(rate) {
+        if (this.recipes.length == 0) {
+            return [null, null, null]
+        }
         var recipe = this.recipes[0]
         return recipe.factories(rate / recipe.gives(this))
     },
     rate: function(factories) {
+        if (this.recipes.length == 0) {
+            return 1
+        }
         var recipe = this.recipes[0]
         return recipe.rate() * factories
     }
@@ -127,15 +129,13 @@ MineableResource.prototype.rate = function(factories) {
 function getItems(data) {
     var categories = []
     items = {}
-    for (var name in data.resource) {
-        var resource = data.resource[name]
-        if (resource.category) {
-            items[name] = new Resource(name)
+    for (var name in data.resources) {
+        var resource = data.resources[name]
+        if (resource.resource_category == "basic-solid") {
+            items[name] = new MineableResource(name, resource.mineable_properties.hardness, resource.mineable_properties.miningtime)
         } else {
-            items[name] = new MineableResource(name, resource.minable.hardness, resource.minable.mining_time)
+            items[name] = new Resource(name)
         }
     }
-    items.water = new Resource("water")
-    items["alien-artifact"] = new Resource("alien-artifact")
     return items
 }

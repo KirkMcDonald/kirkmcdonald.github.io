@@ -4,3 +4,7 @@
 .bold {
     font-weight: bold;
 }
+div.config-box {
+    border: thin solid black;
+    padding: 1em;
+}

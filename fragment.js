@@ -1,5 +1,7 @@
 function formatSettings() {
-    var settings = "items="
+    var settings = "data=" + currentMod()
+
+    settings += "&items="
     var targetStrings = []
     for (var i=0; i < build_targets.length; i++) {
         var target = build_targets[i]

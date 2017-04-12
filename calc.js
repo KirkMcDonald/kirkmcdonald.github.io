@@ -112,16 +112,12 @@ function itemUpdate() {
                 }
                 select.appendChild(noMod)
 
-                modloop: for (var name in modules) {
+                for (var name in modules) {
                     var module = modules[name]
-                    if (module.limit) {
-                        var valid = false
-                        for (var k=0; k < module.limit.length; k++) {
-                            if (module.limit[k] == itemName) {
-                                valid = true
-                            }
-                        }
-                        if (!valid) continue modloop
+                    if (module.limit
+                            && Object.keys(module.limit).length > 0
+                            && !(itemName in module.limit)) {
+                        continue
                     }
                     var option = document.createElement("option")
                     option.textContent = name
@@ -283,8 +279,6 @@ BuildTarget.prototype = {
     }
 }
 
-var changedFactory = true
-
 function itemChanged() {
     moduleSpec = {}
     itemUpdate()
@@ -296,7 +290,7 @@ function getThreeValue() {
 }
 
 function threeUpdate() {
-    var graph = getRecipeGraph(stuff, getThreeValue())
+    var graph = getRecipeGraph(data, getThreeValue())
     items = graph[0]
     itemUpdate()
 }
@@ -313,9 +307,42 @@ function moduleUpdate(event, itemName, x) {
     itemUpdate()
 }
 
+function toggleVisible(id) {
+    var elem = document.getElementById(id)
+    if (elem.style.display == "none") {
+        elem.style.display = "block"
+    } else {
+        elem.style.display = "none"
+    }
+}
+
+function currentMod() {
+    var elem = document.getElementById("data_set")
+    return elem.value
+}
+
+function changeMod() {
+    var modName = currentMod()
+
+    reset()
+    loadData(modName)
+}
+
 ////
 // Initialization
 ////
+
+function Modification(name, filename) {
+    this.name = name
+    this.filename = filename
+}
+
+var MODIFICATIONS = {
+    "vanilla": new Modification("Vanilla 0.14.22", "vanilla.json"),
+    "revolution": new Modification("Research Revolution", "revolution.json"),
+}
+
+var DEFAULT_MODIFICATION = "vanilla"
 
 // Global mapping of item name to Item, Resource, or MineableResource object.
 var items
@@ -324,25 +351,59 @@ var items
 var modules
 
 // Global containing game data source.
-var stuff
+var data
 
-function loadStuff(callback) {
+// Set the page back to a state immediately following initial setup, but before
+// the dataset is loaded for the first time.
+//
+// This is intended to be called when the top-level dataset is changed.
+// Therefore, it also resets the fragment and settings.
+function reset() {
+    window.location.hash = ""
+
+    build_targets = []
+    var targetList = document.getElementById("targets")
+    var plus = targetList.lastChild
+    var newTargetList = document.createElement("ul")
+    newTargetList.id = "targets"
+    newTargetList.appendChild(plus)
+    document.body.replaceChild(newTargetList, targetList)
+
+    var oldSteps = document.getElementById("steps")
+    var newSteps = document.createElement("ul")
+    newSteps.id = "steps"
+    document.body.replaceChild(newSteps, oldSteps)
+
+    var oldTotals = document.getElementById("totals")
+    var newTotals = document.createElement("table")
+    newTotals.id = "totals"
+    document.body.replaceChild(newTotals, oldTotals)
+}
+
+function loadDataRunner(modName, callback) {
     var xobj = new XMLHttpRequest()
+    var mod = MODIFICATIONS[modName]
+    var filename = "data/" + mod.filename
     xobj.overrideMimeType("application/json")
-    xobj.open("GET", "stuff.json", true)
+    xobj.open("GET", filename, true)
     xobj.onreadystatechange = function() {
         if (xobj.readyState == 4 && xobj.status == "200") {
-            stuff = JSON.parse(xobj.responseText)
-            callback(stuff)
+            data = JSON.parse(xobj.responseText)
+            callback(data)
         }
     }
     xobj.send(null)
 }
 
-function init() {
-    loadStuff(function(data) {
+function loadData(modName, settings) {
+    if (!settings) {
+        settings = {}
+    }
+    if ("data" in settings && settings.data != "") {
+        modName = settings.data
+    }
+    loadDataRunner(modName, function(data) {
         var useThree = false
-        var settings = loadSettings(window.location.hash)
         if ("use_3" in settings && settings.use_3 == "true") {
             useThree = true
             var checkbox = document.getElementById("use_3")
@@ -388,4 +449,20 @@ function init() {
         }
         itemUpdate()
     })
+}
+
+function init() {
+    var modSelector = document.getElementById("data_set")
+    for (var modName in MODIFICATIONS) {
+        var mod = MODIFICATIONS[modName]
+        var option = document.createElement("option")
+        option.textContent = mod.name
+        option.value = modName
+        if (modName == DEFAULT_MODIFICATION) {
+            option.selected = true
+        }
+        modSelector.appendChild(option)
+    }
+    var settings = loadSettings(window.location.hash)
+    loadData(DEFAULT_MODIFICATION, settings)
 }

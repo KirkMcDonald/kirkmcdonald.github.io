@@ -43,16 +43,12 @@ Recipe.prototype = {
 }
 
 function makeRecipe(d, items, useFastest) {
-    var time = d.energy_required || 0.5
+    var time = d.energy
     var outputs
-    if ("result" in d) {
-        outputs = [new Ingredient(d.result_count || 1, getItem(items, d.result))]
-    } else {
-        outputs = []
-        for (var i in d.results) {
-            var x = d.results[i]
-            outputs.push(new Ingredient(x.amount, getItem(items, x.name)))
-        }
+    outputs = []
+    for (var i in d.products) {
+        var x = d.products[i]
+        outputs.push(new Ingredient(x.amount, getItem(items, x.name)))
     }
     var inputs = []
     for (var i in d.ingredients) {
@@ -90,16 +86,13 @@ function getUnlockableRecipes(data) {
 }
 
 function getRecipeGraph(data, useFastest) {
-    var unlockable = getUnlockableRecipes(data)
     var recipes = {}
     var items = getItems(data)
 
-    for (var name in data.recipe) {
-        var recipe = data.recipe[name]
-        if (recipe.enabled != "false" || recipe.name in unlockable) {
-            var r = makeRecipe(recipe, items, useFastest)
-            recipes[recipe.name] = r
-        }
+    for (var name in data.recipes) {
+        var recipe = data.recipes[name]
+        var r = makeRecipe(recipe, items, useFastest)
+        recipes[recipe.name] = r
     }
     return [items, recipes]
 }

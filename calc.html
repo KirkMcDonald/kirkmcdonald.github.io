@@ -23,6 +23,17 @@
     <script src="fragment.js"></script>
     <script src="calc.js"></script>
     
+    <div class="config-header">
+        <input id="config" type="button" value="configure" class="config-button" onclick="toggleVisible('config_box')"><br />
+        <div id="config_box" class="config-box" style="display: none;">
+            <!--Display rates as:<br />
+            <input type="radio" id="minute_rate" name="rate" value="minute" checked><label for="minute_rate">items/minute</label><br />
+            <input type="radio" id="second_rate" name="rate" value="second"><label for="second_rate">items/second</label><br />-->
+            Use recipe set:<br />
+            <select id="data_set" onchange="changeMod()"></select>
+        </div>
+    </div>
+    <p><span>All rates given in items per minute.</span>
     <ul id="targets"><li><a onclick="plusHandler()">+</a></li></ul>
     <input id="use_3" type="checkbox" onchange="threeUpdate()"><label for="use_3">Use Assembling Machine 3s only</label>
 
