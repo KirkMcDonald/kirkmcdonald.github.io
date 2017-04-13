@@ -452,17 +452,17 @@ function loadData(modName, settings) {
 }
 
 function init() {
+    var settings = loadSettings(window.location.hash)
     var modSelector = document.getElementById("data_set")
     for (var modName in MODIFICATIONS) {
         var mod = MODIFICATIONS[modName]
         var option = document.createElement("option")
         option.textContent = mod.name
         option.value = modName
-        if (modName == DEFAULT_MODIFICATION) {
+        if (settings.data && settings.data == modName || !settings.data && modName == DEFAULT_MODIFICATION) {
             option.selected = true
         }
         modSelector.appendChild(option)
     }
-    var settings = loadSettings(window.location.hash)
     loadData(DEFAULT_MODIFICATION, settings)
 }

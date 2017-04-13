@@ -78,7 +78,7 @@ Item.prototype = {
             return 1
         }
         var recipe = this.recipes[0]
-        return recipe.rate() * factories
+        return recipe.rate() * factories * recipe.gives(this)
     }
 }
 
