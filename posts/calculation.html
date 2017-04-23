@@ -1,0 +1,308 @@
+<script src="bower_components/d3/d3.min.js"></script>
+<script src="bower_components/function-plot/dist/function-plot.js"></script>
+
+<style>
+div.recipe ul {
+    list-style-type: none;
+    margin: 0;
+}
+div.recipe {
+    margin-left: 2em;
+}
+table.matrix {
+    margin-left: 2em;
+}
+table.matrix td {
+    text-align: right;
+}
+</style>
+
+<h1>Calculating Factorio</h1>
+
+<a href="https://www.factorio.com/">Factorio</a> is a game in which you dig resources out of the ground, craft those resources into items, then craft those items into other items, following a graph of recipes of considerable complexity. Good planning can be tremendously helpful when building out your factory, and a key part of that is knowing how much of any given item you will need to make as a prerequisite for more advanced items down the line. The first step of such planning is calculation.
+
+<h2>Basics</h2>
+
+As a simple example, let's look at the recipe for one of the first items in the game, the <b>electronic circuit</b>:
+
+<div class="recipe">
+<img src="electronic-circuit.png">
+<b>Electronic circuit</b><br>
+Craft time: 0.5 seconds<br>
+Ingredients:
+    <ul><li>3x <img src="copper-cable.png"> copper cable
+    <li>1x <img src="iron-plate.png"> iron plate</ul>
+</div>
+<p>
+Recipes consist of three major things: A <b>crafting time</b>, one or more <b>products</b>, and one or more <b>ingredients</b>. Products and ingredients consist of an <b>amount</b> and an <b>item</b>.
+<p>
+The vast majority of the recipes in the game will produce a single instance of a single item. Several will make multiple copies of an item at a time, and a bare handful will make multiple distinct items at once. The recipe for the electronic circuit, shown above, will produce a single electronic circuit each time it is completed.
+<p>
+Copper cables and iron plates have their own recipes, in turn.
+
+<div class="recipe">
+<img src="copper-cable.png">
+<b>2x Copper cable</b><br>
+Craft time: 0.5 seconds<br>
+Ingredients:<br>
+    <ul><li>1x <img src="copper-plate.png"> copper plate</ul>
+</div>
+<p>
+<div class="recipe">
+<img src="iron-plate.png">
+<b>Iron plate</b><br>
+Craft time: 3.5 seconds<br>
+Ingredients:<br>
+    <ul><li>1x <img src="iron-ore.png"> iron ore</ul>
+</div>
+<p>
+And then copper cables require copper plate, the recipe for which looks like this:
+
+<div class="recipe">
+<img src="copper-plate.png">
+<b>Copper plate</b><br>
+Craft time: 3.5 seconds<br>
+Ingredients:<br>
+    <ul><li>1x <img src="copper-ore.png"> copper ore</ul>
+</div>
+<p>
+Iron ore and copper ore don't have a recipe, and are mined directly from deposits in the game world.
+<p>
+If one were to represent the complete tree of items and the ratios required of each of their prerequisites, it would look something like this:
+
+<ul><li>1x <img src="electronic-circuit.png"> electronic circuit
+    <ul><li>3x <img src="copper-cable.png"> copper cable
+        <ul><li>1.5x <img src="copper-plate.png"> copper plate
+            <ul><li>1.5x <img src="copper-ore.png"> copper ore</ul>
+        </ul>
+    <li>1x <img src="iron-plate.png"> iron plate
+        <ul><li>1x <img src="iron-ore.png"> iron ore</ul>
+    </ul>
+</ul>
+
+Notice how electronic circuits require three copper cables, but the recipe for copper cables produces two of them at a time. This means that, even though items in Factorio are indivisible units, a single electronic circuit effectively requires one and a half units of copper ore. More concretely, it means that making two electronic circuits will consume three pieces of copper ore. And because electronic circuits and copper cables have the same crafting time, this means that you can build a ratio of 2 electronic circuit assemblers to 3 copper cable assemblers in your factory to achieve perfect throughput.
+<p>
+The relationship between crafting times and ratios is straightforward, but deserves mentioning. The ratios shown above are best thought of as a series of <b>rates</b>. For instance, if you wanted to produce one electronic circuit per second, then you would also need to make three copper cables per second, one-and-a-half copper plates per second, and so on. These rates would remain constant regardless of the crafting times of the individual recipes. Recipes with longer crafting times will simply require more assemblers or furnaces working in parallel in order to satisfy the desired rate.
+<p>
+(There is the additional detail that different types of assemblers and furnaces have different crafting speeds. Working through the arithmetic here is outside the scope of this post, however.)
+<p>
+A tree similar to the above is sufficient for calculating the production ratios between the majority of the recipes in the game. However, the complete recipe graph hides a few complex corner-cases, and the technique shown above will fail once it runs into the weirder parts of the graph.
+
+<h2>Complex recipes</h2>
+
+The tree shown above is the result of a simple graph traversal, multiplying ratios as ingredients are needed, and dividing them as products are found. Given that the vast majority of items in the game are produced by a single recipe, and that the vast majority of recipes produce a single item, this can get you quite far before you run into any ambiguity as to where an item is supposed to come from.
+<p>
+But, inevitably, you will run into the <b>oil production pipeline</b>.
+
+<div class="recipe">
+<img src="basic-oil-processing.png">
+<b>Basic oil processing</b><br>
+Craft time: 5 seconds<br>
+Produces:<br>
+    <ul><li>3x <img src="heavy-oil.png"> heavy oil
+    <li>3x <img src="light-oil.png"> light oil
+    <li>4x <img src="petroleum-gas.png"> petroleum gas</ul>
+Ingredients:<br>
+    <ul><li>10x <img src="crude-oil.png"> crude oil</ul>
+</div>
+<br>
+<div class="recipe">
+<img src="advanced-oil-processing.png">
+<b>Advanced oil processing</b><br>
+Craft time: 5 seconds<br>
+Produces:<br>
+    <ul><li>1x <img src="heavy-oil.png"> heavy oil
+    <li>4.5x <img src="light-oil.png"> light oil
+    <li>5.5x <img src="petroleum-gas.png"> petroleum gas</ul>
+Ingredients:<br>
+    <ul><li>10x <img src="crude-oil.png"> crude oil
+    <li>5x <img src="water.png"> water</ul>
+</div>
+<br>
+<div class="recipe">
+<img src="heavy-oil-cracking.png">
+<b>Heavy oil cracking</b><br>
+Craft time: 5 seconds<br>
+Produces:<br>
+    <ul><li>3x <img src="light-oil.png"> light oil</ul>
+Ingredients:<br>
+    <ul><li>4x <img src="heavy-oil.png"> heavy oil
+    <li>3x <img src="water.png"> water</ul>
+</div>
+<br>
+<div class="recipe">
+<img src="light-oil-cracking.png">
+<b>Light oil cracking</b><br>
+Craft time: 5 seconds<br>
+Produces:<br>
+    <ul><li>2x <img src="petroleum-gas.png"> petroleum gas</ul>
+Ingredients:<br>
+    <ul><li>3x <img src="light-oil.png"> light oil
+    <li>3x <img src="water.png"> water</ul>
+</div>
+<p>
+What a pain in the ass. These recipes violate a number of assumptions that it would be easy to make if you looked exclusively at the non-oil parts of the recipe graph.
+<p>
+To start with, note that fluids, unlike other items in the game, are measured in tenths of a unit, rather than whole units. This is mostly just annoying, and the developers have said they will be correcting this (by multiplying all fluid-related values by 10) in a future version.
+<p>
+Next, notice how the fluids produced by these recipes (heavy oil, light oil, and petroleum gas; collectively referred to as the <b>oil products</b>) are each created by multiple recipes. The basic and advanced oil processing recipes are also in that exclusive class of recipes which produce multiple, distinct items.
+<p>
+There are some other recipes closely related to the oil pipeline which add to the annoyance. Each of the three oil products may be turned into <b>solid fuel</b>, via three additional recipes. There is also a system in which crude oil may be placed into barrels, and then the full barrels may be emptied again. This is accomplished via a pair of recipes that depend on one another. <b>As a consequence, the recipe graph is not a DAG.</b> Any algorithm that wants to work with the recipe graph in a general sense must be prepared to deal with cycles.
+<p>
+So: Suppose we want to make an item that depends on one of the oil products. A good example would be plastic.
+
+<div class="recipe">
+<img src="plastic-bar.png">
+<b>2x Plastic bar</b><br>
+Craft time: 1 second<br>
+Ingredients:<br>
+    <ul><li>3x <img src="petroleum-gas.png"> petroleum gas
+    <li>1x <img src="coal.png"> coal</ul>
+</div>
+<p>
+If we want to produce plastic bars at a given rate, we will require petroleum gas at 1.5 times that rate. However, we can obtain petroleum gas from three different recipes, and some of those recipes ultimately depend on each other, and they also end up producing the other oil products at the same time, which we can turn into more petroleum gas via the cracking recipes.
+<p>
+How can we calculate the optimal selection of recipes to produce this with? And what if we actually want to use more than one oil product, at some specific ratio?
+<p>
+It turns out that this is a straightforward problem of linear algebra. The key is representing the recipes in a useful way. We can encode the recipe graph using a matrix like the following.
+
+<table class="matrix">
+<tr>
+    <th></th>
+    <th><img src="heavy-oil-cracking.png"></th>
+    <th><img src="light-oil-cracking.png"></th>
+    <th><img src="basic-oil-processing.png"></th>
+    <th><img src="advanced-oil-processing.png"></th>
+    <th><img src="water.png"></th>
+    <th><img src="crude-oil.png"></th>
+</tr>
+<tr>
+    <th><img src="heavy-oil.png"></th>
+    <td>-4</td><td>0</td><td>3</td><td>1</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <th><img src="light-oil.png"></th>
+    <td>3</td><td>-3</td><td>3</td><td>4.5</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <th><img src="petroleum-gas.png"></th>
+    <td>0</td><td>2</td><td>4</td><td>5.5</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <th><img src="water.png"></th>
+    <td>-3</td><td>-3</td><td>0</td><td>-5</td><td>1</td><td>0</td>
+</tr>
+<tr>
+    <th><img src="crude-oil.png"></th>
+    <td>0</td><td>0</td><td>-10</td><td>-10</td><td>0</td><td>1</td>
+</tr>
+</table>
+
+The rows of this matrix represent the individual fluids involved with the oil production pipeline. The columns represent the recipes. Positive values represent the products of recipes, and negative values represent ingredients. The two recipes on the right represent the raw resources that serve as inputs. These aren't real recipes in the game, but it is useful to model resources using pseudo-recipes that produce them at no cost.
+<p>
+Now let's use this matrix to determine the optimum ratios for some series of oil products. Completely arbitrarily, let's say we want to produce 4.5 units of petroleum gas, and 1 unit of heavy oil, per unit time. We can represent this as an item vector:
+
+<table class="matrix">
+<tr><th><img src="heavy-oil.png"></th>    <td>1</td></tr>
+<tr><th><img src="light-oil.png"></th>    <td>0</td></tr>
+<tr><th><img src="petroleum-gas.png"></th><td>4.5</td></tr>
+<tr><th><img src="water.png"></th>        <td>0</td></tr>
+<tr><th><img src="crude-oil.png"></th>    <td>0</td></tr>
+</table>
+
+If we tack this onto the recipe matrix in order to form an <a href="https://en.wikipedia.org/wiki/Augmented_matrix">augmented matrix</a>, and then place that matrix into its <a href="https://en.wikipedia.org/wiki/Row_echelon_form#Reduced_row_echelon_form">reduced row echelon form</a>, we get this result:
+
+<table class="matrix">
+<tr>
+    <th><img src="heavy-oil-cracking.png"></th>
+    <th><img src="light-oil-cracking.png"></th>
+    <th><img src="basic-oil-processing.png"></th>
+    <th><img src="advanced-oil-processing.png"></th>
+    <th><img src="water.png"></th>
+    <th><img src="crude-oil.png"></th>
+    <th>result</th>
+</tr>
+<tr>
+<td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>-13/40</td><td>-23/12</td>
+</tr><tr>
+<td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>-7/40</td><td>-1/4</td>
+</tr><tr>
+<td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>-3/5</td><td>-10/3</td>
+</tr><tr>
+<td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1/2</td><td>10/3</td>
+</tr><tr>
+<td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>61/6</td>
+</tr>
+</table>
+
+The recipe matrix has five rows and six columns. Therefore, any solution to that matrix will still contain one unknown. Intuitively, the presence of this unknown represents the fact that you have to make a choice between the two oil processing recipes. There is an extent to which they may be substituted for one another, and so there can be no exact numerical solution until we can decide how to choose a value for this one remaining unknown.
+<p>
+To get a better sense of what this looks like, let's plot the system of equations represented by the above matrix.
+<p>
+<div id="solution"></div>
+<script>
+functionPlot({
+    target: "#solution",
+    xAxis: {
+        label: 'crude oil',
+        domain: [0, 12]
+    },
+    yAxis: {
+        label: 'recipe ratios',
+        domain: [0, 3]
+    },
+    annotations: [{
+        x: 230/39,
+        text: 'minimum'
+    }, {
+        x: 20/3,
+        text: 'maximum'
+    }],
+    data: [{
+        fn: '13x/40 - 23/12',
+        color: 'red'
+    }, {
+        fn: '7x/40 - 1/4',
+        color: 'orange'
+    }, {
+        fn: '3x/5 - 10/3',
+        color: '#4040e8'
+    }, {
+        fn: '-x/2 + 10/3',
+        color: '#05b378'
+    }, {
+        fn: '-x + 61/6',
+        color: 'steelblue'
+    }]
+})
+</script>
+<span style="color: red"><b>&#9632;</b></span> <img src="heavy-oil-cracking.png">
+<span style="color: orange"><b>&#9632;</b></span> <img src="light-oil-cracking.png">
+<span style="color: #4040e8"><b>&#9632;</b></span> <img src="basic-oil-processing.png">
+<span style="color: #05b378"><b>&#9632;</b></span> <img src="advanced-oil-processing.png">
+<span style="color: steelblue"><b>&#9632;</b></span> <img src="water.png">
+<p>
+In mathematical terms, let's call the recipe matrix <b>A</b>, the vector of ratios we want to solve for <b>x</b>, and the vector of desired outputs <b>b</b>. Together, these satisfy the relationship <b>Ax</b> = <b>b</b>. However, it is very important that all of the components of <b>x</b> are positive. A negative value in <b>x</b> would represent trying to operate a recipe in reverse, which is not something that makes sense in the context of the game.
+<p>
+Thus, the vertical lines in the above plot represent the minimum and maximum values for x<sub>crude oil</sub> such that all of the values in <b>x</b> will be greater than or equal to zero. Or, in game terms, they represent the minimum and maximum amounts of oil we could spend in order to produce 4.5 units of petroleum gas and 1 unit of heavy oil, with no other oil products left over.
+<p>
+In order to choose a value for x<sub>crude oil</sub>, we need to establish an order of priorities. Ultimately, we are trying to find the most efficient production chain for the items we want to make, where efficiency is defined as using as few resources as possible. But, as we can see with water and crude oil in the above plot, sometimes resources are used in inverse proportion to one another. Using less crude oil would mean using more water, and vice versa.
+<p>
+Given that crude oil can be annoying to acquire, and water is effectively free, it makes sense to define, a priori, that optimizing for crude oil has a higher priority than optimizing for water. Therefore, we can say that the optimum value for x<sub>cude oil</sub> is the minimum possible one, as shown in the plot above.
+<p>
+Taking that value as a solution, our final value for <b>x</b> is this.
+
+<table class="matrix">
+<tr>
+    <th><img src="heavy-oil-cracking.png"></th>
+    <th><img src="light-oil-cracking.png"></th>
+    <th><img src="basic-oil-processing.png"></th>
+    <th><img src="advanced-oil-processing.png"></th>
+    <th><img src="water.png"></th>
+    <th><img src="crude-oil.png"></th>
+</tr>
+<tr><td>0.00</td><td>0.78</td><td>0.21</td><td>0.38</td><td>4.27</td><td>5.90</td></td>
+</table>
+
+<p>
+{TODO: Discuss situation with multiple unknowns.}
