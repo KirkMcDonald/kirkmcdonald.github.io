@@ -33,15 +33,14 @@
   "dependencies": {
     "d3": ">=3.0.0 <4.0.0"
   },
-  "version": "1.17.1",
-  "_release": "1.17.1",
+  "_release": "5afd0e8a02",
   "_resolution": {
-    "type": "version",
-    "tag": "v1.17.1",
-    "commit": "0cf53be8242ea9746143468184b2a1038a8bbcb6"
+    "type": "branch",
+    "branch": "master",
+    "commit": "5afd0e8a02920c9de42e8f83214e83f1f165d25d"
   },
   "_source": "https://github.com/maurizzzio/function-plot.git",
-  "_target": "^1.17.1",
+  "_target": "master",
   "_originalSource": "function-plot",
   "_direct": true
 }
