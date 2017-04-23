@@ -11,9 +11,15 @@ div.recipe {
 }
 table.matrix {
     margin-left: 2em;
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 table.matrix td {
     text-align: right;
+    padding-left: 0.5em;
+}
+table.matrix td.comment {
+    text-align: left;
 }
 </style>
 
@@ -304,5 +310,160 @@ Taking that value as a solution, our final value for <b>x</b> is this.
 <tr><td>0.00</td><td>0.78</td><td>0.21</td><td>0.38</td><td>4.27</td><td>5.90</td></td>
 </table>
 
+Huh, interesting. Heavy oil cracking turned out to be zero. I wonder if that's significant?
+
+<h2>Handling multiple unknowns</h2>
+
+The complete recipe graph in vanilla Factorio (0.14.22) has 183 items and 187 recipes. This means that a solution involving that entire graph could have as many as 4 unknowns. How do we decide on concrete values in this case?
 <p>
-{TODO: Discuss situation with multiple unknowns.}
+Let's start with a more constrained example. Let's take the oil production matrix above, and add the recipes for solid fuel.
+
+<table class="matrix">
+<tr>
+    <th></th>
+    <th><img src="heavy-oil-cracking.png"></th>
+    <th><img src="light-oil-cracking.png"></th>
+    <th><img src="basic-oil-processing.png"></th>
+    <th><img src="advanced-oil-processing.png"></th>
+    <th><img src="solid-fuel-from-heavy-oil.png"></th>
+    <th><img src="solid-fuel-from-light-oil.png"></th>
+    <th><img src="solid-fuel-from-petroleum-gas.png"></th>
+    <th><img src="water.png"></th>
+    <th><img src="crude-oil.png"></th>
+</tr>
+<tr>
+    <th><img src="heavy-oil.png"></th>
+    <td>-4</td><td>0</td><td>3</td><td>1</td><td>-2</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <th><img src="light-oil.png"></th>
+    <td>3</td><td>-3</td><td>3</td><td>4.5</td><td>0</td><td>-1</td><td>0</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <th><img src="petroleum-gas.png"></th>
+    <td>0</td><td>2</td><td>4</td><td>5.5</td><td>0</td><td>0</td><td>-2</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <th><img src="solid-fuel.png"></th>
+    <td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <th><img src="water.png"></th>
+    <td>-3</td><td>-3</td><td>0</td><td>-5</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td>
+</tr>
+<tr>
+    <th><img src="crude-oil.png"></th>
+    <td>0</td><td>0</td><td>-10</td><td>-10</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td>
+</tr>
+</table>
+
+Suppose we arbitrarily want to make solid fuel at a rate of 100 items per unit time. Sticking this onto the recipe graph and finding its RREF, as above, gives us this:
+
+<table class="matrix">
+<tr>
+    <th><img src="heavy-oil-cracking.png"></th>
+    <th><img src="light-oil-cracking.png"></th>
+    <th><img src="basic-oil-processing.png"></th>
+    <th><img src="advanced-oil-processing.png"></th>
+    <th><img src="solid-fuel-from-heavy-oil.png"></th>
+    <th><img src="solid-fuel-from-light-oil.png"></th>
+    <th><img src="solid-fuel-from-petroleum-gas.png"></th>
+    <th><img src="water.png"></th>
+    <th><img src="crude-oil.png"></th>
+    <th>result</th>
+</tr>
+<tr>
+<td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>5/2</td><td>-1/2</td><td>-33/40</td><td>-50</td>
+</tr><tr>
+<td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>5/22</td><td>-3/22</td><td>-137/440</td><td>-450/11</td>
+</tr><tr>
+<td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>18/11</td><td>-2/11</td><td>-43/55</td><td>-600/11</td>
+</tr><tr>
+<td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>-18/11</td><td>2/11</td><td>15/22</td><td>600/11</td>
+</tr><tr>
+<td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>-37/11</td><td>9/11</td><td>9/11</td><td>500/11</td>
+</tr><tr>
+<td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>48/11</td><td>-9/11</td><td>-9/11</td><td>600/11</td>
+</tr>
+</table>
+
+We're left with three unknowns, which is to be expected, given that there are six items and nine recipes. Making sense of these numbers requires taking a step back and looking at what the recipe matrix actually means.
+<p>
+Items come from recipes. In the normal case, each item is produced by one recipe. The oil production pipeline violates this assumption, by having three items that are produced by four recipes. Thus, its recipe matrix is not square, and calculations involving oil end up with a single unknown. In practice, regardless of the order in which you happen to arrange the columns of the matrix, this unknown is <i>really</i> asking: Which oil product do I need to use the least?
+<p>
+To put that another way: Having more recipes than items results from having multiple ways of making an item. The unknown that results from trying to solve the resulting recipe matrix represents the choice between those recipes.
+<p>
+There are three possibilties when trying to choose between these recipes.
+
+<ol>
+<li>All possibilities reduce to different proportions of some underlying resource. The most efficient possibility should win.
+<li>All possibilities reduce to the <i>same</i> quantities of the underlying resources. They are equal, and one may be chosen arbitrarily.
+<li>Each possibility reduces to <i>different</i> underlying resources. The possibility that uses the lower-priority resource wins.
+</ol>
+
+More plainly: <b>Each unknown represents a choice to be made somewhere, and one of the options will win.</b> In mathematical terms, <b>each unknown means that an element of the vector x will be zero.</b>
+<p>
+We saw this in the last section, when the ratio for heavy oil cracking turned out to be zero. This result can be understood intuitively: We required heavy oil as part of the output, and advanced oil processing produces heavy oil at an extremely low ratio, while making the other products at higher ratios. It therefore follows that production of heavy oil would be the bottleneck, and we would have no excess heavy oil to pass on to the heavy oil cracking recipe.
+<p>
+There is always a bottleneck.
+<p>
+Applying that same intuition to the result above, we can guess which three recipes will end up being zero. First, notice that light oil produces solid fuel at a vastly more advantageous ratio (1:1) than either of the other two products (2:1). Then notice that the ratio for converting from heavy oil to light oil (4:3) is more advantageous than converting from heavy oil directly to solid fuel.
+<p>
+So: The first zero recipe is the <b>solid fuel from heavy oil</b> recipe. It's more efficient to convert all of our heavy oil to light oil.
+<p>
+On the other hand, we have petroleum gas, which we will be producing as an unavoidable byproduct of the oil processing recipes, and so we're forced to make a certain proportion of our solid fuel from it. Converting our light oil into petroleum gas would be much less efficient than just converting all of the light oil directly into solid fuel, and so the second zero recipe is <b>light oil cracking</b>.
+<p>
+Finally, given that we really want all of the light oil we can get our hands on, we can look back at the oil processing recipes and note that basic oil processing makes less of it than advanced oil processing does. Thus, the third zero recipe is <b>basic oil processing</b>.
+<p>
+But how can we calculate this automatically?
+<p>
+In the previous section, we essentially determined the optimum value for <b>x</b> by trying to zero out each value in <b>x</b>, and checking whether the result was valid. This yielded two valid results (the minimum and maximum shown in the graph), from which we chose the optimum one.
+<p>
+This can be generalized for multiple unknowns by chosing every combination of N elements from <b>x</b>, finding solutions for the rest of <b>x</b> when those elements are zero, and then seeing if that solution is valid (i.e. if it contains no negative elements). This will, more than likely, yield multiple valid solutions, and so the final step is to choose the most optimal solution.
+<p>
+This process can be optimized slightly by only considering those recipes that have at least one product that is produced by multiple recipes. The only recipes that can be considered to be zero in this process are those which have alternatives. The game's complete recipe graph has 187 recipes with four unknowns. Computing this naively would yield over 46 million possibilties. However, the game only has nine recipes which actually need to be considered, which brings the number of possibilities down to 126. Further reductions in the number of possibilities are possible as well, but this is outside the scope of this post.
+<p>
+For the purposes of our example, all this means is that we do not need to consider the possibility that water or crude oil will be zero (although they may be zero as a natural consequence of other columns being zero). If we take our 7 remaining recipes and set three of them to zero at a time, we get 35 possible solutions, of which the following are valid:
+
+<table class="matrix">
+<tr>
+    <th><img src="heavy-oil-cracking.png"></th>
+    <th><img src="light-oil-cracking.png"></th>
+    <th><img src="basic-oil-processing.png"></th>
+    <th><img src="advanced-oil-processing.png"></th>
+    <th><img src="solid-fuel-from-heavy-oil.png"></th>
+    <th><img src="solid-fuel-from-light-oil.png"></th>
+    <th><img src="solid-fuel-from-petroleum-gas.png"></th>
+    <th><img src="water.png"></th>
+    <th><img src="crude-oil.png"></th>
+</tr>
+<tr>
+<td>0.00</td><td>0.00</td><td>0.00</td><td>12.90</td><td>6.45</td><td>58.06</td><td>35.48</td><td>64.52</td><td>129.03</td>
+<td class="comment">The "don't crack anything" solution.</td>
+</tr><tr>
+<td>0.00</td><td>0.00</td><td>15.38</td><td>0.00</td><td>23.08</td><td>46.15</td><td>30.77</td><td>0.00</td><td>153.85</td>
+<td class="comment">The same, but with basic oil processing.</td>
+</tr><tr>
+<td>0.00</td><td>31.58</td><td>0.00</td><td>21.05</td><td>10.53</td><td>0.00</td><td>89.47</td><td>200.00</td><td>210.53</td>
+<td class="comment">Crack all the light oil to petroleum gas.</td>
+</tr><tr>
+<td>0.00</td><td>22.22</td><td>22.22</td><td>0.00</td><td>33.33</td><td>0.00</td><td>66.67</td><td>66.67</td><td>222.22</td>
+<td class="comment">The same, but with basic oil processing.</td>
+</tr><tr>
+<td>3.12</td><td>0.00</td><td>0.00</td><td>12.50</td><td>0.00</td><td>65.62</td><td>34.38</td><td>71.88</td><td>125.00</td>
+<td class="comment"><b>The winner!</b></td>
+</tr><tr>
+<td>10.34</td><td>0.00</td><td>13.79</td><td>0.00</td><td>0.00</td><td>72.41</td><td>27.59</td><td>31.03</td><td>137.93</td>
+<td class="comment">Crack all the heavy oil, but use basic oil processing.</td>
+</tr><tr>
+<td>5.56</td><td>38.89</td><td>0.00</td><td>22.22</td><td>0.00</td><td>0.00</td><td>100.00</td><td>244.44</td><td>222.22</td>
+<td class="comment">All petroleum gas, all the time.</td>
+</tr><tr>
+<td>20.00</td><td>46.67</td><td>26.67</td><td>0.00</td><td>0.00</td><td>0.00</td><td>100.00</td><td>200.00</td><td>266.67</td>
+<td class="comment">The same, but with basic oil processing.</td>
+</tr>
+</table>
+
+And would you look at that? The zero entries for the optimal solution are the ones we predicted.
+<p>
+{TODO: Discuss when there is no valid solution.}
