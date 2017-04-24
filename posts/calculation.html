@@ -2,6 +2,9 @@
 <script src="bower_components/function-plot/dist/function-plot.js"></script>
 
 <style>
+a.toc {
+    margin-left: 2em;
+}
 div.recipe ul {
     list-style-type: none;
     margin: 0;
@@ -27,7 +30,13 @@ table.matrix td.comment {
 
 <a href="https://www.factorio.com/">Factorio</a> is a game in which you dig resources out of the ground, craft those resources into items, then craft those items into other items, following a graph of recipes of considerable complexity. Good planning can be tremendously helpful when building out your factory, and a key part of that is knowing how much of any given item you will need to make as a prerequisite for more advanced items down the line. The first step of such planning is calculation.
 
-<h2>Basics</h2>
+<p>
+<a class="toc" href="#basics">1. Basics</a><br>
+<a class="toc" href="#complex-recipes">2. Complex recipes</a><br>
+<a class="toc" href="#handling-multiple-unknowns">3. Handling multiple unknowns</a><br>
+<a class="toc" href="#no-solution-found">4. No solution found</a>
+
+<h2 id="basics">Basics</h2>
 
 As a simple example, let's look at the recipe for one of the first items in the game, the <b>electronic circuit</b>:
 
@@ -94,7 +103,7 @@ The relationship between crafting times and ratios is straightforward, but deser
 <p>
 A tree similar to the above is sufficient for calculating the production ratios between the majority of the recipes in the game. However, the complete recipe graph hides a few complex corner-cases, and the technique shown above will fail once it runs into the weirder parts of the graph.
 
-<h2>Complex recipes</h2>
+<h2 id="complex-recipes">Complex recipes</h2>
 
 The tree shown above is the result of a simple graph traversal, multiplying ratios as ingredients are needed, and dividing them as products are found. Given that the vast majority of items in the game are produced by a single recipe, and that the vast majority of recipes produce a single item, this can get you quite far before you run into any ambiguity as to where an item is supposed to come from.
 <p>
@@ -312,7 +321,7 @@ Taking that value as a solution, our final value for <b>x</b> is this.
 
 Huh, interesting. Heavy oil cracking turned out to be zero. I wonder if that's significant?
 
-<h2>Handling multiple unknowns</h2>
+<h2 id="handling-multiple-unknowns">Handling multiple unknowns</h2>
 
 The complete recipe graph in vanilla Factorio (0.14.22) has 183 items and 187 recipes. This means that a solution involving that entire graph could have as many as 4 unknowns. How do we decide on concrete values in this case?
 <p>
@@ -466,7 +475,7 @@ For the purposes of our example, all this means is that we do not need to consid
 
 And would you look at that? The zero entries for the optimal solution are the ones we predicted.
 
-<h2>No solution found</h2>
+<h2 id="no-solution-found">No solution found</h2>
 
 Sometimes a solution can't be found.
 <p>
