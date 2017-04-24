@@ -465,5 +465,159 @@ For the purposes of our example, all this means is that we do not need to consid
 </table>
 
 And would you look at that? The zero entries for the optimal solution are the ones we predicted.
+
+<h2>No solution found</h2>
+
+Sometimes a solution can't be found.
 <p>
-{TODO: Discuss when there is no valid solution.}
+If we think of the recipe matrix as a vector space, there are some places we just can't reach. In the vanilla game, this is entirely the fault of the oil processing recipes.
+<p>
+To illustrate this, here is a somewhat simplified oil processing recipe graph, with only heavy oil and light oil.
+
+<table class="matrix">
+<tr>
+    <th></th>
+    <th><img src="heavy-oil-cracking.png"></th>
+    <th><img src="basic-oil-processing.png"></th>
+    <th><img src="advanced-oil-processing.png"></th>
+</tr>
+<tr>
+    <th><img src="heavy-oil.png"></th>
+    <td>-4</td><td>3</td><td>1</td>
+</tr>
+<tr>
+    <th><img src="light-oil.png"></th>
+    <td>3</td><td>3</td><td>4.5</td>
+</tr>
+</table>
+
+It is not possible to produce every combination of heavy oil and light oil. We can't make more heavy oil than light oil; there simply isn't a recipe available to do that. The interactive graph below illustrates this.
+
+<div id="vector"></div>
+<img src="heavy-oil-cracking.png"> <span id="crack" style="color: red">0</span><br>
+<img src="basic-oil-processing.png"> <span id="basic" style="color: #4040e8">0</span><br>
+<img src="advanced-oil-processing.png"> <span id="adv" style="color: #05b378">0</span>
+<script>
+var minimum = {
+    fn: 'x',
+    skipTip: true,
+    color: "red",
+}
+var options = {
+    target: "#vector",
+    xAxis: {
+        domain: [0, 10],
+        label: 'light oil',
+    },
+    yAxis: {
+        domain: [0, 10],
+        label: 'heavy oil',
+    },
+    disableZoom: true,
+    data: [minimum],
+}
+var vectors = functionPlot(options)
+function vectormousemove(coords) {
+    var x = coords.x
+    var y = coords.y
+    var recipes = [
+        [ 3,  -4, "red"],
+        [ 3,   3, "#4040e8"],
+        [ 4.5, 1, "#05b378"],
+    ]
+    var solutions = [
+        [            0, -2*x/21 + 3*y/7, 2*x/7 - 2*y/7],
+        [x/21 - 3*y/14,               0,  4*x/21 + y/7],
+        [    x/7 - y/7,    4*x/21 + y/7,             0]
+    ]
+    var first = [-1, 0]
+    var firstColor = "black"
+    var second = [0, 0]
+    var secondColor = "black"
+    for (var i in solutions) {
+        var valid = true
+        for (var j in solutions[i]) {
+            if (solutions[i][j] < 0) {
+                valid = false
+                break
+            }
+        }
+        if (valid) {
+            document.getElementById("crack").textContent = solutions[i][0]
+            document.getElementById("basic").textContent = solutions[i][1]
+            document.getElementById("adv").textContent = solutions[i][2]
+            var j = 0
+            var doFirst = true
+            for (j in solutions[i]) {
+                if (j == i) {
+                    continue
+                }
+                var recipe = recipes[j]
+                var current = [
+                    recipe[0] * solutions[i][j],
+                    recipe[1] * solutions[i][j],
+                ]
+                var color = recipe[2]
+                if (doFirst) {
+                    first = current
+                    firstColor = color
+                    doFirst = false
+                } else {
+                    second = current
+                    secondColor = color
+                }
+            }
+            break
+        }
+    }
+    options.data = [minimum]
+    if (first[0] == -1) {
+        document.getElementById("crack").textContent = "X"
+        document.getElementById("basic").textContent = "X"
+        document.getElementById("adv").textContent = "X"
+        options.data.push({
+            points: [
+                [3, 2],
+                [7, 8],
+            ],
+            fnType: 'points',
+            graphType: 'polyline',
+            color: 'red'
+        })
+        options.data.push({
+            points: [
+                [3, 8],
+                [7, 2],
+            ],
+            fnType: 'points',
+            graphType: 'polyline',
+            color: 'red'
+        })
+    } else {
+        options.data.push({
+            vector: second,
+            graphType: 'polyline',
+            fnType: 'vector',
+            skipTip: true,
+            color: secondColor,
+        })
+        options.data.push({
+            vector: first,
+            offset: second,
+            graphType: 'polyline',
+            fnType: 'vector',
+            skipTip: true,
+            color: firstColor,
+        })
+    }
+    vectors = functionPlot(options)
+}
+vectors.on("mousemove", vectormousemove)
+</script>
+
+<p>
+The situation with the complete recipe graph is analogous, except with a third dimension representing petroleum gas.
+<p>
+The shortcoming of representing the recipe graph as a vector space is that it becomes difficult to find partial solutions. The mathematics involved want solutions which will completely zero out, but in the actual game, you have a certain amount of wiggle room in which you can stockpile excess materials, use circuit networks to intelligently regulate your oil cracking, and so forth.
+<p>
+Exact solutions are useful to know for the purposes of planning your factory, but they can't substitute for actually playing the game.
