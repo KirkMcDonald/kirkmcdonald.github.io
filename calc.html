@@ -22,13 +22,17 @@
     <script src="module.js"></script>
     <script src="fragment.js"></script>
     <script src="calc.js"></script>
+
+    <div style="color: red">Support for 0.15 doesn't totally work yet. Please bear with me as I work out the kinks.</div>
     
     <div class="config-header">
         <input id="config" type="button" value="configure" class="config-button" onclick="toggleVisible('config_box')"><br />
         <div id="config_box" class="config-box" style="display: none;">
             <!--Display rates as:<br />
-            <input type="radio" id="minute_rate" name="rate" value="minute" checked><label for="minute_rate">items/minute</label><br />
-            <input type="radio" id="second_rate" name="rate" value="second"><label for="second_rate">items/second</label><br />-->
+            <form id="rate_display">
+            <input type="radio" id="minute_rate" name="rate" value="1" checked><label for="minute_rate">items/minute</label><br />
+            <input type="radio" id="second_rate" name="rate" value="60"><label for="second_rate">items/second</label><br />
+            </form>-->
             Use recipe set:<br />
             <select id="data_set" onchange="changeMod()"></select>
         </div>

@@ -52,7 +52,8 @@ Item.prototype = {
     requirements: function(multiple) {
         var totals = new Totals()
         var result = []
-        if (this.recipes.length == 0) {
+        // XXX: Refuse the temptation to guess. (At least for now.)
+        if (this.recipes.length != 1) {
             return [result, totals]
         }
         var recipe = this.recipes[0]
