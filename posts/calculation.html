@@ -114,11 +114,11 @@ But, inevitably, you will run into the <b>oil production pipeline</b>.
 <b>Basic oil processing</b><br>
 Craft time: 5 seconds<br>
 Produces:<br>
-    <ul><li>3x <img src="heavy-oil.png"> heavy oil
-    <li>3x <img src="light-oil.png"> light oil
-    <li>4x <img src="petroleum-gas.png"> petroleum gas</ul>
+    <ul><li>30x <img src="heavy-oil.png"> heavy oil
+    <li>30x <img src="light-oil.png"> light oil
+    <li>40x <img src="petroleum-gas.png"> petroleum gas</ul>
 Ingredients:<br>
-    <ul><li>10x <img src="crude-oil.png"> crude oil</ul>
+    <ul><li>100x <img src="crude-oil.png"> crude oil</ul>
 </div>
 <br>
 <div class="recipe">
@@ -126,12 +126,12 @@ Ingredients:<br>
 <b>Advanced oil processing</b><br>
 Craft time: 5 seconds<br>
 Produces:<br>
-    <ul><li>1x <img src="heavy-oil.png"> heavy oil
-    <li>4.5x <img src="light-oil.png"> light oil
-    <li>5.5x <img src="petroleum-gas.png"> petroleum gas</ul>
+    <ul><li>10x <img src="heavy-oil.png"> heavy oil
+    <li>45x <img src="light-oil.png"> light oil
+    <li>55x <img src="petroleum-gas.png"> petroleum gas</ul>
 Ingredients:<br>
-    <ul><li>10x <img src="crude-oil.png"> crude oil
-    <li>5x <img src="water.png"> water</ul>
+    <ul><li>100x <img src="crude-oil.png"> crude oil
+    <li>50x <img src="water.png"> water</ul>
 </div>
 <br>
 <div class="recipe">
@@ -139,10 +139,10 @@ Ingredients:<br>
 <b>Heavy oil cracking</b><br>
 Craft time: 5 seconds<br>
 Produces:<br>
-    <ul><li>3x <img src="light-oil.png"> light oil</ul>
+    <ul><li>30x <img src="light-oil.png"> light oil</ul>
 Ingredients:<br>
-    <ul><li>4x <img src="heavy-oil.png"> heavy oil
-    <li>3x <img src="water.png"> water</ul>
+    <ul><li>40x <img src="heavy-oil.png"> heavy oil
+    <li>30x <img src="water.png"> water</ul>
 </div>
 <br>
 <div class="recipe">
@@ -150,17 +150,15 @@ Ingredients:<br>
 <b>Light oil cracking</b><br>
 Craft time: 5 seconds<br>
 Produces:<br>
-    <ul><li>2x <img src="petroleum-gas.png"> petroleum gas</ul>
+    <ul><li>20x <img src="petroleum-gas.png"> petroleum gas</ul>
 Ingredients:<br>
-    <ul><li>3x <img src="light-oil.png"> light oil
-    <li>3x <img src="water.png"> water</ul>
+    <ul><li>30x <img src="light-oil.png"> light oil
+    <li>30x <img src="water.png"> water</ul>
 </div>
 <p>
 What a pain in the ass. These recipes violate a number of assumptions that it would be easy to make if you looked exclusively at the non-oil parts of the recipe graph.
 <p>
-To start with, note that fluids, unlike other items in the game, are measured in tenths of a unit, rather than whole units. This is mostly just annoying, and the developers have said they will be correcting this (by multiplying all fluid-related values by 10) in a future version.
-<p>
-Next, notice how the fluids produced by these recipes (heavy oil, light oil, and petroleum gas; collectively referred to as the <b>oil products</b>) are each created by multiple recipes. The basic and advanced oil processing recipes are also in that exclusive class of recipes which produce multiple, distinct items.
+Notice how the fluids produced by these recipes (heavy oil, light oil, and petroleum gas; collectively referred to as the <b>oil products</b>) are each created by multiple recipes. The basic and advanced oil processing recipes are also in that exclusive class of recipes which produce multiple, distinct items.
 <p>
 There are some other recipes closely related to the oil pipeline which add to the annoyance. Each of the three oil products may be turned into <b>solid fuel</b>, via three additional recipes. There is also a system in which crude oil may be placed into barrels, and then the full barrels may be emptied again. This is accomplished via a pair of recipes that depend on one another. <b>As a consequence, the recipe graph is not a DAG.</b> Any algorithm that wants to work with the recipe graph in a general sense must be prepared to deal with cycles.
 <p>
@@ -171,7 +169,7 @@ So: Suppose we want to make an item that depends on one of the oil products. A g
 <b>2x Plastic bar</b><br>
 Craft time: 1 second<br>
 Ingredients:<br>
-    <ul><li>3x <img src="petroleum-gas.png"> petroleum gas
+    <ul><li>30x <img src="petroleum-gas.png"> petroleum gas
     <li>1x <img src="coal.png"> coal</ul>
 </div>
 <p>
@@ -193,34 +191,34 @@ It turns out that this is a straightforward problem of linear algebra. The key i
 </tr>
 <tr>
     <th><img src="heavy-oil.png"></th>
-    <td>-4</td><td>0</td><td>3</td><td>1</td><td>0</td><td>0</td>
+    <td>-40</td><td>0</td><td>30</td><td>10</td><td>0</td><td>0</td>
 </tr>
 <tr>
     <th><img src="light-oil.png"></th>
-    <td>3</td><td>-3</td><td>3</td><td>4.5</td><td>0</td><td>0</td>
+    <td>30</td><td>-30</td><td>30</td><td>45</td><td>0</td><td>0</td>
 </tr>
 <tr>
     <th><img src="petroleum-gas.png"></th>
-    <td>0</td><td>2</td><td>4</td><td>5.5</td><td>0</td><td>0</td>
+    <td>0</td><td>20</td><td>40</td><td>55</td><td>0</td><td>0</td>
 </tr>
 <tr>
     <th><img src="water.png"></th>
-    <td>-3</td><td>-3</td><td>0</td><td>-5</td><td>1</td><td>0</td>
+    <td>-30</td><td>-30</td><td>0</td><td>-50</td><td>1</td><td>0</td>
 </tr>
 <tr>
     <th><img src="crude-oil.png"></th>
-    <td>0</td><td>0</td><td>-10</td><td>-10</td><td>0</td><td>1</td>
+    <td>0</td><td>0</td><td>-100</td><td>-100</td><td>0</td><td>1</td>
 </tr>
 </table>
 
 The rows of this matrix represent the individual fluids involved with the oil production pipeline. The columns represent the recipes. Positive values represent the products of recipes, and negative values represent ingredients. The two recipes on the right represent the raw resources that serve as inputs. These aren't real recipes in the game, but it is useful to model resources using pseudo-recipes that produce them at no cost.
 <p>
-Now let's use this matrix to determine the optimum ratios for some series of oil products. Completely arbitrarily, let's say we want to produce 4.5 units of petroleum gas, and 1 unit of heavy oil, per unit time. We can represent this as an item vector:
+Now let's use this matrix to determine the optimum ratios for some series of oil products. Completely arbitrarily, let's say we want to produce 45 units of petroleum gas, and 10 units of heavy oil, per unit time. We can represent this as an item vector:
 
 <table class="matrix">
-<tr><th><img src="heavy-oil.png"></th>    <td>1</td></tr>
+<tr><th><img src="heavy-oil.png"></th>    <td>10</td></tr>
 <tr><th><img src="light-oil.png"></th>    <td>0</td></tr>
-<tr><th><img src="petroleum-gas.png"></th><td>4.5</td></tr>
+<tr><th><img src="petroleum-gas.png"></th><td>45</td></tr>
 <tr><th><img src="water.png"></th>        <td>0</td></tr>
 <tr><th><img src="crude-oil.png"></th>    <td>0</td></tr>
 </table>
@@ -238,15 +236,15 @@ If we tack this onto the recipe matrix in order to form an <a href="https://en.w
     <th>result</th>
 </tr>
 <tr>
-<td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>-13/40</td><td>-23/12</td>
+<td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>-13/400</td><td>-23/12</td>
 </tr><tr>
-<td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>-7/40</td><td>-1/4</td>
+<td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>-7/400</td><td>-1/4</td>
 </tr><tr>
-<td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>-3/5</td><td>-10/3</td>
+<td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>-3/50</td><td>-10/3</td>
 </tr><tr>
-<td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1/2</td><td>10/3</td>
+<td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1/20</td><td>10/3</td>
 </tr><tr>
-<td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>61/6</td>
+<td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>305/3</td>
 </tr>
 </table>
 
@@ -260,33 +258,33 @@ functionPlot({
     target: "#solution",
     xAxis: {
         label: 'crude oil',
-        domain: [0, 12]
+        domain: [0, 120]
     },
     yAxis: {
         label: 'recipe ratios',
         domain: [0, 3]
     },
     annotations: [{
-        x: 230/39,
+        x: 2300/39,
         text: 'minimum'
     }, {
-        x: 20/3,
+        x: 200/3,
         text: 'maximum'
     }],
     data: [{
-        fn: '13x/40 - 23/12',
+        fn: '13x/400 - 23/12',
         color: 'red'
     }, {
-        fn: '7x/40 - 1/4',
+        fn: '7x/400 - 1/4',
         color: 'orange'
     }, {
-        fn: '3x/5 - 10/3',
+        fn: '3x/50 - 10/3',
         color: '#4040e8'
     }, {
-        fn: '-x/2 + 10/3',
+        fn: '-x/20 + 10/3',
         color: '#05b378'
     }, {
-        fn: '-x + 61/6',
+        fn: '-x + 305/3',
         color: 'steelblue'
     }]
 })
@@ -316,14 +314,14 @@ Taking that value as a solution, our final value for <b>x</b> is this.
     <th><img src="water.png"></th>
     <th><img src="crude-oil.png"></th>
 </tr>
-<tr><td>0.00</td><td>0.78</td><td>0.21</td><td>0.38</td><td>4.27</td><td>5.90</td></td>
+<tr><td>0.00</td><td>0.78</td><td>0.21</td><td>0.38</td><td>42.69</td><td>58.97</td></td>
 </table>
 
 Huh, interesting. Heavy oil cracking turned out to be zero. I wonder if that's significant?
 
 <h2 id="handling-multiple-unknowns">Handling multiple unknowns</h2>
 
-The complete recipe graph in vanilla Factorio (0.14.22) has 183 items and 187 recipes. This means that a solution involving that entire graph could have as many as 4 unknowns. How do we decide on concrete values in this case?
+The complete recipe graph in vanilla Factorio (0.15.2) has 204 items and 215 recipes. This means that a solution involving that entire graph could have as many as 11 unknowns. How do we decide on concrete values in this case?
 <p>
 Let's start with a more constrained example. Let's take the oil production matrix above, and add the recipes for solid fuel.
 
@@ -342,15 +340,15 @@ Let's start with a more constrained example. Let's take the oil production matri
 </tr>
 <tr>
     <th><img src="heavy-oil.png"></th>
-    <td>-4</td><td>0</td><td>3</td><td>1</td><td>-2</td><td>0</td><td>0</td><td>0</td><td>0</td>
+    <td>-40</td><td>0</td><td>30</td><td>10</td><td>-20</td><td>0</td><td>0</td><td>0</td><td>0</td>
 </tr>
 <tr>
     <th><img src="light-oil.png"></th>
-    <td>3</td><td>-3</td><td>3</td><td>4.5</td><td>0</td><td>-1</td><td>0</td><td>0</td><td>0</td>
+    <td>30</td><td>-30</td><td>30</td><td>45</td><td>0</td><td>-10</td><td>0</td><td>0</td><td>0</td>
 </tr>
 <tr>
     <th><img src="petroleum-gas.png"></th>
-    <td>0</td><td>2</td><td>4</td><td>5.5</td><td>0</td><td>0</td><td>-2</td><td>0</td><td>0</td>
+    <td>0</td><td>20</td><td>40</td><td>55</td><td>0</td><td>0</td><td>-20</td><td>0</td><td>0</td>
 </tr>
 <tr>
     <th><img src="solid-fuel.png"></th>
@@ -358,11 +356,11 @@ Let's start with a more constrained example. Let's take the oil production matri
 </tr>
 <tr>
     <th><img src="water.png"></th>
-    <td>-3</td><td>-3</td><td>0</td><td>-5</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td>
+    <td>-30</td><td>-30</td><td>0</td><td>-50</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td>
 </tr>
 <tr>
     <th><img src="crude-oil.png"></th>
-    <td>0</td><td>0</td><td>-10</td><td>-10</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td>
+    <td>0</td><td>0</td><td>-100</td><td>-100</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td>
 </tr>
 </table>
 
@@ -382,17 +380,17 @@ Suppose we arbitrarily want to make solid fuel at a rate of 100 items per unit t
     <th>result</th>
 </tr>
 <tr>
-<td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>5/2</td><td>-1/2</td><td>-33/40</td><td>-50</td>
+<td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>5/2</td><td>-1/20</td><td>-33/400</td><td>-50</td>
 </tr><tr>
-<td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>5/22</td><td>-3/22</td><td>-137/440</td><td>-450/11</td>
+<td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>5/22</td><td>-3/220</td><td>-137/4400</td><td>-450/11</td>
 </tr><tr>
-<td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>18/11</td><td>-2/11</td><td>-43/55</td><td>-600/11</td>
+<td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>18/11</td><td>-1/55</td><td>-43/550</td><td>-600/11</td>
 </tr><tr>
-<td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>-18/11</td><td>2/11</td><td>15/22</td><td>600/11</td>
+<td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>-18/11</td><td>1/55</td><td>3/44</td><td>600/11</td>
 </tr><tr>
-<td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>-37/11</td><td>9/11</td><td>9/11</td><td>500/11</td>
+<td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>-37/11</td><td>9/110</td><td>9/110</td><td>500/11</td>
 </tr><tr>
-<td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>48/11</td><td>-9/11</td><td>-9/11</td><td>600/11</td>
+<td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>48/11</td><td>-9/110</td><td>-9/110</td><td>600/11</td>
 </tr>
 </table>
 
@@ -416,7 +414,7 @@ We saw this in the last section, when the ratio for heavy oil cracking turned ou
 <p>
 There is always a bottleneck.
 <p>
-Applying that same intuition to the result above, we can guess which three recipes will end up being zero. First, notice that light oil produces solid fuel at a vastly more advantageous ratio (1:1) than either of the other two products (2:1). Then notice that the ratio for converting from heavy oil to light oil (4:3) is more advantageous than converting from heavy oil directly to solid fuel.
+Applying that same intuition to the result above, we can guess which three recipes will end up being zero. First, notice that light oil produces solid fuel at a vastly more advantageous ratio (10:1) than either of the other two products (20:1). Then notice that the ratio for converting from heavy oil to light oil (40:30) is more advantageous than converting from heavy oil directly to solid fuel.
 <p>
 So: The first zero recipe is the <b>solid fuel from heavy oil</b> recipe. It's more efficient to convert all of our heavy oil to light oil.
 <p>
@@ -430,7 +428,7 @@ In the previous section, we essentially determined the optimum value for <b>x</b
 <p>
 This can be generalized for multiple unknowns by choosing every combination of N elements from <b>x</b>, finding solutions for the rest of <b>x</b> when those elements are zero, and then seeing if that solution is valid (i.e. if it contains no negative elements). This will, more than likely, yield multiple valid solutions, and so the final step is to choose the most optimal solution.
 <p>
-This process can be optimized slightly by only considering those recipes that have at least one product that is produced by multiple recipes. The only recipes that can be considered to be zero in this process are those which have alternatives. The game's complete recipe graph has 187 recipes with four unknowns. Computing this naively would yield over 46 million possibilties. However, the game only has nine recipes which actually need to be considered, which brings the number of possibilities down to 126. Further reductions in the number of possibilities are possible as well, but this is outside the scope of this post.
+This process can be optimized slightly by only considering those recipes that have at least one product that is produced by multiple recipes. The only recipes that can be considered to be zero in this process are those which have alternatives. The game's complete recipe graph has 215 recipes with 11 unknowns. Computing this naively would yield over 8&times;10<sup>17</sup> possibilties. However, the game only has 22 recipes which actually need to be considered, which brings the number of possibilities down to 705,432. Further reductions in the number of possibilities are possible as well, since some combinations of zeros are mutually exclusive, but this is outside the scope of this post. (The bulk of these excess recipes come from the fluid barreling system, which can largely be ignored as redundant in most production chains.)
 <p>
 For the purposes of our example, all this means is that we do not need to consider the possibility that water or crude oil will be zero (although they may be zero as a natural consequence of other columns being zero). If we take our 7 remaining recipes and set three of them to zero at a time, we get 35 possible solutions, of which the following are valid:
 
@@ -447,28 +445,28 @@ For the purposes of our example, all this means is that we do not need to consid
     <th><img src="crude-oil.png"></th>
 </tr>
 <tr>
-<td>0.00</td><td>0.00</td><td>0.00</td><td>12.90</td><td>6.45</td><td>58.06</td><td>35.48</td><td>64.52</td><td>129.03</td>
+<td>0.00</td><td>0.00</td><td>0.00</td><td>12.90</td><td>6.45</td><td>58.06</td><td>35.48</td><td>645.16</td><td>1290.32</td>
 <td class="comment">The "don't crack anything" solution.</td>
 </tr><tr>
-<td>0.00</td><td>0.00</td><td>15.38</td><td>0.00</td><td>23.08</td><td>46.15</td><td>30.77</td><td>0.00</td><td>153.85</td>
+<td>0.00</td><td>0.00</td><td>15.38</td><td>0.00</td><td>23.08</td><td>46.15</td><td>30.77</td><td>0.00</td><td>1538.46</td>
 <td class="comment">The same, but with basic oil processing.</td>
 </tr><tr>
-<td>0.00</td><td>31.58</td><td>0.00</td><td>21.05</td><td>10.53</td><td>0.00</td><td>89.47</td><td>200.00</td><td>210.53</td>
+<td>0.00</td><td>31.58</td><td>0.00</td><td>21.05</td><td>10.53</td><td>0.00</td><td>89.47</td><td>2000.00</td><td>2105.26</td>
 <td class="comment">Crack all the light oil to petroleum gas.</td>
 </tr><tr>
-<td>0.00</td><td>22.22</td><td>22.22</td><td>0.00</td><td>33.33</td><td>0.00</td><td>66.67</td><td>66.67</td><td>222.22</td>
+<td>0.00</td><td>22.22</td><td>22.22</td><td>0.00</td><td>33.33</td><td>0.00</td><td>66.67</td><td>666.67</td><td>2222.22</td>
 <td class="comment">The same, but with basic oil processing.</td>
 </tr><tr>
-<td>3.12</td><td>0.00</td><td>0.00</td><td>12.50</td><td>0.00</td><td>65.62</td><td>34.38</td><td>71.88</td><td>125.00</td>
+<td>3.12</td><td>0.00</td><td>0.00</td><td>12.50</td><td>0.00</td><td>65.62</td><td>34.38</td><td>718.75</td><td>1250.00</td>
 <td class="comment"><b>The winner!</b></td>
 </tr><tr>
-<td>10.34</td><td>0.00</td><td>13.79</td><td>0.00</td><td>0.00</td><td>72.41</td><td>27.59</td><td>31.03</td><td>137.93</td>
+<td>10.34</td><td>0.00</td><td>13.79</td><td>0.00</td><td>0.00</td><td>72.41</td><td>27.59</td><td>310.34</td><td>1379.31</td>
 <td class="comment">Crack all the heavy oil, but use basic oil processing.</td>
 </tr><tr>
-<td>5.56</td><td>38.89</td><td>0.00</td><td>22.22</td><td>0.00</td><td>0.00</td><td>100.00</td><td>244.44</td><td>222.22</td>
+<td>5.56</td><td>38.89</td><td>0.00</td><td>22.22</td><td>0.00</td><td>0.00</td><td>100.00</td><td>2444.44</td><td>2222.22</td>
 <td class="comment">All petroleum gas, all the time.</td>
 </tr><tr>
-<td>20.00</td><td>46.67</td><td>26.67</td><td>0.00</td><td>0.00</td><td>0.00</td><td>100.00</td><td>200.00</td><td>266.67</td>
+<td>20.00</td><td>46.67</td><td>26.67</td><td>0.00</td><td>0.00</td><td>0.00</td><td>100.00</td><td>2000.00</td><td>2666.67</td>
 <td class="comment">The same, but with basic oil processing.</td>
 </tr>
 </table>
@@ -492,11 +490,11 @@ To illustrate this, here is a somewhat simplified oil processing recipe graph, w
 </tr>
 <tr>
     <th><img src="heavy-oil.png"></th>
-    <td>-4</td><td>3</td><td>1</td>
+    <td>-40</td><td>30</td><td>10</td>
 </tr>
 <tr>
     <th><img src="light-oil.png"></th>
-    <td>3</td><td>3</td><td>4.5</td>
+    <td>30</td><td>30</td><td>45</td>
 </tr>
 </table>
 
@@ -515,11 +513,11 @@ var minimum = {
 var options = {
     target: "#vector",
     xAxis: {
-        domain: [0, 10],
+        domain: [0, 100],
         label: 'light oil',
     },
     yAxis: {
-        domain: [0, 10],
+        domain: [0, 100],
         label: 'heavy oil',
     },
     disableZoom: true,
@@ -530,14 +528,14 @@ function vectormousemove(coords) {
     var x = coords.x
     var y = coords.y
     var recipes = [
-        [ 3,  -4, "red"],
-        [ 3,   3, "#4040e8"],
-        [ 4.5, 1, "#05b378"],
+        [ 30, -40, "red"],
+        [ 30,  30, "#4040e8"],
+        [ 45,  10, "#05b378"],
     ]
     var solutions = [
-        [            0, -2*x/21 + 3*y/7, 2*x/7 - 2*y/7],
-        [x/21 - 3*y/14,               0,  4*x/21 + y/7],
-        [    x/7 - y/7,    4*x/21 + y/7,             0]
+        [              0, -x/105 + 3*y/70,    x/35 - y/35],
+        [x/210 - 3*y/140,               0, 2*x/105 + y/70],
+        [    x/70 - y/70,  2*x/105 + y/70,              0]
     ]
     var first = [-1, 0]
     var firstColor = "black"
@@ -586,8 +584,8 @@ function vectormousemove(coords) {
         document.getElementById("adv").textContent = "X"
         options.data.push({
             points: [
-                [3, 2],
-                [7, 8],
+                [30, 20],
+                [70, 80],
             ],
             fnType: 'points',
             graphType: 'polyline',
@@ -595,8 +593,8 @@ function vectormousemove(coords) {
         })
         options.data.push({
             points: [
-                [3, 8],
-                [7, 2],
+                [30, 80],
+                [70, 20],
             ],
             fnType: 'points',
             graphType: 'polyline',
