@@ -338,12 +338,14 @@ function Modification(name, filename) {
 }
 
 var MODIFICATIONS = {
+    "0-15-9": new Modification("Vanilla 0.15.9", "vanilla-0.15.9.json"),
+    "0-15-9x": new Modification("Vanilla 0.15.9 - Expensive", "vanilla-0.15.9-expensive.json"),
     "0-15-1": new Modification("Vanilla 0.15.1", "vanilla-0.15.1.json"),
     "vanilla": new Modification("Vanilla 0.14.22", "vanilla.json"),
     "revolution": new Modification("Research Revolution", "revolution.json"),
 }
 
-var DEFAULT_MODIFICATION = "0-15-1"
+var DEFAULT_MODIFICATION = "0-15-9"
 
 // Global mapping of item name to Item, Resource, or MineableResource object.
 var items
