@@ -39,7 +39,12 @@
     </div>
     <p><span>All rates given in items per minute.</span>
     <ul id="targets"><li><a onclick="plusHandler()">+</a></li></ul>
-    <input id="use_3" type="checkbox" onchange="threeUpdate()"><label for="use_3">Use Assembling Machine 3s only</label>
+    <label for="minimum_assembler">Minimum assembling machine level:</label>
+    <select id="minimum_assembler" onchange="changeMin()">
+        <option selected>1</option>
+        <option>2</option>
+        <option>3</option>
+    </select>
 
     <ul id="steps"></ul>
     <p id="total_label">totals:</p>

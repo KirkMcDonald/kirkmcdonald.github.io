@@ -284,13 +284,13 @@ function itemChanged() {
     itemUpdate()
 }
 
-function getThreeValue() {
-    var checkbox = document.getElementById("use_3")
-    return checkbox.checked
+function getMinimumValue() {
+    var min = document.getElementById("minimum_assembler")
+    return min.value
 }
 
-function threeUpdate() {
-    var graph = getRecipeGraph(data, getThreeValue())
+function changeMin() {
+    var graph = getRecipeGraph(data, getMinimumValue())
     items = graph[0]
     itemUpdate()
 }
@@ -406,13 +406,17 @@ function loadData(modName, settings) {
         modName = settings.data
     }
     loadDataRunner(modName, function(data) {
-        var useThree = false
+        var min = "1"
+        // Backward compatibility.
         if ("use_3" in settings && settings.use_3 == "true") {
-            useThree = true
-            var checkbox = document.getElementById("use_3")
-            checkbox.checked = true
+            min = "3"
         }
-        var graph = getRecipeGraph(data, useThree)
+        if ("min" in settings && (settings.min == "1" || settings.min == "2" || settings.min == "3")) {
+            min = settings.min
+        }
+        var minDropdown = document.getElementById("minimum_assembler")
+        minDropdown.value = min
+        var graph = getRecipeGraph(data, min)
         loadModules(data)
 
         items = graph[0]

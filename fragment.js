@@ -1,7 +1,11 @@
 function formatSettings() {
-    var settings = "data=" + currentMod()
+    var settings = ""
+    var mod = currentMod()
+    if (mod != DEFAULT_MODIFICATION) {
+        settings += "data=" + mod + "&"
+    }
 
-    settings += "&items="
+    settings += "items="
     var targetStrings = []
     for (var i=0; i < build_targets.length; i++) {
         var target = build_targets[i]
@@ -14,29 +18,32 @@ function formatSettings() {
         targetStrings.push(targetString)
     }
     settings += targetStrings.join(",")
-    settings += "&use_3="
-    if (getThreeValue()) {
-        settings += "true"
-    } else {
-        settings += "false"
+    var min = getMinimumValue()
+    if (min != "1") {
+        settings += "&min=" + getMinimumValue()
     }
-    settings += "&modules="
     var itemSpecs = []
     for (var itemName in moduleSpec) {
         var moduleSet = moduleSpec[itemName]
         var modules = []
+        var any = false
         for (var i=0; i < moduleSet.modules.length; i++) {
             var module = moduleSet.modules[i]
             if (module) {
                 modules.push(module.name)
+                any = true
             } else {
                 modules.push("null")
             }
         }
-        var itemSpec = sprintf("%s:%s", itemName, modules.join(":"))
-        itemSpecs.push(itemSpec)
+        if (any) {
+            var itemSpec = sprintf("%s:%s", itemName, modules.join(":"))
+            itemSpecs.push(itemSpec)
+        }
     }
-    settings += itemSpecs.join(",")
+    if (itemSpecs.length > 0) {
+        settings += "&modules=" + itemSpecs.join(",")
+    }
     return settings
 }
 

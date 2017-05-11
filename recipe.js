@@ -42,7 +42,7 @@ Recipe.prototype = {
     }
 }
 
-function makeRecipe(d, items, useFastest) {
+function makeRecipe(d, items, minimumFactory) {
     var time = d.energy
     var outputs
     outputs = []
@@ -56,9 +56,9 @@ function makeRecipe(d, items, useFastest) {
     }
     var factory = CATEGORY_SPEEDS[d["category"]]
     if (!factory) {
-        if (useFastest) {
+        if (inputs.length > 4 || minimumFactory == "3") {
             factory = ASSEMBLY_3
-        } else if (inputs.length <= 2) {
+        } else if (inputs.length <= 2 && minimumFactory == "1") {
             factory = ASSEMBLY_1
         } else {
             factory = ASSEMBLY_2
@@ -85,13 +85,13 @@ function getUnlockableRecipes(data) {
     return recipes
 }
 
-function getRecipeGraph(data, useFastest) {
+function getRecipeGraph(data, minimumFactory) {
     var recipes = {}
     var items = getItems(data)
 
     for (var name in data.recipes) {
         var recipe = data.recipes[name]
-        var r = makeRecipe(recipe, items, useFastest)
+        var r = makeRecipe(recipe, items, minimumFactory)
         recipes[recipe.name] = r
     }
     return [items, recipes]
