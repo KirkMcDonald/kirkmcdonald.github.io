@@ -55,10 +55,11 @@ function itemUpdate() {
     var newTotals = document.createElement("table")
     newTotals.id = "totals"
     var header = document.createElement("tr")
-    header.innerHTML = '<th>rate</th><th>item</th><th>factory count</th><th>real factory count</th><th colspan="4">modules</th>'
+    header.innerHTML = '<th>rate</th><th>item</th><th>factory count</th><th>real factory count</th><th colspan="4">modules</th><th>beacons</th>'
     newTotals.appendChild(header)
     document.body.replaceChild(newTotals, oldTotals)
     
+    var max_modules = 4
     var sorted_totals = sorted(totals.totals)
     for (var i in sorted_totals) {
         var itemName = sorted_totals[i]
@@ -75,6 +76,8 @@ function itemUpdate() {
         nameCell.textContent = itemName
         row.appendChild(nameCell)
 
+        var currentModules = moduleSpec[itemName]
+
         factoryInfo = items[itemName].factories(rate)
         var factoryCount = factoryInfo[0]
         if (factoryCount) {
@@ -90,7 +93,9 @@ function itemUpdate() {
             realCell.innerHTML = sprintf("<tt>%.3f</tt>", factoryInfo[1])
             row.appendChild(realCell)
 
-            var currentModules = moduleSpec[itemName]
+            if (factory.modules > max_modules) {
+                max_modules = factory.modules
+            }
 
             for (var j=0; j<factory.modules; j++) {
                 var currentSpec = null
@@ -128,7 +133,66 @@ function itemUpdate() {
                 }
             }
         }
+
+        var beacon = [null, 0]
+        if (currentModules) {
+            beacon = currentModules.getBeacon()
+        }
+        var currentBeacon = beacon[0]
+        var currentCount = beacon[1]
+
+        var beaconCell = document.createElement("td")
+
+        var beaconModSelect = document.createElement("select")
+        beaconModSelect.addEventListener("change", new BeaconHandler(itemName))
+
+        beaconCell.appendChild(beaconModSelect)
+
+        var noBeacon = document.createElement("option")
+        noBeacon.textContent = "no module"
+        if (!currentBeacon) {
+            noBeacon.selected = true
+        }
+        beaconModSelect.appendChild(noBeacon)
+
+        for (var name in modules) {
+            var module = modules[name]
+            // No productivity modules in beacons.
+            if (module.productivity != 0) {
+                continue
+            }
+            var option = document.createElement("option")
+            option.textContent = name
+            if (currentBeacon && currentBeacon.name == name) {
+                option.selected = true
+            }
+            beaconModSelect.appendChild(option)
+        }
+
+        var mult = document.createElement("span")
+        mult.textContent = " \u00D7 "
+        beaconCell.appendChild(mult)
+
+        var beaconCountBox = document.createElement("input")
+        beaconCountBox.addEventListener("change", new BeaconCountHandler(itemName))
+        beaconCountBox.type = "number"
+        beaconCountBox.value = currentCount
+        beaconCountBox.className = "beacon"
+        beaconCell.appendChild(beaconCountBox)
+
+        row.appendChild(beaconCell)
+
         newTotals.appendChild(row)
+    }
+
+    var expected_length = 5 + max_modules
+    for (var i=1; i < newTotals.children.length; i++) {
+        var row = newTotals.children[i]
+        var beacon = row.lastChild
+        while (row.children.length < expected_length) {
+            var empty = document.createElement("td")
+            row.insertBefore(empty, beacon)
+        }
     }
 }
 
@@ -307,6 +371,30 @@ function moduleUpdate(event, itemName, x) {
     itemUpdate()
 }
 
+function BeaconHandler(itemName) {
+    this.handleEvent = function(event) {
+        beaconUpdate(event, itemName)
+    }
+}
+
+function beaconUpdate(event, itemName) {
+    var moduleName = event.target.value
+    setBeacon(itemName, moduleName)
+    itemUpdate()
+}
+
+function BeaconCountHandler(itemName) {
+    this.handleEvent = function(event) {
+        beaconCountUpdate(event, itemName)
+    }
+}
+
+function beaconCountUpdate(event, itemName) {
+    var moduleCount = Number(event.target.value)
+    setBeaconCount(itemName, moduleCount)
+    itemUpdate()
+}
+
 function toggleVisible(id) {
     var elem = document.getElementById(id)
     if (elem.style.display == "none") {
@@ -443,7 +531,11 @@ function loadData(modName, settings) {
         if ("modules" in settings && settings.modules != "") {
             var moduleSettings = settings.modules.split(",")
             for (var i=0; i < moduleSettings.length; i++) {
-                var singleModuleSettings = moduleSettings[i].split(":")
+                var bothSettings = moduleSettings[i].split(";")
+                var factoryModuleSettings = bothSettings[0]
+                var beaconSettings = bothSettings[1]
+
+                var singleModuleSettings = factoryModuleSettings.split(":")
                 var itemName = singleModuleSettings[0]
                 var modules = singleModuleSettings.slice(1)
                 for (var j=0; j < modules.length; j++) {
@@ -451,6 +543,13 @@ function loadData(modName, settings) {
                     if (moduleName && moduleName != "null") {
                         setModule(itemName, j, modules[j])
                     }
+                }
+                if (beaconSettings) {
+                    beaconSettings = beaconSettings.split(":")
+                    var moduleName = beaconSettings[0]
+                    var count = Number(beaconSettings[1])
+                    setBeacon(itemName, moduleName)
+                    setBeaconCount(itemName, count)
                 }
             }
         }

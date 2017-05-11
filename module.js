@@ -24,16 +24,33 @@ function loadModules(data) {
 // {item: [modules]}
 var moduleSpec = {}
 
-function setModule(itemName, x, moduleName) {
+function ensureModuleSpec(itemName) {
     if (!(itemName in moduleSpec)) {
         moduleSpec[itemName] = new ModuleSet()
     }
+}
+
+function setModule(itemName, x, moduleName) {
+    ensureModuleSpec(itemName)
     var moduleObj = modules[moduleName]
     moduleSpec[itemName].setModule(x, moduleObj)
 }
 
+function setBeacon(itemName, moduleName) {
+    ensureModuleSpec(itemName)
+    var moduleObj = modules[moduleName]
+    moduleSpec[itemName].setBeacon(moduleObj)
+}
+
+function setBeaconCount(itemName, count) {
+    ensureModuleSpec(itemName)
+    moduleSpec[itemName].setBeaconCount(count)
+}
+
 function ModuleSet() {
     this.modules = []
+    this.beacon_module = null
+    this.beacon_module_count = 0
 }
 ModuleSet.prototype = {
     constructor: ModuleSet,
@@ -42,6 +59,15 @@ ModuleSet.prototype = {
     },
     getModule: function(x) {
         return this.modules[x]
+    },
+    setBeacon: function(module) {
+        this.beacon_module = module
+    },
+    setBeaconCount: function(count) {
+        this.beacon_module_count = count
+    },
+    getBeacon: function() {
+        return [this.beacon_module, this.beacon_module_count]
     },
     total: function(factory) {
         var sum = {'speed': 1, 'productivity': 1}
@@ -53,6 +79,10 @@ ModuleSet.prototype = {
             }
             sum.speed += module.speed
             sum.productivity += module.productivity
+        }
+        if (this.beacon_module) {
+            var module = this.beacon_module
+            sum.speed += module.speed * this.beacon_module_count * 0.5
         }
         return sum
     }

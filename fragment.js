@@ -26,6 +26,7 @@ function formatSettings() {
     for (var itemName in moduleSpec) {
         var moduleSet = moduleSpec[itemName]
         var modules = []
+        var beacon = ""
         var any = false
         for (var i=0; i < moduleSet.modules.length; i++) {
             var module = moduleSet.modules[i]
@@ -36,8 +37,15 @@ function formatSettings() {
                 modules.push("null")
             }
         }
+        if (moduleSet.beacon_module && moduleSet.beacon_module_count > 0) {
+            any = true
+            beacon = sprintf("%s:%d", moduleSet.beacon_module.name, moduleSet.beacon_module_count)
+        }
         if (any) {
             var itemSpec = sprintf("%s:%s", itemName, modules.join(":"))
+            if (beacon != "") {
+                itemSpec += ";" + beacon
+            }
             itemSpecs.push(itemSpec)
         }
     }
@@ -56,8 +64,6 @@ function loadSettings(fragment) {
         if (j == -1) {
             continue
         }
-        //var pair = pairs[i].split("=", 1)
-        //settings[pair[0]] = pair[1]
         var name = pairs[i].substr(0, j)
         var value = pairs[i].substr(j + 1)
         settings[name] = value
