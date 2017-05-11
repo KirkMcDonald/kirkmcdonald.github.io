@@ -44,12 +44,16 @@ function itemUpdate() {
 
     window.location.hash = "#" + formatSettings()
 
+    var stepTab = document.getElementById("steps_tab")
+
     var oldSteps = document.getElementById("steps")
     var newSteps = document.createElement("ul")
     newSteps.id = "steps"
-    document.body.replaceChild(newSteps, oldSteps)
+    stepTab.replaceChild(newSteps, oldSteps)
 
     displaySteps(requirements, newSteps)
+
+    var totalTab = document.getElementById("totals_tab")
 
     var oldTotals = document.getElementById("totals")
     var newTotals = document.createElement("table")
@@ -57,7 +61,7 @@ function itemUpdate() {
     var header = document.createElement("tr")
     header.innerHTML = '<th>rate</th><th>item</th><th>factory count</th><th>real factory count</th><th colspan="4">modules</th><th>beacons</th>'
     newTotals.appendChild(header)
-    document.body.replaceChild(newTotals, oldTotals)
+    totalTab.replaceChild(newTotals, oldTotals)
     
     var max_modules = 4
     var sorted_totals = sorted(totals.totals)
@@ -416,6 +420,21 @@ function changeMod() {
     loadData(modName)
 }
 
+function clickTab(event, tabName) {
+    var tabs = document.getElementsByClassName("tab")
+    for (var i=0; i < tabs.length; i++) {
+        tabs[i].style.display = "none"
+    }
+
+    var buttons = document.getElementsByClassName("tab_button")
+    for (var i=0; i < buttons.length; i++) {
+        buttons[i].classList.remove("active")
+    }
+
+    document.getElementById(tabName).style.display = "block"
+    event.currentTarget.classList.add("active")
+}
+
 ////
 // Initialization
 ////
@@ -571,4 +590,5 @@ function init() {
         modSelector.appendChild(option)
     }
     loadData(DEFAULT_MODIFICATION, settings)
+    document.getElementById("default_tab").click()
 }

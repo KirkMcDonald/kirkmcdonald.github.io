@@ -33,21 +33,30 @@
             <input type="radio" id="minute_rate" name="rate" value="1" checked><label for="minute_rate">items/minute</label><br />
             <input type="radio" id="second_rate" name="rate" value="60"><label for="second_rate">items/second</label><br />
             </form>-->
-            Use recipe set:<br />
-            <select id="data_set" onchange="changeMod()"></select>
+            Use recipe set:
+            <select id="data_set" onchange="changeMod()"></select><br /><br />
+            <label for="minimum_assembler">Minimum assembling machine level:</label>
+            <select id="minimum_assembler" onchange="changeMin()">
+                <option selected>1</option>
+                <option>2</option>
+                <option>3</option>
+            </select>
         </div>
     </div>
     <p><span>All rates given in items per minute.</span>
     <ul id="targets"><li><a onclick="plusHandler()">+</a></li></ul>
-    <label for="minimum_assembler">Minimum assembling machine level:</label>
-    <select id="minimum_assembler" onchange="changeMin()">
-        <option selected>1</option>
-        <option>2</option>
-        <option>3</option>
-    </select>
 
-    <ul id="steps"></ul>
-    <p id="total_label">totals:</p>
-    <table id="totals"></table>
+    <div class="tabs">
+        <button class="tab_button" onclick="clickTab(event, 'totals_tab')" id="default_tab">Totals</button>
+        <button class="tab_button" onclick="clickTab(event, 'steps_tab')">Tree</button>
+    </div>
+
+    <div id="steps_tab" class="tab">
+        <ul id="steps"></ul>
+    </div>
+
+    <div id="totals_tab" class="tab">
+        <table id="totals"></table>
+    </div>
 </body>
 </html>

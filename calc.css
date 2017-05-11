@@ -11,3 +11,33 @@ div.config-box {
 input.beacon {
     width: 3em;
 }
+
+div.tabs {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+div.tabs button.tab_button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0.5em;
+}
+
+div.tabs button.tab_button:hover {
+    background-color: #ddd;
+}
+
+div.tabs button.active {
+    background-color: #ccc;
+}
+
+div.tab {
+    display: none;
+    padding: 1em;
+    border: 1px solid #ccc;
+    border-top: none;
+}
