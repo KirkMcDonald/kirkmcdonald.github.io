@@ -177,7 +177,7 @@ function changeMprod(event) {
 }
 
 function setMprod(bonus) {
-    var mprod = one.add(RationalFromFloats(Number(bonus), 100))
+    var mprod = RationalFromFloats(Number(bonus), 100)
     spec.miningProd = mprod
 }
 

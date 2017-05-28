@@ -94,6 +94,8 @@ function loadData(modName, settings) {
         spec.setMinimum(min)
         if ("mprod" in settings) {
             setMprod(settings.mprod)
+            var mprod = document.getElementById("mprod")
+            mprod.value = settings.mprod
         }
 
         var items = graph[0]

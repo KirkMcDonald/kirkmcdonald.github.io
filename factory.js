@@ -96,7 +96,7 @@ Miner.prototype.recipeRate = function(recipe) {
 }
 Miner.prototype.prodEffect = function(spec) {
     var prod = Factory.prototype.prodEffect.call(this, spec)
-    return prod.mul(spec.miningProd)
+    return prod.add(spec.miningProd)
 }
 
 var assembly_machine_categories = {
@@ -133,7 +133,7 @@ function FactorySpec(factories) {
     this.setMinimum("1")
     var smelters = this.factories["smelting"]
     this.furnace = smelters[smelters.length - 1]
-    this.miningProd = one
+    this.miningProd = zero
 }
 FactorySpec.prototype = {
     constructor: FactorySpec,

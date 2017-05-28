@@ -9,9 +9,9 @@ function formatSettings() {
     if (rateName != DEFAULT_RATE) {
         settings += "rate=" + rateName + "&"
     }
-    if (!spec.miningProd.equal(one)) {
+    if (!spec.miningProd.isZero()) {
         var hundred = RationalFromFloat(100)
-        var mprod = spec.miningProd.mul(hundred).sub(hundred).toString()
+        var mprod = spec.miningProd.mul(hundred).toString()
         settings += "mprod=" + mprod + "&"
     }
 
