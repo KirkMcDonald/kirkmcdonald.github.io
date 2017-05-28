@@ -118,7 +118,7 @@ function getRecipeGraph(data) {
                 "mining-" + category,
                 RationalFromFloat(props.hardness),
                 RationalFromFloat(props.mining_time),
-                ingredients,
+                ingredients
             )
         }
     }

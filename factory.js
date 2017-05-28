@@ -193,7 +193,7 @@ function getFactories(data) {
                 d.crafting_categories,
                 d.ingredient_count,
                 RationalFromFloat(d.crafting_speed),
-                d.module_inventory_size,
+                d.module_inventory_size
             ))
         } else if ("mining_power" in d) {
             if (d.name == "pumpjack") {
@@ -204,7 +204,7 @@ function getFactories(data) {
                 {"mining-basic-solid": true},
                 RationalFromFloat(d.mining_power),
                 RationalFromFloat(d.mining_speed),
-                d.module_inventory_size,
+                d.module_inventory_size
             ))
         }
     }
