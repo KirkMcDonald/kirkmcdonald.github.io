@@ -6,6 +6,9 @@ function formatSettings() {
     if (mod != DEFAULT_MODIFICATION) {
         settings += "data=" + mod + "&"
     }
+    if (rateName != DEFAULT_RATE) {
+        settings += "rate=" + rateName + "&"
+    }
 
     settings += "items="
     var targetStrings = []

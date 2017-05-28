@@ -25,18 +25,20 @@ var seconds = one
 var minutes = RationalFromFloat(60)
 var hours = RationalFromFloat(3600)
 
-var displayRate = minutes
-
 var displayRates = {
-    "second": seconds,
-    "minute": minutes,
-    "hour": hours,
+    "s": seconds,
+    "m": minutes,
+    "h": hours,
 }
+
+var DEFAULT_RATE = "m"
+
+var displayRate = displayRates[DEFAULT_RATE]
+var rateName = DEFAULT_RATE
 
 function addRateOptions(node) {
     for (var name in displayRates) {
         var rate = displayRates[name]
-        //<input type="radio" id="minute_rate" name="rate" value="1" checked><label for="minute_rate">items/minute</label><br />
         var input = document.createElement("input")
         input.id = name + "_rate"
         input.type = "radio"
@@ -96,11 +98,26 @@ function itemUpdate() {
     var newTotals = document.createElement("table")
     newTotals.id = "totals"
     var header = document.createElement("tr")
-    header.innerHTML = '<th>rate</th><th>recipe</th><th>factory count</th><th>real factory count</th><th colspan="4">modules</th><th>beacons</th>'
+    var headers = [
+        "craft/" + rateName,
+        "recipe",
+        "factory count",
+        "real factory count",
+        "modules",
+        "beacons"
+    ]
+    var max_modules = 4
+    for (var i = 0; i < headers.length; i++) {
+        var th = document.createElement("th")
+        th.textContent = headers[i]
+        if (i == 4) {
+            th.colSpan = max_modules
+        }
+        header.appendChild(th)
+    }
     newTotals.appendChild(header)
     totalTab.replaceChild(newTotals, oldTotals)
     
-    var max_modules = 4
     var sorted_totals = sorted(totals.totals)
     for (var i = 0; i < sorted_totals.length; i++) {
         var recipeName = sorted_totals[i]

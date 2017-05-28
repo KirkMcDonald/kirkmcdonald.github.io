@@ -7,6 +7,7 @@ var build_targets = []
 function displayRateHandler(event) {
     var value = event.target.value
     displayRate = displayRates[value]
+    rateName = value
     itemUpdate()
 }
 

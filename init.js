@@ -151,6 +151,10 @@ function loadData(modName, settings) {
 
 function init() {
     var settings = loadSettings(window.location.hash)
+    if ("rate" in settings) {
+        rateName = settings.rate
+        displayRate = displayRates[settings.rate]
+    }
     var modSelector = document.getElementById("data_set")
     for (var modName in MODIFICATIONS) {
         var mod = MODIFICATIONS[modName]
