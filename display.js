@@ -146,7 +146,7 @@ function itemUpdate() {
 
             var factoryCell = document.createElement("td")
             factoryCell.className = "right-align"
-            factoryCell.textContent = sprintf("%s \u00d7%d", factory.name, Math.ceil(factoryCount.toFloat()))
+            factoryCell.textContent = sprintf("%s \u00d7 %d", factory.name, Math.ceil(factoryCount.toFloat()))
             row.appendChild(factoryCell)
 
             var realCell = document.createElement("td")
@@ -161,7 +161,7 @@ function itemUpdate() {
                 row.appendChild(modCell)
 
                 var select = document.createElement("select")
-                select.addEventListener("change", new ModuleHandler(recipeName, j))
+                select.addEventListener("change", new ModuleHandler(factory, j))
                 modCell.appendChild(select)
 
                 var noMod = document.createElement("option")
@@ -182,6 +182,13 @@ function itemUpdate() {
                         option.selected = true
                     }
                     select.appendChild(option)
+                }
+                if (j == 0) {
+                    var copyButton = document.createElement("button")
+                    copyButton.textContent = "\u2192"
+                    copyButton.title = "copy to rest of modules"
+                    copyButton.addEventListener("click", new ModuleCopyHandler(factory))
+                    modCell.appendChild(copyButton)
                 }
             }
             for (var j = 0; j < max_modules - factory.modules.length; j++) {

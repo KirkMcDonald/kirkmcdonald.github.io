@@ -68,6 +68,7 @@ function BuildTarget(index, itemName) {
 
     var itemSelector = document.createElement("select")
     itemSelector.addEventListener("change", new ItemHandler(this))
+    itemSelector.title = "Select an item to produce."
     this.element.appendChild(itemSelector)
 
     var sortedItems = sorted(solver.items)
@@ -104,6 +105,7 @@ function BuildTarget(index, itemName) {
     this.factories.type = "text"
     this.factories.value = 1
     this.factories.size = 3
+    this.factories.title = "Enter a value to specify number of factories. The rate will be determined based on the number of items a factory can make."
     this.element.appendChild(this.factories)
 
     this.rateLabel = document.createElement("label")
@@ -115,6 +117,7 @@ function BuildTarget(index, itemName) {
     this.rate.type = "text"
     this.rate.value = ""
     this.rate.size = 5
+    this.rate.title = "Enter a value to specify the rate. The number of factories will be determined based on the rate."
     this.element.appendChild(this.rate)
 }
 BuildTarget.prototype = {
@@ -186,12 +189,21 @@ function getFactory(recipeName) {
     return spec.getFactory(recipe)
 }
 
-function ModuleHandler(recipeName, index) {
+function ModuleHandler(factory, index) {
     this.handleEvent = function(event) {
         var moduleName = event.target.value
         var module = modules[moduleName]
-        var factory = getFactory(recipeName)
         factory.setModule(index, module)
+        itemUpdate()
+    }
+}
+
+function ModuleCopyHandler(factory) {
+    this.handleEvent = function(event) {
+        var module = factory.getModule(0)
+        for (var i = 0; i < factory.modules.length; i++) {
+            factory.setModule(i, module)
+        }
         itemUpdate()
     }
 }
