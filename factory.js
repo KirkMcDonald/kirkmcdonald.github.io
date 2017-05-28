@@ -130,8 +130,6 @@ function FactorySpec(factories) {
     var smelters = this.factories["smelting"]
     this.furnace = smelters[smelters.length - 1]
     this.miningProd = zero
-    // Factor for meaning of rates. 1 = seconds, 60 = minutes, 3600 = hours
-    this.speedFactor = one
 }
 FactorySpec.prototype = {
     constructor: FactorySpec,
