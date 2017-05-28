@@ -7,6 +7,18 @@ function Module(name, productivity, speed, limit) {
     this.speed = speed
     this.limit = limit
 }
+Module.prototype = {
+    constructor: Module,
+    canUse: function(recipe) {
+        if (recipe.allModules()) {
+            return true
+        }
+        if (Object.keys(this.limit).length > 0) {
+            return recipe.name in this.limit
+        }
+        return true
+    }
+}
 
 function getModules(data) {
     var modules = {}

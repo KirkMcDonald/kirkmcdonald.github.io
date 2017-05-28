@@ -43,6 +43,9 @@ Recipe.prototype = {
     },
     makesResource: function() {
         return false
+    },
+    allModules: function() {
+        return false
     }
 }
 
@@ -77,6 +80,9 @@ function MiningRecipe(item, category, hardness, mining_time, ingredients) {
 }
 MiningRecipe.prototype = Object.create(Recipe.prototype)
 MiningRecipe.prototype.makesResource = function() {
+    return true
+}
+MiningRecipe.prototype.allModules = function() {
     return true
 }
 

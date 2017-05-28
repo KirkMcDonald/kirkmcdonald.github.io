@@ -141,7 +141,7 @@ function itemUpdate() {
 
             var factoryCell = document.createElement("td")
             factoryCell.className = "right-align"
-            factoryCell.textContent = sprintf("%s x%d", factory.name, Math.ceil(factoryCount.toFloat()))
+            factoryCell.textContent = sprintf("%s \u00d7%d", factory.name, Math.ceil(factoryCount.toFloat()))
             row.appendChild(factoryCell)
 
             var realCell = document.createElement("td")
@@ -168,9 +168,7 @@ function itemUpdate() {
 
                 for (var name in modules) {
                     var module = modules[name]
-                    if (module.limit
-                            && Object.keys(module.limit).length > 0
-                            && !(recipeName in module.limit)) {
+                    if (!module.canUse(recipe)) {
                         continue
                     }
                     var option = document.createElement("option")
