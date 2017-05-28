@@ -1,98 +1,133 @@
-function Recipe(name, time, inputs, outputs, factory) {
+"use strict"
+
+function Ingredient(amount, item) {
+    this.amount = amount
+    this.item = item
+}
+
+function makeIngredient(i, items) {
+    var amount
+    if ("amount" in i) {
+        amount = i.amount
+    } else {
+        amount = (i.amount_min + i.amount_max) / 2
+    }
+    amount *= i.probability || 1
+    return new Ingredient(RationalFromFloat(amount), getItem(items, i.name))
+}
+
+function Recipe(name, category, time, ingredients, products) {
     this.name = name
+    this.category = category
     this.time = time
-    this.inputs = inputs
-    this.outputs = outputs
-    this.factory = factory
+    this.ingredients = ingredients
+    this.products = products
+    for (var i = 0; i < products.length; i++) {
+        products[i].item.addRecipe(this)
+    }
 }
 Recipe.prototype = {
     constructor: Recipe,
-    rate: function() {
-        var moduleEffects = moduleSpec[this.name]
-        var speed = 1
-        if (moduleEffects) {
-            var total = moduleEffects.total(this.factory)
-            speed = total.speed
+    gives: function(item, spec) {
+        var factory = spec.getFactory(this)
+        var prod = one
+        if (factory) {
+            prod = factory.prodEffect()
         }
-        return 60.0 / this.time * this.factory.speed * speed
-    },
-    factories: function(target_rate) {
-        var rate = this.rate()
-        var real = target_rate / rate
-        var factories = Math.floor(target_rate / rate)
-        var fraction = target_rate % rate
-        if (fraction > 0) {
-            factories += 1
-        }
-        return [factories, real, this.factory]
-    },
-    gives: function(item) {
-        for (var i in this.outputs) {
-            var output = this.outputs[i]
-            if (output.item == item) {
-                var moduleEffects = moduleSpec[output.item.name]
-                var productivity = 1
-                if (moduleEffects) {
-                    var total = moduleEffects.total(this.factory)
-                    productivity = total.productivity
-                }
-                return output.amount * productivity
+        for (var i=0; i < this.products.length; i++) {
+            var product = this.products[i]
+            if (product.item.name == item.name) {
+                return product.amount.mul(prod)
             }
         }
+    },
+    makesResource: function() {
+        return false
     }
 }
 
-function makeRecipe(d, items, minimumFactory) {
-    var time = d.energy
-    var outputs
-    outputs = []
-    for (var i in d.products) {
-        var x = d.products[i]
-        outputs.push(new Ingredient(x.amount, getItem(items, x.name)))
+function makeRecipe(d, items) {
+    var time = RationalFromFloat(d.energy)
+    var products = []
+    for (var i=0; i < d.products.length; i++) {
+        products.push(makeIngredient(d.products[i], items))
     }
-    var inputs = []
-    for (var i in d.ingredients) {
-        inputs.push(makeIngredient(d.ingredients[i], items))
+    var ingredients = []
+    for (var i=0; i < d.ingredients.length; i++) {
+        ingredients.push(makeIngredient(d.ingredients[i], items))
     }
-    var factory = CATEGORY_SPEEDS[d["category"]]
-    if (!factory) {
-        if (inputs.length > 4 || minimumFactory == "3") {
-            factory = ASSEMBLY_3
-        } else if (inputs.length <= 2 && minimumFactory == "1") {
-            factory = ASSEMBLY_1
-        } else {
-            factory = ASSEMBLY_2
-        }
-    }
-    var r = new Recipe(d.name, time, inputs, outputs, factory)
-    for (var i in r.outputs) {
-        r.outputs[i].item.addRecipe(r)
-    }
-    return r
+    return new Recipe(d.name, d.category, time, ingredients, products)
 }
 
-function getUnlockableRecipes(data) {
-    var recipes = {}
-    for (var name in data.technology) {
-        var info = data.technology[name]
-        for (var i in info.effects) {
-            var effect = info.effects[i]
-            if (effect.type == "unlock-recipe") {
-                recipes[effect.recipe] = true
-            }
-        }
-    }
-    return recipes
+function ResourceRecipe(item) {
+    Recipe.call(this, item.name, null, zero, [], [new Ingredient(one, item)])
+}
+ResourceRecipe.prototype = Object.create(Recipe.prototype)
+ResourceRecipe.prototype.makesResource = function() {
+    return true
 }
 
-function getRecipeGraph(data, minimumFactory) {
+function MiningRecipe(item, category, hardness, mining_time, ingredients) {
+    this.hardness = hardness
+    this.mining_time = mining_time
+    if (!ingredients) {
+        ingredients = []
+    }
+    Recipe.call(this, item.name, category, zero, ingredients, [new Ingredient(one, item)])
+}
+MiningRecipe.prototype = Object.create(Recipe.prototype)
+MiningRecipe.prototype.makesResource = function() {
+    return true
+}
+
+function ignoreRecipe(d) {
+    return d.subgroup == "empty-barrel"
+}
+
+function getRecipeGraph(data) {
     var recipes = {}
     var items = getItems(data)
 
     for (var name in data.recipes) {
         var recipe = data.recipes[name]
-        var r = makeRecipe(recipe, items, minimumFactory)
+        if (ignoreRecipe(recipe)) {
+            continue
+        }
+        var r = makeRecipe(recipe, items)
         recipes[recipe.name] = r
+    }
+    for (var entityName in data.entities) {
+        var entity = data.entities[entityName]
+        var category = entity.resource_category
+        if (!category) {
+            continue
+        }
+        if (category == "basic-solid") {
+            var name = entity.name
+            var props = entity.mineable_properties
+            var item = items[name]
+            var ingredients = null
+            if ("required_fluid" in props) {
+                ingredients = [new Ingredient(
+                    RationalFromFloat(props.fluid_amount / 10),
+                    items[props.required_fluid]
+                )]
+            }
+            recipes[name] = new MiningRecipe(
+                item,
+                "mining-" + category,
+                RationalFromFloat(props.hardness),
+                RationalFromFloat(props.mining_time),
+                ingredients,
+            )
+        }
+    }
+    for (var itemName in items) {
+        var item = items[itemName]
+        if (item.recipes.length == 0) {
+            var r = new ResourceRecipe(item)
+            recipes[r.name] = r
+        }
     }
     return [items, recipes]
 }

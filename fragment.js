@@ -1,3 +1,5 @@
+"use strict"
+
 function formatSettings() {
     var settings = ""
     var mod = currentMod()
@@ -7,7 +9,7 @@ function formatSettings() {
 
     settings += "items="
     var targetStrings = []
-    for (var i=0; i < build_targets.length; i++) {
+    for (var i = 0; i < build_targets.length; i++) {
         var target = build_targets[i]
         var targetString = ""
         if (target.changedFactory) {
@@ -22,35 +24,33 @@ function formatSettings() {
     if (min != "1") {
         settings += "&min=" + getMinimumValue()
     }
-    var itemSpecs = []
-    for (var itemName in moduleSpec) {
-        var moduleSet = moduleSpec[itemName]
+    var specs = []
+    for (var recipeName in spec.spec) {
+        var factory = spec.spec[recipeName]
         var modules = []
         var beacon = ""
         var any = false
-        for (var i=0; i < moduleSet.modules.length; i++) {
-            var module = moduleSet.modules[i]
+        for (var i=0; i < factory.modules.length; i++) {
+            var module = factory.modules[i]
             if (module) {
                 modules.push(module.name)
                 any = true
-            } else {
-                modules.push("null")
             }
         }
-        if (moduleSet.beacon_module && moduleSet.beacon_module_count > 0) {
+        if (factory.beaconModule && !factory.beaconCount.isZero()) {
             any = true
-            beacon = sprintf("%s:%d", moduleSet.beacon_module.name, moduleSet.beacon_module_count)
+            beacon = sprintf("%s:%d", factory.beaconModule.name, factory.beaconCount.toFloat())
         }
         if (any) {
-            var itemSpec = sprintf("%s:%s", itemName, modules.join(":"))
+            var recipeSpec = sprintf("%s:%s", recipeName, modules.join(":"))
             if (beacon != "") {
-                itemSpec += ";" + beacon
+                recipeSpec += ";" + beacon
             }
-            itemSpecs.push(itemSpec)
+            specs.push(recipeSpec)
         }
     }
-    if (itemSpecs.length > 0) {
-        settings += "&modules=" + itemSpecs.join(",")
+    if (specs.length > 0) {
+        settings += "&modules=" + specs.join(",")
     }
     return settings
 }
