@@ -31,32 +31,12 @@
 </head>
 
 <body onload="init()">
-    <div style="color: red">Support for 0.15 doesn't totally work yet. Please bear with me as I work out the kinks.</div>
-    
-    <div class="config-header">
-        <input id="config" type="button" value="configure" class="config-button" onclick="toggleVisible('config_box')"><br />
-        <div id="config_box" class="config-box" style="display: none;">
-            <!--Display rates as:<br />
-            <form id="rate_display">
-            <input type="radio" id="minute_rate" name="rate" value="1" checked><label for="minute_rate">items/minute</label><br />
-            <input type="radio" id="second_rate" name="rate" value="60"><label for="second_rate">items/second</label><br />
-            </form>-->
-            Use recipe set:
-            <select id="data_set" onchange="changeMod()"></select><br /><br />
-            <label for="minimum_assembler">Minimum assembling machine level:</label>
-            <select id="minimum_assembler" onchange="changeMin()">
-                <option selected>1</option>
-                <option>2</option>
-                <option>3</option>
-            </select>
-        </div>
-    </div>
-    <p><span>All rates given in items per minute.</span>
     <ul id="targets"><li><a onclick="plusHandler()">+</a></li></ul>
 
     <div class="tabs">
-        <button class="tab_button" onclick="clickTab(event, 'totals_tab')" id="default_tab">Totals</button>
-        <button class="tab_button" onclick="clickTab(event, 'steps_tab')">Tree</button>
+        <button class="tab_button" onclick="clickTab(event, 'totals_tab')" id="default_tab">Factories</button>
+        <button class="tab_button" onclick="clickTab(event, 'steps_tab')">Items</button>
+        <button class="tab_button" onclick="clickTab(event, 'settings_tab')">Settings</button>
     </div>
 
     <div id="steps_tab" class="tab">
@@ -65,6 +45,19 @@
 
     <div id="totals_tab" class="tab">
         <table id="totals"></table>
+    </div>
+
+    <div id="settings_tab" class="tab">
+        Use recipe set:
+        <select id="data_set" onchange="changeMod()"></select><br /><br />
+        Display rates as:<br />
+        <form id="display_rate"></form>
+        <label for="minimum_assembler">Minimum assembling machine level:</label>
+        <select id="minimum_assembler" onchange="changeMin()">
+            <option selected>1</option>
+            <option>2</option>
+            <option>3</option>
+        </select>
     </div>
 </body>
 </html>

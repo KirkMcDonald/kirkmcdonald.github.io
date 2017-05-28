@@ -61,7 +61,7 @@ Solver.prototype = {
                 if (solver.inputRecipes.indexOf(recipe) !== -1) {
                     var ing = recipe.products[0]
                     var subTotals = ing.item.produce(rate.mul(ing.amount), spec)
-                    totals.combine(subTotals)
+                    totals.combine(subTotals, true)
                 } else {
                     totals.add(recipeName, rate)
                 }

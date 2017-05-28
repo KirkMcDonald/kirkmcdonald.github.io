@@ -4,10 +4,6 @@
 .bold {
     font-weight: bold;
 }
-div.config-box {
-    border: thin solid black;
-    padding: 1em;
-}
 input.beacon {
     width: 3em;
 }

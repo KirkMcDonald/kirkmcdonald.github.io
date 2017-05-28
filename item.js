@@ -13,7 +13,7 @@ Item.prototype = {
         return this.recipes.length == 0 // XXX or any recipe makes a resource
     },
     produce: function(rate, spec) {
-        var totals = new Totals()
+        var totals = new Totals(rate, this)
         if (this.recipes.length > 1) {
             totals.addUnfinished(this.name, rate)
             return totals

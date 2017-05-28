@@ -164,4 +164,5 @@ function init() {
     }
     loadData(DEFAULT_MODIFICATION, settings)
     document.getElementById("default_tab").click()
+    addRateOptions(document.getElementById("display_rate"))
 }

@@ -1,6 +1,21 @@
 "use strict"
 
-function Totals() {
+function Requirements(rate, item) {
+    this.rate = rate
+    this.item = item
+    this.dependencies = []
+}
+Requirements.prototype = {
+    constructor: Requirements,
+    add: function(reqs, suppress) {
+        if (reqs.item && !suppress) {
+            this.dependencies.push(reqs)
+        }
+    }
+}
+
+function Totals(rate, item) {
+    this.reqs = new Requirements(rate, item)
     // Maps recipe name to its required rate.
     this.totals = {}
     // Maps item name to its as-yet-unfulfilled rate.
@@ -8,7 +23,8 @@ function Totals() {
 }
 Totals.prototype = {
     constructor: Totals,
-    combine: function(other) {
+    combine: function(other, suppress) {
+        this.reqs.add(other.reqs, suppress)
         for (var recipeName in other.totals) {
             this.add(recipeName, other.totals[recipeName])
         }

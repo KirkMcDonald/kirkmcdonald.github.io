@@ -1,6 +1,6 @@
 "use strict"
 
-/*function displaySteps(reqs, steps) {
+function displaySteps(reqs, steps) {
     reqs.sort(function(a, b) {
         if (a.item.name < b.item.name) {
             return -1
@@ -11,7 +11,7 @@
     for (var i=0; i < reqs.length; i++) {
         var req = reqs[i]
         var li = document.createElement("li")
-        li.innerHTML = sprintf("<tt>%.3f</tt> %s", req.rate, req.item.name)
+        li.innerHTML = sprintf("<tt>%.3f</tt> %s", req.rate.mul(displayRate).toFloat(), req.item.name)
         steps.appendChild(li)
         if (req.dependencies.length > 0) {
             var subUL = document.createElement("ul")
@@ -19,13 +19,41 @@
             displaySteps(req.dependencies, subUL)
         }
     }
-}*/
+}
 
 var seconds = one
 var minutes = RationalFromFloat(60)
 var hours = RationalFromFloat(3600)
 
 var displayRate = minutes
+
+var displayRates = {
+    "second": seconds,
+    "minute": minutes,
+    "hour": hours,
+}
+
+function addRateOptions(node) {
+    for (var name in displayRates) {
+        var rate = displayRates[name]
+        //<input type="radio" id="minute_rate" name="rate" value="1" checked><label for="minute_rate">items/minute</label><br />
+        var input = document.createElement("input")
+        input.id = name + "_rate"
+        input.type = "radio"
+        input.name = "rate"
+        input.value = name
+        if (rate.equal(displayRate)) {
+            input.checked = true
+        }
+        input.addEventListener("change", displayRateHandler)
+        node.appendChild(input)
+        var label = document.createElement("label")
+        label.htmlFor = name + "_rate"
+        label.textContent = "items/" + name
+        node.appendChild(label)
+        node.appendChild(document.createElement("br"))
+    }
+}
 
 function sorted(obj, compareFunc) {
     var keys = []
@@ -60,7 +88,7 @@ function itemUpdate() {
     newSteps.id = "steps"
     stepTab.replaceChild(newSteps, oldSteps)
 
-    //displaySteps(requirements, newSteps)
+    displaySteps(totals.reqs.dependencies, newSteps)
 
     var totalTab = document.getElementById("totals_tab")
 

@@ -4,6 +4,12 @@ var DEFAULT_ITEM = "advanced-circuit"
 
 var build_targets = []
 
+function displayRateHandler(event) {
+    var value = event.target.value
+    displayRate = displayRates[value]
+    itemUpdate()
+}
+
 function addTarget(itemName) {
     var target = new BuildTarget(build_targets.length, itemName)
     build_targets.push(target)
