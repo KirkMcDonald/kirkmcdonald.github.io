@@ -164,7 +164,7 @@ MatrixSolver.prototype = {
                 var recipe = this.recipes[j]
                 var factory = spec.getFactory(recipe)
                 if (factory) {
-                    var prod = factory.prodEffect()
+                    var prod = factory.prodEffect(spec)
                     A_prime.mulPosColumn(j, prod)
                 }
             }

@@ -32,7 +32,7 @@ Recipe.prototype = {
         var factory = spec.getFactory(this)
         var prod = one
         if (factory) {
-            prod = factory.prodEffect()
+            prod = factory.prodEffect(spec)
         }
         for (var i=0; i < this.products.length; i++) {
             var product = this.products[i]

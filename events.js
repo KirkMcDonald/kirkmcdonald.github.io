@@ -170,6 +170,17 @@ function changeMin() {
     itemUpdate()
 }
 
+function changeMprod(event) {
+    var bonus = event.target.value
+    setMprod(bonus)
+    itemUpdate()
+}
+
+function setMprod(bonus) {
+    var mprod = one.add(RationalFromFloats(Number(bonus), 100))
+    spec.miningProd = mprod
+}
+
 function getFactory(recipeName) {
     var recipe = solver.recipes[recipeName]
     return spec.getFactory(recipe)

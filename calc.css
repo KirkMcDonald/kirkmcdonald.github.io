@@ -4,6 +4,9 @@
 .bold {
     font-weight: bold;
 }
+input.mprod {
+    width: 3em;
+}
 input.beacon {
     width: 3em;
 }

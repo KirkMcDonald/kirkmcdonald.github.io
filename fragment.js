@@ -9,6 +9,11 @@ function formatSettings() {
     if (rateName != DEFAULT_RATE) {
         settings += "rate=" + rateName + "&"
     }
+    if (!spec.miningProd.equal(one)) {
+        var hundred = RationalFromFloat(100)
+        var mprod = spec.miningProd.mul(hundred).sub(hundred).toString()
+        settings += "mprod=" + mprod + "&"
+    }
 
     settings += "items="
     var targetStrings = []

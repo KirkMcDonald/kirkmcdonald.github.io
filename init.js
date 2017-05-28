@@ -92,6 +92,9 @@ function loadData(modName, settings) {
         var factories = getFactories(data)
         spec = new FactorySpec(factories)
         spec.setMinimum(min)
+        if ("mprod" in settings) {
+            setMprod(settings.mprod)
+        }
 
         var items = graph[0]
         var recipes = graph[1]

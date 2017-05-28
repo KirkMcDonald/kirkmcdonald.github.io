@@ -71,7 +71,7 @@ Factory.prototype = {
         }
         return speed
     },
-    prodEffect: function() {
+    prodEffect: function(spec) {
         var prod = one
         for (var i=0; i < this.modules.length; i++) {
             if (!this.modules[i]) {
@@ -93,6 +93,10 @@ Miner.prototype = Object.create(Factory.prototype)
 Miner.prototype.recipeRate = function(recipe) {
     var miner = this.factory
     return miner.mining_power.sub(recipe.hardness).mul(miner.mining_speed).div(recipe.mining_time).mul(this.speedEffect())
+}
+Miner.prototype.prodEffect = function(spec) {
+    var prod = Factory.prototype.prodEffect.call(this, spec)
+    return prod.mul(spec.miningProd)
 }
 
 var assembly_machine_categories = {
@@ -129,7 +133,7 @@ function FactorySpec(factories) {
     this.setMinimum("1")
     var smelters = this.factories["smelting"]
     this.furnace = smelters[smelters.length - 1]
-    this.miningProd = zero
+    this.miningProd = one
 }
 FactorySpec.prototype = {
     constructor: FactorySpec,
