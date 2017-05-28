@@ -30,6 +30,11 @@ var displayRates = {
     "m": minutes,
     "h": hours,
 }
+var longRateNames = {
+    "s": "second",
+    "m": "minute",
+    "h": "hour",
+}
 
 var DEFAULT_RATE = "m"
 
@@ -51,7 +56,7 @@ function addRateOptions(node) {
         node.appendChild(input)
         var label = document.createElement("label")
         label.htmlFor = name + "_rate"
-        label.textContent = "items/" + name
+        label.textContent = "items/" + longRateNames[name]
         node.appendChild(label)
         node.appendChild(document.createElement("br"))
     }
