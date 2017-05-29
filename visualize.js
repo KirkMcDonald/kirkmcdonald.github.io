@@ -16,11 +16,20 @@ function makeGraph(totals) {
         var recipe = solver.recipes[recipeName]
         for (var i = 0; i < recipe.ingredients.length; i++) {
             var ing = recipe.ingredients[i]
+            var totalRate = zero
             for (var j = 0; j < ing.item.recipes.length; j++) {
                 var subRecipe = ing.item.recipes[j]
                 if (subRecipe.name in totals.totals) {
-                    var rate = totals.totals[recipeName].mul(ing.amount).mul(displayRate)
-                    var label = sprintf("%.3f %s/%s", rate.toFloat(), ing.item.name, rateName)
+                    totalRate = totalRate.add(totals.totals[subRecipe.name].mul(subRecipe.gives(ing.item, spec)))
+                }
+            }
+            for (var j = 0; j < ing.item.recipes.length; j++) {
+                var subRecipe = ing.item.recipes[j]
+                if (subRecipe.name in totals.totals) {
+                    var rate = totals.totals[recipeName].mul(ing.amount)
+                    var ratio = rate.div(totalRate)
+                    var subRate = totals.totals[subRecipe.name].mul(subRecipe.gives(ing.item, spec)).mul(ratio).mul(displayRate)
+                    var label = sprintf("%.3f %s/%s", subRate.toFloat(), ing.item.name, rateName)
                     g.setEdge(subRecipe.name, recipeName, {"label": label})
                 }
             }
