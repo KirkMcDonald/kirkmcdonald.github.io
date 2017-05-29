@@ -9,6 +9,9 @@ function makeGraph(totals) {
         var label = sprintf("%.3f %s/%s", rate.toFloat(), recipeName, rateName)
         g.setNode(recipeName, {"label": label})
     }
+    for (var itemName in totals.unfinished) {
+        g.setNode(itemName, {"label": "???"})
+    }
     for (var recipeName in totals.totals) {
         var recipe = solver.recipes[recipeName]
         for (var i = 0; i < recipe.ingredients.length; i++) {
@@ -20,6 +23,11 @@ function makeGraph(totals) {
                     var label = sprintf("%.3f %s/%s", rate.toFloat(), ing.item.name, rateName)
                     g.setEdge(subRecipe.name, recipeName, {"label": label})
                 }
+            }
+            if (ing.item.name in totals.unfinished) {
+                var rate = totals.totals[recipeName].mul(ing.amount).mul(displayRate)
+                var label = sprintf("%.3f %s/%s", rate.toFloat(), ing.item.name, rateName)
+                g.setEdge(ing.item.name, recipeName, {"label": label})
             }
         }
     }

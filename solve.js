@@ -40,20 +40,12 @@ Solver.prototype = {
             if (Object.keys(match).length == 0) {
                 continue
             }
-            for (var itemName in match) {
-                delete totals.unfinished[itemName]
-            }
             var solution = solver.solveFor(match, spec)
             if (!solution) {
-                for (var itemName in match) {
-                    var unknown = unknowns[itemName]
-                    if (!unknown) {
-                        unknown = new UnknownRecipe(item)
-                        unknowns[itemName] = unknown
-                    }
-                    totals.add(unknown.name, match[itemName])
-                }
                 continue
+            }
+            for (var itemName in match) {
+                delete totals.unfinished[itemName]
             }
             for (var recipeName in solution) {
                 var rate = solution[recipeName]
@@ -66,9 +58,6 @@ Solver.prototype = {
                     totals.add(recipeName, rate)
                 }
             }
-        }
-        if (Object.keys(totals.unfinished).length > 0) {
-            console.log("hmmm")
         }
         return totals
     }

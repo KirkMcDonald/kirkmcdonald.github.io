@@ -284,6 +284,6 @@ function clickTab(event, tabName) {
 
 function clickVisualize(event, tabName) {
     clickTab(event, tabName)
-    renderGraph(totals)
+    renderGraph(globalTotals)
 }
 
