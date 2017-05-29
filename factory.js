@@ -17,6 +17,9 @@ FactoryDef.prototype = {
     },
     makeFactory: function() {
         return new Factory(this)
+    },
+    canBeacon: function() {
+        return true
     }
 }
 
@@ -92,8 +95,10 @@ Factory.prototype = {
                 other.setModule(i, module)
             }
         }
-        other.beaconModule = this.beaconModule
-        other.beaconCount = this.beaconCount
+        if (other.factory.canBeacon()) {
+            other.beaconModule = this.beaconModule
+            other.beaconCount = this.beaconCount
+        }
     },
 }
 
@@ -198,6 +203,9 @@ FactorySpec.prototype = {
 
 function getFactories(data) {
     var factories = []
+    var pump = new FactoryDef("offshore-pump", {"water": true}, 1, one, 0)
+    pump.canBeacon = function() { return false }
+    factories.push(pump)
     for (var name in data.entities) {
         var d = data.entities[name]
         if ("crafting_categories" in d && d.name != "player") {

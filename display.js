@@ -209,62 +209,64 @@ function itemUpdate() {
                 row.appendChild(document.createElement("td"))
             }
 
-            var currentBeacon = factory.beaconModule
-            var currentCount = factory.beaconCount
+            if (factory.factory.canBeacon()) {
+                var currentBeacon = factory.beaconModule
+                var currentCount = factory.beaconCount
 
-            var beaconCell = document.createElement("td")
+                var beaconCell = document.createElement("td")
 
-            var beaconModSelect = document.createElement("select")
-            beaconModSelect.addEventListener("change", new BeaconHandler(recipeName))
+                var beaconModSelect = document.createElement("select")
+                beaconModSelect.addEventListener("change", new BeaconHandler(recipeName))
 
-            beaconCell.appendChild(beaconModSelect)
+                beaconCell.appendChild(beaconModSelect)
 
-            var noBeacon = document.createElement("option")
-            noBeacon.textContent = "no module"
-            if (!currentBeacon) {
-                noBeacon.selected = true
-            }
-            beaconModSelect.appendChild(noBeacon)
-
-            for (var name in modules) {
-                var module = modules[name]
-                // No productivity modules in beacons.
-                if (!module.productivity.isZero()) {
-                    continue
+                var noBeacon = document.createElement("option")
+                noBeacon.textContent = "no module"
+                if (!currentBeacon) {
+                    noBeacon.selected = true
                 }
-                var option = document.createElement("option")
-                option.textContent = name
-                if (currentBeacon && currentBeacon.name == name) {
-                    option.selected = true
+                beaconModSelect.appendChild(noBeacon)
+
+                for (var name in modules) {
+                    var module = modules[name]
+                    // No productivity modules in beacons.
+                    if (!module.productivity.isZero()) {
+                        continue
+                    }
+                    var option = document.createElement("option")
+                    option.textContent = name
+                    if (currentBeacon && currentBeacon.name == name) {
+                        option.selected = true
+                    }
+                    beaconModSelect.appendChild(option)
                 }
-                beaconModSelect.appendChild(option)
+
+                var mult = document.createElement("span")
+                mult.textContent = " \u00D7 "
+                beaconCell.appendChild(mult)
+
+                var beaconCountBox = document.createElement("input")
+                beaconCountBox.addEventListener("change", new BeaconCountHandler(recipeName))
+                beaconCountBox.type = "number"
+                beaconCountBox.value = currentCount.toFloat()
+                beaconCountBox.className = "beacon"
+                beaconCell.appendChild(beaconCountBox)
+
+                row.appendChild(beaconCell)
+
+                var downArrowCell = document.createElement("td")
+                var downArrow = document.createElement("button")
+                if (!downArrowShown) {
+                    downArrowShown = true
+                    downArrow.textContent = "\u2193"
+                } else {
+                    downArrow.textContent = "\u2195"
+                }
+                downArrow.title = "copy this recipe's modules to all other recipes"
+                downArrow.addEventListener("click", new CopyAllHandler(recipeName))
+                downArrowCell.appendChild(downArrow)
+                row.appendChild(downArrowCell)
             }
-
-            var mult = document.createElement("span")
-            mult.textContent = " \u00D7 "
-            beaconCell.appendChild(mult)
-
-            var beaconCountBox = document.createElement("input")
-            beaconCountBox.addEventListener("change", new BeaconCountHandler(recipeName))
-            beaconCountBox.type = "number"
-            beaconCountBox.value = currentCount.toFloat()
-            beaconCountBox.className = "beacon"
-            beaconCell.appendChild(beaconCountBox)
-
-            row.appendChild(beaconCell)
-
-            var downArrowCell = document.createElement("td")
-            var downArrow = document.createElement("button")
-            if (!downArrowShown) {
-                downArrowShown = true
-                downArrow.textContent = "\u2193"
-            } else {
-                downArrow.textContent = "\u2195"
-            }
-            downArrow.title = "copy this recipe's modules to all other recipes"
-            downArrow.addEventListener("click", new CopyAllHandler(recipeName))
-            downArrowCell.appendChild(downArrow)
-            row.appendChild(downArrowCell)
         }
 
         newTotals.appendChild(row)

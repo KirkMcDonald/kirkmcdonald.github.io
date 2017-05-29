@@ -93,6 +93,8 @@ function ignoreRecipe(d) {
 function getRecipeGraph(data) {
     var recipes = {}
     var items = getItems(data)
+    var water = items["water"]
+    recipes["water"] = new Recipe("water", "water", one, [], [new Ingredient(RationalFromFloat(1200), water)])
 
     for (var name in data.recipes) {
         var recipe = data.recipes[name]
