@@ -84,6 +84,17 @@ Factory.prototype = {
     recipeRate: function(recipe) {
         return one.div(recipe.time).mul(this.factory.speed).mul(this.speedEffect())
     },
+    copyModules: function(other, recipe) {
+        var length = Math.max(this.modules.length, other.modules.length)
+        for (var i = 0; i < length; i++) {
+            var module = this.getModule(i)
+            if (!module || module.canUse(recipe)) {
+                other.setModule(i, module)
+            }
+        }
+        other.beaconModule = this.beaconModule
+        other.beaconCount = this.beaconCount
+    },
 }
 
 function Miner(factory) {

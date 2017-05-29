@@ -227,6 +227,24 @@ function BeaconCountHandler(recipeName) {
     }
 }
 
+function CopyAllHandler(name) {
+    this.handleEvent = function(event) {
+        var factory = spec.spec[name]
+        for (var recipeName in spec.spec) {
+            if (recipeName == name) {
+                continue
+            }
+            var f = spec.spec[recipeName]
+            if (!f) {
+                continue
+            }
+            var recipe = solver.recipes[recipeName]
+            factory.copyModules(f, recipe)
+        }
+        itemUpdate()
+    }
+}
+
 function toggleVisible(id) {
     var elem = document.getElementById(id)
     if (elem.style.display == "none") {

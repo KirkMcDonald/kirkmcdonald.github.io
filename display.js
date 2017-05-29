@@ -71,6 +71,18 @@ function sorted(obj, compareFunc) {
     return keys
 }
 
+function pruneSpec(totals) {
+    var drop = []
+    for (var name in spec.spec) {
+        if (!(name in totals.totals)) {
+            drop.push(name)
+        }
+    }
+    for (var i = 0; i < drop.length; i++) {
+        delete spec.spec[drop[i]]
+    }
+}
+
 // The main top-level calculation function. Called whenever the solution
 // requires recalculation.
 //
@@ -85,6 +97,7 @@ function itemUpdate() {
         rates[target.itemName] = rate
     }
     var totals = solver.solve(rates, spec)
+    pruneSpec(totals)
 
     window.location.hash = "#" + formatSettings()
 
@@ -123,6 +136,7 @@ function itemUpdate() {
     newTotals.appendChild(header)
     totalTab.replaceChild(newTotals, oldTotals)
     
+    var downArrowShown = false
     var sorted_totals = sorted(totals.totals)
     for (var i = 0; i < sorted_totals.length; i++) {
         var recipeName = sorted_totals[i]
@@ -238,8 +252,22 @@ function itemUpdate() {
             beaconCell.appendChild(beaconCountBox)
 
             row.appendChild(beaconCell)
+
+            var downArrowCell = document.createElement("td")
+            var downArrow = document.createElement("button")
+            if (!downArrowShown) {
+                downArrowShown = true
+                downArrow.textContent = "\u2193"
+            } else {
+                downArrow.textContent = "\u2195"
+            }
+            downArrow.title = "copy this recipe's modules to all other recipes"
+            downArrow.addEventListener("click", new CopyAllHandler(recipeName))
+            downArrowCell.appendChild(downArrow)
+            row.appendChild(downArrowCell)
         }
 
         newTotals.appendChild(row)
     }
+    downArrow.textContent = "\u2191"
 }
