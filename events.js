@@ -185,6 +185,11 @@ function setMprod(bonus) {
     spec.miningProd = mprod
 }
 
+function changeSortOrder(event) {
+    sortOrder = event.target.value
+    itemUpdate()
+}
+
 function getFactory(recipeName) {
     var recipe = solver.recipes[recipeName]
     return spec.getFactory(recipe)

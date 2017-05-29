@@ -41,6 +41,8 @@ var DEFAULT_RATE = "m"
 var displayRate = displayRates[DEFAULT_RATE]
 var rateName = DEFAULT_RATE
 
+var sortOrder = "topo"
+
 function addRateOptions(node) {
     for (var name in displayRates) {
         var rate = displayRates[name]
@@ -142,6 +144,11 @@ function itemUpdate() {
     
     var downArrowShown = false
     var sorted_totals = sorted(totals.totals)
+    if (sortOrder == "topo") {
+        sorted_totals = totals.topo
+    } else {
+        sorted_totals = sorted(totals.totals)
+    }
     for (var i = 0; i < sorted_totals.length; i++) {
         var recipeName = sorted_totals[i]
         var recipe = solver.recipes[recipeName]

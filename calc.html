@@ -80,9 +80,14 @@ limitations under the License.-->
             <option selected>1</option>
             <option>2</option>
             <option>3</option>
-        </select><br />
+        </select><br /><br />
         Mining production bonus:
-        +<input id="mprod" class="mprod" type="number" step="2" value="0" min="0" onchange="changeMprod(event)">%
+        +<input id="mprod" class="mprod" type="number" step="2" value="0" min="0" onchange="changeMprod(event)">%<br /><br />
+        Recipe sort order:<br />
+        <input type="radio" name="sort_order" id="topo_order" value="topo" checked onchange="changeSortOrder(event)">
+        <label for="topo_order">Topological order</label><br />
+        <input type="radio" name="sort_order" id="alpha_order" value="alpha" onchange="changeSortOrder(event)">
+        <label for="alpha_order">Alphabetical order</label><br />
     </div>
 
     <div id="about_tab" class="tab">

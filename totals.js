@@ -20,19 +20,30 @@ function Totals(rate, item) {
     this.totals = {}
     // Maps item name to its as-yet-unfulfilled rate.
     this.unfinished = {}
+    this.topo = []
 }
 Totals.prototype = {
     constructor: Totals,
     combine: function(other, suppress) {
         this.reqs.add(other.reqs, suppress)
+        var newTopo = []
+        for (var i = 0; i < this.topo.length; i++) {
+            var recipeName = this.topo[i]
+            if (!(recipeName in other.totals)) {
+                newTopo.push(recipeName)
+            }
+        }
+        newTopo = newTopo.concat(other.topo)
         for (var recipeName in other.totals) {
             this.add(recipeName, other.totals[recipeName])
         }
         for (var itemName in other.unfinished) {
             this.addUnfinished(itemName, other.unfinished[itemName])
         }
+        this.topo = newTopo
     },
-    add: function(recipeName, rate) {
+    add: function(recipeName, rate, notopo) {
+        this.topo.push(recipeName)
         this.totals[recipeName] = (this.totals[recipeName] || zero).add(rate)
     },
     addUnfinished: function(itemName, rate) {
