@@ -41,13 +41,13 @@ function formatSettings() {
         for (var i=0; i < factory.modules.length; i++) {
             var module = factory.modules[i]
             if (module) {
-                modules.push(module.name)
+                modules.push(module.shortName())
                 any = true
             }
         }
         if (factory.beaconModule && !factory.beaconCount.isZero()) {
             any = true
-            beacon = sprintf("%s:%d", factory.beaconModule.name, factory.beaconCount.toFloat())
+            beacon = sprintf("%s:%d", factory.beaconModule.shortName(), factory.beaconCount.toFloat())
         }
         if (any) {
             var recipeSpec = sprintf("%s:%s", recipeName, modules.join(":"))

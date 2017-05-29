@@ -21,6 +21,9 @@ var spec
 // Map from module name to Module object.
 var modules
 
+// Map from short module name to Module object.
+var shortModules
+
 // Set the page back to a state immediately following initial setup, but before
 // the dataset is loaded for the first time.
 //
@@ -60,14 +63,11 @@ function loadDataRunner(modName, callback) {
     xobj.onreadystatechange = function() {
         if (xobj.readyState == 4 && xobj.status == "200") {
             var data = JSON.parse(xobj.responseText)
-            globalData = data
             callback(data)
         }
     }
     xobj.send(null)
 }
-
-var globalData
 
 function loadData(modName, settings) {
     if (!settings) {
@@ -89,6 +89,11 @@ function loadData(modName, settings) {
         minDropdown.value = min
         var graph = getRecipeGraph(data)
         modules = getModules(data)
+        shortModules = {}
+        for (var moduleName in modules) {
+            var module = modules[moduleName]
+            shortModules[module.shortName()] = module
+        }
         var factories = getFactories(data)
         spec = new FactorySpec(factories)
         spec.setMinimum(min)
@@ -135,18 +140,32 @@ function loadData(modName, settings) {
                 var moduleNameList = singleModuleSettings.slice(1)
                 for (var j=0; j < moduleNameList.length; j++) {
                     var moduleName = moduleNameList[j]
-                    if (moduleName && moduleName != "null" && moduleName in modules) {
-                        var module = modules[moduleName]
-                        factory.setModule(j, module)
+                    if (moduleName && moduleName != "null") {
+                        var module
+                        if (moduleName in modules) {
+                            module = modules[moduleName]
+                        } else if (moduleName in shortModules) {
+                            module = shortModules[moduleName]
+                        }
+                        if (module) {
+                            factory.setModule(j, module)
+                        }
                     }
                 }
                 if (beaconSettings) {
                     beaconSettings = beaconSettings.split(":")
                     var moduleName = beaconSettings[0]
-                    var module = modules[moduleName]
-                    var count = RationalFromFloat(Number(beaconSettings[1]))
-                    factory.beaconModule = module
-                    factory.beaconCount = count
+                    var module
+                    if (moduleName in modules) {
+                        module = modules[moduleName]
+                    } else if (moduleName in shortModules) {
+                        module = shortModules[moduleName]
+                    }
+                    if (module) {
+                        var count = RationalFromFloat(Number(beaconSettings[1]))
+                        factory.beaconModule = module
+                        factory.beaconCount = count
+                    }
                 }
             }
         }

@@ -9,6 +9,9 @@ function Module(name, productivity, speed, limit) {
 }
 Module.prototype = {
     constructor: Module,
+    shortName: function() {
+        return this.name[0] + this.name[this.name.length - 1]
+    },
     canUse: function(recipe) {
         if (recipe.allModules()) {
             return true
