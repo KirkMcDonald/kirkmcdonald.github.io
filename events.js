@@ -282,3 +282,8 @@ function clickTab(event, tabName) {
     event.currentTarget.classList.add("active")
 }
 
+function clickVisualize(event, tabName) {
+    clickTab(event, tabName)
+    renderGraph(totals)
+}
+

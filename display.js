@@ -83,6 +83,8 @@ function pruneSpec(totals) {
     }
 }
 
+var totals
+
 // The main top-level calculation function. Called whenever the solution
 // requires recalculation.
 //
@@ -96,11 +98,12 @@ function itemUpdate() {
         var rate = target.getRate()
         rates[target.itemName] = rate
     }
-    var totals = solver.solve(rates, spec)
+    totals = solver.solve(rates, spec)
     pruneSpec(totals)
 
     window.location.hash = "#" + formatSettings()
 
+    renderGraph(totals)
     var stepTab = document.getElementById("steps_tab")
 
     var oldSteps = document.getElementById("steps")

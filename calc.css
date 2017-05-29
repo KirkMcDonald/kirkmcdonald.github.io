@@ -10,7 +10,15 @@ input.mprod {
 input.beacon {
     width: 3em;
 }
-
+.node rect {
+    stroke: #333;
+    fill: #fff;
+    stroke-width: 1px;
+}
+.edgePath path {
+    stroke: #333;
+    stroke-width: 1px;
+}
 div.tabs {
     overflow: hidden;
     border: 1px solid #ccc;
