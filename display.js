@@ -250,6 +250,7 @@ function itemUpdate() {
                 beaconCountBox.type = "number"
                 beaconCountBox.value = currentCount.toFloat()
                 beaconCountBox.className = "beacon"
+                beaconCountBox.title = "The number of broadcasted modules which will affect this factory."
                 beaconCell.appendChild(beaconCountBox)
 
                 row.appendChild(beaconCell)

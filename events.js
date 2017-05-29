@@ -90,6 +90,7 @@ function BuildTarget(index, itemName) {
     var remover = document.createElement("a")
     remover.addEventListener("click", new RemoveHandler(this))
     remover.textContent = "x"
+    remover.title = "Remove this item."
     this.element.appendChild(remover)
 
     this.element.appendChild(document.createElement("br"))
