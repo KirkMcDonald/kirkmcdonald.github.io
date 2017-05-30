@@ -1,3 +1,10 @@
+ul.targets {
+    list-style-type: none;
+}
+ul.targets a {
+    font-size: large;
+    font-weight: bold;
+}
 .right-align {
     text-align: right;
 }
@@ -9,7 +16,11 @@ img.icon {
     display: inline-block;
     height: 32px;
     width: 32px;
-    border: none;
+    vertical-align: middle;
+}
+img.spacer {
+    height: 40px;
+    width: 1px;
     vertical-align: middle;
 }
 input.mprod {
@@ -69,7 +80,7 @@ div.tab {
     position: absolute;
     z-index: 10;
     background-color: white;
-    margin-top: -18px;
+    margin-top: -19px;
 }
 .dropdown input {
     position: absolute;
@@ -93,4 +104,43 @@ div.tab {
 .dropdown input:checked + label {
     opacity: 1 !important;
     display: block;
+}
+
+.itemDropdown {
+    border: 1px solid #ccc;
+    width: 36px;
+    height: 36px;
+    overflow: hidden;
+}
+.itemDropdown:hover {
+    height: 300px;
+    width: 380px;
+    overflow-y: scroll;
+    transition: height 0.3s;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    margin-top: -19px;
+}
+.itemDropdown input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+.itemDropdown label {
+    display: none;
+    margin: 2px;
+    height: 32px;
+    opacity: 0.5;
+}
+.itemDropdown:hover label {
+    display: inline;
+}
+.itemDropdown label:hover {
+    opacity: 0.7;
+}
+.itemDropdown input:checked + label {
+    opacity: 1 !important;
+    display: inline;
 }

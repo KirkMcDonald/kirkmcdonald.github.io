@@ -11,11 +11,8 @@ function Sprite(name, row, col) {
 Sprite.prototype = {
     constructor: Sprite,
     getImage: function() {
-        var im = document.createElement("img")
+        var im = blankImage()
         im.classList.add("icon")
-        // Chrome wants the <img> element to have a src attribute, or it will
-        // draw a border around it. Cram in this transparent 1x1 pixel image.
-        im.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
         var x = -this.col * PX_WIDTH
         var y = -this.row * PX_HEIGHT
         im.style.setProperty("background-position", x + "px " + y + "px")
@@ -25,9 +22,19 @@ Sprite.prototype = {
 }
 
 function getImage(name) {
-    return spriteNames[name].getImage()
+    var sprite = spriteNames[name]
+    if (sprite) {
+        return sprite.getImage()
+    }
+    return null
 }
-
+function blankImage() {
+    var im = document.createElement("img")
+    // Chrome wants the <img> element to have a src attribute, or it will
+    // draw a border around it. Cram in this transparent 1x1 pixel image.
+    im.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+    return im
+}
 var spriteNames = {}
 
 function getSprites(data) {
