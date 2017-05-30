@@ -134,7 +134,9 @@ function itemUpdate() {
 
     window.location.hash = "#" + formatSettings()
 
-    renderGraph(totals)
+    if (currentTab == "graph_tab") {
+        renderGraph(totals)
+    }
     var stepTab = document.getElementById("steps_tab")
 
     var oldSteps = document.getElementById("steps")

@@ -298,7 +298,10 @@ function changeMod() {
     loadData(modName)
 }
 
+var currentTab = "totals_tab"
+
 function clickTab(event, tabName) {
+    currentTab = tabName
     var tabs = document.getElementsByClassName("tab")
     for (var i=0; i < tabs.length; i++) {
         tabs[i].style.display = "none"
