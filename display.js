@@ -87,6 +87,31 @@ function pruneSpec(totals) {
 
 var globalTotals
 
+function makeDropdown(cell) {
+    var dropdown = document.createElement("div")
+    dropdown.classList.add("dropdown")
+    cell.appendChild(dropdown)
+    var form = document.createElement("form")
+    dropdown.appendChild(form)
+    return form
+}
+
+function makeDropdownEntry(id, form, checked, value, labelContent, handler) {
+    var input = document.createElement("input")
+    input.id = id
+    input.name = "mod"
+    input.type = "radio"
+    input.value = value
+    input.checked = checked
+    input.addEventListener("change", handler)
+    form.appendChild(input)
+    var label = document.createElement("label")
+    label.htmlFor = id
+    label.appendChild(labelContent)
+    label.title = value
+    form.appendChild(label)
+}
+
 // The main top-level calculation function. Called whenever the solution
 // requires recalculation.
 //
@@ -123,8 +148,8 @@ function itemUpdate() {
     newTotals.id = "totals"
     var header = document.createElement("tr")
     var headers = [
-        "craft/" + rateName,
         "recipe",
+        "craft/" + rateName,
         "factory count",
         "real factory count",
         "modules",
@@ -134,8 +159,11 @@ function itemUpdate() {
     for (var i = 0; i < headers.length; i++) {
         var th = document.createElement("th")
         th.textContent = headers[i]
-        if (i == 4) {
-            th.colSpan = max_modules
+        th.style.setProperty("padding-left", "1em")
+        if (headers[i] == "modules") {
+            th.colSpan = max_modules + 1
+        } else if (headers[i] == "beacons") {
+            th.colSpan = 2
         }
         header.appendChild(th)
     }
@@ -155,23 +183,25 @@ function itemUpdate() {
         var rate = totals.get(recipeName)
         var row = document.createElement("tr")
 
+        var nameCell = document.createElement("td")
+        nameCell.className = "right-align"
+        nameCell.appendChild(getImage(recipeName))
+        row.appendChild(nameCell)
+
         var rateCell = document.createElement("td")
         rateCell.className = "right-align"
         rateCell.innerHTML = sprintf("<tt>%.3f</tt>", rate.mul(displayRate).toFloat())
         row.appendChild(rateCell)
-
-        var nameCell = document.createElement("td")
-        nameCell.className = "right-align"
-        nameCell.textContent = recipeName
-        row.appendChild(nameCell)
 
         var factoryCount = spec.getCount(recipe, rate)
         if (!factoryCount.isZero()) {
             var factory = spec.getFactory(recipe)
 
             var factoryCell = document.createElement("td")
-            factoryCell.className = "right-align"
-            factoryCell.textContent = sprintf("%s \u00d7 %d", factory.name, Math.ceil(factoryCount.toFloat()))
+            var image = getImage(factory.name)
+            factoryCell.appendChild(image)
+            factoryCell.appendChild(new Text(sprintf(" \u00d7 %d", Math.ceil(factoryCount.toFloat()))))
+            factoryCell.style.setProperty("padding-left", "1em")
             row.appendChild(factoryCell)
 
             var realCell = document.createElement("td")
@@ -185,38 +215,47 @@ function itemUpdate() {
                 var modCell = document.createElement("td")
                 row.appendChild(modCell)
 
-                var select = document.createElement("select")
-                select.addEventListener("change", new ModuleHandler(factory, j))
-                modCell.appendChild(select)
+                var form = makeDropdown(modCell)
 
-                var noMod = document.createElement("option")
-                noMod.textContent = "no module"
-                if (!currentModule) {
-                    noMod.selected = true
-                }
-                select.appendChild(noMod)
+                var handler = new ModuleHandler(factory, j)
+                makeDropdownEntry(
+                    "mod-" + recipeName + "-" + j + "-nomod",
+                    form,
+                    !currentModule,
+                    "no module",
+                    new Text("\u{1F6AB}"),
+                    handler
+                )
 
                 for (var name in modules) {
                     var module = modules[name]
                     if (!module.canUse(recipe)) {
                         continue
                     }
-                    var option = document.createElement("option")
-                    option.textContent = name
-                    if (currentModule && currentModule.name == name) {
-                        option.selected = true
-                    }
-                    select.appendChild(option)
+                    makeDropdownEntry(
+                        "mod-" + recipeName + "-" + j + "-" + name,
+                        form,
+                        currentModule && currentModule.name == name,
+                        name,
+                        getImage(name),
+                        handler
+                    )
                 }
                 if (j == 0) {
+                    var buttonCell = document.createElement("td")
+                    row.append(buttonCell)
                     var copyButton = document.createElement("button")
                     copyButton.textContent = "\u2192"
                     copyButton.title = "copy to rest of modules"
                     copyButton.addEventListener("click", new ModuleCopyHandler(factory))
-                    modCell.appendChild(copyButton)
+                    buttonCell.appendChild(copyButton)
                 }
             }
-            for (var j = 0; j < max_modules - factory.modules.length; j++) {
+            var dummiesNeeded = max_modules - factory.modules.length
+            if (dummiesNeeded == max_modules) {
+                dummiesNeeded++
+            }
+            for (var j = 0; j < dummiesNeeded; j++) {
                 row.appendChild(document.createElement("td"))
             }
 
@@ -225,18 +264,19 @@ function itemUpdate() {
                 var currentCount = factory.beaconCount
 
                 var beaconCell = document.createElement("td")
+                beaconCell.style.setProperty("padding-left", "1em")
 
-                var beaconModSelect = document.createElement("select")
-                beaconModSelect.addEventListener("change", new BeaconHandler(recipeName))
+                var beaconForm = makeDropdown(beaconCell)
+                var beaconHandler = new BeaconHandler(recipeName)
 
-                beaconCell.appendChild(beaconModSelect)
-
-                var noBeacon = document.createElement("option")
-                noBeacon.textContent = "no module"
-                if (!currentBeacon) {
-                    noBeacon.selected = true
-                }
-                beaconModSelect.appendChild(noBeacon)
+                makeDropdownEntry(
+                    "mod-" + recipeName + "-beacon-nomod",
+                    beaconForm,
+                    !currentBeacon,
+                    "no module",
+                    new Text("\u{1F6AB}"),
+                    beaconHandler
+                )
 
                 for (var name in modules) {
                     var module = modules[name]
@@ -244,17 +284,21 @@ function itemUpdate() {
                     if (!module.productivity.isZero()) {
                         continue
                     }
-                    var option = document.createElement("option")
-                    option.textContent = name
-                    if (currentBeacon && currentBeacon.name == name) {
-                        option.selected = true
-                    }
-                    beaconModSelect.appendChild(option)
+                    makeDropdownEntry(
+                        "mod-" + recipeName + "-beacon-" + name,
+                        beaconForm,
+                        currentBeacon && currentBeacon.name == name,
+                        name,
+                        getImage(name),
+                        beaconHandler
+                    )
                 }
+                row.appendChild(beaconCell)
 
+                var countCell = document.createElement("td")
                 var mult = document.createElement("span")
                 mult.textContent = " \u00D7 "
-                beaconCell.appendChild(mult)
+                countCell.appendChild(mult)
 
                 var beaconCountBox = document.createElement("input")
                 beaconCountBox.addEventListener("change", new BeaconCountHandler(recipeName))
@@ -262,9 +306,8 @@ function itemUpdate() {
                 beaconCountBox.value = currentCount.toFloat()
                 beaconCountBox.className = "beacon"
                 beaconCountBox.title = "The number of broadcasted modules which will affect this factory."
-                beaconCell.appendChild(beaconCountBox)
-
-                row.appendChild(beaconCell)
+                countCell.appendChild(beaconCountBox)
+                row.appendChild(countCell)
 
                 var downArrowCell = document.createElement("td")
                 var downArrow = document.createElement("button")

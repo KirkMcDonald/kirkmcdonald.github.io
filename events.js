@@ -75,9 +75,6 @@ function BuildTarget(index, itemName) {
     for (var i=0; i<sortedItems.length; i++) {
         var currentItemName = sortedItems[i]
         var currentItem = solver.items[currentItemName]
-        /*if (currentItem.recipes.length != 1) {
-            continue
-        }*/
         var option = document.createElement("option")
         option.textContent = currentItemName
         option.value = currentItemName

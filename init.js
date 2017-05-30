@@ -102,6 +102,7 @@ function loadData(modName, settings) {
             var mprod = document.getElementById("mprod")
             mprod.value = settings.mprod
         }
+        getSprites(data)
 
         var items = graph[0]
         var recipes = graph[1]

@@ -4,6 +4,14 @@
 .bold {
     font-weight: bold;
 }
+img.icon {
+    background: url(images/sprite-sheet.png);
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    border: none;
+    vertical-align: middle;
+}
 input.mprod {
     width: 3em;
 }
@@ -16,7 +24,7 @@ input.beacon {
     stroke-width: 1px;
 }
 .edgePath path {
-    stroke: #333;
+    stroke: #bbb;
     stroke-width: 1px;
 }
 div.tabs {
@@ -47,4 +55,42 @@ div.tab {
     padding: 1em;
     border: 1px solid #ccc;
     border-top: none;
+}
+.dropdown {
+    border: 1px solid #ccc;
+    width: 50px;
+    height: 36px;
+    overflow: hidden;
+}
+.dropdown:hover {
+    height: 150px;
+    overflow-y: scroll;
+    transition: height 0.1s;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    margin-top: -18px;
+}
+.dropdown input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+.dropdown label {
+    display: none;
+    margin: 2px;
+    height: 32px;
+    opacity: 0.5;
+    font-size: 28px;
+}
+.dropdown:hover label {
+    display: block;
+}
+.dropdown label:hover {
+    opacity: 0.7;
+}
+.dropdown input:checked + label {
+    opacity: 1 !important;
+    display: block;
 }

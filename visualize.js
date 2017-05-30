@@ -5,9 +5,24 @@ function makeGraph(totals) {
     g.setGraph({})
     g.setDefaultEdgeLabel(function() { return  {} })
     for (var recipeName in totals.totals) {
-        var rate = totals.totals[recipeName].mul(displayRate)
-        var label = sprintf("%.3f %s/%s", rate.toFloat(), recipeName, rateName)
-        g.setNode(recipeName, {"label": label})
+        var rate = totals.totals[recipeName]
+        var recipe = solver.recipes[recipeName]
+        var factoryCount = spec.getCount(recipe, rate)
+        var label = sprintf(
+            "%s \u00d7 %.3f/%s",
+            getImage(recipeName).outerHTML,
+            rate.mul(displayRate).toFloat(),
+            rateName
+        )
+        if (!factoryCount.isZero()) {
+            var factory = spec.getFactory(recipe)
+            label += sprintf(
+                " (%s \u00d7 %.3f)",
+                getImage(factory.name).outerHTML,
+                factoryCount.toFloat()
+            )
+        }
+        g.setNode(recipeName, {"label": label, "labelType": "html"})
     }
     for (var itemName in totals.unfinished) {
         g.setNode(itemName, {"label": "???"})
@@ -29,14 +44,32 @@ function makeGraph(totals) {
                     var rate = totals.totals[recipeName].mul(ing.amount)
                     var ratio = rate.div(totalRate)
                     var subRate = totals.totals[subRecipe.name].mul(subRecipe.gives(ing.item, spec)).mul(ratio).mul(displayRate)
-                    var label = sprintf("%.3f %s/%s", subRate.toFloat(), ing.item.name, rateName)
-                    g.setEdge(subRecipe.name, recipeName, {"label": label})
+                    var label = sprintf(
+                        "%s \u00d7 %.3f/%s",
+                        getImage(ing.item.name).outerHTML,
+                        subRate.toFloat(),
+                        rateName
+                    )
+                    g.setEdge(subRecipe.name, recipeName, {
+                        "label": label,
+                        "labelType": "html",
+                        "labelpos": "c"
+                    })
                 }
             }
             if (ing.item.name in totals.unfinished) {
                 var rate = totals.totals[recipeName].mul(ing.amount).mul(displayRate)
-                var label = sprintf("%.3f %s/%s", rate.toFloat(), ing.item.name, rateName)
-                g.setEdge(ing.item.name, recipeName, {"label": label})
+                var label = sprintf(
+                    "%s \u00d7 %.3f/%s",
+                    getImage(ing.item.name).outerHTML,
+                    rate.toFloat(),
+                    rateName
+                )
+                g.setEdge(ing.item.name, recipeName, {
+                    "label": label,
+                    "labelType": "html",
+                    "labelpos": "c"
+                })
             }
         }
     }
