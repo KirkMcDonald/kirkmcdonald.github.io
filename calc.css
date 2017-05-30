@@ -69,18 +69,19 @@ div.tab {
 }
 .dropdown {
     border: 1px solid #ccc;
-    width: 50px;
+    width: 36px;
     height: 36px;
     overflow: hidden;
 }
 .dropdown:hover {
-    height: 150px;
-    overflow-y: scroll;
-    transition: height 0.1s;
     position: absolute;
     z-index: 10;
     background-color: white;
     margin-top: -19px;
+}
+.dropdown:hover {
+    height: 231px;
+    transition: height 0.1s;
 }
 .dropdown input {
     position: absolute;
@@ -93,54 +94,23 @@ div.tab {
     margin: 2px;
     height: 32px;
     opacity: 0.5;
-    font-size: 28px;
 }
 .dropdown:hover label {
-    display: block;
+    display: inline;
 }
 .dropdown label:hover {
     opacity: 0.7;
 }
 .dropdown input:checked + label {
     opacity: 1 !important;
-    display: block;
+    display: inline;
 }
-
-.itemDropdown {
-    border: 1px solid #ccc;
-    width: 36px;
-    height: 36px;
-    overflow: hidden;
+.shortDropdown:hover {
+    height: 132;
 }
 .itemDropdown:hover {
     height: 300px;
     width: 380px;
     overflow-y: scroll;
     transition: height 0.3s;
-    position: absolute;
-    z-index: 10;
-    background-color: white;
-    margin-top: -19px;
-}
-.itemDropdown input {
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0;
-}
-.itemDropdown label {
-    display: none;
-    margin: 2px;
-    height: 32px;
-    opacity: 0.5;
-}
-.itemDropdown:hover label {
-    display: inline;
-}
-.itemDropdown label:hover {
-    opacity: 0.7;
-}
-.itemDropdown input:checked + label {
-    opacity: 1 !important;
-    display: inline;
 }

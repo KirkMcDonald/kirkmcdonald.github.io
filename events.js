@@ -74,6 +74,7 @@ function BuildTarget(index, itemName) {
     var cell = document.createElement("td")
     row.appendChild(cell)
     var dropdown = document.createElement("div")
+    dropdown.classList.add("dropdown")
     dropdown.classList.add("itemDropdown")
     cell.appendChild(dropdown)
     var form = document.createElement("form")

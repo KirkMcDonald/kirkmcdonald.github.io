@@ -87,9 +87,12 @@ function pruneSpec(totals) {
 
 var globalTotals
 
-function makeDropdown(cell) {
+function makeDropdown(cell, isShort) {
     var dropdown = document.createElement("div")
     dropdown.classList.add("dropdown")
+    if (isShort) {
+        dropdown.classList.add("shortDropdown")
+    }
     cell.appendChild(dropdown)
     var form = document.createElement("form")
     dropdown.appendChild(form)
@@ -223,7 +226,7 @@ function itemUpdate() {
                     form,
                     !currentModule,
                     "no module",
-                    new Text("\u{1F6AB}"),
+                    getImage("slot-icon-module"),
                     handler
                 )
 
@@ -274,7 +277,7 @@ function itemUpdate() {
                     beaconForm,
                     !currentBeacon,
                     "no module",
-                    new Text("\u{1F6AB}"),
+                    getImage("slot-icon-module"),
                     beaconHandler
                 )
 
