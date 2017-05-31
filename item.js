@@ -1,8 +1,15 @@
 "use strict"
 
-function Item(name) {
+function Item(data, name) {
     this.name = name
     this.recipes = []
+    var d = data.items[this.name]
+    if (!d) {
+        d = data.fluids[this.name]
+    }
+    this.group = d.group
+    this.subgroup = d.subgroup
+    this.order = d.order
 }
 Item.prototype = {
     constructor: Item,
@@ -31,32 +38,33 @@ Item.prototype = {
     }
 }
 
-function Resource(name) {
-    Item.call(this, name)
+function Resource(data, name) {
+    Item.call(this, data, name)
 }
 Resource.prototype = Object.create(Item.prototype)
 Resource.prototype.isResource = function() {
     return true
 }
 
-function getItem(items, name) {
+function getItem(data, items, name) {
     if (name in items) {
         return items[name]
     } else {
-        var item = new Item(name)
+        var item = new Item(data, name)
         items[name] = item
         return item
     }
 }
 
 function getItems(data) {
-    var items = {"water": new Resource("water")}
+    var items = {"water": new Resource(data, "water")}
     for (var name in data.entities) {
         var entity = data.entities[name]
         if (!entity.resource_category) {
             continue
         }
-        items[name] = new Resource(name)
+        var r = new Resource(data, name)
+        items[name] = r
     }
     return items
 }

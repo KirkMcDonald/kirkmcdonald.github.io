@@ -5,7 +5,7 @@ function Ingredient(amount, item) {
     this.item = item
 }
 
-function makeIngredient(i, items) {
+function makeIngredient(data, i, items) {
     var amount
     if ("amount" in i) {
         amount = i.amount
@@ -13,7 +13,7 @@ function makeIngredient(i, items) {
         amount = (i.amount_min + i.amount_max) / 2
     }
     amount *= i.probability || 1
-    return new Ingredient(RationalFromFloat(amount), getItem(items, i.name))
+    return new Ingredient(RationalFromFloat(amount), getItem(data, items, i.name))
 }
 
 function Recipe(name, category, time, ingredients, products) {
@@ -49,15 +49,15 @@ Recipe.prototype = {
     }
 }
 
-function makeRecipe(d, items) {
+function makeRecipe(data, d, items) {
     var time = RationalFromFloat(d.energy)
     var products = []
     for (var i=0; i < d.products.length; i++) {
-        products.push(makeIngredient(d.products[i], items))
+        products.push(makeIngredient(data, d.products[i], items))
     }
     var ingredients = []
     for (var i=0; i < d.ingredients.length; i++) {
-        ingredients.push(makeIngredient(d.ingredients[i], items))
+        ingredients.push(makeIngredient(data, d.ingredients[i], items))
     }
     return new Recipe(d.name, d.category, time, ingredients, products)
 }
@@ -101,7 +101,7 @@ function getRecipeGraph(data) {
         if (ignoreRecipe(recipe)) {
             continue
         }
-        var r = makeRecipe(recipe, items)
+        var r = makeRecipe(data, recipe, items)
         recipes[recipe.name] = r
     }
     for (var entityName in data.entities) {

@@ -25,7 +25,7 @@ function makeGraph(totals) {
         g.setNode(recipeName, {"label": label, "labelType": "html"})
     }
     for (var itemName in totals.unfinished) {
-        g.setNode(itemName, {"label": "???"})
+        g.setNode(itemName, {"label": "unknown " + itemName + " recipe"})
     }
     for (var recipeName in totals.totals) {
         var recipe = solver.recipes[recipeName]

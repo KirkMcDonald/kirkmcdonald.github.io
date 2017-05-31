@@ -83,6 +83,12 @@ div.tab {
     height: 231px;
     transition: height 0.1s;
 }
+.dropdown br {
+    display: none;
+}
+.dropdown:hover br {
+    display: inline;
+}
 .dropdown input {
     position: absolute;
     top: 0;

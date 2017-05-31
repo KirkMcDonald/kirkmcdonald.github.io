@@ -24,6 +24,9 @@ var modules
 // Map from short module name to Module object.
 var shortModules
 
+// Array of item groups, in turn divided into subgroups. For display purposes.
+var itemGroups
+
 // Set the page back to a state immediately following initial setup, but before
 // the dataset is loaded for the first time.
 //
@@ -106,6 +109,7 @@ function loadData(modName, settings) {
 
         var items = graph[0]
         var recipes = graph[1]
+        itemGroups = getItemGroups(items, data)
         solver = new Solver(items, recipes)
         
         if ("items" in settings && settings.items != "") {

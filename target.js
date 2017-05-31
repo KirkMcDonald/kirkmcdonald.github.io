@@ -37,30 +37,40 @@ function BuildTarget(index, itemName) {
     dropdown.appendChild(form)
 
     var handler = new ItemHandler(this)
-    var sortedItems = sorted(solver.items)
-    for (var i = 0; i < sortedItems.length; i++) {
-        var currentItemName = sortedItems[i]
-        var currentItem = solver.items[currentItemName]
-        var image = getImage(currentItemName)
-        if (!image) {
-            continue
+    for (var i = 0; i < itemGroups.length; i++) {
+        var group = itemGroups[i]
+        for (var j = 0; j < group.length; j++) {
+            var subgroup = group[j]
+            var any = false
+            for (var k = 0; k < subgroup.length; k++) {
+                var currentItem = subgroup[k]
+                var currentItemName = currentItem.name
+                var image = getImage(currentItemName)
+                if (!image) {
+                    continue
+                }
+                any = true
+                var id = sprintf("target-%d-%d-%d-%d", this.index, i, j, k)
+                var input = document.createElement("input")
+                input.id = id
+                input.name = "target"
+                input.type = "radio"
+                input.value = currentItemName
+                if (currentItemName == this.itemName) {
+                    input.checked = true
+                }
+                input.addEventListener("change", handler)
+                form.appendChild(input)
+                var label = document.createElement("label")
+                label.htmlFor = id
+                label.appendChild(image)
+                label.title = currentItemName
+                form.appendChild(label)
+            }
+            if (any) {
+                form.appendChild(document.createElement("br"))
+            }
         }
-        var id = "target-" + this.index + "-" + i
-        var input = document.createElement("input")
-        input.id = id
-        input.name = "target"
-        input.type = "radio"
-        input.value = currentItemName
-        if (currentItemName == this.itemName) {
-            input.checked = true
-        }
-        input.addEventListener("change", handler)
-        form.appendChild(input)
-        var label = document.createElement("label")
-        label.htmlFor = id
-        label.appendChild(image)
-        label.title = currentItemName
-        form.appendChild(label)
     }
 
     var cell2 = document.createElement("td")
