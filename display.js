@@ -17,6 +17,19 @@ function displayValue(x) {
     return displayRate(x, true)
 }
 
+function align(s) {
+    var idx = s.indexOf(".")
+    if (idx == -1) {
+        idx = s.length
+    }
+    var toAdd = 4 - s.length + idx
+    while (toAdd > 0) {
+        s += "\u00A0"
+        toAdd--
+    }
+    return s
+}
+
 function displaySteps(reqs, steps) {
     reqs.sort(function(a, b) {
         if (a.item.name < b.item.name) {
@@ -217,7 +230,7 @@ function display() {
         var rateCell = document.createElement("td")
         rateCell.classList.add("right-align")
         var tt = document.createElement("tt")
-        tt.textContent = displayRate(rate)
+        tt.textContent = align(displayRate(rate))
         rateCell.appendChild(tt)
         row.appendChild(rateCell)
 
@@ -235,7 +248,7 @@ function display() {
             var realCell = document.createElement("td")
             realCell.className = "right-align"
             var tt = document.createElement("tt")
-            tt.textContent = displayValue(factoryCount)
+            tt.textContent = align(displayValue(factoryCount))
             realCell.appendChild(tt)
             row.appendChild(realCell)
 
