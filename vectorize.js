@@ -30,6 +30,34 @@ function combinations(n, r) {
     }
 }
 
+// Combine list of indexes (output from combinations) with indexes being
+// ignored.
+function applyIgnore(indexes, ignore, n) {
+    var result = []
+    var lookup = []
+    var j = 0
+    for (var i = 0; i < n; i++) {
+        if (i == ignore[j]) {
+            j++
+            continue
+        }
+        lookup.push(i)
+    }
+    j = 0
+    for (var i = 0; i < indexes.length; i++) {
+        var val = lookup[indexes[i]]
+        while (j < ignore.length && ignore[j] < val) {
+            result.push(ignore[j])
+            j++
+        }
+        result.push(val)
+    }
+    for (; j < ignore.length; j++) {
+        result.push(ignore[j])
+    }
+    return result
+}
+
 // Assumes same length.
 function lexicographicOrder(a, b) {
     for (var i = 0; i < a.length; i++) {
@@ -43,6 +71,23 @@ function lexicographicOrder(a, b) {
         }
     }
     return 0
+}
+
+// Given two sorted arrays of integers, return whether a intersects with b.
+function indexIntersect(a, b) {
+    var j = 0
+    for (var i = 0; i < a.length; i++) {
+        while (j < b.length && b[j] < a[i]) {
+            j++
+        }
+        if (j == b.length) {
+            break
+        }
+        if (b[j] == a[i]) {
+            return true
+        }
+    }
+    return false
 }
 
 function MatrixSolver(recipes) {
@@ -139,6 +184,52 @@ MatrixSolver.prototype = {
         }
         return result
     },
+    // Get the input/output column indexes for each item.
+    itemCols: function(row) {
+        var prodCols = []
+        var useCols = []
+        var productRecipes = this.matrix.cols - this.inputRecipes.length
+        for (var col = 0; col < productRecipes; col++) {
+            var x = this.matrix.index(row, col)
+            if (zero.less(x)) {
+                prodCols.push(col)
+            } else if (x.less(zero)) {
+                useCols.push(col)
+            }
+        }
+        return {prod: prodCols, use: useCols}
+    },
+    // Get the columns for recipes that produce an item that nothing needs.
+    ignoreCols: function(itemCols, want) {
+        var ignore = []
+        for (var row = 0; row < this.matrix.rows; row++) {
+            var providers = itemCols[row].prod
+            var users = itemCols[row].use
+            if (want[row].isZero() && users.length == 0) {
+                for (var i = 0; i < providers.length; i++) {
+                    ignore.push(providers[i])
+                }
+            }
+        }
+        return ignore
+    },
+    // Return whether the given set of indexes will exclude all possible
+    // producers of an item.
+    exclude: function(indexes, itemCols) {
+        for (var row = 0; row < this.matrix.rows; row++) {
+            var cols = itemCols[row]
+            var providers = cols.prod
+            var users = cols.use
+            // Is an input item/recipe, already excluded.
+            if (providers.length == 0) {
+                continue
+            }
+            if (!indexIntersect(providers, indexes)) {
+                return true
+            }
+        }
+        return false
+    },
     solveFor: function(products, spec) {
         var want = []
         for (var i = 0; i < this.matrix.rows; i++) {
@@ -150,12 +241,20 @@ MatrixSolver.prototype = {
             }
         }
         var A = this.matrix.appendColumn(want)
+        var itemCols = []
+        for (var i = 0; i < this.matrix.rows; i++) {
+            itemCols.push(this.itemCols(i))
+        }
         var productRecipes = this.matrix.cols - this.inputRecipes.length
-        var zeroCount = this.matrix.cols - this.matrix.rows
+        var ignore = this.ignoreCols(itemCols, want)
+        var zeroCount = this.matrix.cols - this.matrix.rows - ignore.length
         var solutions = []
-        var c = combinations(productRecipes, zeroCount)
+        var c = combinations(productRecipes - ignore.length, zeroCount)
         possible: for (var i = 0; i < c.length; i++) {
-            var indexes = c[i]
+            var indexes = applyIgnore(c[i], ignore, productRecipes)
+            if (this.exclude(indexes, itemCols)) {
+                continue
+            }
             var A_prime = A.copy()
             for (var j = 0; j < indexes.length; j++) {
                 A_prime.zeroColumn(indexes[j])
