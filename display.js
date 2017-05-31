@@ -64,15 +64,6 @@ function addRateOptions(node) {
     }
 }
 
-function sorted(obj, compareFunc) {
-    var keys = []
-    for (var i in obj) {
-        keys.push(i)
-    }
-    keys.sort(compareFunc)
-    return keys
-}
-
 function pruneSpec(totals) {
     var drop = []
     for (var name in spec.spec) {
