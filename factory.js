@@ -150,6 +150,7 @@ function FactorySpec(factories) {
     var smelters = this.factories["smelting"]
     this.furnace = smelters[smelters.length - 1]
     this.miningProd = zero
+    this.ignore = {}
 }
 FactorySpec.prototype = {
     constructor: FactorySpec,

@@ -156,7 +156,7 @@ function itemUpdate() {
         var rate = target.getRate()
         rates[target.itemName] = rate
     }
-    globalTotals = solver.solve(rates, spec)
+    globalTotals = solver.solve(rates, spec.ignore, spec)
     display()
 }
 
@@ -172,7 +172,7 @@ function display() {
     window.location.hash = "#" + formatSettings()
 
     if (currentTab == "graph_tab") {
-        renderGraph(totals)
+        renderGraph(totals, spec.ignore)
     }
     var stepTab = document.getElementById("steps_tab")
 
@@ -224,10 +224,16 @@ function display() {
         var recipe = solver.recipes[recipeName]
         var rate = totals.get(recipeName)
         var row = document.createElement("tr")
+        if (spec.ignore[recipeName]) {
+            row.classList.add("ignore")
+        }
 
         var nameCell = document.createElement("td")
         nameCell.className = "right-align"
-        nameCell.appendChild(getImage(recipeName))
+        var im = getImage(recipeName)
+        im.classList.add("display")
+        im.addEventListener("click", new IgnoreHandler(recipeName))
+        nameCell.appendChild(im)
         row.appendChild(nameCell)
 
         var rateCell = document.createElement("td")
@@ -243,6 +249,7 @@ function display() {
 
             var factoryCell = document.createElement("td")
             var image = getImage(factory.name)
+            image.classList.add("display")
             factoryCell.appendChild(image)
             factoryCell.appendChild(new Text(sprintf(" \u00d7 %d", Math.ceil(factoryCount.toFloat()))))
             factoryCell.style.setProperty("padding-left", "1em")

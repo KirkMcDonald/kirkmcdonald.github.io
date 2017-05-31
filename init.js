@@ -105,6 +105,12 @@ function loadData(modName, settings) {
             var mprod = document.getElementById("mprod")
             mprod.value = settings.mprod
         }
+        if ("ignore" in settings) {
+            var ignore = settings.ignore.split(",")
+            for (var i = 0; i < ignore.length; i++) {
+                spec.ignore[ignore[i]] = true
+            }
+        }
         getSprites(data)
 
         var items = graph[0]

@@ -19,7 +19,7 @@ Item.prototype = {
     isResource: function() {
         return this.recipes.length == 0 // XXX or any recipe makes a resource
     },
-    produce: function(rate, spec) {
+    produce: function(rate, ignore, spec) {
         var totals = new Totals(rate, this)
         if (this.recipes.length > 1) {
             totals.addUnfinished(this.name, rate)
@@ -29,9 +29,12 @@ Item.prototype = {
         var gives = recipe.gives(this, spec)
         rate = rate.div(gives)
         totals.add(recipe.name, rate)
+        if (ignore[recipe.name]) {
+            return totals
+        }
         for (var i=0; i < recipe.ingredients.length; i++) {
             var ing = recipe.ingredients[i]
-            var subTotals = ing.item.produce(rate.mul(ing.amount), spec)
+            var subTotals = ing.item.produce(rate.mul(ing.amount), ignore, spec)
             totals.combine(subTotals)
         }
         return totals

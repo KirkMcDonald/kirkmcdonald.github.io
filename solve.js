@@ -22,13 +22,13 @@ function Solver(items, recipes) {
 }
 Solver.prototype = {
     constructor: Solver,
-    solve: function(rates, spec) {
+    solve: function(rates, ignore, spec) {
         var unknowns = {}
         var totals = new Totals()
         for (var itemName in rates) {
             var item = this.items[itemName]
             var rate = rates[itemName]
-            var subTotals = item.produce(rate, spec)
+            var subTotals = item.produce(rate, ignore, spec)
             totals.combine(subTotals)
         }
         if (Object.keys(totals.unfinished).length == 0) {
@@ -52,7 +52,7 @@ Solver.prototype = {
                 var recipe = this.recipes[recipeName]
                 if (solver.inputRecipes.indexOf(recipe) !== -1) {
                     var ing = recipe.products[0]
-                    var subTotals = ing.item.produce(rate.mul(ing.amount), spec)
+                    var subTotals = ing.item.produce(rate.mul(ing.amount), ignore, spec)
                     totals.combine(subTotals, true)
                 } else {
                     totals.add(recipeName, rate)

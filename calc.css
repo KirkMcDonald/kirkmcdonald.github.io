@@ -29,6 +29,9 @@ input.mprod {
 input.beacon {
     width: 3em;
 }
+tr.ignore img.display {
+    opacity: 0.2;
+}
 .node rect {
     stroke: #333;
     fill: #fff;

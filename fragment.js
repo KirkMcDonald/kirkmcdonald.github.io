@@ -28,6 +28,10 @@ function formatSettings() {
         targetStrings.push(targetString)
     }
     settings += targetStrings.join(",")
+    var ignore = Object.keys(spec.ignore)
+    if (ignore.length > 0) {
+        settings += "&ignore=" + ignore.join(",")
+    }
     var min = getMinimumValue()
     if (min != "1") {
         settings += "&min=" + getMinimumValue()

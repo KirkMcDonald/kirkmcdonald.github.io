@@ -107,6 +107,17 @@ function changeFormat(event) {
 
 // recipe row events
 
+function IgnoreHandler(recipeName) {
+    this.handleEvent = function(event) {
+        if (spec.ignore[recipeName]) {
+            delete spec.ignore[recipeName]
+        } else {
+            spec.ignore[recipeName] = true
+        }
+        itemUpdate()
+    }
+}
+
 // Triggered when a factory module is changed.
 function ModuleHandler(factory, index) {
     this.handleEvent = function(event) {
@@ -198,6 +209,6 @@ function clickTab(event, tabName) {
 // Triggered when the "Visualize" tab is clicked on.
 function clickVisualize(event, tabName) {
     clickTab(event, tabName)
-    renderGraph(globalTotals)
+    renderGraph(globalTotals, spec.ignore)
 }
 
