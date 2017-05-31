@@ -73,21 +73,18 @@ function lexicographicOrder(a, b) {
     return 0
 }
 
-// Given two sorted arrays of integers, return whether a intersects with b.
-function indexIntersect(a, b) {
+// Given two sorted arrays of integers, return whether a is a subset of b.
+function subset(a, b) {
     var j = 0
     for (var i = 0; i < a.length; i++) {
         while (j < b.length && b[j] < a[i]) {
             j++
         }
-        if (j == b.length) {
-            break
-        }
-        if (b[j] == a[i]) {
-            return true
+        if (j == b.length || b[j] != a[i]) {
+            return false
         }
     }
-    return false
+    return true
 }
 
 function MatrixSolver(recipes) {
@@ -215,7 +212,18 @@ MatrixSolver.prototype = {
     },
     // Return whether the given set of indexes will exclude all possible
     // producers of an item.
-    exclude: function(indexes, itemCols) {
+    exclude: function(indexes, itemCols, ignore) {
+        var strippedIndexes = []
+        var j = 0
+        for (var i = 0; i < indexes.length; i++) {
+            while (j < ignore.length && ignore[j] < indexes[i]) {
+                j++
+            }
+            if (j < ignore.length && ignore[j] == indexes[i]) {
+                continue
+            }
+            strippedIndexes.push(indexes[i])
+        }
         for (var row = 0; row < this.matrix.rows; row++) {
             var cols = itemCols[row]
             var providers = cols.prod
@@ -224,7 +232,7 @@ MatrixSolver.prototype = {
             if (providers.length == 0) {
                 continue
             }
-            if (!indexIntersect(providers, indexes)) {
+            if (subset(providers, strippedIndexes)) {
                 return true
             }
         }
@@ -252,7 +260,7 @@ MatrixSolver.prototype = {
         var c = combinations(productRecipes - ignore.length, zeroCount)
         possible: for (var i = 0; i < c.length; i++) {
             var indexes = applyIgnore(c[i], ignore, productRecipes)
-            if (this.exclude(indexes, itemCols)) {
+            if (this.exclude(indexes, itemCols, ignore)) {
                 continue
             }
             var A_prime = A.copy()
