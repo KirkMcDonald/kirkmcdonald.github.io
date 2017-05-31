@@ -9,17 +9,17 @@ function makeGraph(totals) {
         var recipe = solver.recipes[recipeName]
         var factoryCount = spec.getCount(recipe, rate)
         var label = sprintf(
-            "%s \u00d7 %.3f/%s",
+            "%s \u00d7 %s/%s",
             getImage(recipeName).outerHTML,
-            rate.mul(displayRate).toFloat(),
+            displayRate(rate),
             rateName
         )
         if (!factoryCount.isZero()) {
             var factory = spec.getFactory(recipe)
             label += sprintf(
-                " (%s \u00d7 %.3f)",
+                " (%s \u00d7 %s)",
                 getImage(factory.name).outerHTML,
-                factoryCount.toFloat()
+                displayValue(factoryCount)
             )
         }
         g.setNode(recipeName, {"label": label, "labelType": "html"})
@@ -43,11 +43,11 @@ function makeGraph(totals) {
                 if (subRecipe.name in totals.totals) {
                     var rate = totals.totals[recipeName].mul(ing.amount)
                     var ratio = rate.div(totalRate)
-                    var subRate = totals.totals[subRecipe.name].mul(subRecipe.gives(ing.item, spec)).mul(ratio).mul(displayRate)
+                    var subRate = totals.totals[subRecipe.name].mul(subRecipe.gives(ing.item, spec)).mul(ratio)
                     var label = sprintf(
-                        "%s \u00d7 %.3f/%s",
+                        "%s \u00d7 %s/%s",
                         getImage(ing.item.name).outerHTML,
-                        subRate.toFloat(),
+                        displayRate(subRate),
                         rateName
                     )
                     g.setEdge(subRecipe.name, recipeName, {
@@ -58,11 +58,11 @@ function makeGraph(totals) {
                 }
             }
             if (ing.item.name in totals.unfinished) {
-                var rate = totals.totals[recipeName].mul(ing.amount).mul(displayRate)
+                var rate = totals.totals[recipeName].mul(ing.amount)
                 var label = sprintf(
-                    "%s \u00d7 %.3f/%s",
+                    "%s \u00d7 %s/%s",
                     getImage(ing.item.name).outerHTML,
-                    rate.toFloat(),
+                    displayRate(rate),
                     rateName
                 )
                 g.setEdge(ing.item.name, recipeName, {

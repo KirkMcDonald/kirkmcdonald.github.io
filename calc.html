@@ -77,21 +77,31 @@ limitations under the License.-->
     <div id="settings_tab" class="tab">
         Use recipe set:
         <select id="data_set" onchange="changeMod()"></select><br /><br />
+
         Display rates as:<br />
         <form id="display_rate"></form>
+
         <label for="minimum_assembler">Minimum assembling machine level:</label>
         <select id="minimum_assembler" onchange="changeMin()">
             <option selected>1</option>
             <option>2</option>
             <option>3</option>
         </select><br /><br />
+
         Mining production bonus:
         +<input id="mprod" class="mprod" type="number" step="2" value="0" min="0" onchange="changeMprod(event)">%<br /><br />
+
         Recipe sort order:<br />
         <input type="radio" name="sort_order" id="topo_order" value="topo" checked onchange="changeSortOrder(event)">
         <label for="topo_order">Topological order</label><br />
         <input type="radio" name="sort_order" id="alpha_order" value="alpha" onchange="changeSortOrder(event)">
-        <label for="alpha_order">Alphabetical order</label><br />
+        <label for="alpha_order">Alphabetical order</label><br /><br />
+
+        Format values as:<br />
+        <input type="radio" name="format" id="decimal_format" value="decimal" checked onchange="changeFormat(event)">
+        <label for="decimal_format">Decimals</label><br />
+        <input type="radio" name="format" id="rational_format" value="rational" onchange="changeFormat(event)">
+        <label for="rational_format">Rationals</label><br />
     </div>
 
     <div id="about_tab" class="tab">

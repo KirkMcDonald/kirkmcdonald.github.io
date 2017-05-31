@@ -1,5 +1,22 @@
 "use strict"
 
+var displayFormat = "decimal"
+
+function displayRate(x, notRate) {
+    if (!notRate) {
+        x = x.mul(displayRateFactor)
+    }
+    if (displayFormat == "rational") {
+        return x.toString()
+    } else {
+        return x.toDecimal()
+    }
+}
+
+function displayValue(x) {
+    return displayRate(x, true)
+}
+
 function displaySteps(reqs, steps) {
     reqs.sort(function(a, b) {
         if (a.item.name < b.item.name) {
@@ -14,7 +31,7 @@ function displaySteps(reqs, steps) {
         li.appendChild(getImage(req.item.name))
         li.appendChild(new Text(" \u00d7 "))
         var tt = document.createElement("tt")
-        tt.textContent = sprintf("%.3f", req.rate.mul(displayRate).toFloat())
+        tt.textContent = displayRate(req.rate)
         li.appendChild(tt)
         steps.appendChild(li)
         if (req.dependencies.length > 0) {
@@ -42,7 +59,7 @@ var longRateNames = {
 
 var DEFAULT_RATE = "m"
 
-var displayRate = displayRates[DEFAULT_RATE]
+var displayRateFactor = displayRates[DEFAULT_RATE]
 var rateName = DEFAULT_RATE
 
 var sortOrder = "topo"
@@ -55,7 +72,7 @@ function addRateOptions(node) {
         input.type = "radio"
         input.name = "rate"
         input.value = name
-        if (rate.equal(displayRate)) {
+        if (rate.equal(displayRateFactor)) {
             input.checked = true
         }
         input.addEventListener("change", displayRateHandler)
@@ -129,6 +146,10 @@ function itemUpdate() {
 
 // Re-renders the current solution, without re-computing it.
 function display() {
+    // Update the display of the target rate text boxes, if needed.
+    for (var i = 0; i < build_targets.length; i++) {
+        build_targets[i].getRate()
+    }
     var totals = globalTotals
     pruneSpec(totals)
 
@@ -194,8 +215,10 @@ function display() {
         row.appendChild(nameCell)
 
         var rateCell = document.createElement("td")
-        rateCell.className = "right-align"
-        rateCell.innerHTML = sprintf("<tt>%.3f</tt>", rate.mul(displayRate).toFloat())
+        rateCell.classList.add("right-align")
+        var tt = document.createElement("tt")
+        tt.textContent = displayRate(rate)
+        rateCell.appendChild(tt)
         row.appendChild(rateCell)
 
         var factoryCount = spec.getCount(recipe, rate)
@@ -211,7 +234,9 @@ function display() {
 
             var realCell = document.createElement("td")
             realCell.className = "right-align"
-            realCell.innerHTML = sprintf("<tt>%.3f</tt>", factoryCount.toFloat())
+            var tt = document.createElement("tt")
+            tt.textContent = displayValue(factoryCount)
+            realCell.appendChild(tt)
             row.appendChild(realCell)
 
             for (var j = 0; j < factory.modules.length; j++) {

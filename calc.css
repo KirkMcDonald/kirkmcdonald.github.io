@@ -112,7 +112,7 @@ div.tab {
     display: inline;
 }
 .shortDropdown:hover {
-    height: 132;
+    height: 132px;
 }
 .itemDropdown:hover {
     height: 300px;

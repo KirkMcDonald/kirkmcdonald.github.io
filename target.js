@@ -127,12 +127,12 @@ BuildTarget.prototype = {
         var baseRate = factory.recipeRate(recipe).mul(recipe.gives(item, spec))
         if (this.changedFactory) {
             rate = baseRate.mul(this.factoriesValue)
-            this.rate.value = rate.mul(displayRate).toFloat()
+            this.rate.value = displayRate(rate)
         } else {
             rate = this.rateValue
             var factories = rate.div(baseRate)
-            this.factories.value = factories.toFloat()
-            this.rate.value = rate.mul(displayRate).toFloat()
+            this.factories.value = displayValue(factories)
+            this.rate.value = displayRate(rate)
         }
         return rate
     },
@@ -153,7 +153,7 @@ BuildTarget.prototype = {
         this.factoryLabel.className = ""
         this.rateLabel.className = "bold"
         this.factoriesValue = zero
-        this.rateValue = RationalFromString(this.rate.value).div(displayRate)
+        this.rateValue = RationalFromString(this.rate.value).div(displayRateFactor)
         this.factories.value = ""
     },
     setRate: function(rate) {

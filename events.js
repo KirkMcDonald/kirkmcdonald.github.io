@@ -61,11 +61,8 @@ function changeMin() {
 // Triggered when the display rate is changed.
 function displayRateHandler(event) {
     var value = event.target.value
-    displayRate = displayRates[value]
+    displayRateFactor = displayRates[value]
     rateName = value
-    for (var i = 0; i < build_targets.length; i++) {
-        build_targets[i].getRate()
-    }
     display()
 }
 
@@ -101,6 +98,11 @@ function changeMod() {
 
     reset()
     loadData(modName)
+}
+
+function changeFormat(event) {
+    displayFormat = event.target.value
+    display()
 }
 
 // recipe row events

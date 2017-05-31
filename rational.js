@@ -26,6 +26,32 @@ Rational.prototype = {
         }
         return this.p.toString() + "/" + this.q.toString()
     },
+    toDecimal: function(maxDigits) {
+        if (!maxDigits) {
+            maxDigits = 3
+        }
+        var roundingFactor = new Rational(bigInt(5), bigInt(10).pow(maxDigits+1))
+        var x = this.add(roundingFactor)
+        var divmod = x.p.divmod(x.q)
+        var integerPart = divmod.quotient.toString()
+        var decimalPart = ""
+        var fraction = new Rational(divmod.remainder, x.q)
+        var ten = new Rational(bigInt(10), bigInt.one)
+        while (maxDigits > 0 && !fraction.isZero()) {
+            fraction = fraction.mul(ten)
+            divmod = fraction.p.divmod(fraction.q)
+            decimalPart += divmod.quotient.toString()
+            fraction = new Rational(divmod.remainder, fraction.q)
+            maxDigits--
+        }
+        while (decimalPart[decimalPart.length - 1] == "0") {
+            decimalPart = decimalPart.slice(0, decimalPart.length - 1)
+        }
+        if (decimalPart != "") {
+            return integerPart + "." + decimalPart
+        }
+        return integerPart
+    },
     isZero: function() {
         return this.p.isZero()
     },
