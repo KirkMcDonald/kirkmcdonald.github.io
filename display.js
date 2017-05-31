@@ -18,6 +18,9 @@ function displayValue(x) {
 }
 
 function align(s) {
+    if (displayFormat == "rational") {
+        return s
+    }
     var idx = s.indexOf(".")
     if (idx == -1) {
         idx = s.length
