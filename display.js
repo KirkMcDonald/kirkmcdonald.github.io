@@ -223,12 +223,14 @@ function itemUpdate() {
                 var form = makeDropdown(modCell)
 
                 var handler = new ModuleHandler(factory, j)
+                var noModImage = getImage("slot-icon-module")
+                noModImage.title = "no module"
                 makeDropdownEntry(
                     "mod-" + recipeName + "-" + j + "-nomod",
                     form,
                     !currentModule,
                     "no module",
-                    getImage("slot-icon-module"),
+                    noModImage,
                     handler
                 )
 
@@ -274,12 +276,14 @@ function itemUpdate() {
                 var beaconForm = makeDropdown(beaconCell)
                 var beaconHandler = new BeaconHandler(recipeName)
 
+                var noModImage = getImage("slot-icon-module")
+                noModImage.title = "no module"
                 makeDropdownEntry(
                     "mod-" + recipeName + "-beacon-nomod",
                     beaconForm,
                     !currentBeacon,
                     "no module",
-                    getImage("slot-icon-module"),
+                    noModImage,
                     beaconHandler
                 )
 
