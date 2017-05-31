@@ -123,8 +123,13 @@ function itemUpdate() {
         var rate = target.getRate()
         rates[target.itemName] = rate
     }
-    var totals = solver.solve(rates, spec)
-    globalTotals = totals
+    globalTotals = solver.solve(rates, spec)
+    display()
+}
+
+// Re-renders the current solution, without re-computing it.
+function display() {
+    var totals = globalTotals
     pruneSpec(totals)
 
     window.location.hash = "#" + formatSettings()

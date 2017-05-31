@@ -23,7 +23,7 @@ function formatSettings() {
         if (target.changedFactory) {
             targetString = sprintf("%s:f:%s", target.itemName, target.factories.value)
         } else {
-            targetString = sprintf("%s:r:%s", target.itemName, target.rate.value)
+            targetString = sprintf("%s:r:%s", target.itemName, target.rateValue.mul(displayRate).toString())
         }
         targetStrings.push(targetString)
     }

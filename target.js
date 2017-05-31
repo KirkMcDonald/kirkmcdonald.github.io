@@ -20,6 +20,8 @@ function BuildTarget(index, itemName) {
     this.index = index
     this.itemName = itemName
     this.changedFactory = true
+    this.factoriesValue = one
+    this.rateValue = zero
     this.element = document.createElement("li")
     this.element.style.setProperty("vertical-align", "middle")
 
@@ -124,13 +126,13 @@ BuildTarget.prototype = {
         var factory = spec.getFactory(recipe)
         var baseRate = factory.recipeRate(recipe).mul(recipe.gives(item, spec))
         if (this.changedFactory) {
-            var factoryCount = RationalFromString(this.factories.value)
-            rate = baseRate.mul(factoryCount)
+            rate = baseRate.mul(this.factoriesValue)
             this.rate.value = rate.mul(displayRate).toFloat()
         } else {
-            rate = RationalFromString(this.rate.value).div(displayRate)
+            rate = this.rateValue
             var factories = rate.div(baseRate)
             this.factories.value = factories.toFloat()
+            this.rate.value = rate.mul(displayRate).toFloat()
         }
         return rate
     },
@@ -138,6 +140,8 @@ BuildTarget.prototype = {
         this.changedFactory = true
         this.factoryLabel.className = "bold"
         this.rateLabel.className = ""
+        this.factoriesValue = RationalFromString(this.factories.value)
+        this.rateValue = zero
         this.rate.value = ""
     },
     setFactories: function(factories) {
@@ -147,8 +151,10 @@ BuildTarget.prototype = {
     rateChanged: function() {
         this.changedFactory = false
         this.factoryLabel.className = ""
-        this.factories.value = ""
         this.rateLabel.className = "bold"
+        this.factoriesValue = zero
+        this.rateValue = RationalFromString(this.rate.value).div(displayRate)
+        this.factories.value = ""
     },
     setRate: function(rate) {
         this.rate.value = rate

@@ -63,7 +63,10 @@ function displayRateHandler(event) {
     var value = event.target.value
     displayRate = displayRates[value]
     rateName = value
-    itemUpdate()
+    for (var i = 0; i < build_targets.length; i++) {
+        build_targets[i].getRate()
+    }
+    display()
 }
 
 // Triggered when the mining productivity bonus is changed.
