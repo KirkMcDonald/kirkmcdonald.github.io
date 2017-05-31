@@ -1,17 +1,14 @@
 "use strict"
 
-function displayRateHandler(event) {
-    var value = event.target.value
-    displayRate = displayRates[value]
-    rateName = value
-    itemUpdate()
-}
+// build target events
 
+// The "+" button to add a new target.
 function plusHandler() {
     addTarget()
     itemUpdate()
 }
 
+// Triggered when a build target's item is changed.
 function ItemHandler(target) {
     this.handleEvent = function(event) {
         target.itemName = event.target.value
@@ -19,6 +16,7 @@ function ItemHandler(target) {
     }
 }
 
+// The "x" button to remove a target.
 function RemoveHandler(target) {
     this.handleEvent = function(event) {
         build_targets.splice(target.index, 1)
@@ -30,6 +28,7 @@ function RemoveHandler(target) {
     }
 }
 
+// Triggered when a "Factories:" text box is changed.
 function FactoryHandler(target) {
     this.handleEvent = function(event) {
         target.factoriesChanged()
@@ -37,6 +36,7 @@ function FactoryHandler(target) {
     }
 }
 
+// Triggered when a "Rate:" text box is changed.
 function RateHandler(target) {
     this.handleEvent = function(event) {
         target.rateChanged()
@@ -44,37 +44,50 @@ function RateHandler(target) {
     }
 }
 
+// settings events
+
+// Obtains the current "minimum assembling machine" setting.
 function getMinimumValue() {
     var min = document.getElementById("minimum_assembler")
     return min.value
 }
 
+// Triggered when the "minimum assembling machine" setting is changed.
 function changeMin() {
     spec.setMinimum(getMinimumValue())
     itemUpdate()
 }
 
+// Triggered when the display rate is changed.
+function displayRateHandler(event) {
+    var value = event.target.value
+    displayRate = displayRates[value]
+    rateName = value
+    itemUpdate()
+}
+
+// Triggered when the mining productivity bonus is changed.
 function changeMprod(event) {
     var bonus = event.target.value
     setMprod(bonus)
     itemUpdate()
 }
 
+// Called to change the mining productivity bonus (on init or event).
 function setMprod(bonus) {
     var mprod = RationalFromFloats(Number(bonus), 100)
     spec.miningProd = mprod
 }
 
+// Triggered when the recipe sort order is changed.
 function changeSortOrder(event) {
     sortOrder = event.target.value
     itemUpdate()
 }
 
-function getFactory(recipeName) {
-    var recipe = solver.recipes[recipeName]
-    return spec.getFactory(recipe)
-}
+// recipe row events
 
+// Triggered when a factory module is changed.
 function ModuleHandler(factory, index) {
     this.handleEvent = function(event) {
         var moduleName = event.target.value
@@ -84,6 +97,7 @@ function ModuleHandler(factory, index) {
     }
 }
 
+// Triggered when the right-arrow "copy module" button is pressed.
 function ModuleCopyHandler(factory) {
     this.handleEvent = function(event) {
         var module = factory.getModule(0)
@@ -94,6 +108,13 @@ function ModuleCopyHandler(factory) {
     }
 }
 
+// Gets Factory object for a corresponding recipe name.
+function getFactory(recipeName) {
+    var recipe = solver.recipes[recipeName]
+    return spec.getFactory(recipe)
+}
+
+// Triggered when a beacon module is changed.
 function BeaconHandler(recipeName) {
     this.handleEvent = function(event) {
         var moduleName = event.target.value
@@ -104,6 +125,7 @@ function BeaconHandler(recipeName) {
     }
 }
 
+// Triggered when a beacon module count is changed.
 function BeaconCountHandler(recipeName) {
     this.handleEvent = function(event) {
         var moduleCount = RationalFromFloats(event.target.value, 1)
@@ -113,6 +135,7 @@ function BeaconCountHandler(recipeName) {
     }
 }
 
+// Triggered when the up/down arrow "copy to all recipes" button is pressed.
 function CopyAllHandler(name) {
     this.handleEvent = function(event) {
         var factory = spec.spec[name]
@@ -131,20 +154,16 @@ function CopyAllHandler(name) {
     }
 }
 
-function toggleVisible(id) {
-    var elem = document.getElementById(id)
-    if (elem.style.display == "none") {
-        elem.style.display = "block"
-    } else {
-        elem.style.display = "none"
-    }
-}
+// UI events
 
+// Returns currently-selected data set.
 function currentMod() {
     var elem = document.getElementById("data_set")
     return elem.value
 }
 
+// Obtains current data set from UI element, and resets the world with the new
+// data.
 function changeMod() {
     var modName = currentMod()
 
@@ -154,6 +173,7 @@ function changeMod() {
 
 var currentTab = "totals_tab"
 
+// Triggered when a tab is clicked on.
 function clickTab(event, tabName) {
     currentTab = tabName
     var tabs = document.getElementsByClassName("tab")
@@ -170,6 +190,7 @@ function clickTab(event, tabName) {
     event.currentTarget.classList.add("active")
 }
 
+// Triggered when the "Visualize" tab is clicked on.
 function clickVisualize(event, tabName) {
     clickTab(event, tabName)
     renderGraph(globalTotals)
