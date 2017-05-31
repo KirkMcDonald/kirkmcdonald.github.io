@@ -85,6 +85,21 @@ function changeSortOrder(event) {
     itemUpdate()
 }
 
+// Returns currently-selected data set.
+function currentMod() {
+    var elem = document.getElementById("data_set")
+    return elem.value
+}
+
+// Obtains current data set from UI element, and resets the world with the new
+// data.
+function changeMod() {
+    var modName = currentMod()
+
+    reset()
+    loadData(modName)
+}
+
 // recipe row events
 
 // Triggered when a factory module is changed.
@@ -154,22 +169,7 @@ function CopyAllHandler(name) {
     }
 }
 
-// UI events
-
-// Returns currently-selected data set.
-function currentMod() {
-    var elem = document.getElementById("data_set")
-    return elem.value
-}
-
-// Obtains current data set from UI element, and resets the world with the new
-// data.
-function changeMod() {
-    var modName = currentMod()
-
-    reset()
-    loadData(modName)
-}
+// tab events
 
 var currentTab = "totals_tab"
 
