@@ -11,7 +11,10 @@ function displaySteps(reqs, steps) {
     for (var i=0; i < reqs.length; i++) {
         var req = reqs[i]
         var li = document.createElement("li")
-        li.innerHTML = sprintf("<tt>%.3f</tt> %s", req.rate.mul(displayRate).toFloat(), req.item.name)
+        li.appendChild(getImage(req.item.name))
+        var tt = document.createElement("tt")
+        tt.textContent = sprintf(" \u00d7 %.3f", req.rate.mul(displayRate).toFloat())
+        li.appendChild(tt)
         steps.appendChild(li)
         if (req.dependencies.length > 0) {
             var subUL = document.createElement("ul")
