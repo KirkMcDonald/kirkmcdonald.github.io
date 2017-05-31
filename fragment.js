@@ -64,6 +64,10 @@ function formatSettings() {
     if (specs.length > 0) {
         settings += "&modules=" + specs.join(",")
     }
+    var zip = "zip=" + window.btoa(pako.deflateRaw(settings, {to: "string"}))
+    if (zip.length < settings.length) {
+        return zip
+    }
     return settings
 }
 
@@ -79,6 +83,10 @@ function loadSettings(fragment) {
         var name = pairs[i].substr(0, j)
         var value = pairs[i].substr(j + 1)
         settings[name] = value
+    }
+    if ("zip" in settings) {
+        var unzip = pako.inflateRaw(window.atob(settings.zip), {to: "string"})
+        return loadSettings(unzip)
     }
     return settings
 }
