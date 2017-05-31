@@ -73,15 +73,19 @@ end
 
 function inspect_recipes(recipes)
     local r = {}
+    local groups = {}
     for k, v in pairs(recipes) do
+        groups[v.group.name] = v.group
         r[k] = inspect_recipe(v)
     end
-    return r
+    return r, groups
 end
 
 function inspect_entities(entities)
     local e = {}
+    local groups = {}
     for k, v in pairs(entities) do
+        groups[v.group.name] = v.group
         if v.crafting_categories or v.mining_power or v.resource_category or v.burner_prototype then
             entity = {
                 name=v.name,
@@ -113,40 +117,92 @@ function inspect_entities(entities)
             e[k] = entity
         end
     end
-    return e
+    return e, groups
 end
 
 function inspect_items(items)
     local i = {}
+    local groups = {}
     for k, v in pairs(items) do
-        if v.fuel_category or v.module_effects then
-            i[k] = {
-                name=v.name,
-                type=v.type,
-                group=v.group.name,
-                subgroup=v.subgroup.name,
-                order=v.order,
-                fuel_category=v.fuel_category,
-                fuel_value=v.fuel_value,
-                module_effects=v.module_effects,
-                category=v.category,
-                tier=v.tier,
-                limitations=v.limitations,
-            }
-            if v.place_result then
-                i[k].place_result = v.place_result.name
-            end
+        groups[v.group.name] = v.group
+        i[k] = {
+            name=v.name,
+            type=v.type,
+            group=v.group.name,
+            subgroup=v.subgroup.name,
+            order=v.order,
+            fuel_category=v.fuel_category,
+            module_effects=v.module_effects,
+            category=v.category,
+            tier=v.tier,
+            limitations=v.limitations,
+        }
+        if v.fuel_value ~= 0 then
+            i[k].fuel_value = v.fuel_value
+        end
+        if v.place_result then
+            i[k].place_result = v.place_result.name
         end
     end
-    return i
+    return i, groups
+end
+
+function inspect_fluids(fluids)
+    local f = {}
+    local groups = {}
+    for k, v in pairs(fluids) do
+        groups[v.group.name] = v.group
+        f[k] = {
+            name=v.name,
+            group=v.group.name,
+            subgroup=v.subgroup.name,
+            order=v.order,
+            base_color=v.base_color,
+            flow_color=v.flow_color,
+        }
+    end
+    return f, groups
+end
+
+function inspect_groups(groups)
+    local g = {}
+    for k, v in pairs(groups) do
+        local subgroups = {}
+        for i, s in ipairs(v.subgroups) do
+            subgroups[s.name] = s.order
+        end
+        g[k] = {
+            name=v.name,
+            order=v.order,
+            subgroups=subgroups,
+        }
+    end
+    return g
+end
+
+function update(a, b)
+    for k, v in pairs(b) do
+        a[k] = v
+    end
 end
 
 function inspect_all()
-    data = {
-        recipes=inspect_recipes(game.recipe_prototypes),
-        entities=inspect_entities(game.entity_prototypes),
-        items=inspect_items(game.item_prototypes),
+    local groups = {}
+    local recipes, g = inspect_recipes(game.recipe_prototypes)
+    update(groups, g)
+    local entities, g = inspect_entities(game.entity_prototypes)
+    update(groups, g)
+    local items, g = inspect_items(game.item_prototypes)
+    update(groups, g)
+    local fluids, g = inspect_fluids(game.fluid_prototypes)
+    update(groups, g)
+    local data = {
         versions=game.active_mods,
+        recipes=recipes,
+        entities=entities,
+        items=items,
+        fluids=fluids,
+        groups=inspect_groups(groups),
     }
     traverse(data)
 end
