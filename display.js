@@ -12,8 +12,9 @@ function displaySteps(reqs, steps) {
         var req = reqs[i]
         var li = document.createElement("li")
         li.appendChild(getImage(req.item.name))
+        li.appendChild(new Text(" \u00d7 "))
         var tt = document.createElement("tt")
-        tt.textContent = sprintf(" \u00d7 %.3f", req.rate.mul(displayRate).toFloat())
+        tt.textContent = sprintf("%.3f", req.rate.mul(displayRate).toFloat())
         li.appendChild(tt)
         steps.appendChild(li)
         if (req.dependencies.length > 0) {
