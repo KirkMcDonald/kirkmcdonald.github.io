@@ -224,6 +224,7 @@ function display() {
         var recipe = solver.recipes[recipeName]
         var rate = totals.get(recipeName)
         var row = document.createElement("tr")
+        row.classList.add("recipe-row")
         if (spec.ignore[recipeName]) {
             row.classList.add("ignore")
         }
@@ -231,7 +232,13 @@ function display() {
         var nameCell = document.createElement("td")
         nameCell.className = "right-align"
         var im = getImage(recipeName)
+        if (spec.ignore[recipeName]) {
+            im.title += " (click to unignore)"
+        } else {
+            im.title += " (click to ignore)"
+        }
         im.classList.add("display")
+        im.classList.add("recipe-icon")
         im.addEventListener("click", new IgnoreHandler(recipeName))
         nameCell.appendChild(im)
         row.appendChild(nameCell)

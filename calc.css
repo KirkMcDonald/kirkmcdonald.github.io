@@ -29,6 +29,9 @@ input.mprod {
 input.beacon {
     width: 3em;
 }
+tr.recipe-row img.recipe-icon {
+    cursor: pointer;
+}
 tr.ignore img.display {
     opacity: 0.2;
 }
