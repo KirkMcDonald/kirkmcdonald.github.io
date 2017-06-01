@@ -110,6 +110,7 @@ function renderMinimumAssembler(settings) {
     }
     var minDropdown = document.getElementById("minimum_assembler")
     minDropdown.value = min
+    spec.setMinimum(getMinimumValue())
 }
 
 function getMinimumValue() {
@@ -123,6 +124,7 @@ function renderMiningProd(settings) {
         var mprod = document.getElementById("mprod")
         mprod.value = settings.mprod
     }
+    spec.miningProd = getMprod()
 }
 
 function getMprod() {
@@ -132,7 +134,6 @@ function getMprod() {
 
 // all
 function renderSettings(settings) {
-    renderDataSetOptions(settings)
     renderRateOptions(settings)
     renderPrecisions(settings)
     renderMinimumAssembler(settings)

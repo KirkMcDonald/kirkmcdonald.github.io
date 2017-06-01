@@ -77,8 +77,6 @@ function loadData(modName, settings) {
         }
         var factories = getFactories(data)
         spec = new FactorySpec(factories)
-        spec.setMinimum(getMinimumValue())
-        spec.miningProd = getMprod()
         if ("ignore" in settings) {
             var ignore = settings.ignore.split(",")
             for (var i = 0; i < ignore.length; i++) {
@@ -90,7 +88,9 @@ function loadData(modName, settings) {
         var recipes = graph[1]
         itemGroups = getItemGroups(items, data)
         solver = new Solver(items, recipes)
-        
+
+        renderSettings(settings)
+
         if ("items" in settings && settings.items != "") {
             var targets = settings.items.split(",")
             for (var i=0; i < targets.length; i++) {
@@ -160,7 +160,7 @@ function loadData(modName, settings) {
 
 function init() {
     var settings = loadSettings(window.location.hash)
-    renderSettings(settings)
+    renderDataSetOptions(settings)
     if ("tab" in settings) {
         currentTab = settings.tab + "_tab"
     }
