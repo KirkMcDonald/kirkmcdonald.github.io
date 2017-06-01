@@ -86,7 +86,7 @@ function loadSettings(fragment) {
     }
     if ("zip" in settings) {
         var unzip = pako.inflateRaw(window.atob(settings.zip), {to: "string"})
-        return loadSettings(unzip)
+        return loadSettings("#" + unzip)
     }
     return settings
 }
