@@ -27,6 +27,8 @@ var shortModules
 // Array of item groups, in turn divided into subgroups. For display purposes.
 var itemGroups
 
+var initDone = false
+
 // Set the page back to a state immediately following initial setup, but before
 // the dataset is loaded for the first time.
 //
@@ -180,6 +182,7 @@ function loadData(modName, settings) {
                 }
             }
         }
+        initDone = true
         itemUpdate()
     })
 }
@@ -189,6 +192,9 @@ function init() {
     if ("rate" in settings) {
         rateName = settings.rate
         displayRateFactor = displayRates[settings.rate]
+    }
+    if ("tab" in settings) {
+        currentTab = settings.tab + "_tab"
     }
     var modSelector = document.getElementById("data_set")
     for (var modName in MODIFICATIONS) {
@@ -202,6 +208,8 @@ function init() {
         modSelector.appendChild(option)
     }
     loadData(DEFAULT_MODIFICATION, settings)
-    document.getElementById("default_tab").click()
+    // We don't need to call clickVisualize here, as we will properly render
+    // the graph when we call itemUpdate() at the end of initialization.
+    clickTab(currentTab)
     addRateOptions(document.getElementById("display_rate"))
 }

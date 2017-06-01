@@ -187,10 +187,20 @@ function CopyAllHandler(name) {
 
 // tab events
 
-var currentTab = "totals_tab"
+var DEFAULT_TAB = "totals_tab"
+
+var currentTab = DEFAULT_TAB
+
+var tabMap = {
+    "totals_tab": "totals_button",
+    "steps_tab": "steps_button",
+    "graph_tab": "graph_button",
+    "settings_tab": "settings_button",
+    "about_tab": "about_button",
+}
 
 // Triggered when a tab is clicked on.
-function clickTab(event, tabName) {
+function clickTab(tabName) {
     currentTab = tabName
     var tabs = document.getElementsByClassName("tab")
     for (var i=0; i < tabs.length; i++) {
@@ -203,7 +213,11 @@ function clickTab(event, tabName) {
     }
 
     document.getElementById(tabName).style.display = "block"
-    event.currentTarget.classList.add("active")
+    var button = document.getElementById(tabMap[tabName])
+    button.classList.add("active")
+    if (initDone) {
+        window.location.hash = "#" + formatSettings()
+    }
 }
 
 // Triggered when the "Visualize" tab is clicked on.
