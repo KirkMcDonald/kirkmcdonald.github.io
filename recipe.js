@@ -105,6 +105,17 @@ function getRecipeGraph(data) {
             new Ingredient(one, items["nuclear-reactor-cycle"]),
         ]
     )
+    recipes["rocket-launch"] = new Recipe(
+        "rocket-launch",
+        "rocket-building",
+        one,
+        [
+            new Ingredient(RationalFromFloat(100), getItem(data, items, "rocket-part")),
+            new Ingredient(one, getItem(data, items, "satellite"))
+        ], [new Ingredient(RationalFromFloat(1000), getItem(data, items, "space-science-pack"))]
+    )
+    var siloSprite = spriteNames["rocket-silo"]
+    spriteNames["rocket-launch"] = new Sprite("rocket-launch", siloSprite.row, siloSprite.col)
 
     for (var name in data.recipes) {
         var recipe = data.recipes[name]
