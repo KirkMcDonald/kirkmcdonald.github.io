@@ -19,7 +19,7 @@ FactoryDef.prototype = {
         return new Factory(this)
     },
     canBeacon: function() {
-        return true
+        return this.moduleSlots > 0
     }
 }
 
@@ -205,10 +205,8 @@ FactorySpec.prototype = {
 function getFactories(data) {
     var factories = []
     var pump = new FactoryDef("offshore-pump", {"water": true}, 1, one, 0)
-    pump.canBeacon = function() { return false }
     factories.push(pump)
     var reactor = new FactoryDef("nuclear-reactor", {"nuclear": true}, 1, one, 0)
-    reactor.canBeacon = function() { return false }
     factories.push(reactor)
     for (var name in data.entities) {
         var d = data.entities[name]
