@@ -20,6 +20,9 @@ Module.prototype = {
             return recipe.name in this.limit
         }
         return true
+    },
+    canBeacon: function() {
+        return this.productivity.isZero()
     }
 }
 

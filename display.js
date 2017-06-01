@@ -87,11 +87,27 @@ function pruneSpec(totals) {
 
 var globalTotals
 
-function makeDropdown(cell, isShort) {
+var dropDownStyles = {}
+
+function getDropdownStyle(length) {
+    var styleName = "dropdown-" + length
+    if (styleName in dropDownStyles) {
+        return styleName
+    }
+    var style = document.createElement("style")
+    var height = 33 * length
+    var css = sprintf(".%s:hover { height: %dpx; }", styleName, height)
+    style.appendChild(new Text(css))
+    document.getElementsByTagName("head")[0].appendChild(style)
+    dropDownStyles[styleName] = style
+    return styleName
+}
+
+function makeDropdown(cell, length) {
     var dropdown = document.createElement("div")
     dropdown.classList.add("dropdown")
-    if (isShort) {
-        dropdown.classList.add("shortDropdown")
+    if (length) {
+        dropdown.classList.add(getDropdownStyle(length))
     }
     cell.appendChild(dropdown)
     var form = document.createElement("form")
@@ -250,7 +266,14 @@ function display() {
                 var modCell = document.createElement("td")
                 row.appendChild(modCell)
 
-                var form = makeDropdown(modCell)
+                var moduleCount = 1
+                for (var name in modules) {
+                    if (modules[name].canUse(recipe)) {
+                        moduleCount++
+                    }
+                }
+
+                var form = makeDropdown(modCell, moduleCount)
 
                 var handler = new ModuleHandler(factory, j)
                 var noModImage = getImage("slot-icon-module")
@@ -303,7 +326,14 @@ function display() {
                 var beaconCell = document.createElement("td")
                 beaconCell.style.setProperty("padding-left", "1em")
 
-                var beaconForm = makeDropdown(beaconCell)
+                var moduleCount = 1
+                for (var name in modules) {
+                    if (modules[name].canBeacon()) {
+                        moduleCount++
+                    }
+                }
+
+                var beaconForm = makeDropdown(beaconCell, moduleCount)
                 var beaconHandler = new BeaconHandler(recipeName)
 
                 var noModImage = getImage("slot-icon-module")
@@ -320,7 +350,7 @@ function display() {
                 for (var name in modules) {
                     var module = modules[name]
                     // No productivity modules in beacons.
-                    if (!module.productivity.isZero()) {
+                    if (!module.canBeacon()) {
                         continue
                     }
                     makeDropdownEntry(

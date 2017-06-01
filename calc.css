@@ -88,8 +88,6 @@ div.tab {
     z-index: 10;
     background-color: white;
     margin-top: -19px;
-}
-.dropdown:hover {
     height: 231px;
     transition: height 0.1s;
 }
@@ -120,9 +118,6 @@ div.tab {
 .dropdown input:checked + label {
     opacity: 1 !important;
     display: inline;
-}
-.shortDropdown:hover {
-    height: 132px;
 }
 .itemDropdown:hover {
     height: 300px;
