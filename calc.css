@@ -4,6 +4,7 @@ ul.targets {
 ul.targets a {
     font-size: large;
     font-weight: bold;
+    cursor: pointer;
 }
 .right-align {
     text-align: right;
