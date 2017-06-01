@@ -94,7 +94,7 @@ function renderPrecisions(settings) {
     }
     if ("cp" in settings) {
         countPrecision = Number(settings.cp)
-        document.getElementById("fprec").value = ratePrecision
+        document.getElementById("fprec").value = countPrecision
     }
 }
 
