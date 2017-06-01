@@ -35,6 +35,7 @@
     <script src="display.js"></script>
     <script src="visualize.js"></script>
     <script src="icon.js"></script>
+    <script src="settings.js"></script>
     <script src="init.js"></script>
 </head>
 
@@ -92,8 +93,8 @@ limitations under the License.-->
             <option>3</option>
         </select><br /><br />
 
-        Mining production bonus:
-        +<input id="mprod" class="mprod" type="number" step="2" value="0" min="0" onchange="changeMprod(event)">%<br /><br />
+        Mining productivity bonus:
+        +<input id="mprod" class="mprod" type="number" step="2" value="0" min="0" onchange="changeMprod()">%<br /><br />
 
         Recipe sort order:<br />
         <input type="radio" name="sort_order" id="topo_order" value="topo" checked onchange="changeSortOrder(event)">

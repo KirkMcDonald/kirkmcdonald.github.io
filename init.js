@@ -1,17 +1,5 @@
 "use strict"
 
-function Modification(name, filename) {
-    this.name = name
-    this.filename = filename
-}
-
-var MODIFICATIONS = {
-    "0-15-16": new Modification("Vanilla 0.15.16", "vanilla-0.15.16.json"),
-    "0-15-16x": new Modification("Vanilla 0.15.16 - Expensive", "vanilla-0.15.16-expensive.json"),
-}
-
-var DEFAULT_MODIFICATION = "0-15-16"
-
 // Contains collections of items and recipes. (solve.js)
 var solver
 
@@ -78,20 +66,7 @@ function loadData(modName, settings) {
     if (!settings) {
         settings = {}
     }
-    if ("data" in settings && settings.data != "") {
-        modName = settings.data
-    }
     loadDataRunner(modName, function(data) {
-        var min = "1"
-        // Backward compatibility.
-        if ("use_3" in settings && settings.use_3 == "true") {
-            min = "3"
-        }
-        if ("min" in settings && (settings.min == "1" || settings.min == "2" || settings.min == "3")) {
-            min = settings.min
-        }
-        var minDropdown = document.getElementById("minimum_assembler")
-        minDropdown.value = min
         getSprites(data)
         var graph = getRecipeGraph(data)
         modules = getModules(data)
@@ -102,12 +77,8 @@ function loadData(modName, settings) {
         }
         var factories = getFactories(data)
         spec = new FactorySpec(factories)
-        spec.setMinimum(min)
-        if ("mprod" in settings) {
-            setMprod(settings.mprod)
-            var mprod = document.getElementById("mprod")
-            mprod.value = settings.mprod
-        }
+        spec.setMinimum(getMinimumValue())
+        spec.miningProd = getMprod()
         if ("ignore" in settings) {
             var ignore = settings.ignore.split(",")
             for (var i = 0; i < ignore.length; i++) {
@@ -189,35 +160,12 @@ function loadData(modName, settings) {
 
 function init() {
     var settings = loadSettings(window.location.hash)
-    if ("rate" in settings) {
-        rateName = settings.rate
-        displayRateFactor = displayRates[settings.rate]
-    }
-    if ("rp" in settings) {
-        ratePrecision = Number(settings.rp)
-        document.getElementById("rprec").value = ratePrecision
-    }
-    if ("cp" in settings) {
-        countPrecision = Number(settings.cp)
-        document.getElementById("fprec").value = ratePrecision
-    }
+    renderSettings(settings)
     if ("tab" in settings) {
         currentTab = settings.tab + "_tab"
     }
-    var modSelector = document.getElementById("data_set")
-    for (var modName in MODIFICATIONS) {
-        var mod = MODIFICATIONS[modName]
-        var option = document.createElement("option")
-        option.textContent = mod.name
-        option.value = modName
-        if (settings.data && settings.data == modName || !settings.data && modName == DEFAULT_MODIFICATION) {
-            option.selected = true
-        }
-        modSelector.appendChild(option)
-    }
-    loadData(DEFAULT_MODIFICATION, settings)
+    loadData(currentMod(), settings)
     // We don't need to call clickVisualize here, as we will properly render
     // the graph when we call itemUpdate() at the end of initialization.
     clickTab(currentTab)
-    addRateOptions(document.getElementById("display_rate"))
 }

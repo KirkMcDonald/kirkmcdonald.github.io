@@ -46,16 +46,13 @@ function RateHandler(target) {
 
 // settings events
 
-// Obtains the current "minimum assembling machine" setting.
-function getMinimumValue() {
-    var min = document.getElementById("minimum_assembler")
-    return min.value
-}
+// Obtains current data set from UI element, and resets the world with the new
+// data.
+function changeMod() {
+    var modName = currentMod()
 
-// Triggered when the "minimum assembling machine" setting is changed.
-function changeMin() {
-    spec.setMinimum(getMinimumValue())
-    itemUpdate()
+    reset()
+    loadData(modName)
 }
 
 // Triggered when the display rate is changed.
@@ -76,38 +73,22 @@ function changeFPrec(event) {
     display()
 }
 
-// Triggered when the mining productivity bonus is changed.
-function changeMprod(event) {
-    var bonus = event.target.value
-    setMprod(bonus)
+// Triggered when the "minimum assembling machine" setting is changed.
+function changeMin() {
+    spec.setMinimum(getMinimumValue())
     itemUpdate()
 }
 
-// Called to change the mining productivity bonus (on init or event).
-function setMprod(bonus) {
-    var mprod = RationalFromFloats(Number(bonus), 100)
-    spec.miningProd = mprod
+// Triggered when the mining productivity bonus is changed.
+function changeMprod() {
+    spec.miningProd = getMprod()
+    itemUpdate()
 }
 
 // Triggered when the recipe sort order is changed.
 function changeSortOrder(event) {
     sortOrder = event.target.value
-    itemUpdate()
-}
-
-// Returns currently-selected data set.
-function currentMod() {
-    var elem = document.getElementById("data_set")
-    return elem.value
-}
-
-// Obtains current data set from UI element, and resets the world with the new
-// data.
-function changeMod() {
-    var modName = currentMod()
-
-    reset()
-    loadData(modName)
+    display()
 }
 
 function changeFormat(event) {

@@ -2,12 +2,6 @@
 
 var displayFormat = "decimal"
 
-var DEFAULT_RATE_PRECISION = 3
-var ratePrecision = DEFAULT_RATE_PRECISION
-
-var DEFAULT_COUNT_PRECISION = 1
-var countPrecision = DEFAULT_COUNT_PRECISION
-
 function displayValue(x, precision) {
     if (displayFormat == "rational") {
         return x.toString()
@@ -77,48 +71,7 @@ function displaySteps(reqs, steps) {
     }
 }
 
-var seconds = one
-var minutes = RationalFromFloat(60)
-var hours = RationalFromFloat(3600)
-
-var displayRates = {
-    "s": seconds,
-    "m": minutes,
-    "h": hours,
-}
-var longRateNames = {
-    "s": "second",
-    "m": "minute",
-    "h": "hour",
-}
-
-var DEFAULT_RATE = "m"
-
-var displayRateFactor = displayRates[DEFAULT_RATE]
-var rateName = DEFAULT_RATE
-
 var sortOrder = "topo"
-
-function addRateOptions(node) {
-    for (var name in displayRates) {
-        var rate = displayRates[name]
-        var input = document.createElement("input")
-        input.id = name + "_rate"
-        input.type = "radio"
-        input.name = "rate"
-        input.value = name
-        if (rate.equal(displayRateFactor)) {
-            input.checked = true
-        }
-        input.addEventListener("change", displayRateHandler)
-        node.appendChild(input)
-        var label = document.createElement("label")
-        label.htmlFor = name + "_rate"
-        label.textContent = "items/" + longRateNames[name]
-        node.appendChild(label)
-        node.appendChild(document.createElement("br"))
-    }
-}
 
 function pruneSpec(totals) {
     var drop = []

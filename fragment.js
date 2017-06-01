@@ -18,6 +18,10 @@ function formatSettings() {
     if (countPrecision != DEFAULT_COUNT_PRECISION) {
         settings += "cp=" + countPrecision + "&"
     }
+    var min = getMinimumValue()
+    if (min != "1") {
+        settings += "min=" + min + "&"
+    }
     if (!spec.miningProd.isZero()) {
         var hundred = RationalFromFloat(100)
         var mprod = spec.miningProd.mul(hundred).toString()
@@ -40,10 +44,6 @@ function formatSettings() {
     var ignore = Object.keys(spec.ignore)
     if (ignore.length > 0) {
         settings += "&ignore=" + ignore.join(",")
-    }
-    var min = getMinimumValue()
-    if (min != "1") {
-        settings += "&min=" + getMinimumValue()
     }
     var specs = []
     for (var recipeName in spec.spec) {
