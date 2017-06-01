@@ -1,7 +1,7 @@
 "use strict"
 
 function makeGraph(totals, ignore) {
-    var g = new dagreD3.graphlib.Graph()
+    var g = new dagreD3.graphlib.Graph({multigraph: true})
     g.setGraph({})
     g.setDefaultEdgeLabel(function() { return  {} })
     for (var recipeName in totals.totals) {
@@ -65,7 +65,7 @@ function makeGraph(totals, ignore) {
                         "label": label,
                         "labelType": "html",
                         "labelpos": "c"
-                    })
+                    }, sprintf("%s-%s-%s", subRecipe.name, recipeName, ing.item.name))
                 }
             }
             if (ing.item.name in totals.unfinished) {

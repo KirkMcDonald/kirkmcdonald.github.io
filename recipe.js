@@ -95,6 +95,16 @@ function getRecipeGraph(data) {
     var items = getItems(data)
     var water = items["water"]
     recipes["water"] = new Recipe("water", "water", RationalFromFloats(1, 1200), [], [new Ingredient(one, water)])
+    recipes["nuclear-reactor-cycle"] = new Recipe(
+        "nuclear-reactor-cycle",
+        "nuclear",
+        RationalFromFloat(200),
+        [new Ingredient(one, getItem(data, items, "uranium-fuel-cell"))],
+        [
+            new Ingredient(one, getItem(data, items, "used-up-uranium-fuel-cell")),
+            new Ingredient(one, items["nuclear-reactor-cycle"]),
+        ]
+    )
 
     for (var name in data.recipes) {
         var recipe = data.recipes[name]

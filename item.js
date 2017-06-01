@@ -7,9 +7,11 @@ function Item(data, name) {
     if (!d) {
         d = data.fluids[this.name]
     }
-    this.group = d.group
-    this.subgroup = d.subgroup
-    this.order = d.order
+    if (d) {
+        this.group = d.group
+        this.subgroup = d.subgroup
+        this.order = d.order
+    }
 }
 Item.prototype = {
     constructor: Item,
@@ -19,9 +21,12 @@ Item.prototype = {
     isResource: function() {
         return this.recipes.length == 0 // XXX or any recipe makes a resource
     },
+    isWeird: function() {
+        return this.recipes.length > 1 || this.recipes[0].products.length > 1
+    },
     produce: function(rate, ignore, spec) {
         var totals = new Totals(rate, this)
-        if (this.recipes.length > 1) {
+        if (this.isWeird()) {
             totals.addUnfinished(this.name, rate)
             return totals
         }
@@ -61,6 +66,14 @@ function getItem(data, items, name) {
 
 function getItems(data) {
     var items = {"water": new Resource(data, "water")}
+    var cycleName = "nuclear-reactor-cycle"
+    var cycle = new Item(data, cycleName)
+    cycle.group = "production"
+    cycle.subgroup = "energy"
+    cycle.order = "f[nuclear-energy]-d[reactor-cycle]"
+    var reactorSprite = spriteNames["nuclear-reactor"]
+    spriteNames[cycleName] = new Sprite(cycleName, reactorSprite.row, reactorSprite.col)
+    items[cycleName] = cycle
     for (var name in data.entities) {
         var entity = data.entities[name]
         if (!entity.resource_category) {

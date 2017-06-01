@@ -90,6 +90,7 @@ function loadData(modName, settings) {
         }
         var minDropdown = document.getElementById("minimum_assembler")
         minDropdown.value = min
+        getSprites(data)
         var graph = getRecipeGraph(data)
         modules = getModules(data)
         shortModules = {}
@@ -111,7 +112,6 @@ function loadData(modName, settings) {
                 spec.ignore[ignore[i]] = true
             }
         }
-        getSprites(data)
 
         var items = graph[0]
         var recipes = graph[1]

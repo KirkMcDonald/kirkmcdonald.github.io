@@ -104,13 +104,11 @@ function MatrixSolver(recipes) {
         }
     }
     var items = []
-    // Map of items produced by this matrix, all of which have multiple recipes.
+    // Map of items produced by this matrix.
     this.outputs = {}
     for (var itemName in products) {
         var item = products[itemName]
-        if (item.recipes.length > 1) {
-            this.outputs[item.name] = item
-        }
+        this.outputs[item.name] = item
         items.push(item)
     }
     // Array of the recipes that produce the "inputs" to this matrix.

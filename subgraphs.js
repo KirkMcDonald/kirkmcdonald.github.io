@@ -17,6 +17,15 @@ function findGroups(items, recipes) {
             candidates[itemName] = item
         }
     }
+    for (var recipeName in recipes) {
+        var recipe = recipes[recipeName]
+        if (recipe.products.length > 1) {
+            for (var i = 0; i < recipe.ingredients.length; i++) {
+                var item = recipe.products[i].item
+                candidates[item.name] = item
+            }
+        }
+    }
     var itemSets = []
     for (var itemName in candidates) {
         var item = candidates[itemName]
@@ -36,6 +45,29 @@ function findGroups(items, recipes) {
         }
         if (Object.keys(group).length > 0) {
             itemSets.push(group)
+        }
+    }
+    for (var recipeName in recipes) {
+        var recipe = recipes[recipeName]
+        if (recipe.products.length > 1) {
+            for (var i = 0; i < recipe.ingredients.length; i++) {
+                var item = recipe.ingredients[i].item
+                for (var j = 0; j < item.recipes.length; j++) {
+                    var subRecipe = item.recipes[j]
+                    if (subRecipe === recipe) {
+                        continue
+                    }
+                    for (var k = 0; k < subRecipe.ingredients.length; k++) {
+                        var ing = subRecipe.ingredients[k]
+                        if (ing.item.name in candidates) {
+                            var group = {}
+                            group[recipe.name] = recipe
+                            group[subRecipe.name] = subRecipe
+                            itemSets.push(group)
+                        }
+                    }
+                }
+            }
         }
     }
     var groups = []
