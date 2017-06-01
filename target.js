@@ -131,7 +131,7 @@ BuildTarget.prototype = {
         } else {
             rate = this.rateValue
             var factories = rate.div(baseRate)
-            this.factories.value = displayValue(factories)
+            this.factories.value = displayCount(factories)
             this.rate.value = displayRate(rate)
         }
         return rate

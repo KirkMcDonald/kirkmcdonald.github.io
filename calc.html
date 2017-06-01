@@ -82,6 +82,9 @@ limitations under the License.-->
         Display rates as:<br />
         <form id="display_rate"></form>
 
+        Rate precision: <input id="rprec" class="prec" type="number" value="3" min="0" onchange="changeRPrec(event)"><br />
+        Factory precision: <input id="fprec" class="prec" type="number" value="1" min="0" onchange="changeFPrec(event)"><br /><br />
+
         <label for="minimum_assembler">Minimum assembling machine level:</label>
         <select id="minimum_assembler" onchange="changeMin()">
             <option selected>1</option>

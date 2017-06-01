@@ -27,7 +27,7 @@ function makeGraph(totals, ignore) {
             label += sprintf(
                 " (%s \u00d7 %s)",
                 im.outerHTML,
-                displayValue(factoryCount)
+                displayCount(factoryCount)
             )
         }
         g.setNode(recipeName, {"label": label, "labelType": "html"})

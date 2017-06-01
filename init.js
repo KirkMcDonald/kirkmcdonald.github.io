@@ -193,6 +193,14 @@ function init() {
         rateName = settings.rate
         displayRateFactor = displayRates[settings.rate]
     }
+    if ("rp" in settings) {
+        ratePrecision = Number(settings.rp)
+        document.getElementById("rprec").value = ratePrecision
+    }
+    if ("cp" in settings) {
+        countPrecision = Number(settings.cp)
+        document.getElementById("fprec").value = ratePrecision
+    }
     if ("tab" in settings) {
         currentTab = settings.tab + "_tab"
     }

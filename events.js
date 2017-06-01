@@ -66,6 +66,16 @@ function displayRateHandler(event) {
     display()
 }
 
+function changeRPrec(event) {
+    ratePrecision = Number(event.target.value)
+    display()
+}
+
+function changeFPrec(event) {
+    countPrecision = Number(event.target.value)
+    display()
+}
+
 // Triggered when the mining productivity bonus is changed.
 function changeMprod(event) {
     var bonus = event.target.value

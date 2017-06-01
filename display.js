@@ -2,22 +2,33 @@
 
 var displayFormat = "decimal"
 
-function displayRate(x, notRate) {
-    if (!notRate) {
-        x = x.mul(displayRateFactor)
-    }
+var DEFAULT_RATE_PRECISION = 3
+var ratePrecision = DEFAULT_RATE_PRECISION
+
+var DEFAULT_COUNT_PRECISION = 1
+var countPrecision = DEFAULT_COUNT_PRECISION
+
+function displayValue(x, precision) {
     if (displayFormat == "rational") {
         return x.toString()
     } else {
-        return x.toDecimal()
+        return x.toDecimal(precision)
     }
 }
 
-function displayValue(x) {
-    return displayRate(x, true)
+function displayRate(x) {
+    x = x.mul(displayRateFactor)
+    return displayValue(x, ratePrecision)
 }
 
-function align(s) {
+function displayCount(x) {
+    if (countPrecision == 0) {
+        return x.ceil().toString()
+    }
+    return displayValue(x, countPrecision)
+}
+
+function align(s, prec) {
     if (displayFormat == "rational") {
         return s
     }
@@ -25,12 +36,20 @@ function align(s) {
     if (idx == -1) {
         idx = s.length
     }
-    var toAdd = 4 - s.length + idx
+    var toAdd = prec - s.length + idx + 1
     while (toAdd > 0) {
         s += "\u00A0"
         toAdd--
     }
     return s
+}
+
+function alignRate(s) {
+    return align(s, ratePrecision)
+}
+
+function alignCount(s) {
+    return align(s, countPrecision)
 }
 
 function displaySteps(reqs, steps) {
@@ -160,6 +179,13 @@ function itemUpdate() {
     display()
 }
 
+function Header(name, colSpan) {
+    if (!colSpan) {
+        colSpan = 1
+    }
+    return {"name": name, "colSpan": colSpan}
+}
+
 // Re-renders the current solution, without re-computing it.
 function display() {
     // Update the display of the target rate text boxes, if needed.
@@ -189,24 +215,19 @@ function display() {
     var newTotals = document.createElement("table")
     newTotals.id = "totals"
     var header = document.createElement("tr")
-    var headers = [
-        "recipe",
-        "craft/" + rateName,
-        "factory count",
-        "real factory count",
-        "modules",
-        "beacons"
-    ]
     var max_modules = 4
+    var headers = [
+        Header("recipe"),
+        Header("craft/" + rateName),
+        Header("factories", 2),
+        Header("modules", max_modules + 1),
+        Header("beacons", 2)
+    ]
     for (var i = 0; i < headers.length; i++) {
         var th = document.createElement("th")
-        th.textContent = headers[i]
+        th.textContent = headers[i].name
+        th.colSpan = headers[i].colSpan
         th.style.setProperty("padding-left", "1em")
-        if (headers[i] == "modules") {
-            th.colSpan = max_modules + 1
-        } else if (headers[i] == "beacons") {
-            th.colSpan = 2
-        }
         header.appendChild(th)
     }
     newTotals.appendChild(header)
@@ -246,7 +267,7 @@ function display() {
         var rateCell = document.createElement("td")
         rateCell.classList.add("right-align")
         var tt = document.createElement("tt")
-        tt.textContent = align(displayRate(rate))
+        tt.textContent = alignRate(displayRate(rate))
         rateCell.appendChild(tt)
         row.appendChild(rateCell)
 
@@ -258,14 +279,15 @@ function display() {
             var image = getImage(factory.name)
             image.classList.add("display")
             factoryCell.appendChild(image)
-            factoryCell.appendChild(new Text(sprintf(" \u00d7 %d", Math.ceil(factoryCount.toFloat()))))
+            factoryCell.appendChild(new Text(" \u00d7"))
+            //factoryCell.appendChild(new Text(sprintf(" \u00d7 %d", Math.ceil(factoryCount.toFloat()))))
             factoryCell.style.setProperty("padding-left", "1em")
             row.appendChild(factoryCell)
 
             var realCell = document.createElement("td")
             realCell.className = "right-align"
             var tt = document.createElement("tt")
-            tt.textContent = align(displayValue(factoryCount))
+            tt.textContent = alignCount(displayCount(factoryCount))
             realCell.appendChild(tt)
             row.appendChild(realCell)
 

@@ -24,6 +24,9 @@ img.spacer {
     width: 1px;
     vertical-align: middle;
 }
+input.prec {
+    width: 3em;
+}
 input.mprod {
     width: 3em;
 }

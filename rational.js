@@ -27,7 +27,7 @@ Rational.prototype = {
         return this.p.toString() + "/" + this.q.toString()
     },
     toDecimal: function(maxDigits) {
-        if (!maxDigits) {
+        if (maxDigits == null) {
             maxDigits = 3
         }
         var roundingFactor = new Rational(bigInt(5), bigInt(10).pow(maxDigits+1))
@@ -60,6 +60,14 @@ Rational.prototype = {
     },
     isInteger: function() {
         return this.q.equals(bigInt.one)
+    },
+    ceil: function() {
+        var divmod = this.p.divmod(this.q)
+        var result = new Rational(divmod.quotient, bigInt.one)
+        if (!divmod.remainder.isZero()) {
+            result = result.add(one)
+        }
+        return result
     },
     equal: function(other) {
         return this.p.equals(other.p) && this.q.equals(other.q)

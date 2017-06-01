@@ -12,6 +12,12 @@ function formatSettings() {
     if (rateName != DEFAULT_RATE) {
         settings += "rate=" + rateName + "&"
     }
+    if (ratePrecision != DEFAULT_RATE_PRECISION) {
+        settings += "rp=" + ratePrecision + "&"
+    }
+    if (countPrecision != DEFAULT_COUNT_PRECISION) {
+        settings += "cp=" + countPrecision + "&"
+    }
     if (!spec.miningProd.isZero()) {
         var hundred = RationalFromFloat(100)
         var mprod = spec.miningProd.mul(hundred).toString()
