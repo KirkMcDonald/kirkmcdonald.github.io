@@ -37,15 +37,18 @@ Rational.prototype = {
         var decimalPart = ""
         var fraction = new Rational(divmod.remainder, x.q)
         var ten = new Rational(bigInt(10), bigInt.one)
-        while (maxDigits > 0 && !fraction.isZero()) {
+        while (maxDigits > 0 && !fraction.equal(roundingFactor)) {
             fraction = fraction.mul(ten)
+            roundingFactor = roundingFactor.mul(ten)
             divmod = fraction.p.divmod(fraction.q)
             decimalPart += divmod.quotient.toString()
             fraction = new Rational(divmod.remainder, fraction.q)
             maxDigits--
         }
-        while (decimalPart[decimalPart.length - 1] == "0") {
-            decimalPart = decimalPart.slice(0, decimalPart.length - 1)
+        if (fraction.equal(roundingFactor)) {
+            while (decimalPart[decimalPart.length - 1] == "0") {
+                decimalPart = decimalPart.slice(0, decimalPart.length - 1)
+            }
         }
         if (decimalPart != "") {
             return integerPart + "." + decimalPart
