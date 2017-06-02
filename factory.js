@@ -97,7 +97,7 @@ Factory.prototype = {
         for (var i = 0; i < length; i++) {
             var module = this.getModule(i)
             if (!module || module.canUse(recipe)) {
-                needRecalc = needRecalc || other.setModule(i, module)
+                needRecalc = other.setModule(i, module) || needRecalc
             }
         }
         if (other.factory.canBeacon()) {

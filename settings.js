@@ -59,7 +59,10 @@ function renderRateOptions(settings) {
         rateName = settings.rate
         displayRateFactor = displayRates[settings.rate]
     }
-    var node = document.getElementById("display_rate")
+    var tab = document.getElementById("settings_tab")
+    var oldNode = document.getElementById("display_rate")
+    var node = document.createElement("form")
+    node.id = "display_rate"
     for (var name in displayRates) {
         var rate = displayRates[name]
         var input = document.createElement("input")
@@ -78,6 +81,7 @@ function renderRateOptions(settings) {
         node.appendChild(label)
         node.appendChild(document.createElement("br"))
     }
+    tab.replaceChild(node, oldNode)
 }
 
 // precisions
@@ -99,23 +103,37 @@ function renderPrecisions(settings) {
 }
 
 // minimum assembler
+var DEFAULT_MINIMUM = "1"
+
+var minimumAssembler = DEFAULT_MINIMUM
+
 function renderMinimumAssembler(settings) {
-    var min = "1"
+    var min = DEFAULT_MINIMUM
     // Backward compatibility.
     if ("use_3" in settings && settings.use_3 == "true") {
         min = "3"
     }
-    if ("min" in settings && (settings.min == "1" || settings.min == "2" || settings.min == "3")) {
+    var assemblers = spec.factories["crafting"]
+    if ("min" in settings && Number(min) >= 1 && Number(min) <= assemblers.length) {
         min = settings.min
     }
-    var minDropdown = document.getElementById("minimum_assembler")
-    minDropdown.value = min
-    spec.setMinimum(getMinimumValue())
-}
-
-function getMinimumValue() {
-    var min = document.getElementById("minimum_assembler")
-    return min.value
+    spec.setMinimum(min)
+    minimumAssembler = min
+    var tab = document.getElementById("settings_tab")
+    var oldNode = document.getElementById("minimum_assembler")
+    var node = document.createElement("span")
+    node.id = "minimum_assembler"
+    var dropdown = new Dropdown(node, "assembler_dropdown", changeMin)
+    for (var i = 0; i < assemblers.length; i++) {
+        var assembler = assemblers[i].name
+        var image = getImage(assembler)
+        dropdown.add(
+            image,
+            String(i + 1),
+            String(i + 1) === min
+        )
+    }
+    tab.replaceChild(node, oldNode)
 }
 
 // mining productivity bonus

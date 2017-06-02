@@ -18,9 +18,8 @@ function formatSettings() {
     if (countPrecision != DEFAULT_COUNT_PRECISION) {
         settings += "cp=" + countPrecision + "&"
     }
-    var min = getMinimumValue()
-    if (min != "1") {
-        settings += "min=" + min + "&"
+    if (minimumAssembler != DEFAULT_MINIMUM) {
+        settings += "min=" + minimumAssembler + "&"
     }
     if (!spec.miningProd.isZero()) {
         var hundred = RationalFromFloat(100)

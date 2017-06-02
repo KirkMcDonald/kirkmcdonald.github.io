@@ -74,8 +74,9 @@ function changeFPrec(event) {
 }
 
 // Triggered when the "minimum assembling machine" setting is changed.
-function changeMin() {
-    spec.setMinimum(getMinimumValue())
+function changeMin(event) {
+    spec.setMinimum(event.target.value)
+    minimumAssembler = event.target.value
     itemUpdate()
 }
 
@@ -128,7 +129,7 @@ function ModuleCopyHandler(recipeName, factory) {
         var module = factory.getModule(0)
         var needRecalc = false
         for (var i = 0; i < factory.modules.length; i++) {
-            needRecalc = needRecalc || factory.setModule(i, module)
+            needRecalc = factory.setModule(i, module) || needRecalc
         }
         if (needRecalc || isFactoryTarget(recipeName)) {
             itemUpdate()
@@ -187,7 +188,7 @@ function CopyAllHandler(name) {
                 continue
             }
             var recipe = solver.recipes[recipeName]
-            needRecalc = needRecalc || factory.copyModules(f, recipe) || isFactoryTarget(recipeName)
+            needRecalc = factory.copyModules(f, recipe) || needRecalc || isFactoryTarget(recipeName)
         }
         if (needRecalc) {
             itemUpdate()
