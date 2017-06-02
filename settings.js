@@ -117,8 +117,7 @@ function renderMinimumAssembler(settings) {
     if ("min" in settings && Number(min) >= 1 && Number(min) <= assemblers.length) {
         min = settings.min
     }
-    spec.setMinimum(min)
-    minimumAssembler = min
+    setMinimumAssembler(min)
     var tab = document.getElementById("settings_tab")
     var oldNode = document.getElementById("minimum_assembler")
     var node = document.createElement("span")
@@ -134,6 +133,11 @@ function renderMinimumAssembler(settings) {
         )
     }
     tab.replaceChild(node, oldNode)
+}
+
+function setMinimumAssembler(min) {
+    spec.setMinimum(min)
+    minimumAssembler = min
 }
 
 // mining productivity bonus

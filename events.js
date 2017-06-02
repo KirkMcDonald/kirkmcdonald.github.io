@@ -75,8 +75,7 @@ function changeFPrec(event) {
 
 // Triggered when the "minimum assembling machine" setting is changed.
 function changeMin(event) {
-    spec.setMinimum(event.target.value)
-    minimumAssembler = event.target.value
+    setMinimumAssembler(event.target.value)
     itemUpdate()
 }
 
