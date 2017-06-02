@@ -1,5 +1,15 @@
 "use strict"
 
+function OutputRecipe() {
+    this.ingredients = []
+    for (var i = 0; i < build_targets.length; i++) {
+        var target = build_targets[i]
+        var item = solver.items[target.itemName]
+        var ing = new Ingredient(target.getRate(), item)
+        this.ingredients.push(ing)
+    }
+}
+
 function makeGraph(totals, ignore) {
     var g = new dagreD3.graphlib.Graph({multigraph: true})
     g.setGraph({})
@@ -35,11 +45,19 @@ function makeGraph(totals, ignore) {
     for (var itemName in totals.unfinished) {
         g.setNode(itemName, {"label": "unknown " + itemName + " recipe"})
     }
-    for (var recipeName in totals.totals) {
+    g.setNode("output", {"label": "output"})
+    var nodes = Object.keys(totals.totals).concat(["output"])
+    for (var recipeIndex = 0; recipeIndex < nodes.length; recipeIndex++) {
+        var recipeName = nodes[recipeIndex]
         if (ignore[recipeName]) {
             continue
         }
-        var recipe = solver.recipes[recipeName]
+        var recipe
+        if (recipeName == "output") {
+            recipe = new OutputRecipe()
+        } else {
+            recipe = solver.recipes[recipeName]
+        }
         for (var i = 0; i < recipe.ingredients.length; i++) {
             var ing = recipe.ingredients[i]
             var totalRate = zero
@@ -52,7 +70,12 @@ function makeGraph(totals, ignore) {
             for (var j = 0; j < ing.item.recipes.length; j++) {
                 var subRecipe = ing.item.recipes[j]
                 if (subRecipe.name in totals.totals) {
-                    var rate = totals.totals[recipeName].mul(ing.amount)
+                    var rate
+                    if (recipeName == "output") {
+                        rate = ing.amount
+                    } else {
+                        rate = totals.totals[recipeName].mul(ing.amount)
+                    }
                     var ratio = rate.div(totalRate)
                     var subRate = totals.totals[subRecipe.name].mul(subRecipe.gives(ing.item, spec)).mul(ratio)
                     var label = sprintf(
