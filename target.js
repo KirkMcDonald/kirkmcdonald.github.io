@@ -27,9 +27,10 @@ function BuildTarget(index, itemName) {
     this.element = document.createElement("li")
     this.element.style.setProperty("vertical-align", "middle")
 
-    var remover = document.createElement("a")
+    var remover = document.createElement("button")
+    remover.classList.add("targetButton")
     remover.addEventListener("click", new RemoveHandler(this))
-    remover.textContent = "x "
+    remover.textContent = "x"
     remover.title = "Remove this item."
     this.element.appendChild(remover)
 
