@@ -87,34 +87,6 @@ function pruneSpec(totals) {
 
 var globalTotals
 
-function makeDropdown(cell, length) {
-    var dropdown = document.createElement("div")
-    dropdown.classList.add("dropdown")
-    if (length) {
-        dropdown.classList.add(getDropdownStyle(length))
-    }
-    cell.appendChild(dropdown)
-    var form = document.createElement("form")
-    dropdown.appendChild(form)
-    return form
-}
-
-function makeDropdownEntry(id, form, checked, value, labelContent, handler) {
-    var input = document.createElement("input")
-    input.id = id
-    input.name = "mod"
-    input.type = "radio"
-    input.value = value
-    input.checked = checked
-    input.addEventListener("change", handler)
-    form.appendChild(input)
-    var label = document.createElement("label")
-    label.htmlFor = id
-    label.appendChild(labelContent)
-    label.title = value
-    form.appendChild(label)
-}
-
 // The main top-level calculation function. Called whenever the solution
 // requires recalculation.
 //
@@ -167,20 +139,22 @@ function display() {
     var oldTotals = document.getElementById("totals")
     var newTotals = document.createElement("table")
     newTotals.id = "totals"
-    var header = document.createElement("tr")
     var max_modules = 4
     var headers = [
-        Header("recipe"),
-        Header("craft/" + rateName),
+        Header("recipe craft/" + rateName, 2),
         Header("factories", 2),
         Header("modules", max_modules + 1),
-        Header("beacons", 2)
+        Header("beacons", 2),
+        Header("")
     ]
+    var header = document.createElement("tr")
     for (var i = 0; i < headers.length; i++) {
         var th = document.createElement("th")
         th.textContent = headers[i].name
         th.colSpan = headers[i].colSpan
-        th.style.setProperty("padding-left", "1em")
+        if (i > 0) {
+            th.classList.add("pad")
+        }
         header.appendChild(th)
     }
     newTotals.appendChild(header)
@@ -199,6 +173,9 @@ function display() {
         var rate = totals.get(recipeName)
         var row = document.createElement("tr")
         row.classList.add("recipe-row")
+        if (i % 2 == 1) {
+            row.classList.add("odd")
+        }
         if (spec.ignore[recipeName]) {
             row.classList.add("ignore")
         }
@@ -229,11 +206,11 @@ function display() {
             var factory = spec.getFactory(recipe)
 
             var factoryCell = document.createElement("td")
+            factoryCell.classList.add("pad")
             var image = getImage(factory.name)
             image.classList.add("display")
             factoryCell.appendChild(image)
             factoryCell.appendChild(new Text(" \u00d7"))
-            factoryCell.style.setProperty("padding-left", "1em")
             row.appendChild(factoryCell)
 
             var realCell = document.createElement("td")
@@ -247,6 +224,9 @@ function display() {
                 var currentModule = factory.getModule(j)
 
                 var modCell = document.createElement("td")
+                if (j == 0) {
+                    modCell.classList.add("pad")
+                }
                 row.appendChild(modCell)
 
                 var moduleCount = 1
@@ -300,7 +280,7 @@ function display() {
                 var currentCount = factory.beaconCount
 
                 var beaconCell = document.createElement("td")
-                beaconCell.style.setProperty("padding-left", "1em")
+                beaconCell.classList.add("pad")
 
                 var moduleCount = 1
                 for (var name in modules) {
@@ -309,7 +289,6 @@ function display() {
                     }
                 }
 
-                //var beaconForm = makeDropdown(beaconCell, moduleCount)
                 var beaconHandler = new BeaconHandler(recipeName)
                 var beaconDropdown = new Dropdown(
                     beaconCell,

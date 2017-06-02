@@ -23,6 +23,7 @@ ul.targets a {
 }
 img.icon {
     background: url(images/sprite-sheet.png);
+    background-repeat: no-repeat;
     display: inline-block;
     height: 32px;
     width: 32px;
@@ -42,11 +43,20 @@ input.mprod {
 input.beacon {
     width: 3em;
 }
+#totals th {
+}
+tr.recipe-row {
+}
 tr.recipe-row img.recipe-icon {
     cursor: pointer;
 }
+tr.odd {
+}
 tr.ignore img.display {
     opacity: 0.2;
+}
+.pad {
+    padding-left: 1em;
 }
 .node rect {
     stroke: #333;
@@ -95,9 +105,10 @@ div.tab {
     vertical-align: middle;
 }
 .dropdown:hover {
+    border: 1px solid #777;
     position: absolute;
     z-index: 10;
-    background-color: white;
+    background-color: #eee;
     transition: height 0.1s;
 }
 .dropdown br {
