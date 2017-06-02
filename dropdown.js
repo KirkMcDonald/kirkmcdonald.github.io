@@ -8,7 +8,7 @@ function getDropdownStyle(length) {
         return styleName
     }
     var style = document.createElement("style")
-    var height = 32 * length
+    var height = 36 * length
     var css = sprintf(".%s:hover { height: %dpx; }", styleName, height)
     style.appendChild(new Text(css))
     document.getElementsByTagName("head")[0].appendChild(style)
@@ -38,8 +38,9 @@ function Dropdown(node, name, handler, style) {
         this.dropdown.classList.add(getDropdownStyle(this.length))
     }
     node.appendChild(this.dropdown)
-    this.form = document.createElement("form")
-    this.dropdown.appendChild(this.form)
+    var spacer = blankImage()
+    spacer.classList.add("spacer")
+    node.appendChild(spacer)
 }
 Dropdown.prototype = {
     constructor: Dropdown,
@@ -62,15 +63,16 @@ Dropdown.prototype = {
             this.dropdown.classList.add(getDropdownStyle(this.length))
         }
         input.id = id
+        input.name = this.name
         input.type = "radio"
         input.value = value
         input.checked = checked
         input.addEventListener("change", this.handler)
-        this.form.appendChild(input)
+        this.dropdown.appendChild(input)
         var label = document.createElement("label")
         label.htmlFor = id
         label.appendChild(labelContent)
         label.title = value
-        this.form.appendChild(label)
+        this.dropdown.appendChild(label)
     }
 }

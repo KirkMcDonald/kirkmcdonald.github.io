@@ -13,6 +13,8 @@ function addTarget(itemName) {
     return target
 }
 
+var targetCount = 0
+
 function BuildTarget(index, itemName) {
     if (!itemName) {
         itemName = DEFAULT_ITEM
@@ -25,18 +27,20 @@ function BuildTarget(index, itemName) {
     this.element = document.createElement("li")
     this.element.style.setProperty("vertical-align", "middle")
 
-    var table = document.createElement("table")
-    this.element.appendChild(table)
-    var row = document.createElement("tr")
-    table.appendChild(row)
-    var cell = document.createElement("td")
-    row.appendChild(cell)
+    var remover = document.createElement("a")
+    remover.addEventListener("click", new RemoveHandler(this))
+    remover.textContent = "x "
+    remover.title = "Remove this item."
+    this.element.appendChild(remover)
+
     var dropdown = new Dropdown(
-        cell,
-        "target-" + this.index,
+        this.element,
+        "target-" + targetCount,
         new ItemHandler(this),
         "itemDropdown"
     )
+    // Use a single global target count, as a given target's index can change.
+    targetCount++
 
     for (var i = 0; i < itemGroups.length; i++) {
         var group = itemGroups[i]
@@ -58,23 +62,16 @@ function BuildTarget(index, itemName) {
                 )
             }
             if (any) {
-                dropdown.form.appendChild(document.createElement("br"))
+                dropdown.dropdown.appendChild(document.createElement("br"))
             }
         }
     }
-
-    var cell2 = document.createElement("td")
-    // This prevents the dropdown from breaking the flow of the page while it
-    // is deployed.
-    var spacer = blankImage()
-    spacer.classList.add("spacer")
-    cell2.appendChild(spacer)
 
     this.factoryLabel = document.createElement("label")
     this.factoryLabel.className = "bold"
     // TODO: htmlFor
     this.factoryLabel.textContent = "Factories:"
-    cell2.appendChild(this.factoryLabel)
+    this.element.appendChild(this.factoryLabel)
 
     this.factories = document.createElement("input")
     this.factories.addEventListener("change", new FactoryHandler(this))
@@ -82,11 +79,11 @@ function BuildTarget(index, itemName) {
     this.factories.value = 1
     this.factories.size = 3
     this.factories.title = "Enter a value to specify number of factories. The rate will be determined based on the number of items a factory can make."
-    cell2.appendChild(this.factories)
+    this.element.appendChild(this.factories)
 
     this.rateLabel = document.createElement("label")
     this.rateLabel.textContent = "Rate:"
-    cell2.appendChild(this.rateLabel)
+    this.element.appendChild(this.rateLabel)
 
     this.rate = document.createElement("input")
     this.rate.addEventListener("change", new RateHandler(this))
@@ -94,14 +91,7 @@ function BuildTarget(index, itemName) {
     this.rate.value = ""
     this.rate.size = 5
     this.rate.title = "Enter a value to specify the rate. The number of factories will be determined based on the rate."
-    cell2.appendChild(this.rate)
-
-    row.appendChild(cell2)
-    var remover = document.createElement("a")
-    remover.addEventListener("click", new RemoveHandler(this))
-    remover.textContent = " x"
-    remover.title = "Remove this item."
-    cell2.appendChild(remover)
+    this.element.appendChild(this.rate)
 }
 BuildTarget.prototype = {
     constructor: BuildTarget,

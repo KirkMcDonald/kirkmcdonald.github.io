@@ -1,3 +1,8 @@
+.targetButton {
+    height: 2em;
+    width: 2em;
+    text-align: center;
+}
 ul.targets {
     list-style-type: none;
 }
@@ -20,7 +25,7 @@ img.icon {
     vertical-align: middle;
 }
 img.spacer {
-    height: 40px;
+    height: 38px;
     width: 1px;
     vertical-align: middle;
 }
@@ -82,13 +87,13 @@ div.tab {
     width: 36px;
     height: 36px;
     overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
 }
 .dropdown:hover {
     position: absolute;
     z-index: 10;
     background-color: white;
-    margin-top: -19px;
-    height: 231px;
     transition: height 0.1s;
 }
 .dropdown br {
@@ -99,25 +104,24 @@ div.tab {
 }
 .dropdown input {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: -50;
+    left: -50;
     opacity: 0;
 }
 .dropdown label {
     display: none;
     margin: 2px;
-    height: 32px;
     opacity: 0.5;
 }
 .dropdown:hover label {
-    display: inline;
+    display: inline-block;
 }
 .dropdown label:hover {
     opacity: 0.7;
 }
 .dropdown input:checked + label {
     opacity: 1 !important;
-    display: inline;
+    display: inline-block;
 }
 .itemDropdown:hover {
     height: 300px;
