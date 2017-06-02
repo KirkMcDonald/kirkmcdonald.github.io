@@ -110,23 +110,31 @@ function IgnoreHandler(recipeName) {
 }
 
 // Triggered when a factory module is changed.
-function ModuleHandler(factory, index) {
+function ModuleHandler(recipeName, factory, index) {
     this.handleEvent = function(event) {
         var moduleName = event.target.value
         var module = modules[moduleName]
-        factory.setModule(index, module)
-        itemUpdate()
+        if (factory.setModule(index, module) || isFactoryTarget(recipeName)) {
+            itemUpdate()
+        } else {
+            display()
+        }
     }
 }
 
 // Triggered when the right-arrow "copy module" button is pressed.
-function ModuleCopyHandler(factory) {
+function ModuleCopyHandler(recipeName, factory) {
     this.handleEvent = function(event) {
         var module = factory.getModule(0)
+        var needRecalc = false
         for (var i = 0; i < factory.modules.length; i++) {
-            factory.setModule(i, module)
+            needRecalc = needRecalc || factory.setModule(i, module)
         }
-        itemUpdate()
+        if (needRecalc || isFactoryTarget(recipeName)) {
+            itemUpdate()
+        } else {
+            display()
+        }
     }
 }
 
@@ -143,7 +151,11 @@ function BeaconHandler(recipeName) {
         var module = modules[moduleName]
         var factory = getFactory(recipeName)
         factory.beaconModule = module
-        itemUpdate()
+        if (isFactoryTarget(recipeName) && !factory.beaconCount.isZero()) {
+            itemUpdate()
+        } else {
+            display()
+        }
     }
 }
 
@@ -153,7 +165,11 @@ function BeaconCountHandler(recipeName) {
         var moduleCount = RationalFromFloats(event.target.value, 1)
         var factory = getFactory(recipeName)
         factory.beaconCount = moduleCount
-        itemUpdate()
+        if (isFactoryTarget(recipeName) && factory.beaconModule) {
+            itemUpdate()
+        } else {
+            display()
+        }
     }
 }
 
@@ -161,6 +177,7 @@ function BeaconCountHandler(recipeName) {
 function CopyAllHandler(name) {
     this.handleEvent = function(event) {
         var factory = spec.spec[name]
+        var needRecalc = false
         for (var recipeName in spec.spec) {
             if (recipeName == name) {
                 continue
@@ -170,9 +187,13 @@ function CopyAllHandler(name) {
                 continue
             }
             var recipe = solver.recipes[recipeName]
-            factory.copyModules(f, recipe)
+            needRecalc = needRecalc || factory.copyModules(f, recipe) || isFactoryTarget(recipeName)
         }
-        itemUpdate()
+        if (needRecalc) {
+            itemUpdate()
+        } else {
+            display()
+        }
     }
 }
 

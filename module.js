@@ -23,6 +23,9 @@ Module.prototype = {
     },
     canBeacon: function() {
         return this.productivity.isZero()
+    },
+    hasProdEffect: function() {
+        return !this.productivity.isZero()
     }
 }
 

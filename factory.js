@@ -55,11 +55,15 @@ Factory.prototype = {
     getModule: function(index) {
         return this.modules[index]
     },
+    // Returns true if the module change requires a recalculation.
     setModule: function(index, module) {
         if (index >= this.modules.length) {
-            return
+            return false
         }
+        var oldModule = this.modules[index]
+        var needRecalc = (oldModule && oldModule.hasProdEffect()) || (module && module.hasProdEffect())
         this.modules[index] = module
+        return needRecalc
     },
     speedEffect: function() {
         var speed = one
@@ -89,16 +93,18 @@ Factory.prototype = {
     },
     copyModules: function(other, recipe) {
         var length = Math.max(this.modules.length, other.modules.length)
+        var needRecalc = false
         for (var i = 0; i < length; i++) {
             var module = this.getModule(i)
             if (!module || module.canUse(recipe)) {
-                other.setModule(i, module)
+                needRecalc = needRecalc || other.setModule(i, module)
             }
         }
         if (other.factory.canBeacon()) {
             other.beaconModule = this.beaconModule
             other.beaconCount = this.beaconCount
         }
+        return needRecalc
     },
 }
 

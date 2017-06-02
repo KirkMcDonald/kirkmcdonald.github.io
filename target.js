@@ -13,6 +13,20 @@ function addTarget(itemName) {
     return target
 }
 
+function isFactoryTarget(recipeName) {
+    for (var i = 0; i < build_targets.length; i++) {
+        var target = build_targets[i]
+        var item = solver.items[target.itemName]
+        for (var j = 0; j < item.recipes.length; j++) {
+            var recipe = item.recipes[j]
+            if (recipe.name == recipeName && target.changedFactory) {
+                return true
+            }
+        }
+    }
+    return false
+}
+
 var targetCount = 0
 
 function BuildTarget(index, itemName) {
@@ -101,6 +115,7 @@ BuildTarget.prototype = {
     getRate: function() {
         var item = solver.items[this.itemName]
         var rate = zero
+        // XXX: Hmmm...
         var recipe = item.recipes[0]
         var factory = spec.getFactory(recipe)
         var baseRate = factory.recipeRate(recipe).mul(recipe.gives(item, spec))

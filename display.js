@@ -239,7 +239,7 @@ function display() {
                 var dropdown = new Dropdown(
                     modCell,
                     "mod-" + recipeName + "-" + j,
-                    new ModuleHandler(factory, j)
+                    new ModuleHandler(recipeName, factory, j)
                 )
 
                 var noModImage = getImage("slot-icon-module")
@@ -263,7 +263,7 @@ function display() {
                     var copyButton = document.createElement("button")
                     copyButton.textContent = "\u2192"
                     copyButton.title = "copy to rest of modules"
-                    copyButton.addEventListener("click", new ModuleCopyHandler(factory))
+                    copyButton.addEventListener("click", new ModuleCopyHandler(recipeName, factory))
                     buttonCell.appendChild(copyButton)
                 }
             }
