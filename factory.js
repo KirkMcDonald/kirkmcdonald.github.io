@@ -137,6 +137,8 @@ function compareFactories(a, b) {
     return 0
 }
 
+var DEFAULT_FURNACE
+
 function FactorySpec(factories) {
     this.spec = {}
     this.factories = {}
@@ -155,6 +157,7 @@ function FactorySpec(factories) {
     this.setMinimum("1")
     var smelters = this.factories["smelting"]
     this.furnace = smelters[smelters.length - 1]
+    DEFAULT_FURNACE = this.furnace.name
     this.miningProd = zero
     this.ignore = {}
 }
@@ -168,7 +171,22 @@ FactorySpec.prototype = {
     useMinimum: function(recipe) {
         return recipe.category in assembly_machine_categories
     },
-    getMinimum: function(recipe) {
+    setFurnace: function(name) {
+        var smelters = this.factories["smelting"]
+        for (var i = 0; i < smelters.length; i++) {
+            if (smelters[i].name == name) {
+                this.furnace = smelters[i]
+                return
+            }
+        }
+    },
+    useFurnace: function(recipe) {
+        return recipe.category == "smelting"
+    },
+    getFactoryDef: function(recipe) {
+        if (this.useFurnace(recipe)) {
+            return this.furnace
+        }
         var factories = this.factories[recipe.category]
         if (!this.useMinimum(recipe)) {
             return factories[factories.length - 1]
@@ -184,18 +202,16 @@ FactorySpec.prototype = {
         return factoryDef
     },
     getFactory: function(recipe) {
-        var factory = this.spec[recipe.name]
-        // If the minimum changes, update the factory the next time we get it.
-        if (factory) {
-            if (this.useMinimum(recipe)) {
-                factory.setFactory(this.getMinimum(recipe))
-            }
-            return factory
-        }
         if (!recipe.category) {
             return null
         }
-        var factoryDef = this.getMinimum(recipe)
+        var factoryDef = this.getFactoryDef(recipe)
+        var factory = this.spec[recipe.name]
+        // If the minimum changes, update the factory the next time we get it.
+        if (factory) {
+            factory.setFactory(factoryDef)
+            return factory
+        }
         this.spec[recipe.name] = factoryDef.makeFactory()
         return this.spec[recipe.name]
     },

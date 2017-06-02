@@ -21,6 +21,9 @@ function formatSettings() {
     if (minimumAssembler != DEFAULT_MINIMUM) {
         settings += "min=" + minimumAssembler + "&"
     }
+    if (spec.furnace.name != DEFAULT_FURNACE) {
+        settings += "furnace=" + spec.furnace.name + "&"
+    }
     if (!spec.miningProd.isZero()) {
         var hundred = RationalFromFloat(100)
         var mprod = spec.miningProd.mul(hundred).toString()

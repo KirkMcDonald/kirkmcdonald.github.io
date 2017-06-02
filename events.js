@@ -79,6 +79,12 @@ function changeMin(event) {
     itemUpdate()
 }
 
+// Triggered when the furnace is changed.
+function changeFurnace(event) {
+    spec.setFurnace(event.target.value)
+    itemUpdate()
+}
+
 // Triggered when the mining productivity bonus is changed.
 function changeMprod() {
     spec.miningProd = getMprod()

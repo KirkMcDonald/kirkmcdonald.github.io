@@ -126,11 +126,7 @@ function renderMinimumAssembler(settings) {
     for (var i = 0; i < assemblers.length; i++) {
         var assembler = assemblers[i].name
         var image = getImage(assembler)
-        dropdown.add(
-            image,
-            String(i + 1),
-            String(i + 1) === min
-        )
+        dropdown.add(image, String(i + 1), String(i + 1) === min)
     }
     tab.replaceChild(node, oldNode)
 }
@@ -138,6 +134,27 @@ function renderMinimumAssembler(settings) {
 function setMinimumAssembler(min) {
     spec.setMinimum(min)
     minimumAssembler = min
+}
+
+// furnace
+function renderFurnace(settings) {
+    var furnace = spec.furnace.name
+    if ("furnace" in settings) {
+        furnace = settings.furnace
+        spec.setFurnace(furnace)
+    }
+    var tab = document.getElementById("settings_tab")
+    var oldNode = document.getElementById("furnace")
+    var node = document.createElement("span")
+    node.id = "furnace"
+    var dropdown = new Dropdown(node, "furnace_dropdown", changeFurnace)
+    var furnaces = spec.factories["smelting"]
+    for (var i = 0; i < furnaces.length; i++) {
+        var f = furnaces[i].name
+        var image = getImage(f)
+        dropdown.add(image, f, f === furnace)
+    }
+    tab.replaceChild(node, oldNode)
 }
 
 // mining productivity bonus
@@ -159,5 +176,6 @@ function renderSettings(settings) {
     renderRateOptions(settings)
     renderPrecisions(settings)
     renderMinimumAssembler(settings)
+    renderFurnace(settings)
     renderMiningProd(settings)
 }
