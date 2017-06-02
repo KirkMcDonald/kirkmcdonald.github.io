@@ -59,8 +59,8 @@ function renderRateOptions(settings) {
         rateName = settings.rate
         displayRateFactor = displayRates[settings.rate]
     }
-    var tab = document.getElementById("settings_tab")
     var oldNode = document.getElementById("display_rate")
+    var cell = oldNode.parentNode
     var node = document.createElement("form")
     node.id = "display_rate"
     for (var name in displayRates) {
@@ -81,7 +81,7 @@ function renderRateOptions(settings) {
         node.appendChild(label)
         node.appendChild(document.createElement("br"))
     }
-    tab.replaceChild(node, oldNode)
+    cell.replaceChild(node, oldNode)
 }
 
 // precisions
@@ -118,8 +118,8 @@ function renderMinimumAssembler(settings) {
         min = settings.min
     }
     setMinimumAssembler(min)
-    var tab = document.getElementById("settings_tab")
     var oldNode = document.getElementById("minimum_assembler")
+    var cell = oldNode.parentNode
     var node = document.createElement("span")
     node.id = "minimum_assembler"
     var dropdown = new Dropdown(node, "assembler_dropdown", changeMin)
@@ -128,7 +128,7 @@ function renderMinimumAssembler(settings) {
         var image = getImage(assembler)
         dropdown.add(image, String(i + 1), String(i + 1) === min)
     }
-    tab.replaceChild(node, oldNode)
+    cell.replaceChild(node, oldNode)
 }
 
 function setMinimumAssembler(min) {
@@ -143,8 +143,8 @@ function renderFurnace(settings) {
         furnace = settings.furnace
         spec.setFurnace(furnace)
     }
-    var tab = document.getElementById("settings_tab")
     var oldNode = document.getElementById("furnace")
+    var cell = oldNode.parentNode
     var node = document.createElement("span")
     node.id = "furnace"
     var dropdown = new Dropdown(node, "furnace_dropdown", changeFurnace)
@@ -154,7 +154,7 @@ function renderFurnace(settings) {
         var image = getImage(f)
         dropdown.add(image, f, f === furnace)
     }
-    tab.replaceChild(node, oldNode)
+    cell.replaceChild(node, oldNode)
 }
 
 // mining productivity bonus

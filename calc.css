@@ -34,6 +34,12 @@ img.spacer {
     width: 1px;
     vertical-align: middle;
 }
+td.setting-label {
+    text-align: right;
+}
+.top {
+    vertical-align: top;
+}
 input.prec {
     width: 3em;
 }

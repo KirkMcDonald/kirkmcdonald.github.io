@@ -78,33 +78,57 @@ limitations under the License.-->
     </div>
 
     <div id="settings_tab" class="tab">
-        Use recipe set:
-        <select id="data_set" onchange="changeMod()"></select><br /><br />
+        <table>
+        <tr>
+        <td class="setting-label">Use recipe set:</td>
+        <td><select id="data_set" onchange="changeMod()"></select></td>
+        </tr>
 
-        Display rates as:<br />
-        <form id="display_rate"></form>
+        <tr>
+        <td class="setting-label top">Display rates as:</td>
+        <td><form id="display_rate"></form></td>
+        </tr>
 
-        Rate precision: <input id="rprec" class="prec" type="number" value="3" min="0" onchange="changeRPrec(event)"><br />
-        Factory precision: <input id="fprec" class="prec" type="number" value="1" min="0" onchange="changeFPrec(event)"><br /><br />
+        <tr>
+        <td class="setting-label">Rate precision:</td>
+        <td><input id="rprec" class="prec" type="number" value="3" min="0" onchange="changeRPrec(event)"></td>
+        </tr>
+        <tr>
+        <td class="setting-label">Factory precision:</td>
+        <td><input id="fprec" class="prec" type="number" value="1" min="0" onchange="changeFPrec(event)"></td>
+        </tr>
 
-        Minimum assembling machine level: <span id="minimum_assembler"></span><br /><br />
+        <tr>
+        <td class="setting-label">Minimum assembling machine level:</td>
+        <td><span id="minimum_assembler"></span></td>
+        </tr>
 
-        Preferred furnace: <span id="furnace"></span><br /><br />
+        <tr>
+        <td class="setting-label">Preferred furnace:</td>
+        <td><span id="furnace"></span></td>
+        </tr>
 
-        Mining productivity bonus:
-        +<input id="mprod" class="mprod" type="number" step="2" value="0" min="0" onchange="changeMprod()">%<br /><br />
+        <tr>
+        <td class="setting-label">Mining productivity bonus:</td>
+        <td>+<input id="mprod" class="mprod" type="number" step="2" value="0" min="0" onchange="changeMprod()">%</td>
+        </tr>
 
-        Recipe sort order:<br />
-        <input type="radio" name="sort_order" id="topo_order" value="topo" checked onchange="changeSortOrder(event)">
+        <tr>
+        <td class="setting-label top">Recipe sort order:</td>
+        <td><input type="radio" name="sort_order" id="topo_order" value="topo" checked onchange="changeSortOrder(event)">
         <label for="topo_order">Topological order</label><br />
         <input type="radio" name="sort_order" id="alpha_order" value="alpha" onchange="changeSortOrder(event)">
-        <label for="alpha_order">Alphabetical order</label><br /><br />
+        <label for="alpha_order">Alphabetical order</label></td>
+        </tr>
 
-        Format values as:<br />
-        <input type="radio" name="format" id="decimal_format" value="decimal" checked onchange="changeFormat(event)">
+        <tr>
+        <td class="setting-label top">Format values as:</td>
+        <td><input type="radio" name="format" id="decimal_format" value="decimal" checked onchange="changeFormat(event)">
         <label for="decimal_format">Decimals</label><br />
         <input type="radio" name="format" id="rational_format" value="rational" onchange="changeFormat(event)">
-        <label for="rational_format">Rationals</label><br />
+        <label for="rational_format">Rationals</label></td>
+        </tr>
+        </table>
     </div>
 
     <div id="about_tab" class="tab">
