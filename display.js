@@ -87,22 +87,6 @@ function pruneSpec(totals) {
 
 var globalTotals
 
-var dropDownStyles = {}
-
-function getDropdownStyle(length) {
-    var styleName = "dropdown-" + length
-    if (styleName in dropDownStyles) {
-        return styleName
-    }
-    var style = document.createElement("style")
-    var height = 33 * length
-    var css = sprintf(".%s:hover { height: %dpx; }", styleName, height)
-    style.appendChild(new Text(css))
-    document.getElementsByTagName("head")[0].appendChild(style)
-    dropDownStyles[styleName] = style
-    return styleName
-}
-
 function makeDropdown(cell, length) {
     var dropdown = document.createElement("div")
     dropdown.classList.add("dropdown")
@@ -249,7 +233,6 @@ function display() {
             image.classList.add("display")
             factoryCell.appendChild(image)
             factoryCell.appendChild(new Text(" \u00d7"))
-            //factoryCell.appendChild(new Text(sprintf(" \u00d7 %d", Math.ceil(factoryCount.toFloat()))))
             factoryCell.style.setProperty("padding-left", "1em")
             row.appendChild(factoryCell)
 
@@ -273,32 +256,25 @@ function display() {
                     }
                 }
 
-                var form = makeDropdown(modCell, moduleCount)
+                var dropdown = new Dropdown(
+                    modCell,
+                    "mod-" + recipeName + "-" + j,
+                    new ModuleHandler(factory, j)
+                )
 
-                var handler = new ModuleHandler(factory, j)
                 var noModImage = getImage("slot-icon-module")
                 noModImage.title = "no module"
-                makeDropdownEntry(
-                    "mod-" + recipeName + "-" + j + "-nomod",
-                    form,
-                    !currentModule,
-                    "no module",
-                    noModImage,
-                    handler
-                )
+                dropdown.add(noModImage, "no module", !currentModule)
 
                 for (var name in modules) {
                     var module = modules[name]
                     if (!module.canUse(recipe)) {
                         continue
                     }
-                    makeDropdownEntry(
-                        "mod-" + recipeName + "-" + j + "-" + name,
-                        form,
-                        currentModule && currentModule.name == name,
-                        name,
+                    dropdown.add(
                         getImage(name),
-                        handler
+                        name,
+                        currentModule && currentModule.name == name
                     )
                 }
                 if (j == 0) {
@@ -333,19 +309,17 @@ function display() {
                     }
                 }
 
-                var beaconForm = makeDropdown(beaconCell, moduleCount)
+                //var beaconForm = makeDropdown(beaconCell, moduleCount)
                 var beaconHandler = new BeaconHandler(recipeName)
+                var beaconDropdown = new Dropdown(
+                    beaconCell,
+                    "mod-" + recipeName + "-beacon",
+                    beaconHandler
+                )
 
                 var noModImage = getImage("slot-icon-module")
                 noModImage.title = "no module"
-                makeDropdownEntry(
-                    "mod-" + recipeName + "-beacon-nomod",
-                    beaconForm,
-                    !currentBeacon,
-                    "no module",
-                    noModImage,
-                    beaconHandler
-                )
+                beaconDropdown.add(noModImage, "no module", !currentBeacon)
 
                 for (var name in modules) {
                     var module = modules[name]
@@ -353,13 +327,10 @@ function display() {
                     if (!module.canBeacon()) {
                         continue
                     }
-                    makeDropdownEntry(
-                        "mod-" + recipeName + "-beacon-" + name,
-                        beaconForm,
-                        currentBeacon && currentBeacon.name == name,
-                        name,
+                    beaconDropdown.add(
                         getImage(name),
-                        beaconHandler
+                        name,
+                        currentBeacon && currentBeacon.name == name
                     )
                 }
                 row.appendChild(beaconCell)

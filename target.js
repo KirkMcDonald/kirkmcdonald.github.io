@@ -31,14 +31,13 @@ function BuildTarget(index, itemName) {
     table.appendChild(row)
     var cell = document.createElement("td")
     row.appendChild(cell)
-    var dropdown = document.createElement("div")
-    dropdown.classList.add("dropdown")
-    dropdown.classList.add("itemDropdown")
-    cell.appendChild(dropdown)
-    var form = document.createElement("form")
-    dropdown.appendChild(form)
+    var dropdown = new Dropdown(
+        cell,
+        "target-" + this.index,
+        new ItemHandler(this),
+        "itemDropdown"
+    )
 
-    var handler = new ItemHandler(this)
     for (var i = 0; i < itemGroups.length; i++) {
         var group = itemGroups[i]
         for (var j = 0; j < group.length; j++) {
@@ -52,25 +51,14 @@ function BuildTarget(index, itemName) {
                     continue
                 }
                 any = true
-                var id = sprintf("target-%d-%d-%d-%d", this.index, i, j, k)
-                var input = document.createElement("input")
-                input.id = id
-                input.name = "target"
-                input.type = "radio"
-                input.value = currentItemName
-                if (currentItemName == this.itemName) {
-                    input.checked = true
-                }
-                input.addEventListener("change", handler)
-                form.appendChild(input)
-                var label = document.createElement("label")
-                label.htmlFor = id
-                label.appendChild(image)
-                label.title = currentItemName
-                form.appendChild(label)
+                dropdown.add(
+                    image,
+                    currentItemName,
+                    currentItemName == this.itemName
+                )
             }
             if (any) {
-                form.appendChild(document.createElement("br"))
+                dropdown.form.appendChild(document.createElement("br"))
             }
         }
     }
