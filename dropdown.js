@@ -16,6 +16,15 @@ function getDropdownStyle(length) {
     return styleName
 }
 
+/* Creates a new dropdown widget.
+
+Args:
+    node: The parent node of the dropdown.
+    name: A unique ID for this dropdown.
+    handler: An event handler to invoke when the dropdown value is changed.
+    style (optional): CSS class to apply to the dropdown window, in lieu of
+                      the built-in automatic length style.
+*/
 function Dropdown(node, name, handler, style) {
     this.name = name
     this.length = 0
@@ -34,6 +43,14 @@ function Dropdown(node, name, handler, style) {
 }
 Dropdown.prototype = {
     constructor: Dropdown,
+    /* Adds an entry to the dropdown.
+
+    Args:
+        labelContent: A node to use as the visible part of the entry. Should
+                      probably be a 32x32 image.
+        value: The string to use as this entry's value when selected.
+        checked: Whether this entry should be selected by default.
+    */
     add: function(labelContent, value, checked) {
         var input = document.createElement("input")
         var id = this.name + "-" + this.length
@@ -45,7 +62,6 @@ Dropdown.prototype = {
             this.dropdown.classList.add(getDropdownStyle(this.length))
         }
         input.id = id
-        input.name = "mod"
         input.type = "radio"
         input.value = value
         input.checked = checked
