@@ -76,6 +76,7 @@ tr.ignore img.display {
 div.tabs {
     overflow: hidden;
     border: 1px solid #ccc;
+    border-bottom: none;
     background-color: #f1f1f1;
 }
 
@@ -100,7 +101,7 @@ div.tab {
     display: none;
     padding: 1em;
     border: 1px solid #ccc;
-    border-top: none;
+    min-width: max-content;
 }
 .dropdown {
     border: 1px solid #ccc;
