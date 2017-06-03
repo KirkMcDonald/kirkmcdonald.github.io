@@ -101,7 +101,10 @@ div.tab {
     display: none;
     padding: 1em;
     border: 1px solid #ccc;
+}
+div.graph {
     min-width: max-content;
+    min-width: -moz-max-content;
 }
 .dropdown {
     border: 1px solid #ccc;
