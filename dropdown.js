@@ -1,21 +1,5 @@
 "use strict"
 
-var dropDownStyles = {}
-
-function getDropdownStyle(length) {
-    var styleName = "dropdown-" + length
-    if (styleName in dropDownStyles) {
-        return styleName
-    }
-    var style = document.createElement("style")
-    var height = 36 * length
-    var css = sprintf(".%s:hover { height: %dpx; }", styleName, height)
-    style.appendChild(new Text(css))
-    document.getElementsByTagName("head")[0].appendChild(style)
-    dropDownStyles[styleName] = style
-    return styleName
-}
-
 /* Creates a new dropdown widget.
 
 Args:
@@ -34,8 +18,6 @@ function Dropdown(node, name, handler, style) {
     this.style = style
     if (style) {
         this.dropdown.classList.add(style)
-    } else {
-        this.dropdown.classList.add(getDropdownStyle(this.length))
     }
     node.appendChild(this.dropdown)
     var spacer = blankImage()
@@ -55,13 +37,7 @@ Dropdown.prototype = {
     add: function(labelContent, value, checked) {
         var input = document.createElement("input")
         var id = this.name + "-" + this.length
-        if (!this.style) {
-            this.dropdown.classList.remove(getDropdownStyle(this.length))
-        }
         this.length++
-        if (!this.style) {
-            this.dropdown.classList.add(getDropdownStyle(this.length))
-        }
         input.id = id
         input.name = this.name
         input.type = "radio"

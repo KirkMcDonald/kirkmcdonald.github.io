@@ -120,6 +120,7 @@ div.graph {
     z-index: 10;
     background-color: #eee;
     transition: height 0.1s;
+    height: auto;
 }
 .dropdown br {
     display: none;
