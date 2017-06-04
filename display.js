@@ -38,35 +38,74 @@ function align(s, prec) {
     return s
 }
 
-function alignRate(s) {
-    return align(s, ratePrecision)
+function alignRate(x) {
+    return align(displayRate(x), ratePrecision)
 }
 
-function alignCount(s) {
-    return align(s, countPrecision)
+function alignCount(x) {
+    return align(displayCount(x), countPrecision)
 }
 
-function displaySteps(reqs, steps) {
-    reqs.sort(function(a, b) {
-        if (a.item.name < b.item.name) {
-            return -1
-        } else if (a.item.name > b.item.name) {
-            return 1
-        } else return 0
-    })
-    for (var i=0; i < reqs.length; i++) {
-        var req = reqs[i]
-        var li = document.createElement("li")
-        li.appendChild(getImage(req.item.name))
-        li.appendChild(new Text(" \u00d7 "))
+function displaySteps(node, sortedTotals, totals) {
+    var order = []
+    var items = {}
+    for (var i = 0; i < sortedTotals.length; i++) {
+        var recipeName = sortedTotals[i]
+        var recipeRate = totals.totals[recipeName]
+        var recipe = solver.recipes[recipeName]
+        for (var j = 0; j < recipe.products.length; j++) {
+            var ing = recipe.products[j]
+            if (!(ing.item.name in items)) {
+                order.push(ing.item.name)
+                items[ing.item.name] = zero
+            }
+            items[ing.item.name] = items[ing.item.name].add(recipeRate.mul(ing.amount))
+        }
+    }
+    var headers = [
+        new Header("items/" + rateName, 2),
+        new Header("belts", 2)
+    ]
+    var header = document.createElement("tr")
+    for (var i = 0; i < headers.length; i++) {
+        var th = document.createElement("th")
+        th.textContent = headers[i].name
+        th.colSpan = headers[i].colSpan
+        if (i > 0) {
+            th.classList.add("pad")
+        }
+        header.appendChild(th)
+    }
+    node.appendChild(header)
+    for (var i = 0; i < order.length; i++) {
+        var itemName = order[i]
+        var item = solver.items[itemName]
+        var rate = items[itemName]
+        var row = document.createElement("tr")
+        node.appendChild(row)
+        var iconCell = document.createElement("td")
+        iconCell.appendChild(getImage(itemName))
+        row.appendChild(iconCell)
+        var rateCell = document.createElement("td")
+        rateCell.classList.add("right-align")
         var tt = document.createElement("tt")
-        tt.textContent = displayRate(req.rate)
-        li.appendChild(tt)
-        steps.appendChild(li)
-        if (req.dependencies.length > 0) {
-            var subUL = document.createElement("ul")
-            li.appendChild(subUL)
-            displaySteps(req.dependencies, subUL)
+        tt.textContent = alignRate(rate)
+        rateCell.append(tt)
+        row.appendChild(rateCell)
+
+        if (item.phase == "solid") {
+            var belts = rate.div(RationalFromFloats(800, 60))
+            var beltCell = document.createElement("td")
+            beltCell.classList.add("pad")
+            beltCell.appendChild(getImage("transport-belt"))
+            beltCell.appendChild(new Text(" \u00d7"))
+            row.appendChild(beltCell)
+            var beltRateCell = document.createElement("td")
+            beltRateCell.classList.add("right-align")
+            tt = document.createElement("tt")
+            tt.textContent = alignCount(belts)
+            beltRateCell.append(tt)
+            row.appendChild(beltRateCell)
         }
     }
 }
@@ -128,11 +167,9 @@ function display() {
     var stepTab = document.getElementById("steps_tab")
 
     var oldSteps = document.getElementById("steps")
-    var newSteps = document.createElement("ul")
+    var newSteps = document.createElement("table")
     newSteps.id = "steps"
     stepTab.replaceChild(newSteps, oldSteps)
-
-    displaySteps(totals.reqs.dependencies, newSteps)
 
     var totalTab = document.getElementById("totals_tab")
 
@@ -167,6 +204,7 @@ function display() {
     } else {
         sorted_totals = sorted(totals.totals)
     }
+    displaySteps(newSteps, sorted_totals, totals)
     for (var i = 0; i < sorted_totals.length; i++) {
         var recipeName = sorted_totals[i]
         var recipe = solver.recipes[recipeName]
@@ -197,7 +235,7 @@ function display() {
         var rateCell = document.createElement("td")
         rateCell.classList.add("right-align")
         var tt = document.createElement("tt")
-        tt.textContent = alignRate(displayRate(rate))
+        tt.textContent = alignRate(rate)
         rateCell.appendChild(tt)
         row.appendChild(rateCell)
 
@@ -216,7 +254,7 @@ function display() {
             var realCell = document.createElement("td")
             realCell.className = "right-align"
             var tt = document.createElement("tt")
-            tt.textContent = alignCount(displayCount(factoryCount))
+            tt.textContent = alignCount(factoryCount)
             realCell.appendChild(tt)
             row.appendChild(realCell)
 

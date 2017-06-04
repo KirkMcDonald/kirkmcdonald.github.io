@@ -3,9 +3,13 @@
 function Item(data, name) {
     this.name = name
     this.recipes = []
+    this.phase = "solid"
     var d = data.items[this.name]
     if (!d) {
         d = data.fluids[this.name]
+        if (d) {
+            this.phase = "liquid"
+        }
     }
     if (d) {
         this.group = d.group
