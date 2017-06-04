@@ -122,6 +122,15 @@ function pruneSpec(totals) {
     for (var i = 0; i < drop.length; i++) {
         delete spec.spec[drop[i]]
     }
+    drop = []
+    for (var name in spec.ignore) {
+        if (!(name in totals.totals)) {
+            drop.push(name)
+        }
+    }
+    for (var i = 0; i < drop.length; i++) {
+        delete spec.ignore[drop[i]]
+    }
 }
 
 var globalTotals
