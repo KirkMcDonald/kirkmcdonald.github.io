@@ -59,7 +59,7 @@ function displaySteps(node, sortedTotals, totals) {
                 order.push(ing.item.name)
                 items[ing.item.name] = zero
             }
-            items[ing.item.name] = items[ing.item.name].add(recipeRate.mul(ing.amount))
+            items[ing.item.name] = items[ing.item.name].add(recipeRate.mul(recipe.gives(ing.item, spec)))
         }
     }
     var headers = [
