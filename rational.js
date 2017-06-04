@@ -115,9 +115,15 @@ function RationalFromString(s) {
     if (i === -1) {
         return RationalFromFloat(Number(s))
     }
-    var p = Number(s.slice(0, i))
-    var q = Number(s.slice(i + 1))
-    return RationalFromFloats(p, q)
+    var j = s.indexOf("+")
+    var q = bigInt(s.slice(i + 1))
+    if (j !== -1) {
+        var integer = bigInt(s.slice(0, j))
+        var p = bigInt(s.slice(j + 1, i)).plus(integer.times(q))
+    } else {
+        var p = bigInt(s.slice(0, i))
+    }
+    return new Rational(p, q)
 }
 
 function RationalFromFloat(x) {
