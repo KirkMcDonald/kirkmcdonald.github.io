@@ -97,6 +97,7 @@ function changeSortOrder(event) {
     display()
 }
 
+// Triggered when the value format (decimal vs. rational) is changed.
 function changeFormat(event) {
     displayFormat = event.target.value
     display()

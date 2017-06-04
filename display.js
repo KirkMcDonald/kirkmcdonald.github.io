@@ -1,7 +1,5 @@
 "use strict"
 
-var displayFormat = "decimal"
-
 function displayValue(x, precision) {
     if (displayFormat == "rational") {
         return x.toMixed()

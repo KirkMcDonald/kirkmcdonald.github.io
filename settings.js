@@ -171,6 +171,24 @@ function getMprod() {
     return RationalFromFloats(Number(mprod), 100)
 }
 
+// value format
+var DEFAULT_FORMAT = "decimal"
+
+var displayFormat = DEFAULT_FORMAT
+
+var displayFormats = {
+    "d": "decimal",
+    "r": "rational"
+}
+
+function renderValueFormat(settings) {
+    if ("vf" in settings) {
+        displayFormat = displayFormats[settings.vf]
+        var input = document.getElementById(displayFormat + "_format")
+        input.checked = true
+    }
+}
+
 // all
 function renderSettings(settings) {
     renderRateOptions(settings)
@@ -178,4 +196,5 @@ function renderSettings(settings) {
     renderMinimumAssembler(settings)
     renderFurnace(settings)
     renderMiningProd(settings)
+    renderValueFormat(settings)
 }

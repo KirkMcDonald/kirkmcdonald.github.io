@@ -29,6 +29,9 @@ function formatSettings() {
         var mprod = spec.miningProd.mul(hundred).toString()
         settings += "mprod=" + mprod + "&"
     }
+    if (displayFormat != DEFAULT_FORMAT) {
+        settings += "vf=" + displayFormat[0] + "&"
+    }
 
     settings += "items="
     var targetStrings = []
