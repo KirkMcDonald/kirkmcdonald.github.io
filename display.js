@@ -4,7 +4,7 @@ var displayFormat = "decimal"
 
 function displayValue(x, precision) {
     if (displayFormat == "rational") {
-        return x.toString()
+        return x.toMixed()
     } else {
         return x.toDecimal(precision)
     }

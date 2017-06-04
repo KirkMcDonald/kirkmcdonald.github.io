@@ -55,6 +55,13 @@ Rational.prototype = {
         }
         return integerPart
     },
+    toMixed: function() {
+        var divmod = this.p.divmod(this.q)
+        if (divmod.quotient.isZero() || divmod.remainder.isZero()) {
+            return this.toString()
+        }
+        return divmod.quotient.toString() + " + " + divmod.remainder.toString() + "/" + this.q.toString()
+    },
     isZero: function() {
         return this.p.isZero()
     },
