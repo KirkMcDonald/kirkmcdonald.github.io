@@ -30,11 +30,12 @@ function reset() {
     var plus = targetList.lastChild
     var newTargetList = document.createElement("ul")
     newTargetList.id = "targets"
+    newTargetList.classList.add("targets")
     newTargetList.appendChild(plus)
     document.body.replaceChild(newTargetList, targetList)
 
     var oldSteps = document.getElementById("steps")
-    var newSteps = document.createElement("ul")
+    var newSteps = document.createElement("table")
     newSteps.id = "steps"
     oldSteps.parentNode.replaceChild(newSteps, oldSteps)
 

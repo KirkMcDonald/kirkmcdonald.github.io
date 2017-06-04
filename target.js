@@ -29,6 +29,8 @@ function isFactoryTarget(recipeName) {
 
 var targetCount = 0
 
+var SELECTED_INPUT = "selected"
+
 function BuildTarget(index, itemName) {
     if (!itemName) {
         itemName = DEFAULT_ITEM
@@ -39,10 +41,11 @@ function BuildTarget(index, itemName) {
     this.factoriesValue = one
     this.rateValue = zero
     this.element = document.createElement("li")
-    this.element.style.setProperty("vertical-align", "middle")
+    this.element.classList.add("target")
 
     var remover = document.createElement("button")
     remover.classList.add("targetButton")
+    remover.classList.add("ui")
     remover.addEventListener("click", new RemoveHandler(this))
     remover.textContent = "x"
     remover.title = "Remove this item."
@@ -83,9 +86,9 @@ function BuildTarget(index, itemName) {
     }
 
     this.factoryLabel = document.createElement("label")
-    this.factoryLabel.className = "bold"
+    this.factoryLabel.classList.add(SELECTED_INPUT)
     // TODO: htmlFor
-    this.factoryLabel.textContent = "Factories:"
+    this.factoryLabel.textContent = " Factories: "
     this.element.appendChild(this.factoryLabel)
 
     this.factories = document.createElement("input")
@@ -97,7 +100,7 @@ function BuildTarget(index, itemName) {
     this.element.appendChild(this.factories)
 
     this.rateLabel = document.createElement("label")
-    this.rateLabel.textContent = "Rate:"
+    this.rateLabel.textContent = " Rate: "
     this.element.appendChild(this.rateLabel)
 
     this.rate = document.createElement("input")
@@ -132,8 +135,8 @@ BuildTarget.prototype = {
     },
     factoriesChanged: function() {
         this.changedFactory = true
-        this.factoryLabel.className = "bold"
-        this.rateLabel.className = ""
+        this.factoryLabel.classList.add(SELECTED_INPUT)
+        this.rateLabel.classList.remove(SELECTED_INPUT)
         this.factoriesValue = RationalFromString(this.factories.value)
         this.rateValue = zero
         this.rate.value = ""
@@ -144,8 +147,8 @@ BuildTarget.prototype = {
     },
     rateChanged: function() {
         this.changedFactory = false
-        this.factoryLabel.className = ""
-        this.rateLabel.className = "bold"
+        this.factoryLabel.classList.remove(SELECTED_INPUT)
+        this.rateLabel.classList.add(SELECTED_INPUT)
         this.factoriesValue = zero
         this.rateValue = RationalFromString(this.rate.value).div(displayRateFactor)
         this.factories.value = ""

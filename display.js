@@ -306,6 +306,7 @@ function display() {
                     var buttonCell = document.createElement("td")
                     row.append(buttonCell)
                     var copyButton = document.createElement("button")
+                    copyButton.classList.add("ui")
                     copyButton.textContent = "\u2192"
                     copyButton.title = "copy to rest of modules"
                     copyButton.addEventListener("click", new ModuleCopyHandler(recipeName, factory))
@@ -375,6 +376,7 @@ function display() {
 
                 var downArrowCell = document.createElement("td")
                 var downArrow = document.createElement("button")
+                downArrow.classList.add("ui")
                 if (!downArrowShown) {
                     downArrowShown = true
                     downArrow.textContent = "\u2193"

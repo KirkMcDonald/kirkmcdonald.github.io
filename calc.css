@@ -1,3 +1,32 @@
+:root {
+    /* main background, dropdown backgrounds */
+    --dark: #171717;
+    /* visualization node backgrounds, button backgrounds */
+    --medium: #212427;
+    /* background of main visual area */
+    --main: #272b30;
+    /* input field backgrounds, collapsed dropdown borders */
+    --light: #3a3f44;
+
+    /* main foreground text color */
+    --foreground: #c8c8c8;
+    /* makes things stand out */
+    --accent: #ff7200;
+    /* slightly brighter than main foreground color */
+    --bright: #f1fff2;
+}
+body {
+    font-family: sans-serif;
+    color: var(--foreground);
+    background-color: var(--dark);
+}
+a {
+    text-decoration: none;
+    color: var(--accent);
+}
+a:active {
+    color: var(--bright);
+}
 .targetButton {
     height: 2em;
     width: 2em;
@@ -10,6 +39,22 @@
 ul.targets {
     list-style-type: none;
 }
+ul.targets li {
+    margin: 0.25em;
+    border-radius: 0.5em;
+}
+input, select {
+    color: var(--foreground);
+    background-color: var(--light);
+    border: none;
+    padding: 0.25em;
+    border: 1px solid var(--light);
+    border-radius: 0.4em;
+}
+input:focus, select:focus {
+    border-color: var(--accent);
+    outline: none;
+}
 ul.targets a {
     font-size: large;
     font-weight: bold;
@@ -18,8 +63,22 @@ ul.targets a {
 .right-align {
     text-align: right;
 }
-.bold {
+label.selected {
     font-weight: bold;
+    color: var(--bright);
+}
+button.ui {
+    color: var(--accent);
+    background: linear-gradient(to bottom, var(--light), var(--medium));
+    border: 2px outset var(--light);
+    border-radius: 0.4em;
+}
+button.ui:active {
+    border-style: inset;
+}
+button.ui:focus {
+    border-color: var(--accent);
+    outline: none;
 }
 img.icon {
     background: url(images/sprite-sheet.png);
@@ -30,7 +89,7 @@ img.icon {
     vertical-align: middle;
 }
 img.spacer {
-    height: 38px;
+    height: 40px;
     width: 1px;
     vertical-align: middle;
 }
@@ -41,13 +100,13 @@ td.setting-label {
     vertical-align: top;
 }
 input.prec {
-    width: 3em;
+    width: 4em;
 }
 input.mprod {
-    width: 3em;
+    width: 4em;
 }
 input.beacon {
-    width: 3em;
+    width: 4em;
 }
 #totals th {
 }
@@ -65,23 +124,23 @@ tr.ignore img.display {
     padding-left: 1em;
 }
 .node rect {
-    stroke: #333;
-    fill: #fff;
+    stroke: var(--foreground);
+    fill: var(--medium);
     stroke-width: 1px;
 }
 .edgePath path {
-    stroke: #bbb;
-    stroke-width: 1px;
+    stroke: var(--light);
+    stroke-width: 1.5px;
 }
 div.tabs {
     overflow: hidden;
-    border: 1px solid #ccc;
-    border-bottom: none;
-    background-color: #f1f1f1;
 }
 
 div.tabs button.tab_button {
+    color: var(--accent);
     background-color: inherit;
+    border-top-left-radius: 0.25em;
+    border-top-right-radius: 0.25em;
     float: left;
     border: none;
     outline: none;
@@ -90,24 +149,27 @@ div.tabs button.tab_button {
 }
 
 div.tabs button.tab_button:hover {
-    background-color: #ddd;
+    background-color: var(--medium)
 }
 
-div.tabs button.active {
-    background-color: #ccc;
+div.tabs button.active, div.tabs button.active:hover {
+    color: var(--bright);
+    background-color: var(--main);
 }
 
 div.tab {
     display: none;
     padding: 1em;
-    border: 1px solid #ccc;
+    background-color: var(--main);
 }
 div.graph {
     min-width: max-content;
     min-width: -moz-max-content;
 }
 .dropdown {
-    border: 1px solid #ccc;
+    border: 2px solid var(--light);
+    border-radius: 5px;
+    background-color: var(--dark); 
     width: 36px;
     height: 36px;
     overflow: hidden;
@@ -115,10 +177,10 @@ div.graph {
     vertical-align: middle;
 }
 .dropdown:hover {
-    border: 1px solid #777;
+    border-color: var(--accent);
+    padding: 0.4em;
     position: absolute;
     z-index: 10;
-    background-color: #eee;
     transition: height 0.1s;
     height: auto;
 }
@@ -137,13 +199,13 @@ div.graph {
 .dropdown label {
     display: none;
     margin: 2px;
-    opacity: 0.5;
+    opacity: 0.6;
 }
 .dropdown:hover label {
     display: inline-block;
 }
 .dropdown label:hover {
-    opacity: 0.7;
+    opacity: 0.8;
 }
 .dropdown input:checked + label {
     opacity: 1 !important;
