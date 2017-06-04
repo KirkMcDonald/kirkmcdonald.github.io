@@ -28,11 +28,12 @@ function getImage(name) {
     }
     return null
 }
+
 function blankImage() {
     var im = document.createElement("img")
     // Chrome wants the <img> element to have a src attribute, or it will
     // draw a border around it. Cram in this transparent 1x1 pixel image.
-    im.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+    im.src = "images/pixel.gif"
     return im
 }
 var spriteNames = {}
