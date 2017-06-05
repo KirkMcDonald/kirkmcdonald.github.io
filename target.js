@@ -100,7 +100,7 @@ function BuildTarget(index, itemName) {
     this.element.appendChild(this.factories)
 
     this.rateLabel = document.createElement("label")
-    this.rateLabel.textContent = " Rate: "
+    this.setRateLabel()
     this.element.appendChild(this.rateLabel)
 
     this.rate = document.createElement("input")
@@ -113,9 +113,13 @@ function BuildTarget(index, itemName) {
 }
 BuildTarget.prototype = {
     constructor: BuildTarget,
+    setRateLabel: function() {
+        this.rateLabel.textContent = " Items/" + longRateNames[rateName] + ": "
+    },
     // Returns the rate at which this item is being requested. Also updates
     // the text boxes in response to changes in options.
     getRate: function() {
+        this.setRateLabel()
         var item = solver.items[this.itemName]
         var rate = zero
         // XXX: Hmmm...
