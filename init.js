@@ -8,7 +8,8 @@ var spec
 
 // Map from module name to Module object.
 var modules
-
+// Array of modules, sorted by 'order'.
+var sortedModules
 // Map from short module name to Module object.
 var shortModules
 
@@ -71,6 +72,7 @@ function loadData(modName, settings) {
         getSprites(data)
         var graph = getRecipeGraph(data)
         modules = getModules(data)
+        sortedModules = sorted(modules)//, function(m) { return modules[m].order })
         shortModules = {}
         for (var moduleName in modules) {
             var module = modules[moduleName]

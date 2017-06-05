@@ -88,11 +88,6 @@ img.icon {
     width: 32px;
     vertical-align: middle;
 }
-img.spacer {
-    height: 40px;
-    width: 1px;
-    vertical-align: middle;
-}
 td.setting-label {
     text-align: right;
 }
@@ -169,7 +164,7 @@ div.graph {
 .dropdown {
     border: 2px solid var(--light);
     border-radius: 5px;
-    background-color: var(--dark); 
+    background-color: var(--dark);
     width: 36px;
     height: 36px;
     overflow: hidden;
@@ -183,6 +178,16 @@ div.graph {
     z-index: 10;
     transition: height 0.1s;
     height: auto;
+    width: auto;
+}
+.dropdown + img.spacer {
+    display: none;
+}
+.dropdown:hover + img.spacer {
+    height: 40px;
+    width: 40px;
+    display: inline-block;
+    vertical-align: middle;
 }
 .dropdown br {
     display: none;

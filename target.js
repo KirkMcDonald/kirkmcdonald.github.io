@@ -80,7 +80,7 @@ function BuildTarget(index, itemName) {
                 )
             }
             if (any) {
-                dropdown.dropdown.appendChild(document.createElement("br"))
+                dropdown.addBreak()
             }
         }
     }

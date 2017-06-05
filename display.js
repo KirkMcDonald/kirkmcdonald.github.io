@@ -290,11 +290,17 @@ function display() {
                 var noModImage = getImage("slot-icon-module")
                 noModImage.title = "no module"
                 dropdown.add(noModImage, "no module", !currentModule)
+                var category = ""
 
-                for (var name in modules) {
+                for (var k = 0; k < sortedModules.length; k++) {
+                    var name = sortedModules[k]
                     var module = modules[name]
                     if (!module.canUse(recipe)) {
                         continue
+                    }
+                    if (module.category != category || sortedModules.length <= 6) {
+                        category = module.category
+                        dropdown.addBreak()
                     }
                     dropdown.add(
                         getImage(name),
@@ -345,12 +351,18 @@ function display() {
                 var noModImage = getImage("slot-icon-module")
                 noModImage.title = "no module"
                 beaconDropdown.add(noModImage, "no module", !currentBeacon)
+                var category = ""
 
-                for (var name in modules) {
+                for (var j = 0; j < sortedModules.length; j++) {
+                    var name = sortedModules[j]
                     var module = modules[name]
                     // No productivity modules in beacons.
                     if (!module.canBeacon()) {
                         continue
+                    }
+                    if (module.category != category || sortedModules.length <= 6) {
+                        beaconDropdown.addBreak()
+                        category = module.category
                     }
                     beaconDropdown.add(
                         getImage(name),

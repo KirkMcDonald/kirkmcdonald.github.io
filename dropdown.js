@@ -50,5 +50,8 @@ Dropdown.prototype = {
         label.appendChild(labelContent)
         label.title = value
         this.dropdown.appendChild(label)
+    },
+    addBreak: function() {
+        this.dropdown.appendChild(document.createElement("br"))
     }
 }
