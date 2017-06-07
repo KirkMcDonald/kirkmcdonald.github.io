@@ -46,12 +46,20 @@ function formatSettings() {
         targetStrings.push(targetString)
     }
     settings += targetStrings.join(",")
-    var ignore = Object.keys(spec.ignore)
+    var ignore = []
+    for (var recipeName in spec.ignore) {
+        if (recipeName in globalTotals.totals) {
+            ignore.push(recipeName)
+        }
+    }
     if (ignore.length > 0) {
         settings += "&ignore=" + ignore.join(",")
     }
     var specs = []
     for (var recipeName in spec.spec) {
+        if (!(recipeName in globalTotals.totals)) {
+            continue
+        }
         var factory = spec.spec[recipeName]
         var modules = []
         var beacon = ""

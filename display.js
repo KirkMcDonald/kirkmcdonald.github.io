@@ -110,27 +110,6 @@ function displaySteps(node, sortedTotals, totals) {
 
 var sortOrder = "topo"
 
-function pruneSpec(totals) {
-    var drop = []
-    for (var name in spec.spec) {
-        if (!(name in totals.totals)) {
-            drop.push(name)
-        }
-    }
-    for (var i = 0; i < drop.length; i++) {
-        delete spec.spec[drop[i]]
-    }
-    drop = []
-    for (var name in spec.ignore) {
-        if (!(name in totals.totals)) {
-            drop.push(name)
-        }
-    }
-    for (var i = 0; i < drop.length; i++) {
-        delete spec.ignore[drop[i]]
-    }
-}
-
 var globalTotals
 
 // The main top-level calculation function. Called whenever the solution
@@ -164,7 +143,6 @@ function display() {
         build_targets[i].getRate()
     }
     var totals = globalTotals
-    pruneSpec(totals)
 
     window.location.hash = "#" + formatSettings()
 
