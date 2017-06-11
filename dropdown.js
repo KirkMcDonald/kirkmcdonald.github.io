@@ -20,9 +20,10 @@ function Dropdown(node, name, handler, style) {
         this.dropdown.classList.add(style)
     }
     node.appendChild(this.dropdown)
-    var spacer = blankImage()
-    spacer.classList.add("spacer")
-    node.appendChild(spacer)
+    this.spacer = blankImage()
+    this.spacer.classList.add("spacer")
+    node.appendChild(this.spacer)
+    this.parentNode = node
 }
 Dropdown.prototype = {
     constructor: Dropdown,
@@ -33,6 +34,10 @@ Dropdown.prototype = {
                       probably be a 32x32 image.
         value: The string to use as this entry's value when selected.
         checked: Whether this entry should be selected by default.
+
+    Returns:
+        The <input> element for this entry. Its 'checked' attribute may be
+        changed to select this entry.
     */
     add: function(labelContent, value, checked) {
         var input = document.createElement("input")
@@ -50,8 +55,13 @@ Dropdown.prototype = {
         label.appendChild(labelContent)
         label.title = value
         this.dropdown.appendChild(label)
+        return input
     },
     addBreak: function() {
         this.dropdown.appendChild(document.createElement("br"))
+    },
+    remove: function() {
+        this.parentNode.removeChild(this.dropdown)
+        this.parentNode.removeChild(this.spacer)
     }
 }

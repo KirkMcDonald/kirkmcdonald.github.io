@@ -117,11 +117,11 @@ function IgnoreHandler(recipeName) {
 }
 
 // Triggered when a factory module is changed.
-function ModuleHandler(recipeName, factory, index) {
+function ModuleHandler(row, index) {
     this.handleEvent = function(event) {
         var moduleName = event.target.value
         var module = modules[moduleName]
-        if (factory.setModule(index, module) || isFactoryTarget(recipeName)) {
+        if (spec.getFactory(row.recipe).setModule(index, module) || isFactoryTarget(row.name)) {
             itemUpdate()
         } else {
             display()
@@ -130,12 +130,14 @@ function ModuleHandler(recipeName, factory, index) {
 }
 
 // Triggered when the right-arrow "copy module" button is pressed.
-function ModuleCopyHandler(recipeName, factory) {
+function ModuleCopyHandler(row) {
     this.handleEvent = function(event) {
+        var factory = spec.getFactory(row.recipe)
         var module = factory.getModule(0)
         var needRecalc = false
         for (var i = 0; i < factory.modules.length; i++) {
             needRecalc = factory.setModule(i, module) || needRecalc
+            row.setModule(i, module)
         }
         if (needRecalc || isFactoryTarget(recipeName)) {
             itemUpdate()
@@ -195,6 +197,10 @@ function CopyAllHandler(name) {
             }
             var recipe = solver.recipes[recipeName]
             needRecalc = factory.copyModules(f, recipe) || needRecalc || isFactoryTarget(recipeName)
+            var row = recipeTable.getRow(recipeName)
+            if (row) {
+                row.setModules()
+            }
         }
         if (needRecalc) {
             itemUpdate()

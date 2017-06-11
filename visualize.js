@@ -43,7 +43,7 @@ function makeGraph(totals, ignore) {
         g.setNode(recipeName, {"label": label, "labelType": "html"})
     }
     for (var itemName in totals.unfinished) {
-        g.setNode(itemName, {"label": "unknown " + itemName + " recipe"})
+        g.setNode(itemName, {"label": "unknown " + itemName + " recipe", "labelType": "html"})
     }
     g.setNode("output", {"label": "output", "labelType": "html"})
     var nodes = Object.keys(totals.totals).concat(["output"])

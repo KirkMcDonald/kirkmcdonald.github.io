@@ -1,5 +1,7 @@
 "use strict"
 
+var recipeTable
+
 // Contains collections of items and recipes. (solve.js)
 var solver
 
@@ -162,6 +164,7 @@ function loadData(modName, settings) {
 }
 
 function init() {
+    recipeTable = new RecipeTable(document.getElementById("totals"))
     var settings = loadSettings(window.location.hash)
     renderDataSetOptions(settings)
     if ("tab" in settings) {

@@ -15,6 +15,7 @@
     /* slightly brighter than main foreground color */
     --bright: #f1fff2;
 }
+/* top-level/shared elements */
 body {
     font-family: sans-serif;
     color: var(--foreground);
@@ -26,22 +27,6 @@ a {
 }
 a:active {
     color: var(--bright);
-}
-.targetButton {
-    height: 2em;
-    width: 2em;
-    padding: 0;
-    text-align: center;
-    font-weight: bold;
-    font-family: sans-serif;
-    margin-right: 0.5em;
-}
-ul.targets {
-    list-style-type: none;
-}
-ul.targets li {
-    margin: 0.25em;
-    border-radius: 0.5em;
 }
 input, select {
     color: var(--foreground);
@@ -55,17 +40,8 @@ input:focus, select:focus {
     border-color: var(--accent);
     outline: none;
 }
-ul.targets a {
-    font-size: large;
-    font-weight: bold;
-    cursor: pointer;
-}
 .right-align {
     text-align: right;
-}
-label.selected {
-    font-weight: bold;
-    color: var(--bright);
 }
 button.ui {
     color: var(--accent);
@@ -88,6 +64,33 @@ img.icon {
     width: 32px;
     vertical-align: middle;
 }
+/* build targets */
+.targetButton {
+    height: 2em;
+    width: 2em;
+    padding: 0;
+    text-align: center;
+    font-weight: bold;
+    font-family: sans-serif;
+    margin-right: 0.5em;
+}
+ul.targets {
+    list-style-type: none;
+}
+ul.targets li {
+    margin: 0.25em;
+    border-radius: 0.5em;
+}
+ul.targets a {
+    font-size: large;
+    font-weight: bold;
+    cursor: pointer;
+}
+label.selected {
+    font-weight: bold;
+    color: var(--bright);
+}
+/* settings */
 td.setting-label {
     text-align: right;
 }
@@ -100,33 +103,35 @@ input.prec {
 input.mprod {
     width: 4em;
 }
+/* factories tab */
 input.beacon {
     width: 4em;
 }
-#totals th {
+#totals {
+    /*border-spacing: 2px;*/
 }
 tr.recipe-row {
+}
+tr.recipe-row td {
+    padding: 0;
+}
+tr.recipe-row td.pad, th.pad {
+    padding-left: 1em;
 }
 tr.recipe-row img.recipe-icon {
     cursor: pointer;
 }
-tr.odd {
+tr.recipe-row .dropdown, tr.recipe-row .dropdown + img.spacer {
+    /*margin-left: 1px;
+    margin-right: 1px;*/
 }
 tr.ignore img.display {
     opacity: 0.2;
 }
-.pad {
-    padding-left: 1em;
+tr.no-mods td.module {
+    display: none;
 }
-.node rect {
-    stroke: var(--foreground);
-    fill: var(--medium);
-    stroke-width: 1px;
-}
-.edgePath path {
-    stroke: var(--light);
-    stroke-width: 1.5px;
-}
+/* tabs */
 div.tabs {
     overflow: hidden;
 }
@@ -157,10 +162,25 @@ div.tab {
     padding: 1em;
     background-color: var(--main);
 }
+/* visualizer */
+.node rect {
+    stroke: var(--foreground);
+    fill: var(--medium);
+    stroke-width: 1px;
+}
+.edgePath path {
+    stroke: var(--light);
+    stroke-width: 1.5px;
+}
 div.graph {
     min-width: max-content;
     min-width: -moz-max-content;
 }
+/* about */
+.about-content {
+    max-width: 40em;
+}
+/* dropdowns */
 .dropdown {
     border: 2px solid var(--light);
     border-radius: 5px;
