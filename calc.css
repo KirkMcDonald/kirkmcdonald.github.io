@@ -209,11 +209,16 @@ div.graph {
     display: inline-block;
     vertical-align: middle;
 }
-.dropdown br {
+.dropdown br, .dropdown hr {
     display: none;
 }
 .dropdown:hover br {
     display: inline;
+}
+.dropdown:hover hr {
+    display: block;
+    border-color: var(--accent);
+    border-style: solid;
 }
 .dropdown input {
     position: absolute;

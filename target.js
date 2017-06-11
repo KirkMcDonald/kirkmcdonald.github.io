@@ -60,8 +60,13 @@ function BuildTarget(index, itemName) {
     // Use a single global target count, as a given target's index can change.
     targetCount++
 
+    var anyGroup = false
     for (var i = 0; i < itemGroups.length; i++) {
         var group = itemGroups[i]
+        if (anyGroup) {
+            dropdown.addRule()
+        }
+        anyGroup = false
         for (var j = 0; j < group.length; j++) {
             var subgroup = group[j]
             var any = false
@@ -81,6 +86,7 @@ function BuildTarget(index, itemName) {
             }
             if (any) {
                 dropdown.addBreak()
+                anyGroup = true
             }
         }
     }

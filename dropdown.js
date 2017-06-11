@@ -60,6 +60,9 @@ Dropdown.prototype = {
     addBreak: function() {
         this.dropdown.appendChild(document.createElement("br"))
     },
+    addRule: function() {
+        this.dropdown.appendChild(document.createElement("hr"))
+    },
     remove: function() {
         this.parentNode.removeChild(this.dropdown)
         this.parentNode.removeChild(this.spacer)
