@@ -44,6 +44,17 @@ function alignCount(x) {
     return align(displayCount(x), countPrecision)
 }
 
+function Belt(name, speed) {
+    this.name = name
+    this.speed = RationalFromFloats(speed, 60)
+}
+
+var BELTS = [
+    new Belt("transport-belt", 800),
+    new Belt("fast-transport-belt", 1600),
+    new Belt("express-transport-belt", 2400)
+]
+
 function displaySteps(sortedTotals, totals) {
     var stepTab = document.getElementById("steps_tab")
 
@@ -69,7 +80,7 @@ function displaySteps(sortedTotals, totals) {
     }
     var headers = [
         new Header("items/" + rateName, 2),
-        new Header("belts", 2)
+        new Header("belts", BELTS.length * 2)
     ]
     var header = document.createElement("tr")
     for (var i = 0; i < headers.length; i++) {
@@ -99,18 +110,21 @@ function displaySteps(sortedTotals, totals) {
         row.appendChild(rateCell)
 
         if (item.phase == "solid") {
-            var belts = rate.div(RationalFromFloats(800, 60))
-            var beltCell = document.createElement("td")
-            beltCell.classList.add("pad")
-            beltCell.appendChild(getImage("transport-belt"))
-            beltCell.appendChild(new Text(" \u00d7"))
-            row.appendChild(beltCell)
-            var beltRateCell = document.createElement("td")
-            beltRateCell.classList.add("right-align")
-            tt = document.createElement("tt")
-            tt.textContent = alignCount(belts)
-            beltRateCell.append(tt)
-            row.appendChild(beltRateCell)
+            for (var j = 0; j < BELTS.length; j++) {
+                var belt = BELTS[j]
+                var belts = rate.div(belt.speed)
+                var beltCell = document.createElement("td")
+                beltCell.classList.add("pad")
+                beltCell.appendChild(getImage(belt.name))
+                beltCell.appendChild(new Text(" \u00d7"))
+                row.appendChild(beltCell)
+                var beltRateCell = document.createElement("td")
+                beltRateCell.classList.add("right-align")
+                tt = document.createElement("tt")
+                tt.textContent = alignCount(belts)
+                beltRateCell.append(tt)
+                row.appendChild(beltRateCell)
+            }
         }
     }
 }
