@@ -427,6 +427,9 @@ function RecipeTable(node) {
     var header = document.createElement("tr")
     for (var i = 0; i < headers.length; i++) {
         var th = document.createElement("th")
+        if (i == 0) {
+            this.recipeHeader = th
+        }
         th.textContent = headers[i].name
         th.colSpan = headers[i].colSpan
         if (i > 0) {
@@ -440,7 +443,11 @@ function RecipeTable(node) {
 }
 RecipeTable.prototype = {
     constructor: RecipeTable,
+    setRecipeHeader: function() {
+        this.recipeHeader.textContent = "recipe craft/" + rateName
+    },
     displaySolution: function(totals) {
+        this.setRecipeHeader()
         var sortedTotals
         if (sortOrder == "topo") {
             sortedTotals = totals.topo
