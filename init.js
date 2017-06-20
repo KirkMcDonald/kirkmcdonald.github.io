@@ -67,6 +67,7 @@ function loadDataRunner(modName, callback) {
 }
 
 function loadData(modName, settings) {
+    recipeTable = new RecipeTable(document.getElementById("totals"))
     if (!settings) {
         settings = {}
     }
@@ -164,7 +165,6 @@ function loadData(modName, settings) {
 }
 
 function init() {
-    recipeTable = new RecipeTable(document.getElementById("totals"))
     var settings = loadSettings(window.location.hash)
     renderDataSetOptions(settings)
     if ("tab" in settings) {
