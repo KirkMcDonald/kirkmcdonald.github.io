@@ -139,7 +139,7 @@ function ModuleCopyHandler(row) {
             needRecalc = factory.setModule(i, module) || needRecalc
             row.setModule(i, module)
         }
-        if (needRecalc || isFactoryTarget(recipeName)) {
+        if (needRecalc || isFactoryTarget(row.name)) {
             itemUpdate()
         } else {
             display()
