@@ -105,12 +105,14 @@ function changeFormat(event) {
 
 // recipe row events
 
-function IgnoreHandler(recipeName) {
+function IgnoreHandler(row) {
     this.handleEvent = function(event) {
-        if (spec.ignore[recipeName]) {
-            delete spec.ignore[recipeName]
+        if (spec.ignore[row.name]) {
+            delete spec.ignore[row.name]
+            row.setIgnore(false)
         } else {
-            spec.ignore[recipeName] = true
+            spec.ignore[row.name] = true
+            row.setIgnore(true)
         }
         itemUpdate()
     }

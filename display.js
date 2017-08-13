@@ -180,7 +180,7 @@ function RecipeRow(parentNode, recipeName, rate) {
     }
     im.classList.add("display")
     im.classList.add("recipe-icon")
-    im.addEventListener("click", new IgnoreHandler(recipeName))
+    im.addEventListener("click", new IgnoreHandler(this))
     this.image = im
     nameCell.appendChild(im)
     this.node.appendChild(nameCell)
