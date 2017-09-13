@@ -26,11 +26,14 @@ Rational.prototype = {
         }
         return this.p.toString() + "/" + this.q.toString()
     },
-    toDecimal: function(maxDigits) {
+    toDecimal: function(maxDigits, roundingFactor) {
         if (maxDigits == null) {
             maxDigits = 3
         }
-        var roundingFactor = new Rational(bigInt(5), bigInt(10).pow(maxDigits+1))
+        if (roundingFactor == null) {
+            roundingFactor = new Rational(bigInt(5), bigInt(10).pow(maxDigits+1))
+        }
+
         var x = this.add(roundingFactor)
         var divmod = x.p.divmod(x.q)
         var integerPart = divmod.quotient.toString()
@@ -55,6 +58,15 @@ Rational.prototype = {
         }
         return integerPart
     },
+    toUpDecimal: function(maxDigits) {
+        var fraction = new Rational(bigInt.one, bigInt(10).pow(maxDigits))
+        var divmod = this.divmod(fraction)
+        var x = this
+        if (!divmod.remainder.isZero()) {
+            x = x.add(fraction)
+        }
+        return x.toDecimal(maxDigits, zero)
+    },
     toMixed: function() {
         var divmod = this.p.divmod(this.q)
         if (divmod.quotient.isZero() || divmod.remainder.isZero()) {
@@ -76,11 +88,25 @@ Rational.prototype = {
         }
         return result
     },
+    floor: function() {
+        var divmod = this.p.divmod(this.q)
+        var result = new Rational(divmod.quotient, bigInt.one)
+        if (result.less(zero) && !divmod.remainder.isZero()) {
+            result = result.sub(one)
+        }
+        return result
+    },
     equal: function(other) {
         return this.p.equals(other.p) && this.q.equals(other.q)
     },
     less: function(other) {
         return this.p.times(other.q).lesser(this.q.times(other.p))
+    },
+    abs: function() {
+        if (this.less(zero)) {
+            return this.mul(new Rational(bigInt.minusOne, bigInt.one))
+        }
+        return this
     },
     add: function(other) {
         return new Rational(
@@ -107,6 +133,12 @@ Rational.prototype = {
             this.q.times(other.p),
             bigInt.gcd(this.p, other.p).times(bigInt.gcd(this.q, other.q))
         )
+    },
+    divmod: function(other) {
+        var quotient = this.div(other)
+        var div = quotient.floor()
+        var mod = this.sub(other.mul(div))
+        return {quotient: div, remainder: mod}
     },
 }
 

@@ -1,23 +1,20 @@
 "use strict"
 
-function displayValue(x, precision) {
+function displayRate(x) {
+    x = x.mul(displayRateFactor)
     if (displayFormat == "rational") {
         return x.toMixed()
     } else {
-        return x.toDecimal(precision)
+        return x.toDecimal(ratePrecision)
     }
-}
-
-function displayRate(x) {
-    x = x.mul(displayRateFactor)
-    return displayValue(x, ratePrecision)
 }
 
 function displayCount(x) {
-    if (countPrecision == 0) {
-        return x.ceil().toString()
+    if (displayFormat == "rational") {
+        return x.toMixed()
+    } else {
+        return x.toUpDecimal(countPrecision)
     }
-    return displayValue(x, countPrecision)
 }
 
 function align(s, prec) {
