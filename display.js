@@ -475,6 +475,7 @@ RecipeTable.prototype = {
             } else {
                 row = new RecipeRow(this.node, recipeName, rate)
                 this.rows[recipeName] = row
+                sameRows = false
             }
             newRowArray.push(row)
             if (row.hasModules()) {
