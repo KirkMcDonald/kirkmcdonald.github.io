@@ -75,7 +75,7 @@ function loadData(modName, settings) {
         getSprites(data)
         var graph = getRecipeGraph(data)
         modules = getModules(data)
-        sortedModules = sorted(modules)//, function(m) { return modules[m].order })
+        sortedModules = sorted(modules, function(m) { return modules[m].order })
         shortModules = {}
         for (var moduleName in modules) {
             var module = modules[moduleName]

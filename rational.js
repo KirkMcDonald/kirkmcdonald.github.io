@@ -158,12 +158,24 @@ function RationalFromString(s) {
     return new Rational(p, q)
 }
 
+// Decimal approximations.
+var _one_third = new Rational(bigInt(3333), bigInt(10000))
+var _two_thirds = new Rational(bigInt(3333), bigInt(5000))
+
 function RationalFromFloat(x) {
     if (Number.isInteger(x)) {
         return RationalFromFloats(x, 1)
     }
     // Sufficient precision for our data?
-    return new Rational(bigInt(Math.round(x * 10000)), bigInt(10000))
+    var r = new Rational(bigInt(Math.round(x * 10000)), bigInt(10000))
+    // Recognize 1/3 and 2/3 explicitly.
+    var divmod = r.divmod(one)
+    if (divmod.remainder.equal(_one_third)) {
+        return divmod.quotient.add(oneThird)
+    } else if (divmod.remainder.equal(_two_thirds)) {
+        return divmod.quotient.add(twoThirds)
+    }
+    return r
 }
 
 function RationalFromFloats(p, q) {
@@ -173,3 +185,5 @@ function RationalFromFloats(p, q) {
 var zero = new Rational(bigInt.zero, bigInt.one)
 var one = new Rational(bigInt.one, bigInt.one)
 var half = new Rational(bigInt.one, bigInt(2))
+var oneThird = new Rational(bigInt.one, bigInt(3))
+var twoThirds = new Rational(bigInt(2), bigInt(3))

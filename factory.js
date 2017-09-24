@@ -1,11 +1,13 @@
 "use strict"
 
-function FactoryDef(name, categories, max_ingredients, speed, moduleSlots) {
+function FactoryDef(name, categories, max_ingredients, speed, moduleSlots, energyUsage) {
     this.name = name
     this.categories = categories
     this.max_ing = max_ingredients
     this.speed = speed
     this.moduleSlots = moduleSlots
+    // Convert from Joules-per-tick to Watts.
+    this.energyUsage = energyUsage.mul(RationalFromFloat(60))
 }
 FactoryDef.prototype = {
     constructor: FactoryDef,
@@ -23,8 +25,8 @@ FactoryDef.prototype = {
     }
 }
 
-function MinerDef(name, categories, power, speed, moduleSlots) {
-    FactoryDef.call(this, name, categories, 0, 0, moduleSlots)
+function MinerDef(name, categories, power, speed, moduleSlots, energyUsage) {
+    FactoryDef.call(this, name, categories, 0, 0, moduleSlots, energyUsage)
     this.mining_power = power
     this.mining_speed = speed
 }
@@ -87,6 +89,36 @@ Factory.prototype = {
             prod = prod.add(this.modules[i].productivity)
         }
         return prod
+    },
+    powerEffect: function() {
+        var power = one
+        for (var i=0; i < this.modules.length; i++) {
+            if (!this.modules[i]) {
+                continue
+            }
+            power = power.add(this.modules[i].power)
+        }
+        if (this.beaconModule) {
+            power = power.add(this.beaconModule.power.mul(this.beaconCount).mul(half))
+        }
+        var minimum = RationalFromFloats(1, 5)
+        if (power.less(minimum)) {
+            power = minimum
+        }
+        return power
+    },
+    powerUsage: function(count) {
+        var power = this.factory.energyUsage
+        // Default drain value.
+        var drain = power.div(RationalFromFloat(30))
+        var divmod = count.divmod(one)
+        power = power.mul(count)
+        if (!divmod.remainder.isZero()) {
+            var idle = one.sub(divmod.remainder)
+            power = power.add(idle.mul(drain))
+        }
+        power = power.mul(this.powerEffect())
+        return power
     },
     recipeRate: function(recipe) {
         return one.div(recipe.time).mul(this.factory.speed).mul(this.speedEffect())
@@ -226,9 +258,9 @@ FactorySpec.prototype = {
 
 function getFactories(data) {
     var factories = []
-    var pump = new FactoryDef("offshore-pump", {"water": true}, 1, one, 0)
+    var pump = new FactoryDef("offshore-pump", {"water": true}, 1, one, 0, zero)
     factories.push(pump)
-    var reactor = new FactoryDef("nuclear-reactor", {"nuclear": true}, 1, one, 0)
+    var reactor = new FactoryDef("nuclear-reactor", {"nuclear": true}, 1, one, 0, zero)
     factories.push(reactor)
     for (var name in data.entities) {
         var d = data.entities[name]
@@ -238,7 +270,8 @@ function getFactories(data) {
                 d.crafting_categories,
                 d.ingredient_count,
                 RationalFromFloat(d.crafting_speed),
-                d.module_inventory_size
+                d.module_inventory_size,
+                RationalFromFloat(d.energy_usage)
             ))
         } else if ("mining_power" in d) {
             if (d.name == "pumpjack") {
@@ -249,7 +282,8 @@ function getFactories(data) {
                 {"mining-basic-solid": true},
                 RationalFromFloat(d.mining_power),
                 RationalFromFloat(d.mining_speed),
-                d.module_inventory_size
+                d.module_inventory_size,
+                RationalFromFloat(d.energy_usage)
             ))
         }
     }

@@ -1,12 +1,13 @@
 "use strict"
 
-function Module(name, category, order, productivity, speed, limit) {
+function Module(name, category, order, productivity, speed, power, limit) {
     // Other module effects not modeled by this calculator.
     this.name = name
     this.category = category
     this.order = order
     this.productivity = productivity
     this.speed = speed
+    this.power = power
     this.limit = limit
 }
 Module.prototype = {
@@ -39,15 +40,16 @@ function getModules(data) {
             continue
         }
         var effect = item.module_effects
-        if (!("speed" in effect) && !("productivity" in effect)) {
+        /*if (!("speed" in effect) && !("productivity" in effect)) {
             continue
-        }
+        }*/
         var category = item.category
         var order = item.order
         var speed = RationalFromFloat((effect.speed || {}).bonus || 0)
         var productivity = RationalFromFloat((effect.productivity || {}).bonus || 0)
+        var power = RationalFromFloat((effect.consumption || {}).bonus || 0)
         var limit = item.limitations
-        modules[name] = new Module(name, category, order, productivity, speed, limit)
+        modules[name] = new Module(name, category, order, productivity, speed, power, limit)
     }
     return modules
 }

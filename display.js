@@ -41,6 +41,18 @@ function alignCount(x) {
     return align(displayCount(x), countPrecision)
 }
 
+var powerSuffixes = ["\u00A0W", "kW", "MW", "GW", "TW", "PW"]
+
+function alignPower(x) {
+    var thousand = RationalFromFloat(1000)
+    var i = 0
+    while (thousand.less(x) && i < powerSuffixes.length - 1) {
+        x = x.div(thousand)
+        i++
+    }
+    return alignCount(x) + " " + powerSuffixes[i]
+}
+
 function Belt(name, speed) {
     this.name = name
     this.speed = RationalFromFloats(speed, 60)
@@ -160,6 +172,7 @@ function RecipeRow(parentNode, recipeName, rate) {
     this.name = recipeName
     this.recipe = solver.recipes[recipeName]
     this.rate = rate
+    this.power = zero
     this.node = document.createElement("tr")
     this.node.classList.add("recipe-row")
     if (spec.ignore[recipeName]) {
@@ -236,13 +249,15 @@ function RecipeRow(parentNode, recipeName, rate) {
         if (!module.canBeacon()) {
             continue
         }
-        if (module.category != category || sortedModules.length <= 6) {
-            beaconDropdown.addBreak()
+        if (module.category != category) {
             category = module.category
+            beaconDropdown.addBreak()
         }
         this.beacon[name] = beaconDropdown.add(getImage(name), name, false)
     }
-    beaconCell.appendChild(new Text(" \u00D7 "))
+    var beaconX = document.createElement("span")
+    beaconX.appendChild(new Text(" \u00D7 "))
+    beaconCell.appendChild(beaconX)
 
     this.beaconCount = document.createElement("input")
     this.beaconCount.addEventListener("change", new BeaconCountHandler(recipeName))
@@ -262,6 +277,14 @@ function RecipeRow(parentNode, recipeName, rate) {
     this.downArrow.addEventListener("click", new CopyAllHandler(recipeName))
     downArrowCell.appendChild(this.downArrow)
     this.node.appendChild(downArrowCell)
+
+    var powerCell = document.createElement("td")
+    powerCell.classList.add("right-align")
+    powerCell.classList.add("pad")
+    tt = document.createElement("tt")
+    powerCell.appendChild(tt)
+    this.powerNode = tt
+    this.node.appendChild(powerCell)
 
     // Set values.
     this.setIgnore(spec.ignore[recipeName])
@@ -297,6 +320,9 @@ RecipeRow.prototype = {
     },
     setUpArrow: function() {
         this.downArrow.textContent = "\u2191"
+    },
+    setPower: function(watts) {
+        this.powerNode.textContent = alignPower(watts)
     },
     // Call whenever the minimum factory or factory count might change (e.g. in
     // response to speed modules being added/removed).
@@ -350,7 +376,7 @@ RecipeRow.prototype = {
                     if (!module.canUse(this.recipe)) {
                         continue
                     }
-                    if (module.category != category || sortedModules.length <= 6) {
+                    if (module.category != category) {
                         category = module.category
                         dropdown.addBreak()
                     }
@@ -370,6 +396,8 @@ RecipeRow.prototype = {
         } else {
             this.setHasNoModules()
         }
+        this.power = factory.powerUsage(count)
+        this.setPower(this.power)
     },
     setModules: function() {
         var factory = spec.getFactory(this.recipe)
@@ -419,7 +447,8 @@ function RecipeTable(node) {
         Header("factories", 2),
         Header("modules", 1),
         Header("beacons", 1),
-        Header("")
+        Header(""),
+        Header("power")
     ]
     var header = document.createElement("tr")
     for (var i = 0; i < headers.length; i++) {
@@ -435,6 +464,20 @@ function RecipeTable(node) {
         header.appendChild(th)
     }
     node.appendChild(header)
+    this.totalRow = document.createElement("tr")
+    var totalLabelCell = document.createElement("td")
+    totalLabelCell.colSpan = 7
+    totalLabelCell.classList.add("right-align")
+    var totalLabel = document.createElement("b")
+    totalLabel.textContent = "total power:"
+    totalLabelCell.appendChild(totalLabel)
+    this.totalRow.appendChild(totalLabelCell)
+    var totalCell = document.createElement("td")
+    totalCell.classList.add("right-align")
+    this.totalNode = document.createElement("tt")
+    totalCell.appendChild(this.totalNode)
+    this.totalRow.appendChild(totalCell)
+
     this.rowArray = []
     this.rows = {}
 }
@@ -458,6 +501,7 @@ RecipeTable.prototype = {
         var downArrowShown = false
         var sameRows = true
         var i = 0
+        var totalPower = zero
         for (var i = 0; i < sortedTotals.length; i++) {
             var recipeName = sortedTotals[i]
             var rate = totals.get(recipeName)
@@ -477,6 +521,7 @@ RecipeTable.prototype = {
                 this.rows[recipeName] = row
                 sameRows = false
             }
+            totalPower = totalPower.add(row.power)
             newRowArray.push(row)
             if (row.hasModules()) {
                 last = row
@@ -502,6 +547,8 @@ RecipeTable.prototype = {
             this.rows[drop[i]].remove()
             delete this.rows[drop[i]]
         }
+        this.node.appendChild(this.totalRow)
+        this.totalNode.textContent = alignPower(totalPower)
     },
     getRow: function(recipeName) {
         return this.rows[recipeName]

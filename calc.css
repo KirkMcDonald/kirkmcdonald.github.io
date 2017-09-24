@@ -128,7 +128,7 @@ tr.recipe-row .dropdown, tr.recipe-row .dropdown + img.spacer {
 tr.ignore img.display {
     opacity: 0.2;
 }
-tr.no-mods td.module {
+tr.no-mods td.module * {
     display: none;
 }
 /* tabs */
