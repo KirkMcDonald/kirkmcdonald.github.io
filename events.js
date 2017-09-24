@@ -224,6 +224,7 @@ var tabMap = {
     "graph_tab": "graph_button",
     "settings_tab": "settings_button",
     "about_tab": "about_button",
+    "faq_tab": "faq_button",
 }
 
 // Triggered when a tab is clicked on.

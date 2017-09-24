@@ -180,6 +180,9 @@ div.graph {
 .about-content {
     max-width: 40em;
 }
+.about-content h3 {
+    color: var(--bright);
+}
 /* dropdowns */
 .dropdown {
     border: 2px solid var(--light);
