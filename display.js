@@ -547,6 +547,7 @@ RecipeTable.prototype = {
         var i = 0
         var totalPower = zero
         var csvLines = ["recipe,rate,factory,count,modules,beacon module,beacon count,power"]
+        var csvWidth = csvLines[0].length
         for (var i = 0; i < sortedTotals.length; i++) {
             var recipeName = sortedTotals[i]
             var rate = totals.get(recipeName)
@@ -567,7 +568,11 @@ RecipeTable.prototype = {
                 sameRows = false
             }
             totalPower = totalPower.add(row.power)
-            csvLines.push(row.csv())
+            var csvLine = row.csv()
+            if (csvLine.length > csvWidth) {
+                csvWidth = csvLine.length
+            }
+            csvLines.push(csvLine)
             newRowArray.push(row)
             if (row.hasModules()) {
                 last = row
@@ -596,7 +601,9 @@ RecipeTable.prototype = {
         this.node.appendChild(this.totalRow)
         this.totalNode.textContent = alignPower(totalPower)
         var csv = document.getElementById("csv")
-        csv.textContent = csvLines.join("\n") + "\n"
+        csv.value = csvLines.join("\n") + "\n"
+        csv.cols = csvWidth + 1
+        csv.rows = csvLines.length + 1
     },
     getRow: function(recipeName) {
         return this.rows[recipeName]
