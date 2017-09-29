@@ -172,6 +172,8 @@ function RecipeRow(parentNode, recipeName, rate) {
     this.name = recipeName
     this.recipe = solver.recipes[recipeName]
     this.rate = rate
+    this.factory = null
+    this.count = zero
     this.power = zero
     this.node = document.createElement("tr")
     this.node.classList.add("recipe-row")
@@ -324,6 +326,48 @@ RecipeRow.prototype = {
     setPower: function(watts) {
         this.powerNode.textContent = alignPower(watts)
     },
+    csv: function() {
+        var parts = [
+            this.name,
+            displayRate(this.rate),
+        ]
+        if (this.count.isZero()) {
+            parts.push("")
+            parts.push("")
+        } else {
+            parts.push(this.factory.name)
+            parts.push(displayCount(this.count))
+        }
+        if (this.factory && this.factory.modules.length > 0) {
+            var modules = []
+            for (var i = 0; i < this.factory.modules.length; i++) {
+                var module = this.factory.modules[i]
+                if (module) {
+                    modules.push(module.shortName())
+                } else {
+                    modules.push("")
+                }
+            }
+            parts.push(modules.join("/"))
+            if (this.factory.beaconModule && !this.factory.beaconCount.isZero()) {
+                parts.push(this.factory.beaconModule.shortName())
+                parts.push(displayCount(this.factory.beaconCount))
+            } else {
+                parts.push("")
+                parts.push("")
+            }
+        } else {
+            parts.push("")
+            parts.push("")
+            parts.push("")
+        }
+        if (this.factory) {
+            parts.push(displayCount(this.power))
+        } else {
+            parts.push("")
+        }
+        return parts.join(",")
+    },
     // Call whenever the minimum factory or factory count might change (e.g. in
     // response to speed modules being added/removed).
     //
@@ -331,24 +375,24 @@ RecipeRow.prototype = {
     // of module slots, presence of the beacon info, and/or presence of the
     // module-copy buttons.
     displayFactory: function() {
-        var count = spec.getCount(this.recipe, this.rate)
-        if (count.isZero()) {
+        this.count = spec.getCount(this.recipe, this.rate)
+        if (this.count.isZero()) {
             this.setHasNoModules()
             return
         }
-        var factory = spec.getFactory(this.recipe)
-        var image = getImage(factory.name)
+        this.factory = spec.getFactory(this.recipe)
+        var image = getImage(this.factory.name)
         image.classList.add("display")
         while (this.factoryCell.hasChildNodes()) {
             this.factoryCell.removeChild(this.factoryCell.lastChild)
         }
         this.factoryCell.appendChild(image)
         this.factoryCell.appendChild(new Text(" \u00d7"))
-        this.countNode.textContent = alignCount(count)
+        this.countNode.textContent = alignCount(this.count)
 
-        var moduleDelta = factory.modules.length - this.modules.length
+        var moduleDelta = this.factory.modules.length - this.modules.length
         if (moduleDelta < 0) {
-            this.modules.length = factory.modules.length
+            this.modules.length = this.factory.modules.length
             for (var i = moduleDelta; i < 0; i++) {
                 this.dropdowns.pop().remove()
             }
@@ -396,7 +440,7 @@ RecipeRow.prototype = {
         } else {
             this.setHasNoModules()
         }
-        this.power = factory.powerUsage(count)
+        this.power = this.factory.powerUsage(this.count)
         this.setPower(this.power)
     },
     setModules: function() {
@@ -502,6 +546,7 @@ RecipeTable.prototype = {
         var sameRows = true
         var i = 0
         var totalPower = zero
+        var csvLines = ["recipe,rate,factory,count,modules,beacon module,beacon count,power"]
         for (var i = 0; i < sortedTotals.length; i++) {
             var recipeName = sortedTotals[i]
             var rate = totals.get(recipeName)
@@ -522,6 +567,7 @@ RecipeTable.prototype = {
                 sameRows = false
             }
             totalPower = totalPower.add(row.power)
+            csvLines.push(row.csv())
             newRowArray.push(row)
             if (row.hasModules()) {
                 last = row
@@ -549,6 +595,8 @@ RecipeTable.prototype = {
         }
         this.node.appendChild(this.totalRow)
         this.totalNode.textContent = alignPower(totalPower)
+        var csv = document.getElementById("csv")
+        csv.textContent = csvLines.join("\n") + "\n"
     },
     getRow: function(recipeName) {
         return this.rows[recipeName]

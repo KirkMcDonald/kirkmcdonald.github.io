@@ -131,6 +131,9 @@ tr.ignore img.display {
 tr.no-mods td.module * {
     display: none;
 }
+span.displaylink {
+    font-size: x-small;
+}
 /* tabs */
 div.tabs {
     overflow: hidden;
