@@ -16,8 +16,10 @@ function makeIngredient(data, i, items) {
     return new Ingredient(RationalFromFloat(amount), getItem(data, items, i.name))
 }
 
-function Recipe(name, category, time, ingredients, products) {
+function Recipe(name, col, row, category, time, ingredients, products) {
     this.name = name
+    this.icon_col = col
+    this.icon_row = row
     this.category = category
     this.time = time
     this.ingredients = ingredients
@@ -50,20 +52,20 @@ Recipe.prototype = {
 }
 
 function makeRecipe(data, d, items) {
-    var time = RationalFromFloat(d.energy)
+    var time = RationalFromFloat(d.energy_required)
     var products = []
-    for (var i=0; i < d.products.length; i++) {
-        products.push(makeIngredient(data, d.products[i], items))
+    for (var i=0; i < d.results.length; i++) {
+        products.push(makeIngredient(data, d.results[i], items))
     }
     var ingredients = []
     for (var i=0; i < d.ingredients.length; i++) {
         ingredients.push(makeIngredient(data, d.ingredients[i], items))
     }
-    return new Recipe(d.name, d.category, time, ingredients, products)
+    return new Recipe(d.name, d.icon_col, d.icon_row, d.category, time, ingredients, products)
 }
 
 function ResourceRecipe(item) {
-    Recipe.call(this, item.name, null, zero, [], [new Ingredient(one, item)])
+    Recipe.call(this, item.name, item.icon_col, item.icon_row, null, zero, [], [new Ingredient(one, item)])
 }
 ResourceRecipe.prototype = Object.create(Recipe.prototype)
 ResourceRecipe.prototype.makesResource = function() {
@@ -76,7 +78,7 @@ function MiningRecipe(item, category, hardness, mining_time, ingredients) {
     if (!ingredients) {
         ingredients = []
     }
-    Recipe.call(this, item.name, category, zero, ingredients, [new Ingredient(one, item)])
+    Recipe.call(this, item.name, item.icon_col, item.icon_row, category, zero, ingredients, [new Ingredient(one, item)])
 }
 MiningRecipe.prototype = Object.create(Recipe.prototype)
 MiningRecipe.prototype.makesResource = function() {
@@ -93,10 +95,21 @@ function ignoreRecipe(d) {
 function getRecipeGraph(data) {
     var recipes = {}
     var items = getItems(data)
-    var water = items["water"]
-    recipes["water"] = new Recipe("water", "water", RationalFromFloats(1, 1200), [], [new Ingredient(one, water)])
+    var water = getItem(data, items, "water")
+    recipes["water"] = new Recipe(
+        "water",
+        water.icon_col,
+        water.icon_row,
+        "water",
+        RationalFromFloats(1, 1200),
+        [],
+        [new Ingredient(one, water)]
+    )
+    var reactor = data.items["nuclear-reactor"]
     recipes["nuclear-reactor-cycle"] = new Recipe(
         "nuclear-reactor-cycle",
+        reactor.icon_col,
+        reactor.icon_row,
         "nuclear",
         RationalFromFloat(200),
         [new Ingredient(one, getItem(data, items, "uranium-fuel-cell"))],
@@ -105,8 +118,11 @@ function getRecipeGraph(data) {
             new Ingredient(one, items["nuclear-reactor-cycle"]),
         ]
     )
+    var rocket = data.items["rocket-silo"]
     recipes["rocket-launch"] = new Recipe(
         "rocket-launch",
+        rocket.icon_col,
+        rocket.icon_row,
         "rocket-building",
         one,
         [
@@ -114,8 +130,6 @@ function getRecipeGraph(data) {
             new Ingredient(one, getItem(data, items, "satellite"))
         ], [new Ingredient(RationalFromFloat(1000), getItem(data, items, "space-science-pack"))]
     )
-    var siloSprite = spriteNames["rocket-silo"]
-    spriteNames["rocket-launch"] = new Sprite("rocket-launch", siloSprite.row, siloSprite.col)
 
     for (var name in data.recipes) {
         var recipe = data.recipes[name]
@@ -125,31 +139,32 @@ function getRecipeGraph(data) {
         var r = makeRecipe(data, recipe, items)
         recipes[recipe.name] = r
     }
-    for (var entityName in data.entities) {
-        var entity = data.entities[entityName]
-        var category = entity.resource_category
+    for (var entityName in data.resource) {
+        var entity = data.resource[entityName]
+        var category = entity.category
         if (!category) {
+            category = "basic-solid"
+        }
+        if (category != "basic-solid") {
             continue
         }
-        if (category == "basic-solid") {
-            var name = entity.name
-            var props = entity.mineable_properties
-            var item = items[name]
-            var ingredients = null
-            if ("required_fluid" in props) {
-                ingredients = [new Ingredient(
-                    RationalFromFloat(props.fluid_amount / 10),
-                    items[props.required_fluid]
-                )]
-            }
-            recipes[name] = new MiningRecipe(
-                item,
-                "mining-" + category,
-                RationalFromFloat(props.hardness),
-                RationalFromFloat(props.mining_time),
-                ingredients
-            )
+        var name = entity.name
+        var props = entity.minable
+        var item = items[name]
+        var ingredients = null
+        if ("required_fluid" in props) {
+            ingredients = [new Ingredient(
+                RationalFromFloat(props.fluid_amount / 10),
+                items[props.required_fluid]
+            )]
         }
+        recipes[name] = new MiningRecipe(
+            item,
+            "mining-" + category,
+            RationalFromFloat(props.hardness),
+            RationalFromFloat(props.mining_time),
+            ingredients
+        )
     }
     for (var itemName in items) {
         var item = items[itemName]

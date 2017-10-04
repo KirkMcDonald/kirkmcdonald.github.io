@@ -18,7 +18,7 @@ function makeGraph(totals, ignore) {
         var rate = totals.totals[recipeName]
         var recipe = solver.recipes[recipeName]
         var factoryCount = spec.getCount(recipe, rate)
-        var im = getImage(recipeName)
+        var im = getImage(recipe)
         if (ignore[recipeName]) {
             im.classList.add("ignore")
         }
@@ -30,7 +30,7 @@ function makeGraph(totals, ignore) {
         )
         if (!factoryCount.isZero()) {
             var factory = spec.getFactory(recipe)
-            var im = getImage(factory.name)
+            var im = getImage(factory.factory)
             if (ignore[recipeName]) {
                 im.classList.add("ignore")
             }
@@ -80,7 +80,7 @@ function makeGraph(totals, ignore) {
                     var subRate = totals.totals[subRecipe.name].mul(subRecipe.gives(ing.item, spec)).mul(ratio)
                     var label = sprintf(
                         "%s \u00d7 %s/%s",
-                        getImage(ing.item.name).outerHTML,
+                        getImage(ing.item).outerHTML,
                         displayRate(subRate),
                         rateName
                     )
@@ -95,7 +95,7 @@ function makeGraph(totals, ignore) {
                 var rate = totals.totals[recipeName].mul(ing.amount)
                 var label = sprintf(
                     "%s \u00d7 %s/%s",
-                    getImage(ing.item.name).outerHTML,
+                    getImage(ing.item).outerHTML,
                     displayRate(rate),
                     rateName
                 )

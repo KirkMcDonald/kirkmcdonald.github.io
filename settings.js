@@ -7,11 +7,11 @@ function Modification(name, filename) {
 }
 
 var MODIFICATIONS = {
-    "0-15-16": new Modification("Vanilla 0.15.16", "vanilla-0.15.16.json"),
-    "0-15-16x": new Modification("Vanilla 0.15.16 - Expensive", "vanilla-0.15.16-expensive.json"),
+    "0-15-35": new Modification("Vanilla 0.15.35", "vanilla-0.15.35.json"),
+    "0-15-35x": new Modification("Vanilla 0.15.35 - Expensive", "vanilla-0.15.35-expensive.json"),
 }
 
-var DEFAULT_MODIFICATION = "0-15-16"
+var DEFAULT_MODIFICATION = "0-15-35"
 
 function renderDataSetOptions(settings) {
     var modSelector = document.getElementById("data_set")
@@ -124,7 +124,7 @@ function renderMinimumAssembler(settings) {
     node.id = "minimum_assembler"
     var dropdown = new Dropdown(node, "assembler_dropdown", changeMin)
     for (var i = 0; i < assemblers.length; i++) {
-        var assembler = assemblers[i].name
+        var assembler = assemblers[i]
         var image = getImage(assembler)
         dropdown.add(image, String(i + 1), String(i + 1) === min)
     }
@@ -138,10 +138,10 @@ function setMinimumAssembler(min) {
 
 // furnace
 function renderFurnace(settings) {
-    var furnace = spec.furnace.name
+    var furnace = spec.furnace
     if ("furnace" in settings) {
         furnace = settings.furnace
-        spec.setFurnace(furnace)
+        spec.setFurnace(furnace.name)
     }
     var oldNode = document.getElementById("furnace")
     var cell = oldNode.parentNode
@@ -150,9 +150,9 @@ function renderFurnace(settings) {
     var dropdown = new Dropdown(node, "furnace_dropdown", changeFurnace)
     var furnaces = spec.factories["smelting"]
     for (var i = 0; i < furnaces.length; i++) {
-        var f = furnaces[i].name
+        var f = furnaces[i]
         var image = getImage(f)
-        dropdown.add(image, f, f === furnace)
+        dropdown.add(image, f.name, f.name === furnace.name)
     }
     cell.replaceChild(node, oldNode)
 }

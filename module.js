@@ -1,14 +1,21 @@
 "use strict"
 
-function Module(name, category, order, productivity, speed, power, limit) {
+function Module(name, col, row, category, order, productivity, speed, power, limit) {
     // Other module effects not modeled by this calculator.
     this.name = name
+    this.icon_col = col
+    this.icon_row = row
     this.category = category
     this.order = order
     this.productivity = productivity
     this.speed = speed
     this.power = power
-    this.limit = limit
+    this.limit = {}
+    if (limit) {
+        for (var i = 0; i < limit.length; i++) {
+            this.limit[limit[i]] = true
+        }
+    }
 }
 Module.prototype = {
     constructor: Module,
@@ -34,22 +41,27 @@ Module.prototype = {
 
 function getModules(data) {
     var modules = {}
-    for (var name in data.items) {
+    for (var i = 0; i < data.modules.length; i++) {
+        var name = data.modules[i]
         var item = data.items[name]
-        if (!item.module_effects) {
-            continue
-        }
-        var effect = item.module_effects
-        /*if (!("speed" in effect) && !("productivity" in effect)) {
-            continue
-        }*/
+        var effect = item.effect
         var category = item.category
         var order = item.order
         var speed = RationalFromFloat((effect.speed || {}).bonus || 0)
         var productivity = RationalFromFloat((effect.productivity || {}).bonus || 0)
         var power = RationalFromFloat((effect.consumption || {}).bonus || 0)
-        var limit = item.limitations
-        modules[name] = new Module(name, category, order, productivity, speed, power, limit)
+        var limit = item.limitation
+        modules[name] = new Module(
+            name,
+            item.icon_col,
+            item.icon_row,
+            category,
+            order,
+            productivity,
+            speed,
+            power,
+            limit
+        )
     }
     return modules
 }

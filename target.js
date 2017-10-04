@@ -73,7 +73,7 @@ function BuildTarget(index, itemName) {
             for (var k = 0; k < subgroup.length; k++) {
                 var currentItem = subgroup[k]
                 var currentItemName = currentItem.name
-                var image = getImage(currentItemName)
+                var image = getImage(currentItem)
                 if (!image) {
                     continue
                 }

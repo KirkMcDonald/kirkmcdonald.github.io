@@ -109,7 +109,7 @@ function displaySteps(sortedTotals, totals) {
         var row = document.createElement("tr")
         node.appendChild(row)
         var iconCell = document.createElement("td")
-        iconCell.appendChild(getImage(itemName))
+        iconCell.appendChild(getImage(item))
         row.appendChild(iconCell)
         var rateCell = document.createElement("td")
         rateCell.classList.add("right-align")
@@ -121,10 +121,11 @@ function displaySteps(sortedTotals, totals) {
         if (item.phase == "solid") {
             for (var j = 0; j < BELTS.length; j++) {
                 var belt = BELTS[j]
+                var beltItem = solver.items[belt.name]
                 var belts = rate.div(belt.speed)
                 var beltCell = document.createElement("td")
                 beltCell.classList.add("pad")
-                beltCell.appendChild(getImage(belt.name))
+                beltCell.appendChild(getImage(beltItem))
                 beltCell.appendChild(new Text(" \u00d7"))
                 row.appendChild(beltCell)
                 var beltRateCell = document.createElement("td")
@@ -184,7 +185,7 @@ function RecipeRow(parentNode, recipeName, rate) {
 
     var nameCell = document.createElement("td")
     nameCell.className = "right-align"
-    var im = getImage(recipeName)
+    var im = getImage(this.recipe)
     if (spec.ignore[recipeName]) {
         im.title += " (click to unignore)"
     } else {
@@ -239,7 +240,7 @@ function RecipeRow(parentNode, recipeName, rate) {
         "mod-" + recipeName + "-beacon",
         beaconHandler
     )
-    var noModImage = getImage("slot-icon-module")
+    var noModImage = getExtraImage("slot_icon_module")
     noModImage.title = NO_MODULE
     this.beacon = {}
     this.beacon[NO_MODULE] = beaconDropdown.add(noModImage, NO_MODULE, true)
@@ -255,7 +256,7 @@ function RecipeRow(parentNode, recipeName, rate) {
             category = module.category
             beaconDropdown.addBreak()
         }
-        this.beacon[name] = beaconDropdown.add(getImage(name), name, false)
+        this.beacon[name] = beaconDropdown.add(getImage(module), name, false)
     }
     var beaconX = document.createElement("span")
     beaconX.appendChild(new Text(" \u00D7 "))
@@ -381,7 +382,7 @@ RecipeRow.prototype = {
             return
         }
         this.factory = spec.getFactory(this.recipe)
-        var image = getImage(this.factory.name)
+        var image = getImage(this.factory.factory)
         image.classList.add("display")
         while (this.factoryCell.hasChildNodes()) {
             this.factoryCell.removeChild(this.factoryCell.lastChild)
@@ -408,7 +409,7 @@ RecipeRow.prototype = {
                 var inputs = {}
                 this.modules.push(inputs)
 
-                var noModImage = getImage("slot-icon-module")
+                var noModImage = getExtraImage("slot_icon_module")
                 noModImage.title = NO_MODULE
                 var input = dropdown.add(noModImage, NO_MODULE, true)
                 inputs[NO_MODULE] = input
@@ -424,7 +425,7 @@ RecipeRow.prototype = {
                         category = module.category
                         dropdown.addBreak()
                     }
-                    inputs[name] = dropdown.add(getImage(name), name, false)
+                    inputs[name] = dropdown.add(getImage(module), name, false)
                 }
             }
         }

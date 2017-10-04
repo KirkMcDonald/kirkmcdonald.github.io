@@ -3,30 +3,20 @@
 var PX_WIDTH = 32
 var PX_HEIGHT = 32
 
-function Sprite(name, row, col) {
+function Sprite(name, col, row) {
     this.name = name
-    this.row = row
-    this.col = col
-}
-Sprite.prototype = {
-    constructor: Sprite,
-    getImage: function() {
-        var im = blankImage()
-        im.classList.add("icon")
-        var x = -this.col * PX_WIDTH
-        var y = -this.row * PX_HEIGHT
-        im.style.setProperty("background-position", x + "px " + y + "px")
-        im.title = this.name
-        return im
-    },
+    this.icon_col = col
+    this.icon_row = row
 }
 
-function getImage(name) {
-    var sprite = spriteNames[name]
-    if (sprite) {
-        return sprite.getImage()
-    }
-    return null
+function getImage(obj) {
+    var im = blankImage()
+    im.classList.add("icon")
+    var x = -obj.icon_col * PX_WIDTH
+    var y = -obj.icon_row * PX_HEIGHT
+    im.style.setProperty("background-position", x + "px " + y + "px")
+    im.title = obj.name
+    return im
 }
 
 function blankImage() {
@@ -36,15 +26,17 @@ function blankImage() {
     im.src = "images/pixel.gif"
     return im
 }
-var spriteNames = {}
+
+var sprites
+
+function getExtraImage(name) {
+    return getImage(sprites[name])
+}
 
 function getSprites(data) {
-    var width = data.sprites.width
-    var names = data.sprites.names
-    for (var i = 0; i < names.length; i++) {
-        var row = Math.floor(i / width)
-        var col = i % width
-        var name = names[i]
-        spriteNames[name] = new Sprite(name, row, col)
+    sprites = {}
+    for (var name in data.sprites.extra) {
+        var d = data.sprites.extra[name]
+        sprites[name] = new Sprite(d.name, d.icon_col, d.icon_row)
     }
 }

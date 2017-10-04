@@ -1,29 +1,19 @@
 "use strict"
 
-function Item(data, name) {
+function Item(name, col, row, phase, group, subgroup, order) {
     this.name = name
+    this.icon_col = col
+    this.icon_row = row
     this.recipes = []
-    this.phase = "solid"
-    var d = data.items[this.name]
-    if (!d) {
-        d = data.fluids[this.name]
-        if (d) {
-            this.phase = "liquid"
-        }
-    }
-    if (d) {
-        this.group = d.group
-        this.subgroup = d.subgroup
-        this.order = d.order
-    }
+    this.phase = phase
+    this.group = group
+    this.subgroup = subgroup
+    this.order = order
 }
 Item.prototype = {
     constructor: Item,
     addRecipe: function(recipe) {
         this.recipes.push(recipe)
-    },
-    isResource: function() {
-        return this.recipes.length == 0 // XXX or any recipe makes a resource
     },
     isWeird: function() {
         return this.recipes.length > 1 || this.recipes[0].products.length > 1
@@ -50,41 +40,43 @@ Item.prototype = {
     }
 }
 
-function Resource(data, name) {
-    Item.call(this, data, name)
-}
-Resource.prototype = Object.create(Item.prototype)
-Resource.prototype.isResource = function() {
-    return true
-}
-
 function getItem(data, items, name) {
     if (name in items) {
         return items[name]
     } else {
-        var item = new Item(data, name)
+        var d = data.items[name]
+        var phase
+        if (d.type == "fluid") {
+            phase = "fluid"
+        } else {
+            phase = "solid"
+        }
+        var item = new Item(
+            name,
+            d.icon_col,
+            d.icon_row,
+            phase,
+            d.group,
+            d.subgroup,
+            d.order,
+        )
         items[name] = item
         return item
     }
 }
 
 function getItems(data) {
-    var items = {"water": new Resource(data, "water")}
+    var items = {}
     var cycleName = "nuclear-reactor-cycle"
-    var cycle = new Item(data, cycleName)
-    cycle.group = "production"
-    cycle.subgroup = "energy"
-    cycle.order = "f[nuclear-energy]-d[reactor-cycle]"
-    var reactorSprite = spriteNames["nuclear-reactor"]
-    spriteNames[cycleName] = new Sprite(cycleName, reactorSprite.row, reactorSprite.col)
-    items[cycleName] = cycle
-    for (var name in data.entities) {
-        var entity = data.entities[name]
-        if (!entity.resource_category) {
-            continue
-        }
-        var r = new Resource(data, name)
-        items[name] = r
-    }
+    var reactor = data.items["nuclear-reactor"]
+    items[cycleName] = new Item(
+        cycleName,
+        reactor.icon_col,
+        reactor.icon_row,
+        "abstract",
+        "production",
+        "energy",
+        "f[nuclear-energy]-d[reactor-cycle]",
+    )
     return items
 }

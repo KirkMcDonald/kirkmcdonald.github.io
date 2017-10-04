@@ -1,13 +1,14 @@
 "use strict"
 
-function FactoryDef(name, categories, max_ingredients, speed, moduleSlots, energyUsage) {
+function FactoryDef(name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage) {
     this.name = name
+    this.icon_col = col
+    this.icon_row = row
     this.categories = categories
     this.max_ing = max_ingredients
     this.speed = speed
     this.moduleSlots = moduleSlots
-    // Convert from Joules-per-tick to Watts.
-    this.energyUsage = energyUsage.mul(RationalFromFloat(60))
+    this.energyUsage = energyUsage
 }
 FactoryDef.prototype = {
     constructor: FactoryDef,
@@ -25,8 +26,8 @@ FactoryDef.prototype = {
     }
 }
 
-function MinerDef(name, categories, power, speed, moduleSlots, energyUsage) {
-    FactoryDef.call(this, name, categories, 0, 0, moduleSlots, energyUsage)
+function MinerDef(name, col, row, categories, power, speed, moduleSlots, energyUsage) {
+    FactoryDef.call(this, name, col, row, categories, 0, 0, moduleSlots, energyUsage)
     this.mining_power = power
     this.mining_speed = speed
 }
@@ -176,7 +177,8 @@ function FactorySpec(factories) {
     this.factories = {}
     for (var i = 0; i < factories.length; i++) {
         var factory = factories[i]
-        for (var category in factory.categories) {
+        for (var j = 0; j < factory.categories.length; j++) {
+            var category = factory.categories[j]
             if (!(category in this.factories)) {
                 this.factories[category] = []
             }
@@ -258,34 +260,58 @@ FactorySpec.prototype = {
 
 function getFactories(data) {
     var factories = []
-    var pump = new FactoryDef("offshore-pump", {"water": true}, 1, one, 0, zero)
-    factories.push(pump)
-    var reactor = new FactoryDef("nuclear-reactor", {"nuclear": true}, 1, one, 0, zero)
-    factories.push(reactor)
-    for (var name in data.entities) {
-        var d = data.entities[name]
-        if ("crafting_categories" in d && d.name != "player") {
+    var pumpDef = data["offshore-pump"]["offshore-pump"]
+    factories.push(new FactoryDef(
+        "offshore-pump",
+        pumpDef.icon_col,
+        pumpDef.icon_row,
+        ["water"],
+        1,
+        one,
+        0,
+        zero
+    ))
+    var reactorDef = data["reactor"]["nuclear-reactor"]
+    factories.push(new FactoryDef(
+        "nuclear-reactor",
+        reactorDef.icon_col,
+        reactorDef.icon_row,
+        ["nuclear"],
+        1,
+        one,
+        0,
+        zero
+    ))
+    for (var type in {"assembling-machine": true, "furnace": true, "rocket-silo": true}) {
+        for (var name in data[type]) {
+            var d = data[type][name]
             factories.push(new FactoryDef(
                 d.name,
+                d.icon_col,
+                d.icon_row,
                 d.crafting_categories,
                 d.ingredient_count,
                 RationalFromFloat(d.crafting_speed),
-                d.module_inventory_size,
-                RationalFromFloat(d.energy_usage)
-            ))
-        } else if ("mining_power" in d) {
-            if (d.name == "pumpjack") {
-                continue
-            }
-            factories.push(new MinerDef(
-                d.name,
-                {"mining-basic-solid": true},
-                RationalFromFloat(d.mining_power),
-                RationalFromFloat(d.mining_speed),
-                d.module_inventory_size,
+                d.module_slots,
                 RationalFromFloat(d.energy_usage)
             ))
         }
+    }
+    for (var name in data["mining-drill"]) {
+        var d = data["mining-drill"][name]
+        if (d.name == "pumpjack") {
+            continue
+        }
+        factories.push(new MinerDef(
+            d.name,
+            d.icon_col,
+            d.icon_row,
+            ["mining-basic-solid"],
+            RationalFromFloat(d.mining_power),
+            RationalFromFloat(d.mining_speed),
+            d.module_slots,
+            RationalFromFloat(d.energy_usage)
+        ))
     }
     return factories
 }
