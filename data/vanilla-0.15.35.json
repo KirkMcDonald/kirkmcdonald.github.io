@@ -481,7 +481,8 @@
             "icon_row": 0,
             "name": "accumulator",
             "order": "e[accumulator]-a[accumulator]",
-            "subgroup": "energy"
+            "subgroup": "energy",
+            "type": "item"
         },
         "advanced-circuit": {
             "group": "intermediate-products",
@@ -489,7 +490,8 @@
             "icon_row": 0,
             "name": "advanced-circuit",
             "order": "f[advanced-circuit]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "arithmetic-combinator": {
             "group": "logistics",
@@ -497,7 +499,8 @@
             "icon_row": 0,
             "name": "arithmetic-combinator",
             "order": "c[combinators]-a[arithmetic-combinator]",
-            "subgroup": "circuit-network"
+            "subgroup": "circuit-network",
+            "type": "item"
         },
         "assembling-machine-1": {
             "group": "production",
@@ -505,7 +508,8 @@
             "icon_row": 0,
             "name": "assembling-machine-1",
             "order": "a[assembling-machine-1]",
-            "subgroup": "production-machine"
+            "subgroup": "production-machine",
+            "type": "item"
         },
         "assembling-machine-2": {
             "group": "production",
@@ -513,7 +517,8 @@
             "icon_row": 0,
             "name": "assembling-machine-2",
             "order": "b[assembling-machine-2]",
-            "subgroup": "production-machine"
+            "subgroup": "production-machine",
+            "type": "item"
         },
         "assembling-machine-3": {
             "group": "production",
@@ -521,7 +526,8 @@
             "icon_row": 0,
             "name": "assembling-machine-3",
             "order": "c[assembling-machine-3]",
-            "subgroup": "production-machine"
+            "subgroup": "production-machine",
+            "type": "item"
         },
         "atomic-bomb": {
             "group": "combat",
@@ -529,7 +535,8 @@
             "icon_row": 0,
             "name": "atomic-bomb",
             "order": "d[rocket-launcher]-c[atomic-bomb]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "battery": {
             "group": "intermediate-products",
@@ -537,7 +544,8 @@
             "icon_row": 0,
             "name": "battery",
             "order": "j[battery]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "battery-equipment": {
             "group": "combat",
@@ -545,7 +553,8 @@
             "icon_row": 0,
             "name": "battery-equipment",
             "order": "c[battery]-a[battery-equipment]",
-            "subgroup": "equipment"
+            "subgroup": "equipment",
+            "type": "item"
         },
         "battery-mk2-equipment": {
             "group": "combat",
@@ -553,7 +562,8 @@
             "icon_row": 0,
             "name": "battery-mk2-equipment",
             "order": "c[battery]-b[battery-equipment-mk2]",
-            "subgroup": "equipment"
+            "subgroup": "equipment",
+            "type": "item"
         },
         "beacon": {
             "group": "production",
@@ -561,7 +571,8 @@
             "icon_row": 0,
             "name": "beacon",
             "order": "a[beacon]",
-            "subgroup": "module"
+            "subgroup": "module",
+            "type": "item"
         },
         "belt-immunity-equipment": {
             "group": "combat",
@@ -569,7 +580,8 @@
             "icon_row": 0,
             "name": "belt-immunity-equipment",
             "order": "a[belt-immunity]-a[belt-immunity]",
-            "subgroup": "equipment"
+            "subgroup": "equipment",
+            "type": "item"
         },
         "big-electric-pole": {
             "group": "logistics",
@@ -577,7 +589,8 @@
             "icon_row": 1,
             "name": "big-electric-pole",
             "order": "a[energy]-c[big-electric-pole]",
-            "subgroup": "energy-pipe-distribution"
+            "subgroup": "energy-pipe-distribution",
+            "type": "item"
         },
         "blueprint": {
             "group": "production",
@@ -585,7 +598,8 @@
             "icon_row": 1,
             "name": "blueprint",
             "order": "c[automated-construction]-a[blueprint]",
-            "subgroup": "tool"
+            "subgroup": "tool",
+            "type": "blueprint"
         },
         "blueprint-book": {
             "group": "production",
@@ -593,7 +607,8 @@
             "icon_row": 1,
             "name": "blueprint-book",
             "order": "c[automated-construction]-c[blueprint-book]",
-            "subgroup": "tool"
+            "subgroup": "tool",
+            "type": "blueprint-book"
         },
         "boiler": {
             "group": "production",
@@ -601,7 +616,8 @@
             "icon_row": 1,
             "name": "boiler",
             "order": "b[steam-power]-a[boiler]",
-            "subgroup": "energy"
+            "subgroup": "energy",
+            "type": "item"
         },
         "burner-inserter": {
             "group": "logistics",
@@ -609,7 +625,8 @@
             "icon_row": 1,
             "name": "burner-inserter",
             "order": "a[burner-inserter]",
-            "subgroup": "inserter"
+            "subgroup": "inserter",
+            "type": "item"
         },
         "burner-mining-drill": {
             "group": "production",
@@ -617,7 +634,8 @@
             "icon_row": 1,
             "name": "burner-mining-drill",
             "order": "a[items]-a[burner-mining-drill]",
-            "subgroup": "extraction-machine"
+            "subgroup": "extraction-machine",
+            "type": "item"
         },
         "cannon-shell": {
             "group": "combat",
@@ -625,7 +643,8 @@
             "icon_row": 1,
             "name": "cannon-shell",
             "order": "d[cannon-shell]-a[basic]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "car": {
             "group": "logistics",
@@ -633,7 +652,8 @@
             "icon_row": 1,
             "name": "car",
             "order": "b[personal-transport]-a[car]",
-            "subgroup": "transport"
+            "subgroup": "transport",
+            "type": "item-with-entity-data"
         },
         "cargo-wagon": {
             "group": "logistics",
@@ -641,7 +661,8 @@
             "icon_row": 1,
             "name": "cargo-wagon",
             "order": "a[train-system]-g[cargo-wagon]",
-            "subgroup": "transport"
+            "subgroup": "transport",
+            "type": "item-with-entity-data"
         },
         "centrifuge": {
             "group": "production",
@@ -649,7 +670,8 @@
             "icon_row": 1,
             "name": "centrifuge",
             "order": "g[centrifuge]",
-            "subgroup": "production-machine"
+            "subgroup": "production-machine",
+            "type": "item"
         },
         "chemical-plant": {
             "group": "production",
@@ -657,7 +679,8 @@
             "icon_row": 1,
             "name": "chemical-plant",
             "order": "e[chemical-plant]",
-            "subgroup": "production-machine"
+            "subgroup": "production-machine",
+            "type": "item"
         },
         "cluster-grenade": {
             "group": "combat",
@@ -665,7 +688,8 @@
             "icon_row": 1,
             "name": "cluster-grenade",
             "order": "a[grenade]-b[cluster]",
-            "subgroup": "capsule"
+            "subgroup": "capsule",
+            "type": "capsule"
         },
         "coal": {
             "fuel_category": "chemical",
@@ -675,7 +699,8 @@
             "icon_row": 1,
             "name": "coal",
             "order": "b[coal]",
-            "subgroup": "raw-resource"
+            "subgroup": "raw-resource",
+            "type": "item"
         },
         "coin": {
             "group": "intermediate-products",
@@ -683,7 +708,8 @@
             "icon_row": 2,
             "name": "coin",
             "order": "y",
-            "subgroup": "science-pack"
+            "subgroup": "science-pack",
+            "type": "item"
         },
         "combat-shotgun": {
             "group": "combat",
@@ -691,7 +717,8 @@
             "icon_row": 2,
             "name": "combat-shotgun",
             "order": "b[shotgun]-a[combat]",
-            "subgroup": "gun"
+            "subgroup": "gun",
+            "type": "gun"
         },
         "computer": {
             "group": "combat",
@@ -699,7 +726,8 @@
             "icon_row": 2,
             "name": "computer",
             "order": "g[computer]",
-            "subgroup": "defensive-structure"
+            "subgroup": "defensive-structure",
+            "type": "item"
         },
         "concrete": {
             "group": "logistics",
@@ -707,7 +735,8 @@
             "icon_row": 2,
             "name": "concrete",
             "order": "b[concrete]-a[plain]",
-            "subgroup": "terrain"
+            "subgroup": "terrain",
+            "type": "item"
         },
         "constant-combinator": {
             "group": "logistics",
@@ -715,7 +744,8 @@
             "icon_row": 2,
             "name": "constant-combinator",
             "order": "c[combinators]-c[constant-combinator]",
-            "subgroup": "circuit-network"
+            "subgroup": "circuit-network",
+            "type": "item"
         },
         "construction-robot": {
             "group": "logistics",
@@ -723,7 +753,8 @@
             "icon_row": 2,
             "name": "construction-robot",
             "order": "a[robot]-b[construction-robot]",
-            "subgroup": "logistic-network"
+            "subgroup": "logistic-network",
+            "type": "item"
         },
         "copper-cable": {
             "group": "intermediate-products",
@@ -731,7 +762,8 @@
             "icon_row": 2,
             "name": "copper-cable",
             "order": "a[copper-cable]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "copper-ore": {
             "group": "intermediate-products",
@@ -739,7 +771,8 @@
             "icon_row": 2,
             "name": "copper-ore",
             "order": "f[copper-ore]",
-            "subgroup": "raw-resource"
+            "subgroup": "raw-resource",
+            "type": "item"
         },
         "copper-plate": {
             "group": "intermediate-products",
@@ -747,7 +780,8 @@
             "icon_row": 2,
             "name": "copper-plate",
             "order": "c[copper-plate]",
-            "subgroup": "raw-material"
+            "subgroup": "raw-material",
+            "type": "item"
         },
         "crude-oil": {
             "group": "other",
@@ -755,7 +789,8 @@
             "icon_row": 2,
             "name": "crude-oil",
             "order": "a[fluid]-b[crude-oil]",
-            "subgroup": "other"
+            "subgroup": "other",
+            "type": "fluid"
         },
         "decider-combinator": {
             "group": "logistics",
@@ -763,7 +798,8 @@
             "icon_row": 2,
             "name": "decider-combinator",
             "order": "c[combinators]-b[decider-combinator]",
-            "subgroup": "circuit-network"
+            "subgroup": "circuit-network",
+            "type": "item"
         },
         "deconstruction-planner": {
             "group": "production",
@@ -771,7 +807,8 @@
             "icon_row": 2,
             "name": "deconstruction-planner",
             "order": "c[automated-construction]-b[deconstruction-planner]",
-            "subgroup": "tool"
+            "subgroup": "tool",
+            "type": "deconstruction-item"
         },
         "defender-capsule": {
             "group": "combat",
@@ -779,7 +816,8 @@
             "icon_row": 2,
             "name": "defender-capsule",
             "order": "d[defender-capsule]",
-            "subgroup": "capsule"
+            "subgroup": "capsule",
+            "type": "capsule"
         },
         "destroyer-capsule": {
             "group": "combat",
@@ -787,7 +825,8 @@
             "icon_row": 3,
             "name": "destroyer-capsule",
             "order": "f[destroyer-capsule]",
-            "subgroup": "capsule"
+            "subgroup": "capsule",
+            "type": "capsule"
         },
         "discharge-defense-equipment": {
             "group": "combat",
@@ -795,7 +834,8 @@
             "icon_row": 3,
             "name": "discharge-defense-equipment",
             "order": "d[active-defense]-b[discharge-defense-equipment]",
-            "subgroup": "equipment"
+            "subgroup": "equipment",
+            "type": "item"
         },
         "discharge-defense-remote": {
             "group": "combat",
@@ -803,7 +843,8 @@
             "icon_row": 3,
             "name": "discharge-defense-remote",
             "order": "z",
-            "subgroup": "capsule"
+            "subgroup": "capsule",
+            "type": "capsule"
         },
         "distractor-capsule": {
             "group": "combat",
@@ -811,7 +852,8 @@
             "icon_row": 3,
             "name": "distractor-capsule",
             "order": "e[defender-capsule]",
-            "subgroup": "capsule"
+            "subgroup": "capsule",
+            "type": "capsule"
         },
         "effectivity-module": {
             "category": "effectivity",
@@ -825,7 +867,8 @@
             "icon_row": 3,
             "name": "effectivity-module",
             "order": "c[effectivity]-a[effectivity-module-1]",
-            "subgroup": "module"
+            "subgroup": "module",
+            "type": "module"
         },
         "effectivity-module-2": {
             "category": "effectivity",
@@ -839,7 +882,8 @@
             "icon_row": 3,
             "name": "effectivity-module-2",
             "order": "c[effectivity]-b[effectivity-module-2]",
-            "subgroup": "module"
+            "subgroup": "module",
+            "type": "module"
         },
         "effectivity-module-3": {
             "category": "effectivity",
@@ -853,7 +897,8 @@
             "icon_row": 3,
             "name": "effectivity-module-3",
             "order": "c[effectivity]-c[effectivity-module-3]",
-            "subgroup": "module"
+            "subgroup": "module",
+            "type": "module"
         },
         "electric-engine-unit": {
             "group": "intermediate-products",
@@ -861,7 +906,8 @@
             "icon_row": 3,
             "name": "electric-engine-unit",
             "order": "i[electric-engine-unit]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "electric-furnace": {
             "group": "production",
@@ -869,7 +915,8 @@
             "icon_row": 3,
             "name": "electric-furnace",
             "order": "c[electric-furnace]",
-            "subgroup": "smelting-machine"
+            "subgroup": "smelting-machine",
+            "type": "item"
         },
         "electric-mining-drill": {
             "group": "production",
@@ -877,7 +924,8 @@
             "icon_row": 3,
             "name": "electric-mining-drill",
             "order": "a[items]-b[electric-mining-drill]",
-            "subgroup": "extraction-machine"
+            "subgroup": "extraction-machine",
+            "type": "item"
         },
         "electronic-circuit": {
             "group": "intermediate-products",
@@ -885,7 +933,8 @@
             "icon_row": 3,
             "name": "electronic-circuit",
             "order": "e[electronic-circuit]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "empty-barrel": {
             "group": "intermediate-products",
@@ -893,7 +942,8 @@
             "icon_row": 3,
             "name": "empty-barrel",
             "order": "d[empty-barrel]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "energy-shield-equipment": {
             "group": "combat",
@@ -901,7 +951,8 @@
             "icon_row": 3,
             "name": "energy-shield-equipment",
             "order": "b[shield]-a[energy-shield-equipment]",
-            "subgroup": "equipment"
+            "subgroup": "equipment",
+            "type": "item"
         },
         "energy-shield-mk2-equipment": {
             "group": "combat",
@@ -909,7 +960,8 @@
             "icon_row": 4,
             "name": "energy-shield-mk2-equipment",
             "order": "b[shield]-b[energy-shield-equipment-mk2]",
-            "subgroup": "equipment"
+            "subgroup": "equipment",
+            "type": "item"
         },
         "engine-unit": {
             "group": "intermediate-products",
@@ -917,7 +969,8 @@
             "icon_row": 4,
             "name": "engine-unit",
             "order": "h[engine-unit]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "exoskeleton-equipment": {
             "group": "combat",
@@ -925,7 +978,8 @@
             "icon_row": 4,
             "name": "exoskeleton-equipment",
             "order": "e[exoskeleton]-a[exoskeleton-equipment]",
-            "subgroup": "equipment"
+            "subgroup": "equipment",
+            "type": "item"
         },
         "explosive-cannon-shell": {
             "group": "combat",
@@ -933,7 +987,8 @@
             "icon_row": 4,
             "name": "explosive-cannon-shell",
             "order": "d[cannon-shell]-c[explosive]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "explosive-rocket": {
             "group": "combat",
@@ -941,7 +996,8 @@
             "icon_row": 4,
             "name": "explosive-rocket",
             "order": "d[rocket-launcher]-b[explosive]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "explosive-uranium-cannon-shell": {
             "group": "combat",
@@ -949,7 +1005,8 @@
             "icon_row": 4,
             "name": "explosive-uranium-cannon-shell",
             "order": "d[explosive-cannon-shell]-c[uranium]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "explosives": {
             "group": "intermediate-products",
@@ -957,7 +1014,8 @@
             "icon_row": 4,
             "name": "explosives",
             "order": "j[explosives]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "express-loader": {
             "group": "logistics",
@@ -965,7 +1023,8 @@
             "icon_row": 4,
             "name": "express-loader",
             "order": "d[loader]-c[express-loader]",
-            "subgroup": "belt"
+            "subgroup": "belt",
+            "type": "item"
         },
         "express-splitter": {
             "group": "logistics",
@@ -973,7 +1032,8 @@
             "icon_row": 4,
             "name": "express-splitter",
             "order": "c[splitter]-c[express-splitter]",
-            "subgroup": "belt"
+            "subgroup": "belt",
+            "type": "item"
         },
         "express-transport-belt": {
             "group": "logistics",
@@ -981,7 +1041,8 @@
             "icon_row": 4,
             "name": "express-transport-belt",
             "order": "a[transport-belt]-c[express-transport-belt]",
-            "subgroup": "belt"
+            "subgroup": "belt",
+            "type": "item"
         },
         "express-underground-belt": {
             "group": "logistics",
@@ -989,7 +1050,8 @@
             "icon_row": 4,
             "name": "express-underground-belt",
             "order": "b[underground-belt]-c[express-underground-belt]",
-            "subgroup": "belt"
+            "subgroup": "belt",
+            "type": "item"
         },
         "fast-inserter": {
             "group": "logistics",
@@ -997,7 +1059,8 @@
             "icon_row": 4,
             "name": "fast-inserter",
             "order": "d[fast-inserter]",
-            "subgroup": "inserter"
+            "subgroup": "inserter",
+            "type": "item"
         },
         "fast-loader": {
             "group": "logistics",
@@ -1005,7 +1068,8 @@
             "icon_row": 4,
             "name": "fast-loader",
             "order": "d[loader]-b[fast-loader]",
-            "subgroup": "belt"
+            "subgroup": "belt",
+            "type": "item"
         },
         "fast-splitter": {
             "group": "logistics",
@@ -1013,7 +1077,8 @@
             "icon_row": 4,
             "name": "fast-splitter",
             "order": "c[splitter]-b[fast-splitter]",
-            "subgroup": "belt"
+            "subgroup": "belt",
+            "type": "item"
         },
         "fast-transport-belt": {
             "group": "logistics",
@@ -1021,7 +1086,8 @@
             "icon_row": 5,
             "name": "fast-transport-belt",
             "order": "a[transport-belt]-b[fast-transport-belt]",
-            "subgroup": "belt"
+            "subgroup": "belt",
+            "type": "item"
         },
         "fast-underground-belt": {
             "group": "logistics",
@@ -1029,7 +1095,8 @@
             "icon_row": 5,
             "name": "fast-underground-belt",
             "order": "b[underground-belt]-b[fast-underground-belt]",
-            "subgroup": "belt"
+            "subgroup": "belt",
+            "type": "item"
         },
         "filter-inserter": {
             "group": "logistics",
@@ -1037,7 +1104,8 @@
             "icon_row": 5,
             "name": "filter-inserter",
             "order": "e[filter-inserter]",
-            "subgroup": "inserter"
+            "subgroup": "inserter",
+            "type": "item"
         },
         "firearm-magazine": {
             "group": "combat",
@@ -1045,7 +1113,8 @@
             "icon_row": 5,
             "name": "firearm-magazine",
             "order": "a[basic-clips]-a[firearm-magazine]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "flamethrower": {
             "group": "combat",
@@ -1053,7 +1122,8 @@
             "icon_row": 5,
             "name": "flamethrower",
             "order": "e[flamethrower]",
-            "subgroup": "gun"
+            "subgroup": "gun",
+            "type": "gun"
         },
         "flamethrower-ammo": {
             "group": "combat",
@@ -1061,7 +1131,8 @@
             "icon_row": 5,
             "name": "flamethrower-ammo",
             "order": "e[flamethrower]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "flamethrower-turret": {
             "group": "combat",
@@ -1069,7 +1140,8 @@
             "icon_row": 5,
             "name": "flamethrower-turret",
             "order": "b[turret]-c[flamethrower-turret]",
-            "subgroup": "defensive-structure"
+            "subgroup": "defensive-structure",
+            "type": "item"
         },
         "fluid-wagon": {
             "group": "logistics",
@@ -1077,7 +1149,8 @@
             "icon_row": 5,
             "name": "fluid-wagon",
             "order": "a[train-system]-h[fluid-wagon]",
-            "subgroup": "transport"
+            "subgroup": "transport",
+            "type": "item-with-entity-data"
         },
         "flying-robot-frame": {
             "group": "intermediate-products",
@@ -1085,7 +1158,8 @@
             "icon_row": 5,
             "name": "flying-robot-frame",
             "order": "l[flying-robot-frame]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "fusion-reactor-equipment": {
             "group": "combat",
@@ -1093,7 +1167,8 @@
             "icon_row": 5,
             "name": "fusion-reactor-equipment",
             "order": "a[energy-source]-b[fusion-reactor]",
-            "subgroup": "equipment"
+            "subgroup": "equipment",
+            "type": "item"
         },
         "gate": {
             "group": "combat",
@@ -1101,7 +1176,8 @@
             "icon_row": 5,
             "name": "gate",
             "order": "a[wall]-b[gate]",
-            "subgroup": "defensive-structure"
+            "subgroup": "defensive-structure",
+            "type": "item"
         },
         "green-wire": {
             "group": "logistics",
@@ -1109,7 +1185,8 @@
             "icon_row": 5,
             "name": "green-wire",
             "order": "b[wires]-b[green-wire]",
-            "subgroup": "circuit-network"
+            "subgroup": "circuit-network",
+            "type": "item"
         },
         "grenade": {
             "group": "combat",
@@ -1117,7 +1194,8 @@
             "icon_row": 5,
             "name": "grenade",
             "order": "a[grenade]-a[normal]",
-            "subgroup": "capsule"
+            "subgroup": "capsule",
+            "type": "capsule"
         },
         "gun-turret": {
             "group": "combat",
@@ -1125,7 +1203,8 @@
             "icon_row": 6,
             "name": "gun-turret",
             "order": "b[turret]-a[gun-turret]",
-            "subgroup": "defensive-structure"
+            "subgroup": "defensive-structure",
+            "type": "item"
         },
         "hazard-concrete": {
             "group": "logistics",
@@ -1133,7 +1212,8 @@
             "icon_row": 6,
             "name": "hazard-concrete",
             "order": "b[concrete]-b[hazard]",
-            "subgroup": "terrain"
+            "subgroup": "terrain",
+            "type": "item"
         },
         "heat-exchanger": {
             "group": "production",
@@ -1141,7 +1221,8 @@
             "icon_row": 6,
             "name": "heat-exchanger",
             "order": "f[nuclear-energy]-b[heat-exchanger]",
-            "subgroup": "energy"
+            "subgroup": "energy",
+            "type": "item"
         },
         "heat-pipe": {
             "group": "production",
@@ -1149,7 +1230,8 @@
             "icon_row": 6,
             "name": "heat-pipe",
             "order": "f[nuclear-energy]-c[heat-pipe]",
-            "subgroup": "energy"
+            "subgroup": "energy",
+            "type": "item"
         },
         "heavy-armor": {
             "group": "combat",
@@ -1157,7 +1239,8 @@
             "icon_row": 6,
             "name": "heavy-armor",
             "order": "b[heavy-armor]",
-            "subgroup": "armor"
+            "subgroup": "armor",
+            "type": "armor"
         },
         "heavy-oil": {
             "group": "other",
@@ -1165,7 +1248,8 @@
             "icon_row": 6,
             "name": "heavy-oil",
             "order": "a[fluid]-c[heavy-oil]",
-            "subgroup": "other"
+            "subgroup": "other",
+            "type": "fluid"
         },
         "high-tech-science-pack": {
             "group": "intermediate-products",
@@ -1173,7 +1257,8 @@
             "icon_row": 6,
             "name": "high-tech-science-pack",
             "order": "f[high-tech-science-pack]",
-            "subgroup": "science-pack"
+            "subgroup": "science-pack",
+            "type": "tool"
         },
         "inserter": {
             "group": "logistics",
@@ -1181,7 +1266,8 @@
             "icon_row": 6,
             "name": "inserter",
             "order": "b[inserter]",
-            "subgroup": "inserter"
+            "subgroup": "inserter",
+            "type": "item"
         },
         "iron-axe": {
             "group": "production",
@@ -1189,7 +1275,8 @@
             "icon_row": 6,
             "name": "iron-axe",
             "order": "a[mining]-a[iron-axe]",
-            "subgroup": "tool"
+            "subgroup": "tool",
+            "type": "mining-tool"
         },
         "iron-chest": {
             "group": "logistics",
@@ -1197,7 +1284,8 @@
             "icon_row": 6,
             "name": "iron-chest",
             "order": "a[items]-b[iron-chest]",
-            "subgroup": "storage"
+            "subgroup": "storage",
+            "type": "item"
         },
         "iron-gear-wheel": {
             "group": "intermediate-products",
@@ -1205,7 +1293,8 @@
             "icon_row": 6,
             "name": "iron-gear-wheel",
             "order": "c[iron-gear-wheel]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "iron-ore": {
             "group": "intermediate-products",
@@ -1213,7 +1302,8 @@
             "icon_row": 6,
             "name": "iron-ore",
             "order": "e[iron-ore]",
-            "subgroup": "raw-resource"
+            "subgroup": "raw-resource",
+            "type": "item"
         },
         "iron-plate": {
             "group": "intermediate-products",
@@ -1221,7 +1311,8 @@
             "icon_row": 6,
             "name": "iron-plate",
             "order": "b[iron-plate]",
-            "subgroup": "raw-material"
+            "subgroup": "raw-material",
+            "type": "item"
         },
         "iron-stick": {
             "group": "intermediate-products",
@@ -1229,7 +1320,8 @@
             "icon_row": 7,
             "name": "iron-stick",
             "order": "b[iron-stick]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "lab": {
             "group": "production",
@@ -1237,7 +1329,8 @@
             "icon_row": 7,
             "name": "lab",
             "order": "g[lab]",
-            "subgroup": "production-machine"
+            "subgroup": "production-machine",
+            "type": "item"
         },
         "land-mine": {
             "group": "combat",
@@ -1245,7 +1338,8 @@
             "icon_row": 7,
             "name": "land-mine",
             "order": "f[land-mine]",
-            "subgroup": "gun"
+            "subgroup": "gun",
+            "type": "item"
         },
         "landfill": {
             "group": "logistics",
@@ -1253,7 +1347,8 @@
             "icon_row": 7,
             "name": "landfill",
             "order": "c[landfill]-a[dirt]",
-            "subgroup": "terrain"
+            "subgroup": "terrain",
+            "type": "item"
         },
         "laser-turret": {
             "group": "combat",
@@ -1261,7 +1356,8 @@
             "icon_row": 7,
             "name": "laser-turret",
             "order": "b[turret]-b[laser-turret]",
-            "subgroup": "defensive-structure"
+            "subgroup": "defensive-structure",
+            "type": "item"
         },
         "light-armor": {
             "group": "combat",
@@ -1269,7 +1365,8 @@
             "icon_row": 7,
             "name": "light-armor",
             "order": "a[light-armor]",
-            "subgroup": "armor"
+            "subgroup": "armor",
+            "type": "armor"
         },
         "light-oil": {
             "group": "other",
@@ -1277,7 +1374,8 @@
             "icon_row": 7,
             "name": "light-oil",
             "order": "a[fluid]-d[light-oil]",
-            "subgroup": "other"
+            "subgroup": "other",
+            "type": "fluid"
         },
         "loader": {
             "group": "logistics",
@@ -1285,7 +1383,8 @@
             "icon_row": 7,
             "name": "loader",
             "order": "d[loader]-a[basic-loader]",
-            "subgroup": "belt"
+            "subgroup": "belt",
+            "type": "item"
         },
         "locomotive": {
             "group": "logistics",
@@ -1293,7 +1392,8 @@
             "icon_row": 3,
             "name": "locomotive",
             "order": "a[train-system]-f[diesel-locomotive]",
-            "subgroup": "transport"
+            "subgroup": "transport",
+            "type": "item-with-entity-data"
         },
         "logistic-chest-active-provider": {
             "group": "logistics",
@@ -1301,7 +1401,8 @@
             "icon_row": 7,
             "name": "logistic-chest-active-provider",
             "order": "b[storage]-c[logistic-chest-active-provider]",
-            "subgroup": "logistic-network"
+            "subgroup": "logistic-network",
+            "type": "item"
         },
         "logistic-chest-passive-provider": {
             "group": "logistics",
@@ -1309,7 +1410,8 @@
             "icon_row": 7,
             "name": "logistic-chest-passive-provider",
             "order": "b[storage]-c[logistic-chest-passive-provider]",
-            "subgroup": "logistic-network"
+            "subgroup": "logistic-network",
+            "type": "item"
         },
         "logistic-chest-requester": {
             "group": "logistics",
@@ -1317,7 +1419,8 @@
             "icon_row": 7,
             "name": "logistic-chest-requester",
             "order": "b[storage]-c[logistic-chest-requester]",
-            "subgroup": "logistic-network"
+            "subgroup": "logistic-network",
+            "type": "item"
         },
         "logistic-chest-storage": {
             "group": "logistics",
@@ -1325,7 +1428,8 @@
             "icon_row": 7,
             "name": "logistic-chest-storage",
             "order": "b[storage]-c[logistic-chest-storage]",
-            "subgroup": "logistic-network"
+            "subgroup": "logistic-network",
+            "type": "item"
         },
         "logistic-robot": {
             "group": "logistics",
@@ -1333,7 +1437,8 @@
             "icon_row": 8,
             "name": "logistic-robot",
             "order": "a[robot]-a[logistic-robot]",
-            "subgroup": "logistic-network"
+            "subgroup": "logistic-network",
+            "type": "item"
         },
         "long-handed-inserter": {
             "group": "logistics",
@@ -1341,7 +1446,8 @@
             "icon_row": 8,
             "name": "long-handed-inserter",
             "order": "c[long-handed-inserter]",
-            "subgroup": "inserter"
+            "subgroup": "inserter",
+            "type": "item"
         },
         "low-density-structure": {
             "group": "intermediate-products",
@@ -1349,7 +1455,8 @@
             "icon_row": 11,
             "name": "low-density-structure",
             "order": "m[rocket-structure]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "lubricant": {
             "group": "other",
@@ -1357,7 +1464,8 @@
             "icon_row": 8,
             "name": "lubricant",
             "order": "e[lubricant]",
-            "subgroup": "other"
+            "subgroup": "other",
+            "type": "fluid"
         },
         "medium-electric-pole": {
             "group": "logistics",
@@ -1365,7 +1473,8 @@
             "icon_row": 8,
             "name": "medium-electric-pole",
             "order": "a[energy]-b[medium-electric-pole]",
-            "subgroup": "energy-pipe-distribution"
+            "subgroup": "energy-pipe-distribution",
+            "type": "item"
         },
         "military-science-pack": {
             "group": "intermediate-products",
@@ -1373,7 +1482,8 @@
             "icon_row": 8,
             "name": "military-science-pack",
             "order": "d[military-science-pack]",
-            "subgroup": "science-pack"
+            "subgroup": "science-pack",
+            "type": "tool"
         },
         "modular-armor": {
             "group": "combat",
@@ -1381,7 +1491,8 @@
             "icon_row": 8,
             "name": "modular-armor",
             "order": "c[modular-armor]",
-            "subgroup": "armor"
+            "subgroup": "armor",
+            "type": "armor"
         },
         "night-vision-equipment": {
             "group": "combat",
@@ -1389,7 +1500,8 @@
             "icon_row": 8,
             "name": "night-vision-equipment",
             "order": "f[night-vision]-a[night-vision-equipment]",
-            "subgroup": "equipment"
+            "subgroup": "equipment",
+            "type": "item"
         },
         "nuclear-reactor": {
             "group": "production",
@@ -1397,7 +1509,8 @@
             "icon_row": 8,
             "name": "nuclear-reactor",
             "order": "f[nuclear-energy]-a[reactor]",
-            "subgroup": "energy"
+            "subgroup": "energy",
+            "type": "item"
         },
         "offshore-pump": {
             "group": "production",
@@ -1405,7 +1518,8 @@
             "icon_row": 8,
             "name": "offshore-pump",
             "order": "b[fluids]-a[offshore-pump]",
-            "subgroup": "extraction-machine"
+            "subgroup": "extraction-machine",
+            "type": "item"
         },
         "oil-refinery": {
             "group": "production",
@@ -1413,7 +1527,8 @@
             "icon_row": 8,
             "name": "oil-refinery",
             "order": "d[refinery]",
-            "subgroup": "production-machine"
+            "subgroup": "production-machine",
+            "type": "item"
         },
         "personal-laser-defense-equipment": {
             "group": "combat",
@@ -1421,7 +1536,8 @@
             "icon_row": 8,
             "name": "personal-laser-defense-equipment",
             "order": "d[active-defense]-a[personal-laser-defense-equipment]",
-            "subgroup": "equipment"
+            "subgroup": "equipment",
+            "type": "item"
         },
         "personal-roboport-equipment": {
             "group": "combat",
@@ -1429,7 +1545,8 @@
             "icon_row": 8,
             "name": "personal-roboport-equipment",
             "order": "e[robotics]-a[personal-roboport-equipment]",
-            "subgroup": "equipment"
+            "subgroup": "equipment",
+            "type": "item"
         },
         "personal-roboport-mk2-equipment": {
             "group": "combat",
@@ -1437,7 +1554,8 @@
             "icon_row": 8,
             "name": "personal-roboport-mk2-equipment",
             "order": "e[robotics]-b[personal-roboport-mk2-equipment]",
-            "subgroup": "equipment"
+            "subgroup": "equipment",
+            "type": "item"
         },
         "petroleum-gas": {
             "group": "other",
@@ -1445,7 +1563,8 @@
             "icon_row": 9,
             "name": "petroleum-gas",
             "order": "a[fluid]-e[petroleum-gas]",
-            "subgroup": "other"
+            "subgroup": "other",
+            "type": "fluid"
         },
         "piercing-rounds-magazine": {
             "group": "combat",
@@ -1453,7 +1572,8 @@
             "icon_row": 9,
             "name": "piercing-rounds-magazine",
             "order": "a[basic-clips]-b[piercing-rounds-magazine]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "piercing-shotgun-shell": {
             "group": "combat",
@@ -1461,7 +1581,8 @@
             "icon_row": 9,
             "name": "piercing-shotgun-shell",
             "order": "b[shotgun]-b[piercing]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "pipe": {
             "group": "logistics",
@@ -1469,7 +1590,8 @@
             "icon_row": 9,
             "name": "pipe",
             "order": "a[pipe]-a[pipe]",
-            "subgroup": "energy-pipe-distribution"
+            "subgroup": "energy-pipe-distribution",
+            "type": "item"
         },
         "pipe-to-ground": {
             "group": "logistics",
@@ -1477,7 +1599,8 @@
             "icon_row": 9,
             "name": "pipe-to-ground",
             "order": "a[pipe]-b[pipe-to-ground]",
-            "subgroup": "energy-pipe-distribution"
+            "subgroup": "energy-pipe-distribution",
+            "type": "item"
         },
         "pistol": {
             "group": "combat",
@@ -1485,7 +1608,8 @@
             "icon_row": 9,
             "name": "pistol",
             "order": "a[basic-clips]-a[pistol]",
-            "subgroup": "gun"
+            "subgroup": "gun",
+            "type": "gun"
         },
         "plastic-bar": {
             "group": "intermediate-products",
@@ -1493,7 +1617,8 @@
             "icon_row": 9,
             "name": "plastic-bar",
             "order": "g[plastic-bar]",
-            "subgroup": "raw-material"
+            "subgroup": "raw-material",
+            "type": "item"
         },
         "player-port": {
             "group": "combat",
@@ -1501,7 +1626,8 @@
             "icon_row": 9,
             "name": "player-port",
             "order": "z[not-used]",
-            "subgroup": "defensive-structure"
+            "subgroup": "defensive-structure",
+            "type": "item"
         },
         "poison-capsule": {
             "group": "combat",
@@ -1509,7 +1635,8 @@
             "icon_row": 9,
             "name": "poison-capsule",
             "order": "b[poison-capsule]",
-            "subgroup": "capsule"
+            "subgroup": "capsule",
+            "type": "capsule"
         },
         "power-armor": {
             "group": "combat",
@@ -1517,7 +1644,8 @@
             "icon_row": 9,
             "name": "power-armor",
             "order": "d[power-armor]",
-            "subgroup": "armor"
+            "subgroup": "armor",
+            "type": "armor"
         },
         "power-armor-mk2": {
             "group": "combat",
@@ -1525,7 +1653,8 @@
             "icon_row": 9,
             "name": "power-armor-mk2",
             "order": "e[power-armor-mk2]",
-            "subgroup": "armor"
+            "subgroup": "armor",
+            "type": "armor"
         },
         "power-switch": {
             "group": "logistics",
@@ -1533,7 +1662,8 @@
             "icon_row": 9,
             "name": "power-switch",
             "order": "d[other]-a[power-switch]",
-            "subgroup": "circuit-network"
+            "subgroup": "circuit-network",
+            "type": "item"
         },
         "processing-unit": {
             "group": "intermediate-products",
@@ -1541,7 +1671,8 @@
             "icon_row": 9,
             "name": "processing-unit",
             "order": "g[processing-unit]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "production-science-pack": {
             "group": "intermediate-products",
@@ -1549,7 +1680,8 @@
             "icon_row": 9,
             "name": "production-science-pack",
             "order": "e[production-science-pack]",
-            "subgroup": "science-pack"
+            "subgroup": "science-pack",
+            "type": "tool"
         },
         "productivity-module": {
             "category": "productivity",
@@ -1615,7 +1747,8 @@
             ],
             "name": "productivity-module",
             "order": "c[productivity]-a[productivity-module-1]",
-            "subgroup": "module"
+            "subgroup": "module",
+            "type": "module"
         },
         "productivity-module-2": {
             "category": "productivity",
@@ -1681,7 +1814,8 @@
             ],
             "name": "productivity-module-2",
             "order": "c[productivity]-b[productivity-module-2]",
-            "subgroup": "module"
+            "subgroup": "module",
+            "type": "module"
         },
         "productivity-module-3": {
             "category": "productivity",
@@ -1747,7 +1881,8 @@
             ],
             "name": "productivity-module-3",
             "order": "c[productivity]-c[productivity-module-3]",
-            "subgroup": "module"
+            "subgroup": "module",
+            "type": "module"
         },
         "programmable-speaker": {
             "group": "logistics",
@@ -1755,7 +1890,8 @@
             "icon_row": 10,
             "name": "programmable-speaker",
             "order": "d[other]-b[programmable-speaker]",
-            "subgroup": "circuit-network"
+            "subgroup": "circuit-network",
+            "type": "item"
         },
         "pump": {
             "group": "logistics",
@@ -1763,7 +1899,8 @@
             "icon_row": 10,
             "name": "pump",
             "order": "b[pipe]-c[pump]",
-            "subgroup": "energy-pipe-distribution"
+            "subgroup": "energy-pipe-distribution",
+            "type": "item"
         },
         "pumpjack": {
             "group": "production",
@@ -1771,7 +1908,8 @@
             "icon_row": 10,
             "name": "pumpjack",
             "order": "b[fluids]-b[pumpjack]",
-            "subgroup": "extraction-machine"
+            "subgroup": "extraction-machine",
+            "type": "item"
         },
         "radar": {
             "group": "combat",
@@ -1779,7 +1917,8 @@
             "icon_row": 10,
             "name": "radar",
             "order": "d[radar]-a[radar]",
-            "subgroup": "defensive-structure"
+            "subgroup": "defensive-structure",
+            "type": "item"
         },
         "rail": {
             "group": "logistics",
@@ -1787,7 +1926,8 @@
             "icon_row": 10,
             "name": "rail",
             "order": "a[train-system]-a[rail]",
-            "subgroup": "transport"
+            "subgroup": "transport",
+            "type": "rail-planner"
         },
         "rail-chain-signal": {
             "group": "logistics",
@@ -1795,7 +1935,8 @@
             "icon_row": 10,
             "name": "rail-chain-signal",
             "order": "a[train-system]-e[rail-signal-chain]",
-            "subgroup": "transport"
+            "subgroup": "transport",
+            "type": "item"
         },
         "rail-signal": {
             "group": "logistics",
@@ -1803,7 +1944,8 @@
             "icon_row": 10,
             "name": "rail-signal",
             "order": "a[train-system]-d[rail-signal]",
-            "subgroup": "transport"
+            "subgroup": "transport",
+            "type": "item"
         },
         "railgun": {
             "group": "combat",
@@ -1811,7 +1953,8 @@
             "icon_row": 10,
             "name": "railgun",
             "order": "c[railgun]",
-            "subgroup": "gun"
+            "subgroup": "gun",
+            "type": "gun"
         },
         "railgun-dart": {
             "group": "combat",
@@ -1819,7 +1962,8 @@
             "icon_row": 10,
             "name": "railgun-dart",
             "order": "c[railgun]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "raw-fish": {
             "group": "intermediate-products",
@@ -1827,7 +1971,8 @@
             "icon_row": 5,
             "name": "raw-fish",
             "order": "h[raw-fish]",
-            "subgroup": "raw-resource"
+            "subgroup": "raw-resource",
+            "type": "capsule"
         },
         "raw-wood": {
             "fuel_category": "chemical",
@@ -1837,7 +1982,8 @@
             "icon_row": 10,
             "name": "raw-wood",
             "order": "a[raw-wood]",
-            "subgroup": "raw-resource"
+            "subgroup": "raw-resource",
+            "type": "item"
         },
         "red-wire": {
             "group": "logistics",
@@ -1845,7 +1991,8 @@
             "icon_row": 10,
             "name": "red-wire",
             "order": "b[wires]-a[red-wire]",
-            "subgroup": "circuit-network"
+            "subgroup": "circuit-network",
+            "type": "item"
         },
         "repair-pack": {
             "group": "production",
@@ -1853,7 +2000,8 @@
             "icon_row": 11,
             "name": "repair-pack",
             "order": "b[repair]-a[repair-pack]",
-            "subgroup": "tool"
+            "subgroup": "tool",
+            "type": "repair-tool"
         },
         "roboport": {
             "group": "logistics",
@@ -1861,7 +2009,8 @@
             "icon_row": 11,
             "name": "roboport",
             "order": "c[signal]-a[roboport]",
-            "subgroup": "logistic-network"
+            "subgroup": "logistic-network",
+            "type": "item"
         },
         "rocket": {
             "group": "combat",
@@ -1869,7 +2018,8 @@
             "icon_row": 11,
             "name": "rocket",
             "order": "d[rocket-launcher]-a[basic]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "rocket-control-unit": {
             "group": "intermediate-products",
@@ -1877,7 +2027,8 @@
             "icon_row": 11,
             "name": "rocket-control-unit",
             "order": "o[rocket-control-unit]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "rocket-fuel": {
             "fuel_category": "chemical",
@@ -1887,7 +2038,8 @@
             "icon_row": 11,
             "name": "rocket-fuel",
             "order": "n[rocket-fuel]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "rocket-launcher": {
             "group": "combat",
@@ -1895,7 +2047,8 @@
             "icon_row": 11,
             "name": "rocket-launcher",
             "order": "d[rocket-launcher]",
-            "subgroup": "gun"
+            "subgroup": "gun",
+            "type": "gun"
         },
         "rocket-part": {
             "group": "intermediate-products",
@@ -1903,7 +2056,8 @@
             "icon_row": 11,
             "name": "rocket-part",
             "order": "p[rocket-part]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "rocket-silo": {
             "group": "combat",
@@ -1911,7 +2065,8 @@
             "icon_row": 11,
             "name": "rocket-silo",
             "order": "e[rocket-silo]",
-            "subgroup": "defensive-structure"
+            "subgroup": "defensive-structure",
+            "type": "item"
         },
         "satellite": {
             "group": "intermediate-products",
@@ -1919,7 +2074,8 @@
             "icon_row": 11,
             "name": "satellite",
             "order": "q[satellite]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "science-pack-1": {
             "group": "intermediate-products",
@@ -1927,7 +2083,8 @@
             "icon_row": 11,
             "name": "science-pack-1",
             "order": "a[science-pack-1]",
-            "subgroup": "science-pack"
+            "subgroup": "science-pack",
+            "type": "tool"
         },
         "science-pack-2": {
             "group": "intermediate-products",
@@ -1935,7 +2092,8 @@
             "icon_row": 11,
             "name": "science-pack-2",
             "order": "b[science-pack-2]",
-            "subgroup": "science-pack"
+            "subgroup": "science-pack",
+            "type": "tool"
         },
         "science-pack-3": {
             "group": "intermediate-products",
@@ -1943,7 +2101,8 @@
             "icon_row": 11,
             "name": "science-pack-3",
             "order": "c[science-pack-3]",
-            "subgroup": "science-pack"
+            "subgroup": "science-pack",
+            "type": "tool"
         },
         "shotgun": {
             "group": "combat",
@@ -1951,7 +2110,8 @@
             "icon_row": 11,
             "name": "shotgun",
             "order": "b[shotgun]-a[basic]",
-            "subgroup": "gun"
+            "subgroup": "gun",
+            "type": "gun"
         },
         "shotgun-shell": {
             "group": "combat",
@@ -1959,7 +2119,8 @@
             "icon_row": 12,
             "name": "shotgun-shell",
             "order": "b[shotgun]-a[basic]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "simple-entity-with-force": {
             "group": "other",
@@ -1967,7 +2128,8 @@
             "icon_row": 13,
             "name": "simple-entity-with-force",
             "order": "s[simple-entity-with-force]-f[simple-entity-with-force]",
-            "subgroup": "other"
+            "subgroup": "other",
+            "type": "item"
         },
         "simple-entity-with-owner": {
             "group": "other",
@@ -1975,7 +2137,8 @@
             "icon_row": 15,
             "name": "simple-entity-with-owner",
             "order": "s[simple-entity-with-owner]-o[simple-entity-with-owner]",
-            "subgroup": "other"
+            "subgroup": "other",
+            "type": "item"
         },
         "slowdown-capsule": {
             "group": "combat",
@@ -1983,7 +2146,8 @@
             "icon_row": 12,
             "name": "slowdown-capsule",
             "order": "c[slowdown-capsule]",
-            "subgroup": "capsule"
+            "subgroup": "capsule",
+            "type": "capsule"
         },
         "small-electric-pole": {
             "fuel_category": "chemical",
@@ -1993,7 +2157,8 @@
             "icon_row": 12,
             "name": "small-electric-pole",
             "order": "a[energy]-a[small-electric-pole]",
-            "subgroup": "energy-pipe-distribution"
+            "subgroup": "energy-pipe-distribution",
+            "type": "item"
         },
         "small-lamp": {
             "group": "logistics",
@@ -2001,7 +2166,8 @@
             "icon_row": 12,
             "name": "small-lamp",
             "order": "a[light]-a[small-lamp]",
-            "subgroup": "circuit-network"
+            "subgroup": "circuit-network",
+            "type": "item"
         },
         "small-plane": {
             "group": "logistics",
@@ -2009,7 +2175,8 @@
             "icon_row": 12,
             "name": "small-plane",
             "order": "b[personal-transport]-c[small-plane]",
-            "subgroup": "transport"
+            "subgroup": "transport",
+            "type": "item"
         },
         "solar-panel": {
             "group": "production",
@@ -2017,7 +2184,8 @@
             "icon_row": 12,
             "name": "solar-panel",
             "order": "d[solar-panel]-a[solar-panel]",
-            "subgroup": "energy"
+            "subgroup": "energy",
+            "type": "item"
         },
         "solar-panel-equipment": {
             "group": "combat",
@@ -2025,7 +2193,8 @@
             "icon_row": 12,
             "name": "solar-panel-equipment",
             "order": "a[energy-source]-a[solar-panel]",
-            "subgroup": "equipment"
+            "subgroup": "equipment",
+            "type": "item"
         },
         "solid-fuel": {
             "fuel_category": "chemical",
@@ -2035,7 +2204,8 @@
             "icon_row": 12,
             "name": "solid-fuel",
             "order": "c[solid-fuel]",
-            "subgroup": "raw-material"
+            "subgroup": "raw-material",
+            "type": "item"
         },
         "space-science-pack": {
             "group": "intermediate-products",
@@ -2043,7 +2213,8 @@
             "icon_row": 12,
             "name": "space-science-pack",
             "order": "g[space-science-pack]",
-            "subgroup": "science-pack"
+            "subgroup": "science-pack",
+            "type": "tool"
         },
         "speed-module": {
             "category": "speed",
@@ -2060,7 +2231,8 @@
             "icon_row": 12,
             "name": "speed-module",
             "order": "a[speed]-a[speed-module-1]",
-            "subgroup": "module"
+            "subgroup": "module",
+            "type": "module"
         },
         "speed-module-2": {
             "category": "speed",
@@ -2077,7 +2249,8 @@
             "icon_row": 13,
             "name": "speed-module-2",
             "order": "a[speed]-b[speed-module-2]",
-            "subgroup": "module"
+            "subgroup": "module",
+            "type": "module"
         },
         "speed-module-3": {
             "category": "speed",
@@ -2094,7 +2267,8 @@
             "icon_row": 13,
             "name": "speed-module-3",
             "order": "a[speed]-c[speed-module-3]",
-            "subgroup": "module"
+            "subgroup": "module",
+            "type": "module"
         },
         "splitter": {
             "group": "logistics",
@@ -2102,7 +2276,8 @@
             "icon_row": 13,
             "name": "splitter",
             "order": "c[splitter]-a[splitter]",
-            "subgroup": "belt"
+            "subgroup": "belt",
+            "type": "item"
         },
         "stack-filter-inserter": {
             "group": "logistics",
@@ -2110,7 +2285,8 @@
             "icon_row": 13,
             "name": "stack-filter-inserter",
             "order": "g[stack-filter-inserter]",
-            "subgroup": "inserter"
+            "subgroup": "inserter",
+            "type": "item"
         },
         "stack-inserter": {
             "group": "logistics",
@@ -2118,7 +2294,8 @@
             "icon_row": 13,
             "name": "stack-inserter",
             "order": "f[stack-inserter]",
-            "subgroup": "inserter"
+            "subgroup": "inserter",
+            "type": "item"
         },
         "steam": {
             "group": "other",
@@ -2126,7 +2303,8 @@
             "icon_row": 13,
             "name": "steam",
             "order": "a[fluid]-b[steam]",
-            "subgroup": "other"
+            "subgroup": "other",
+            "type": "fluid"
         },
         "steam-engine": {
             "group": "production",
@@ -2134,7 +2312,8 @@
             "icon_row": 13,
             "name": "steam-engine",
             "order": "b[steam-power]-b[steam-engine]",
-            "subgroup": "energy"
+            "subgroup": "energy",
+            "type": "item"
         },
         "steam-turbine": {
             "group": "production",
@@ -2142,7 +2321,8 @@
             "icon_row": 13,
             "name": "steam-turbine",
             "order": "b[steam-power]-c[steam-turbine]",
-            "subgroup": "energy"
+            "subgroup": "energy",
+            "type": "item"
         },
         "steel-axe": {
             "group": "production",
@@ -2150,7 +2330,8 @@
             "icon_row": 13,
             "name": "steel-axe",
             "order": "a[mining]-b[steel-axe]",
-            "subgroup": "tool"
+            "subgroup": "tool",
+            "type": "mining-tool"
         },
         "steel-chest": {
             "group": "logistics",
@@ -2158,7 +2339,8 @@
             "icon_row": 13,
             "name": "steel-chest",
             "order": "a[items]-c[steel-chest]",
-            "subgroup": "storage"
+            "subgroup": "storage",
+            "type": "item"
         },
         "steel-furnace": {
             "group": "production",
@@ -2166,7 +2348,8 @@
             "icon_row": 13,
             "name": "steel-furnace",
             "order": "b[steel-furnace]",
-            "subgroup": "smelting-machine"
+            "subgroup": "smelting-machine",
+            "type": "item"
         },
         "steel-plate": {
             "group": "intermediate-products",
@@ -2174,7 +2357,8 @@
             "icon_row": 13,
             "name": "steel-plate",
             "order": "d[steel-plate]",
-            "subgroup": "raw-material"
+            "subgroup": "raw-material",
+            "type": "item"
         },
         "stone": {
             "group": "intermediate-products",
@@ -2182,7 +2366,8 @@
             "icon_row": 13,
             "name": "stone",
             "order": "d[stone]",
-            "subgroup": "raw-resource"
+            "subgroup": "raw-resource",
+            "type": "item"
         },
         "stone-brick": {
             "group": "logistics",
@@ -2190,7 +2375,8 @@
             "icon_row": 13,
             "name": "stone-brick",
             "order": "a[stone-brick]",
-            "subgroup": "terrain"
+            "subgroup": "terrain",
+            "type": "item"
         },
         "stone-furnace": {
             "group": "production",
@@ -2198,7 +2384,8 @@
             "icon_row": 14,
             "name": "stone-furnace",
             "order": "a[stone-furnace]",
-            "subgroup": "smelting-machine"
+            "subgroup": "smelting-machine",
+            "type": "item"
         },
         "stone-wall": {
             "group": "combat",
@@ -2206,7 +2393,8 @@
             "icon_row": 14,
             "name": "stone-wall",
             "order": "a[stone-wall]-a[stone-wall]",
-            "subgroup": "defensive-structure"
+            "subgroup": "defensive-structure",
+            "type": "item"
         },
         "storage-tank": {
             "group": "logistics",
@@ -2214,7 +2402,8 @@
             "icon_row": 14,
             "name": "storage-tank",
             "order": "b[fluid]-a[storage-tank]",
-            "subgroup": "storage"
+            "subgroup": "storage",
+            "type": "item"
         },
         "submachine-gun": {
             "group": "combat",
@@ -2222,7 +2411,8 @@
             "icon_row": 14,
             "name": "submachine-gun",
             "order": "a[basic-clips]-b[submachine-gun]",
-            "subgroup": "gun"
+            "subgroup": "gun",
+            "type": "gun"
         },
         "substation": {
             "group": "logistics",
@@ -2230,7 +2420,8 @@
             "icon_row": 14,
             "name": "substation",
             "order": "a[energy]-d[substation]",
-            "subgroup": "energy-pipe-distribution"
+            "subgroup": "energy-pipe-distribution",
+            "type": "item"
         },
         "sulfur": {
             "group": "intermediate-products",
@@ -2238,7 +2429,8 @@
             "icon_row": 14,
             "name": "sulfur",
             "order": "f[sulfur]",
-            "subgroup": "raw-material"
+            "subgroup": "raw-material",
+            "type": "item"
         },
         "sulfuric-acid": {
             "group": "other",
@@ -2246,7 +2438,8 @@
             "icon_row": 14,
             "name": "sulfuric-acid",
             "order": "a[fluid]-f[sulfuric-acid]",
-            "subgroup": "other"
+            "subgroup": "other",
+            "type": "fluid"
         },
         "tank": {
             "group": "logistics",
@@ -2254,7 +2447,8 @@
             "icon_row": 14,
             "name": "tank",
             "order": "b[personal-transport]-b[tank]",
-            "subgroup": "transport"
+            "subgroup": "transport",
+            "type": "item-with-entity-data"
         },
         "tank-cannon": {
             "group": "combat",
@@ -2262,7 +2456,8 @@
             "icon_row": 14,
             "name": "tank-cannon",
             "order": "z[tank]-a[cannon]",
-            "subgroup": "gun"
+            "subgroup": "gun",
+            "type": "gun"
         },
         "tank-flamethrower": {
             "group": "combat",
@@ -2270,7 +2465,8 @@
             "icon_row": 5,
             "name": "tank-flamethrower",
             "order": "b[flamethrower]-b[tank-flamethrower]",
-            "subgroup": "gun"
+            "subgroup": "gun",
+            "type": "gun"
         },
         "tank-machine-gun": {
             "group": "combat",
@@ -2278,7 +2474,8 @@
             "icon_row": 14,
             "name": "tank-machine-gun",
             "order": "a[basic-clips]-b[tank-machine-gun]",
-            "subgroup": "gun"
+            "subgroup": "gun",
+            "type": "gun"
         },
         "train-stop": {
             "group": "logistics",
@@ -2286,7 +2483,8 @@
             "icon_row": 14,
             "name": "train-stop",
             "order": "a[train-system]-c[train-stop]",
-            "subgroup": "transport"
+            "subgroup": "transport",
+            "type": "item"
         },
         "transport-belt": {
             "group": "logistics",
@@ -2294,7 +2492,8 @@
             "icon_row": 14,
             "name": "transport-belt",
             "order": "a[transport-belt]-a[transport-belt]",
-            "subgroup": "belt"
+            "subgroup": "belt",
+            "type": "item"
         },
         "underground-belt": {
             "group": "logistics",
@@ -2302,7 +2501,8 @@
             "icon_row": 14,
             "name": "underground-belt",
             "order": "b[underground-belt]-a[underground-belt]",
-            "subgroup": "belt"
+            "subgroup": "belt",
+            "type": "item"
         },
         "uranium-235": {
             "group": "intermediate-products",
@@ -2310,7 +2510,8 @@
             "icon_row": 14,
             "name": "uranium-235",
             "order": "r[uranium-235]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "uranium-238": {
             "group": "intermediate-products",
@@ -2318,7 +2519,8 @@
             "icon_row": 14,
             "name": "uranium-238",
             "order": "r[uranium-238]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "uranium-cannon-shell": {
             "group": "combat",
@@ -2326,7 +2528,8 @@
             "icon_row": 15,
             "name": "uranium-cannon-shell",
             "order": "d[cannon-shell]-c[uranium]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "uranium-fuel-cell": {
             "fuel_category": "nuclear",
@@ -2336,7 +2539,8 @@
             "icon_row": 15,
             "name": "uranium-fuel-cell",
             "order": "r[uranium-processing]-a[uranium-fuel-cell]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "uranium-ore": {
             "group": "intermediate-products",
@@ -2344,7 +2548,8 @@
             "icon_row": 15,
             "name": "uranium-ore",
             "order": "g[uranium-ore]",
-            "subgroup": "raw-resource"
+            "subgroup": "raw-resource",
+            "type": "item"
         },
         "uranium-rounds-magazine": {
             "group": "combat",
@@ -2352,7 +2557,8 @@
             "icon_row": 15,
             "name": "uranium-rounds-magazine",
             "order": "a[basic-clips]-c[uranium-rounds-magazine]",
-            "subgroup": "ammo"
+            "subgroup": "ammo",
+            "type": "ammo"
         },
         "used-up-uranium-fuel-cell": {
             "group": "intermediate-products",
@@ -2360,7 +2566,8 @@
             "icon_row": 15,
             "name": "used-up-uranium-fuel-cell",
             "order": "r[used-up-uranium-fuel-cell]",
-            "subgroup": "intermediate-product"
+            "subgroup": "intermediate-product",
+            "type": "item"
         },
         "vehicle-machine-gun": {
             "group": "combat",
@@ -2368,7 +2575,8 @@
             "icon_row": 14,
             "name": "vehicle-machine-gun",
             "order": "a[basic-clips]-b[vehicle-machine-gun]",
-            "subgroup": "gun"
+            "subgroup": "gun",
+            "type": "gun"
         },
         "water": {
             "group": "other",
@@ -2376,7 +2584,8 @@
             "icon_row": 15,
             "name": "water",
             "order": "a[fluid]-a[water]",
-            "subgroup": "other"
+            "subgroup": "other",
+            "type": "fluid"
         },
         "wood": {
             "fuel_category": "chemical",
@@ -2386,7 +2595,8 @@
             "icon_row": 15,
             "name": "wood",
             "order": "a[wood]",
-            "subgroup": "raw-material"
+            "subgroup": "raw-material",
+            "type": "item"
         },
         "wooden-chest": {
             "fuel_category": "chemical",
@@ -2396,7 +2606,8 @@
             "icon_row": 15,
             "name": "wooden-chest",
             "order": "a[items]-a[wooden-chest]",
-            "subgroup": "storage"
+            "subgroup": "storage",
+            "type": "item"
         }
     },
     "mining-drill": {

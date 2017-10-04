@@ -85,7 +85,7 @@ def main():
         item_groups[d["group"]]["subgroups"][name] = d["order"]
     items = {}
     fuel = []
-    item_attrs = {"category", "effect", "fuel_category", "fuel_value", "icon", "limitation", "name", "order", "subgroup"}
+    item_attrs = {"category", "effect", "fuel_category", "fuel_value", "icon", "limitation", "name", "order", "subgroup", "type"}
     for item_type in item_types:
         for name, item in data[item_type].items():
             item = {attr: value for attr, value in item.items() if attr in item_attrs}
