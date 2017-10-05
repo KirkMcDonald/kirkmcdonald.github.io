@@ -18,6 +18,8 @@ unique_paths = {
     "__base__/graphics/icons/uranium-ore.png": "__base__/graphics/icons/icons-new/uranium-ore.png",
 }
 
+missing_icon = "__core__/graphics/too-far.png"
+
 def get_icon(data, path):
     path = unique_paths.get(path, path)
     m = re.search("__(\w+)__/(.*)", path)
@@ -53,14 +55,15 @@ def normalize_recipe(r):
         r["ingredients"] = ings
 
 conversion_factor = {
+    "": 1,
     "k": 1000,
     "M": 1000000,
     "G": 1000000000,
 }
 
 def convert_power(s):
-    m = re.match(r"([^a-zA-Z]+)([a-zA-Z]+)", s)
-    factor = conversion_factor[m.group(2)[0]]
+    m = re.match(r"([^a-zA-Z]+)([a-zA-Z]?)[WJ]", s)
+    factor = conversion_factor[m.group(2)]
     return float(m.group(1)) * factor
 
 def convert(d, attr):
@@ -93,12 +96,13 @@ def main():
                 subgroup = item["subgroup"]
             else:
                 item["subgroup"] = subgroup = "other"
-            if subgroup == "fill-barrel":
+            if subgroup in ("fill-barrel", "bob-gas-bottle"):
                 continue
             item["group"] = item_subgroups[subgroup]["group"]
             if "icon" not in item:
                 print("missing icon:", name)
                 continue
+                #item["icon"] = missing_icon
             icon_paths.add(item["icon"])
             if "fuel_value" in item:
                 convert(item, "fuel_value")
@@ -160,6 +164,9 @@ def main():
     for entity_type, attrs in entity_attrs.items():
         entities = new_data.setdefault(entity_type, {})
         for name, entity in data[entity_type].items():
+            if "icon" not in entity:
+                print("entity missing icon:", name)
+                entity["icon"] = missing_icon
             icon_paths.add(entity["icon"])
             new_entity = {attr: entity[attr] for attr in attrs + common_attrs if attr in entity}
             if "module_specification" in new_entity:
@@ -169,6 +176,13 @@ def main():
                 new_entity["module_slots"] = 0
             if "energy_usage" in new_entity:
                 convert(new_entity, "energy_usage")
+            if "minable" in new_entity:
+                m = new_entity["minable"]
+                if "result" in m:
+                    m["results"] = [{
+                        "name": m.pop("result"),
+                        "amount": 1,
+                    }]
             entities[name] = new_entity
         new_data[entity_type] = entities
 

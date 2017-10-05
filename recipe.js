@@ -72,13 +72,13 @@ ResourceRecipe.prototype.makesResource = function() {
     return true
 }
 
-function MiningRecipe(item, category, hardness, mining_time, ingredients) {
+function MiningRecipe(name, col, row, category, hardness, mining_time, ingredients, products) {
     this.hardness = hardness
     this.mining_time = mining_time
     if (!ingredients) {
         ingredients = []
     }
-    Recipe.call(this, item.name, item.icon_col, item.icon_row, category, zero, ingredients, [new Ingredient(one, item)])
+    Recipe.call(this, name, col, row, category, zero, ingredients, products)//[new Ingredient(one, item)])
 }
 MiningRecipe.prototype = Object.create(Recipe.prototype)
 MiningRecipe.prototype.makesResource = function() {
@@ -150,7 +150,7 @@ function getRecipeGraph(data) {
         }
         var name = entity.name
         var props = entity.minable
-        var item = items[name]
+        //var item = items[name]
         var ingredients = null
         if ("required_fluid" in props) {
             ingredients = [new Ingredient(
@@ -158,12 +158,19 @@ function getRecipeGraph(data) {
                 items[props.required_fluid]
             )]
         }
+        var products = []
+        for (var i = 0; i < props.results.length; i++) {
+            products.push(makeIngredient(data, props.results[i], items))
+        }
         recipes[name] = new MiningRecipe(
-            item,
+            name,
+            entity.icon_col,
+            entity.icon_row,
             "mining-" + category,
             RationalFromFloat(props.hardness),
             RationalFromFloat(props.mining_time),
-            ingredients
+            ingredients,
+            products
         )
     }
     for (var itemName in items) {

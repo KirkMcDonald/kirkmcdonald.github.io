@@ -8640,7 +8640,12 @@
                 "hardness": 0.9,
                 "mining_particle": "coal-particle",
                 "mining_time": 2,
-                "result": "coal"
+                "results": [
+                    {
+                        "amount": 1,
+                        "name": "coal"
+                    }
+                ]
             },
             "name": "coal"
         },
@@ -8651,7 +8656,12 @@
                 "hardness": 0.9,
                 "mining_particle": "copper-ore-particle",
                 "mining_time": 2,
-                "result": "copper-ore"
+                "results": [
+                    {
+                        "amount": 1,
+                        "name": "copper-ore"
+                    }
+                ]
             },
             "name": "copper-ore"
         },
@@ -8681,7 +8691,12 @@
                 "hardness": 0.9,
                 "mining_particle": "iron-ore-particle",
                 "mining_time": 2,
-                "result": "iron-ore"
+                "results": [
+                    {
+                        "amount": 1,
+                        "name": "iron-ore"
+                    }
+                ]
             },
             "name": "iron-ore"
         },
@@ -8692,7 +8707,12 @@
                 "hardness": 0.4,
                 "mining_particle": "stone-particle",
                 "mining_time": 2,
-                "result": "stone"
+                "results": [
+                    {
+                        "amount": 1,
+                        "name": "stone"
+                    }
+                ]
             },
             "name": "stone"
         },
@@ -8705,7 +8725,12 @@
                 "mining_particle": "stone-particle",
                 "mining_time": 4,
                 "required_fluid": "sulfuric-acid",
-                "result": "uranium-ore"
+                "results": [
+                    {
+                        "amount": 1,
+                        "name": "uranium-ore"
+                    }
+                ]
             },
             "name": "uranium-ore"
         }

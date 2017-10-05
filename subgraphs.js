@@ -20,7 +20,7 @@ function findGroups(items, recipes) {
     for (var recipeName in recipes) {
         var recipe = recipes[recipeName]
         if (recipe.products.length > 1) {
-            for (var i = 0; i < recipe.ingredients.length; i++) {
+            for (var i = 0; i < recipe.products.length; i++) {
                 var item = recipe.products[i].item
                 candidates[item.name] = item
             }

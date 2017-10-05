@@ -57,7 +57,6 @@ button.ui:focus {
     outline: none;
 }
 img.icon {
-    background: url(images/sprite-sheet-2104aa89e14cbd861ac5865881725835.png);
     background-repeat: no-repeat;
     display: inline-block;
     height: 32px;
