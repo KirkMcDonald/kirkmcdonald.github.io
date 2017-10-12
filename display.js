@@ -368,9 +368,18 @@ RecipeRow.prototype = {
         this.powerNode.textContent = alignPower(watts)
     },
     csv: function() {
+        var itemRate = ""
+        if (this.recipe.products.length == 1) {
+            var ing = this.recipe.products[0]
+            if (ing.item.name == this.recipe.name) {
+                var rate = this.rate.mul(this.recipe.gives(ing.item, spec))
+                itemRate = displayRate(rate)
+            }
+        }
         var parts = [
             this.name,
             displayRate(this.rate),
+            itemRate,
         ]
         if (this.count.isZero()) {
             parts.push("")
@@ -587,7 +596,7 @@ RecipeTable.prototype = {
         var sameRows = true
         var i = 0
         var totalPower = zero
-        var csvLines = ["recipe,rate,factory,count,modules,beacon module,beacon count,power"]
+        var csvLines = ["recipe,rate,item rate,factory,count,modules,beacon module,beacon count,power"]
         var csvWidth = csvLines[0].length
         for (var i = 0; i < sortedTotals.length; i++) {
             var recipeName = sortedTotals[i]
@@ -643,8 +652,8 @@ RecipeTable.prototype = {
         this.totalNode.textContent = alignPower(totalPower)
         var csv = document.getElementById("csv")
         csv.value = csvLines.join("\n") + "\n"
-        csv.cols = csvWidth + 1
-        csv.rows = csvLines.length + 1
+        csv.cols = csvWidth + 2
+        csv.rows = csvLines.length + 2
     },
     getRow: function(recipeName) {
         return this.rows[recipeName]
