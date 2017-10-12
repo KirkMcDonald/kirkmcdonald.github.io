@@ -40,15 +40,18 @@ Solver.prototype = {
             if (Object.keys(match).length == 0) {
                 continue
             }
-            var solution = solver.solveFor(match, spec)
+            var solution = solver.solveFor(match, spec, false)
             if (!solution) {
-                continue
+                solution = solver.solveFor(match, spec, true)
+                if (!solution) {
+                    continue
+                }
             }
             for (var itemName in match) {
                 delete totals.unfinished[itemName]
             }
-            for (var recipeName in solution) {
-                var rate = solution[recipeName]
+            for (var recipeName in solution.solution) {
+                var rate = solution.solution[recipeName]
                 var recipe = this.recipes[recipeName]
                 if (solver.inputRecipes.indexOf(recipe) !== -1) {
                     var ing = recipe.products[0]
@@ -57,6 +60,9 @@ Solver.prototype = {
                 } else {
                     totals.add(recipeName, rate)
                 }
+            }
+            for (var itemName in solution.waste) {
+                totals.addWaste(itemName, solution.waste[itemName])
             }
         }
         return totals

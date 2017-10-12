@@ -15,6 +15,29 @@ function Matrix(rows, cols, mat) {
 }
 Matrix.prototype = {
     constructor: Matrix,
+    toString: function() {
+        var widths = []
+        for (var i = 0; i < this.cols; i++) {
+            var width = 0
+            for (var j = 0; j < this.rows; j++) {
+                var s = this.index(j, i).toDecimal(3)
+                if (s.length > width) {
+                    width = s.length
+                }
+            }
+            widths.push(width)
+        }
+        var lines = []
+        for (var i = 0; i < this.rows; i++) {
+            var line = []
+            for (var j = 0; j < this.cols; j++) {
+                s = this.index(i, j).toDecimal(3).padStart(widths[j])
+                line.push(s)
+            }
+            lines.push(line.join(" "))
+        }
+        return lines.join("\n")
+    },
     copy: function() {
         var mat = this.mat.slice()
         return new Matrix(this.rows, this.cols, mat)
@@ -48,6 +71,24 @@ Matrix.prototype = {
             mat.push(column[i])
         }
         return new Matrix(this.rows, this.cols + 1, mat)
+    },
+    // Returns new matrix with given number of additional columns.
+    appendColumns: function(n) {
+        var mat = []
+        for (var i = 0; i < this.rows; i++) {
+            for (var j = 0; j < this.cols; j++) {
+                mat.push(this.index(i, j))
+            }
+            for (var j = 0; j < n; j++) {
+                mat.push(zero)
+            }
+        }
+        return new Matrix(this.rows, this.cols + n, mat)
+    },
+    setColumn: function(j, column) {
+        for (var i = 0; i < this.rows; i++) {
+            this.setIndex(i, j, column[i])
+        }
     },
     // Sets a column to all zeros.
     zeroColumn: function(col) {

@@ -34,7 +34,13 @@ Rational.prototype = {
             roundingFactor = new Rational(bigInt(5), bigInt(10).pow(maxDigits+1))
         }
 
-        var x = this.add(roundingFactor)
+        var sign = ""
+        var x = this
+        if (x.less(zero)) {
+            sign = "-"
+            x = zero.sub(x)
+        }
+        x = x.add(roundingFactor)
         var divmod = x.p.divmod(x.q)
         var integerPart = divmod.quotient.toString()
         var decimalPart = ""
@@ -54,9 +60,9 @@ Rational.prototype = {
             }
         }
         if (decimalPart != "") {
-            return integerPart + "." + decimalPart
+            return sign + integerPart + "." + decimalPart
         }
-        return integerPart
+        return sign + integerPart
     },
     toUpDecimal: function(maxDigits) {
         var fraction = new Rational(bigInt.one, bigInt(10).pow(maxDigits))
@@ -182,6 +188,7 @@ function RationalFromFloats(p, q) {
     return new Rational(bigInt(p), bigInt(q))
 }
 
+var minusOne = new Rational(bigInt.minusOne, bigInt.one)
 var zero = new Rational(bigInt.zero, bigInt.one)
 var one = new Rational(bigInt.one, bigInt.one)
 var half = new Rational(bigInt.one, bigInt(2))

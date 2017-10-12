@@ -38,6 +38,7 @@
     <script src="display.js"></script>
     <script src="visualize.js"></script>
     <script src="icon.js"></script>
+    <script src="debug.js"></script>
     <script src="settings.js"></script>
     <script src="init.js"></script>
 </head>
@@ -66,10 +67,12 @@ limitations under the License.-->
         <button class="tab_button" id="settings_button" onclick="clickTab('settings_tab')">Settings</button>
         <button class="tab_button" id="faq_button" onclick="clickTab('faq_tab')">FAQ</button>
         <button class="tab_button" id="about_button" onclick="clickTab('about_tab')">About</button>
+        <button class="tab_button" id="debug_button" onclick="clickTab('debug_tab')">Debug</button>
     </div>
 
     <div id="steps_tab" class="tab">
         <table id="steps"></table>
+        <div id="waste"></div>
     </div>
 
     <div id="totals_tab" class="tab">
@@ -166,6 +169,13 @@ limitations under the License.-->
         <p>
         Clicking on the icon a second time will restore its dependencies.
     </div>
+    </div>
+
+    <div id="debug_tab" class="tab">
+        Solutions:
+        <div id="solutions"></div>
+        Recipe matrixes:
+        <div id="matrixes"></div>
     </div>
 </body>
 </html>

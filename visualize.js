@@ -10,6 +10,16 @@ function OutputRecipe() {
     }
 }
 
+function WasteRecipe(totals) {
+    this.ingredients = []
+    for (var itemName in totals.waste) {
+        var rate = totals.waste[itemName]
+        var item = solver.items[itemName]
+        var ing = new Ingredient(rate, item)
+        this.ingredients.push(ing)
+    }
+}
+
 function makeGraph(totals, ignore) {
     var g = new dagreD3.graphlib.Graph({multigraph: true})
     g.setGraph({})
@@ -45,8 +55,11 @@ function makeGraph(totals, ignore) {
     for (var itemName in totals.unfinished) {
         g.setNode(itemName, {"label": "unknown " + itemName + " recipe", "labelType": "html"})
     }
-    g.setNode("output", {"label": "output", "labelType": "html"})
-    var nodes = Object.keys(totals.totals).concat(["output"])
+    var fakeNodes = ["output", "waste"]
+    for (var i = 0; i < fakeNodes.length; i++) {
+        g.setNode(fakeNodes[i], {"label": fakeNodes[i], "labelType": "html"})
+    }
+    var nodes = Object.keys(totals.totals).concat(["output", "waste"])
     for (var recipeIndex = 0; recipeIndex < nodes.length; recipeIndex++) {
         var recipeName = nodes[recipeIndex]
         if (ignore[recipeName]) {
@@ -55,6 +68,8 @@ function makeGraph(totals, ignore) {
         var recipe
         if (recipeName == "output") {
             recipe = new OutputRecipe()
+        } else if (recipeName == "waste") {
+            recipe = new WasteRecipe(totals)
         } else {
             recipe = solver.recipes[recipeName]
         }
@@ -71,7 +86,7 @@ function makeGraph(totals, ignore) {
                 var subRecipe = ing.item.recipes[j]
                 if (subRecipe.name in totals.totals) {
                     var rate
-                    if (recipeName == "output") {
+                    if (recipeName == "output" || recipeName == "waste") {
                         rate = ing.amount
                     } else {
                         rate = totals.totals[recipeName].mul(ing.amount)

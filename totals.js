@@ -20,6 +20,8 @@ function Totals(rate, item) {
     this.totals = {}
     // Maps item name to its as-yet-unfulfilled rate.
     this.unfinished = {}
+    // Maps item name to rate at which it will be wasted.
+    this.waste = {}
     this.topo = []
 }
 Totals.prototype = {
@@ -40,6 +42,9 @@ Totals.prototype = {
         for (var itemName in other.unfinished) {
             this.addUnfinished(itemName, other.unfinished[itemName])
         }
+        for (var itemName in other.waste) {
+            this.addWaste(itemName, other.waste[itemName])
+        }
         this.topo = newTopo
     },
     add: function(recipeName, rate, notopo) {
@@ -48,6 +53,9 @@ Totals.prototype = {
     },
     addUnfinished: function(itemName, rate) {
         this.unfinished[itemName] = (this.unfinished[itemName] || zero).add(rate)
+    },
+    addWaste: function(itemName, rate) {
+        this.waste[itemName] = (this.waste[itemName] || zero).add(rate)
     },
     get: function(recipeName) {
         return this.totals[recipeName]

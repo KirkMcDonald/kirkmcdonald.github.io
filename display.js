@@ -106,6 +106,12 @@ function displaySteps(sortedTotals, totals) {
         var itemName = order[i]
         var item = solver.items[itemName]
         var rate = items[itemName]
+        if (itemName in totals.waste) {
+            rate = rate.sub(totals.waste[itemName])
+            if (rate.equal(zero)) {
+                continue
+            }
+        }
         var row = document.createElement("tr")
         node.appendChild(row)
         var iconCell = document.createElement("td")
@@ -136,6 +142,40 @@ function displaySteps(sortedTotals, totals) {
                 row.appendChild(beltRateCell)
             }
         }
+    }
+
+    var oldWaste = document.getElementById("waste")
+    var waste = document.createElement("div")
+    waste.id = "waste"
+    stepTab.replaceChild(waste, oldWaste)
+    var wasteNames = Object.keys(totals.waste)
+    if (wasteNames.length == 0) {
+        return
+    }
+    var wasteTable = document.createElement("table")
+    waste.appendChild(wasteTable)
+    header = document.createElement("tr")
+    wasteTable.appendChild(header)
+    th = document.createElement("th")
+    th.textContent = "wasted items/" + rateName
+    th.colSpan = 2
+    header.appendChild(th)
+    wasteNames.sort()
+    for (var i = 0; i < wasteNames.length; i++) {
+        var itemName = wasteNames[i]
+        var item = solver.items[itemName]
+        var rate = totals.waste[itemName]
+        var row = document.createElement("tr")
+        wasteTable.appendChild(row)
+        var iconCell = document.createElement("td")
+        iconCell.appendChild(getImage(item))
+        row.appendChild(iconCell)
+        var rateCell = document.createElement("td")
+        rateCell.classList.add("right-align")
+        var tt = document.createElement("tt")
+        tt.textContent = alignRate(rate)
+        rateCell.append(tt)
+        row.appendChild(rateCell)
     }
 }
 
@@ -625,4 +665,5 @@ function display() {
         renderGraph(totals, spec.ignore)
     }
     recipeTable.displaySolution(totals)
+    renderDebug()
 }
