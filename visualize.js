@@ -21,6 +21,29 @@ function WasteRecipe(totals) {
 }
 
 function makeGraph(totals, ignore) {
+    var edgeIndexMap = {}
+    var edge = 0
+    var nodes = []
+    var addEdge = function(node1, node2, label, name) {
+        g.setEdge(node1, node2, label, name)
+        var a = edgeIndexMap[node1]
+        if (!a) {
+            a = []
+            edgeIndexMap[node1] = a
+        }
+        a.push(edge)
+        a = edgeIndexMap[node2]
+        if (!a) {
+            a = []
+            edgeIndexMap[node2] = a
+        }
+        a.push(edge)
+        edge++
+    }
+    var addNode = function(name, label) {
+        g.setNode(name, label)
+        nodes.push(name)
+    }
     var g = new dagreD3.graphlib.Graph({multigraph: true})
     g.setGraph({})
     g.setDefaultEdgeLabel(function() { return  {} })
@@ -50,19 +73,19 @@ function makeGraph(totals, ignore) {
                 displayCount(factoryCount)
             )
         }
-        g.setNode(recipeName, {"label": label, "labelType": "html"})
+        addNode(recipeName, {"label": label, "labelType": "html"})
     }
     for (var itemName in totals.unfinished) {
-        g.setNode(itemName, {"label": "unknown " + itemName + " recipe", "labelType": "html"})
+        addNode(itemName, {"label": "unknown " + itemName + " recipe", "labelType": "html"})
     }
     var fakeNodes = ["output"]
     if (Object.keys(totals.waste).length > 0) {
         fakeNodes.push("waste")
     }
     for (var i = 0; i < fakeNodes.length; i++) {
-        g.setNode(fakeNodes[i], {"label": fakeNodes[i], "labelType": "html"})
+        addNode(fakeNodes[i], {"label": fakeNodes[i], "labelType": "html"})
     }
-    var nodes = Object.keys(totals.totals).concat(["output", "waste"])
+    var nodes = Object.keys(totals.totals).concat(fakeNodes)
     for (var recipeIndex = 0; recipeIndex < nodes.length; recipeIndex++) {
         var recipeName = nodes[recipeIndex]
         if (ignore[recipeName]) {
@@ -102,7 +125,7 @@ function makeGraph(totals, ignore) {
                         displayRate(subRate),
                         rateName
                     )
-                    g.setEdge(subRecipe.name, recipeName, {
+                    addEdge(subRecipe.name, recipeName, {
                         "label": label,
                         "labelType": "html",
                         "labelpos": "c"
@@ -117,7 +140,7 @@ function makeGraph(totals, ignore) {
                     displayRate(rate),
                     rateName
                 )
-                g.setEdge(ing.item.name, recipeName, {
+                addEdge(ing.item.name, recipeName, {
                     "label": label,
                     "labelType": "html",
                     "labelpos": "c"
@@ -125,11 +148,12 @@ function makeGraph(totals, ignore) {
             }
         }
     }
-    return g
+    return {g: g, nodes: nodes, edges: edgeIndexMap}
 }
 
 function renderGraph(totals, ignore) {
-    var g = makeGraph(totals, ignore)
+    var graph = makeGraph(totals, ignore)
+    var g = graph.g
     var svg = d3.select("svg")
     var inner = svg.select("g")
     inner.remove()
@@ -141,4 +165,19 @@ function renderGraph(totals, ignore) {
     var xCenterOffset = (svg.attr("width") - g.graph().width) / 2
     var yCenterOffset = (svg.attr("height") - g.graph().height) / 2
     inner.attr("transform", "translate(" + xCenterOffset + ", " + yCenterOffset + ")")
+
+    var nodes = document.querySelector("g.nodes")
+    var edges = document.querySelector("g.edgePaths")
+    for (var i = 0; i < graph.nodes.length; i++) {
+        var nodeName = graph.nodes[i]
+        var node = nodes.childNodes[i]
+        var edgeIndexes = graph.edges[nodeName]
+        var edgeNodes = []
+        for (var j = 0; j < edgeIndexes.length; j++) {
+            var index = edgeIndexes[j]
+            edgeNodes.push(edges.childNodes[index])
+        }
+        node.addEventListener("mouseover", new GraphMouseOverHandler(edgeNodes))
+        node.addEventListener("mouseout", new GraphMouseLeaveHandler(edgeNodes))
+    }
 }

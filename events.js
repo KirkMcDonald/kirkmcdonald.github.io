@@ -212,6 +212,24 @@ function CopyAllHandler(name) {
     }
 }
 
+// graph hover events
+
+function GraphMouseOverHandler(edges) {
+    this.handleEvent = function(event) {
+        for (var i = 0; i < edges.length; i++) {
+            edges[i].classList.add("edgePathHighlight")
+        }
+    }
+}
+
+function GraphMouseLeaveHandler(edges) {
+    this.handleEvent = function(event) {
+        for (var i = 0; i < edges.length; i++) {
+            edges[i].classList.remove("edgePathHighlight")
+        }
+    }
+}
+
 // tab events
 
 var DEFAULT_TAB = "totals_tab"

@@ -173,9 +173,15 @@ div.tab {
     fill: var(--medium);
     stroke-width: 1px;
 }
-.edgePath path {
+g.node:hover > rect {
+    stroke: var(--accent);
+}
+g.edgePath path {
     stroke: var(--light);
     stroke-width: 1.5px;
+}
+g.edgePathHighlight path {
+    stroke: var(--accent);
 }
 div.graph {
     min-width: max-content;
