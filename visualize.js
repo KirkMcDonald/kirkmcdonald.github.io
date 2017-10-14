@@ -55,7 +55,10 @@ function makeGraph(totals, ignore) {
     for (var itemName in totals.unfinished) {
         g.setNode(itemName, {"label": "unknown " + itemName + " recipe", "labelType": "html"})
     }
-    var fakeNodes = ["output", "waste"]
+    var fakeNodes = ["output"]
+    if (Object.keys(totals.waste).length > 0) {
+        fakeNodes.push("waste")
+    }
     for (var i = 0; i < fakeNodes.length; i++) {
         g.setNode(fakeNodes[i], {"label": fakeNodes[i], "labelType": "html"})
     }
