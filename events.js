@@ -214,18 +214,20 @@ function CopyAllHandler(name) {
 
 // graph hover events
 
-function GraphMouseOverHandler(edges) {
+function GraphMouseOverHandler(edges, labels) {
     this.handleEvent = function(event) {
         for (var i = 0; i < edges.length; i++) {
             edges[i].classList.add("edgePathHighlight")
+            labels[i].classList.add("edgeLabelHighlight")
         }
     }
 }
 
-function GraphMouseLeaveHandler(edges) {
+function GraphMouseLeaveHandler(edges, labels) {
     this.handleEvent = function(event) {
         for (var i = 0; i < edges.length; i++) {
             edges[i].classList.remove("edgePathHighlight")
+            labels[i].classList.remove("edgeLabelHighlight")
         }
     }
 }

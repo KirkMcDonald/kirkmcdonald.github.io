@@ -166,18 +166,21 @@ function renderGraph(totals, ignore) {
     var yCenterOffset = (svg.attr("height") - g.graph().height) / 2
     inner.attr("transform", "translate(" + xCenterOffset + ", " + yCenterOffset + ")")
 
-    var nodes = document.querySelector("g.nodes")
-    var edges = document.querySelector("g.edgePaths")
+    var nodes = document.querySelector("svg#graph g.nodes")
+    var edges = document.querySelector("svg#graph g.edgePaths")
+    var labels = document.querySelector("svg#graph g.edgeLabels")
     for (var i = 0; i < graph.nodes.length; i++) {
         var nodeName = graph.nodes[i]
         var node = nodes.childNodes[i]
         var edgeIndexes = graph.edges[nodeName]
         var edgeNodes = []
+        var edgeLabels = []
         for (var j = 0; j < edgeIndexes.length; j++) {
             var index = edgeIndexes[j]
             edgeNodes.push(edges.childNodes[index])
+            edgeLabels.push(labels.childNodes[index])
         }
-        node.addEventListener("mouseover", new GraphMouseOverHandler(edgeNodes))
-        node.addEventListener("mouseout", new GraphMouseLeaveHandler(edgeNodes))
+        node.addEventListener("mouseover", new GraphMouseOverHandler(edgeNodes, edgeLabels))
+        node.addEventListener("mouseout", new GraphMouseLeaveHandler(edgeNodes, edgeLabels))
     }
 }

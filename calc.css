@@ -31,7 +31,6 @@ a:active {
 input, select {
     color: var(--foreground);
     background-color: var(--light);
-    border: none;
     padding: 0.25em;
     border: 1px solid var(--light);
     border-radius: 0.4em;
@@ -182,6 +181,15 @@ g.edgePath path {
 }
 g.edgePathHighlight path {
     stroke: var(--accent);
+}
+g.edgeLabel div {
+    border: 1px solid transparent;
+    border-radius: 0.4em;
+    padding: 5px;
+}
+g.edgeLabelHighlight div {
+    background-color: var(--medium);
+    border-color: var(--accent);
 }
 div.graph {
     min-width: max-content;
