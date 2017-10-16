@@ -174,12 +174,12 @@ div.tab {
     background-color: var(--main);
 }
 /* visualizer */
-.node rect {
+g.node rect {
     stroke: var(--foreground);
     fill: var(--medium);
     stroke-width: 1px;
 }
-g.node:hover > rect {
+g.nodeHighlight rect {
     stroke: var(--accent);
 }
 g.edgePath path {

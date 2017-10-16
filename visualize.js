@@ -161,6 +161,53 @@ function makeGraph(totals, ignore) {
     return {g: g, nodes: nodes, edges: edgeIndexMap, min: minRate, max: maxRate, rates: edgeRates}
 }
 
+function GraphEdge(edge, label) {
+    this.edge = edge
+    this.label = label
+    this.nodes = {}
+}
+GraphEdge.prototype = {
+    constructor: GraphEdge,
+    hasNodes: function() {
+        return Object.keys(this.nodes).length > 0
+    },
+    highlight: function(node) {
+        if (!this.hasNodes()) {
+            this.edge.classList.add("edgePathHighlight")
+            this.label.classList.add("edgeLabelHighlight")
+        }
+        this.nodes[node.name] = true
+    },
+    unhighlight: function(node) {
+        delete this.nodes[node.name]
+        if (!this.hasNodes()) {
+            this.edge.classList.remove("edgePathHighlight")
+            this.label.classList.remove("edgeLabelHighlight")
+        }
+    },
+}
+
+function GraphNode(name, node, edges) {
+    this.name = name
+    this.node = node
+    this.edges = edges
+}
+GraphNode.prototype = {
+    constructor: GraphNode,
+    highlight: function() {
+        this.node.classList.add("nodeHighlight")
+        for (var i = 0; i < this.edges.length; i++) {
+            this.edges[i].highlight(this)
+        }
+    },
+    unhighlight: function() {
+        this.node.classList.remove("nodeHighlight")
+        for (var i = 0; i < this.edges.length; i++) {
+            this.edges[i].unhighlight(this)
+        }
+    },
+}
+
 function renderGraph(totals, ignore) {
     var graph = makeGraph(totals, ignore)
     var g = graph.g
@@ -183,28 +230,37 @@ function renderGraph(totals, ignore) {
     var widthFactor = widthRange.div(rateRange)
 
     var nodes = document.querySelector("svg#graph g.nodes")
-    var edges = document.querySelector("svg#graph g.edgePaths")
+    var edgePaths = document.querySelector("svg#graph g.edgePaths")
     var labels = document.querySelector("svg#graph g.edgeLabels")
+
+    var edges = []
+    for (var i = 0; i < edgePaths.childNodes.length; i++) {
+        var edge = edgePaths.childNodes[i]
+        var path = edge.querySelector("path")
+        var width = graph.rates[i].sub(graph.min).mul(widthFactor).add(minWidth).toDecimal(1) + "px"
+        path.style.setProperty("stroke-width", width)
+        var marker = edge.querySelector("marker")
+        marker.setAttribute("markerUnits", "userSpaceOnUse")
+        marker.setAttribute("markerWidth", "16")
+        marker.setAttribute("markerHeight", "12")
+        var label = labels.childNodes[i]
+        var edgeNode = new GraphEdge(edge, label)
+        edges.push(edgeNode)
+    }
+
     for (var i = 0; i < graph.nodes.length; i++) {
         var nodeName = graph.nodes[i]
         var node = nodes.childNodes[i]
         var edgeIndexes = graph.edges[nodeName]
         var edgeNodes = []
-        var edgeLabels = []
         for (var j = 0; j < edgeIndexes.length; j++) {
             var index = edgeIndexes[j]
-            var edge = edges.childNodes[index]
-            var path = edge.querySelector("path")
-            var width = graph.rates[index].sub(graph.min).mul(widthFactor).add(minWidth).toDecimal(1) + "px"
-            path.style.setProperty("stroke-width", width)
-            var marker = edge.querySelector("marker")
-            marker.setAttribute("markerUnits", "userSpaceOnUse")
-            marker.setAttribute("markerWidth", "16")
-            marker.setAttribute("markerHeight", "12")
+            var edge = edges[index]
             edgeNodes.push(edge)
-            edgeLabels.push(labels.childNodes[index])
         }
-        node.addEventListener("mouseover", new GraphMouseOverHandler(edgeNodes, edgeLabels))
-        node.addEventListener("mouseout", new GraphMouseLeaveHandler(edgeNodes, edgeLabels))
+        var graphNode = new GraphNode(nodeName, node, edgeNodes)
+        node.addEventListener("mouseover", new GraphMouseOverHandler(graphNode))
+        node.addEventListener("mouseout", new GraphMouseLeaveHandler(graphNode))
+        node.addEventListener("click", new GraphClickHandler(graphNode))
     }
 }

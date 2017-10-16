@@ -228,20 +228,32 @@ function PipeLengthHandler(config) {
 
 // graph hover events
 
-function GraphMouseOverHandler(edges, labels) {
+function GraphMouseOverHandler(node) {
     this.handleEvent = function(event) {
-        for (var i = 0; i < edges.length; i++) {
-            edges[i].classList.add("edgePathHighlight")
-            labels[i].classList.add("edgeLabelHighlight")
+        node.highlight()
+    }
+}
+
+function GraphMouseLeaveHandler(node) {
+    this.handleEvent = function(event) {
+        if (node !== clickedNode) {
+            node.unhighlight()
         }
     }
 }
 
-function GraphMouseLeaveHandler(edges, labels) {
+var clickedNode = null
+
+function GraphClickHandler(node) {
     this.handleEvent = function(event) {
-        for (var i = 0; i < edges.length; i++) {
-            edges[i].classList.remove("edgePathHighlight")
-            labels[i].classList.remove("edgeLabelHighlight")
+        if (node === clickedNode) {
+            node.unhighlight()
+            clickedNode = null
+        } else if (clickedNode) {
+            clickedNode.unhighlight()
+            clickedNode = node
+        } else {
+            clickedNode = node
         }
     }
 }
