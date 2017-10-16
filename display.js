@@ -92,8 +92,13 @@ function RecipeRow(parentNode, recipeName, rate) {
     this.power = zero
     this.node = document.createElement("tr")
     this.node.classList.add("recipe-row")
+    var canIgnore = this.recipe.canIgnore()
     if (spec.ignore[recipeName]) {
-        this.node.classList.add("ignore")
+        if (!canIgnore) {
+            delete spec.ignore[recipeName]
+        } else {
+            this.node.classList.add("ignore")
+        }
     }
     parentNode.appendChild(this.node)
 
@@ -101,7 +106,7 @@ function RecipeRow(parentNode, recipeName, rate) {
     nameCell.className = "right-align"
     var im = getImage(this.recipe)
     im.classList.add("display")
-    if (this.recipe.canIgnore()) {
+    if (canIgnore) {
         if (spec.ignore[recipeName]) {
             im.title += " (click to unignore)"
         } else {
@@ -206,7 +211,7 @@ function RecipeRow(parentNode, recipeName, rate) {
     this.node.appendChild(powerCell)
 
     // Set values.
-    if (this.recipe.canIgnore()) {
+    if (canIgnore) {
         this.setIgnore(spec.ignore[recipeName])
     }
     this.setRate(rate)
