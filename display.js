@@ -100,14 +100,16 @@ function RecipeRow(parentNode, recipeName, rate) {
     var nameCell = document.createElement("td")
     nameCell.className = "right-align"
     var im = getImage(this.recipe)
-    if (spec.ignore[recipeName]) {
-        im.title += " (click to unignore)"
-    } else {
-        im.title += " (click to ignore)"
-    }
     im.classList.add("display")
-    im.classList.add("recipe-icon")
-    im.addEventListener("click", new IgnoreHandler(this))
+    if (this.recipe.canIgnore()) {
+        if (spec.ignore[recipeName]) {
+            im.title += " (click to unignore)"
+        } else {
+            im.title += " (click to ignore)"
+        }
+        im.addEventListener("click", new IgnoreHandler(this))
+        im.classList.add("recipe-icon")
+    }
     this.image = im
     nameCell.appendChild(im)
     this.node.appendChild(nameCell)
@@ -204,7 +206,9 @@ function RecipeRow(parentNode, recipeName, rate) {
     this.node.appendChild(powerCell)
 
     // Set values.
-    this.setIgnore(spec.ignore[recipeName])
+    if (this.recipe.canIgnore()) {
+        this.setIgnore(spec.ignore[recipeName])
+    }
     this.setRate(rate)
     this.setModules()
 }

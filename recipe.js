@@ -48,6 +48,17 @@ Recipe.prototype = {
     },
     allModules: function() {
         return false
+    },
+    canIgnore: function() {
+        if (this.ingredients.length == 0) {
+            return false
+        }
+        for (var i = 0; i < this.products.length; i++) {
+            if (this.products[i].item.isWeird()) {
+                return false
+            }
+        }
+        return true
     }
 }
 
@@ -78,7 +89,7 @@ function MiningRecipe(name, col, row, category, hardness, mining_time, ingredien
     if (!ingredients) {
         ingredients = []
     }
-    Recipe.call(this, name, col, row, category, zero, ingredients, products)//[new Ingredient(one, item)])
+    Recipe.call(this, name, col, row, category, zero, ingredients, products)
 }
 MiningRecipe.prototype = Object.create(Recipe.prototype)
 MiningRecipe.prototype.makesResource = function() {
@@ -150,7 +161,6 @@ function getRecipeGraph(data) {
         }
         var name = entity.name
         var props = entity.minable
-        //var item = items[name]
         var ingredients = null
         if ("required_fluid" in props) {
             ingredients = [new Ingredient(
