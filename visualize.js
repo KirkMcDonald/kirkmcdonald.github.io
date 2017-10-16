@@ -24,7 +24,17 @@ function makeGraph(totals, ignore) {
     var edgeIndexMap = {}
     var edge = 0
     var nodes = []
-    var addEdge = function(node1, node2, label, name) {
+    var minRate = null
+    var maxRate = zero
+    var edgeRates = []
+    var addEdge = function(node1, node2, rate, label, name) {
+        if (!minRate || rate.less(minRate)) {
+            minRate = rate
+        }
+        if (maxRate.less(rate)) {
+            maxRate = rate
+        }
+        edgeRates.push(rate)
         g.setEdge(node1, node2, label, name)
         var a = edgeIndexMap[node1]
         if (!a) {
@@ -125,7 +135,7 @@ function makeGraph(totals, ignore) {
                         displayRate(subRate),
                         rateName
                     )
-                    addEdge(subRecipe.name, recipeName, {
+                    addEdge(subRecipe.name, recipeName, subRate, {
                         "label": label,
                         "labelType": "html",
                         "labelpos": "c"
@@ -140,7 +150,7 @@ function makeGraph(totals, ignore) {
                     displayRate(rate),
                     rateName
                 )
-                addEdge(ing.item.name, recipeName, {
+                addEdge(ing.item.name, recipeName, rate, {
                     "label": label,
                     "labelType": "html",
                     "labelpos": "c"
@@ -148,7 +158,7 @@ function makeGraph(totals, ignore) {
             }
         }
     }
-    return {g: g, nodes: nodes, edges: edgeIndexMap}
+    return {g: g, nodes: nodes, edges: edgeIndexMap, min: minRate, max: maxRate, rates: edgeRates}
 }
 
 function renderGraph(totals, ignore) {
@@ -166,6 +176,12 @@ function renderGraph(totals, ignore) {
     var yCenterOffset = (svg.attr("height") - g.graph().height) / 2
     inner.attr("transform", "translate(" + xCenterOffset + ", " + yCenterOffset + ")")
 
+    var minWidth = one
+    var maxWidth = RationalFromFloat(8)
+    var widthRange = maxWidth.sub(minWidth)
+    var rateRange = graph.max.sub(graph.min)
+    var widthFactor = widthRange.div(rateRange)
+
     var nodes = document.querySelector("svg#graph g.nodes")
     var edges = document.querySelector("svg#graph g.edgePaths")
     var labels = document.querySelector("svg#graph g.edgeLabels")
@@ -177,7 +193,15 @@ function renderGraph(totals, ignore) {
         var edgeLabels = []
         for (var j = 0; j < edgeIndexes.length; j++) {
             var index = edgeIndexes[j]
-            edgeNodes.push(edges.childNodes[index])
+            var edge = edges.childNodes[index]
+            var path = edge.querySelector("path")
+            var width = graph.rates[index].sub(graph.min).mul(widthFactor).add(minWidth).toDecimal(1) + "px"
+            path.style.setProperty("stroke-width", width)
+            var marker = edge.querySelector("marker")
+            marker.setAttribute("markerUnits", "userSpaceOnUse")
+            marker.setAttribute("markerWidth", "16")
+            marker.setAttribute("markerHeight", "12")
+            edgeNodes.push(edge)
             edgeLabels.push(labels.childNodes[index])
         }
         node.addEventListener("mouseover", new GraphMouseOverHandler(edgeNodes, edgeLabels))

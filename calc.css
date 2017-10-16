@@ -184,7 +184,6 @@ g.node:hover > rect {
 }
 g.edgePath path {
     stroke: var(--light);
-    stroke-width: 1.5px;
 }
 g.edgePathHighlight path {
     stroke: var(--accent);
