@@ -134,7 +134,7 @@ function displaySteps(sortedTotals, totals) {
     }
     var headers = [
         new Header("items/" + rateName, 2),
-        new Header("belts", BELTS.length * 2)
+        new Header("belts and pipes", BELTS.length * 2)
     ]
     var header = document.createElement("tr")
     for (var i = 0; i < headers.length; i++) {
