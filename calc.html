@@ -35,6 +35,7 @@
     <script src="fragment.js"></script>
     <script src="events.js"></script>
     <script src="target.js"></script>
+    <script src="steps.js"></script>
     <script src="display.js"></script>
     <script src="visualize.js"></script>
     <script src="icon.js"></script>
@@ -168,6 +169,13 @@ limitations under the License.-->
         It omits the dependencies of that recipe from the solution. The intent behind this feature is to model the case of building a factory when you are shipping in one or more ingredients from elsewhere. For example, if you are making an advanced circuit factory and want to ship in electronic circuits, and want to see the remaining copper cable requirements on their own.
         <p>
         Clicking on the icon a second time will restore its dependencies.
+
+        <h3>How do I interpret the pipe numbers on the "Items" tab?</h3>
+        Pipe throughput is inversely proportional to the length of the pipe. This means that the longer a pipe is, the more parallel lanes of pipes will be required.
+        <p>
+        Say the solution calls for 7500 units of heavy oil per second. The calculator will produce a default of "7 @ 47 max." This means you will need seven parallel lanes of pipes, each with a maximum length of 47 segments.
+        <p>
+        Either value may be edited, and the calculator will produce the corresponding value for the other.
     </div>
     </div>
 

@@ -135,6 +135,13 @@ tr.no-mods td.module * {
 span.displaylink {
     font-size: x-small;
 }
+/* items tab */
+input.pipe {
+    width: 4em;
+}
+input.pipeLength {
+    width: 5em;
+}
 /* tabs */
 div.tabs {
     overflow: hidden;

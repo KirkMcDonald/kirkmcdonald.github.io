@@ -212,6 +212,20 @@ function CopyAllHandler(name) {
     }
 }
 
+// items tab events
+
+function PipeCountHandler(config) {
+    this.handleEvent = function(event) {
+        config.setPipes(event.target.value)
+    }
+}
+
+function PipeLengthHandler(config) {
+    this.handleEvent = function(event) {
+        config.setLength(event.target.value)
+    }
+}
+
 // graph hover events
 
 function GraphMouseOverHandler(edges, labels) {
