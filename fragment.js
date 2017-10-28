@@ -24,6 +24,12 @@ function formatSettings() {
     if (spec.furnace.name != DEFAULT_FURNACE) {
         settings += "furnace=" + spec.furnace.name + "&"
     }
+    if (preferredBelt != DEFAULT_BELT) {
+        settings += "belt=" + preferredBelt + "&"
+    }
+    if (!minPipeLength.equal(DEFAULT_PIPE)) {
+        settings += "pipe=" + minPipeLength.toDecimal(0) + "&"
+    }
     if (!spec.miningProd.isZero()) {
         var hundred = RationalFromFloat(100)
         var mprod = spec.miningProd.mul(hundred).toString()

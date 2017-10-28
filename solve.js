@@ -17,7 +17,11 @@ function Solver(items, recipes) {
     }
     this.matrixSolvers = []
     for (var i = 0; i < groups.length; i++) {
-        this.matrixSolvers.push(new MatrixSolver(groups[i]))
+        var group = groups[i]
+        this.matrixSolvers.push(new MatrixSolver(group))
+        for (var recipeName in group) {
+            group[recipeName].group = i
+        }
     }
 }
 Solver.prototype = {

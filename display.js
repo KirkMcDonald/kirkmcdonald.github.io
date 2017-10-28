@@ -83,15 +83,117 @@ function Header(name, colSpan) {
 
 var NO_MODULE = "no module"
 
-function RecipeRow(parentNode, recipeName, rate) {
+function pipeValues(rate) {
+    var pipes = rate.div(maxPipeThroughput).ceil()
+    var perPipeRate = rate.div(pipes)
+    var length = pipeLength(perPipeRate).floor()
+    return {pipes: pipes, length: length}
+}
+
+function ItemRow(row, item, canIgnore) {
+    this.item = item
+    var nameCell = document.createElement("td")
+    nameCell.className = "right-align"
+    var im = getImage(item)
+    im.classList.add("display")
+    if (canIgnore) {
+        if (spec.ignore[item.name]) {
+            im.title += " (click to unignore)"
+        } else {
+            im.title += " (click to ignore)"
+        }
+        im.classList.add("recipe-icon")
+    }
+    this.image = im
+    nameCell.appendChild(im)
+    row.appendChild(nameCell)
+
+    var rateCell = document.createElement("td")
+    rateCell.classList.add("right-align", "pad-right")
+    var tt = document.createElement("tt")
+    rateCell.appendChild(tt)
+    this.rateNode = tt
+    row.appendChild(rateCell)
+
+    if (item.phase == "solid") {
+        this.beltCell = document.createElement("td")
+        row.appendChild(this.beltCell)
+        var beltCountCell = document.createElement("td")
+        beltCountCell.classList.add("right-align", "pad-right")
+        this.beltCountNode = document.createElement("tt")
+        beltCountCell.appendChild(this.beltCountNode)
+        row.appendChild(beltCountCell)
+    } else if (item.phase == "fluid") {
+        var pipeCell = document.createElement("td")
+        pipeCell.colSpan = 2
+        pipeCell.classList.add("pad-right")
+        row.appendChild(pipeCell)
+        var pipeItem = solver.items["pipe"]
+        pipeCell.appendChild(getImage(pipeItem))
+        this.pipeNode = document.createElement("tt")
+        pipeCell.appendChild(this.pipeNode)
+    } else {
+        row.appendChild(document.createElement("td"))
+        row.appendChild(document.createElement("td"))
+    }
+
+    var wasteCell = document.createElement("td")
+    wasteCell.classList.add("right-align", "pad-right", "waste")
+    tt = document.createElement("tt")
+    wasteCell.appendChild(tt)
+    this.wasteNode = tt
+    row.appendChild(wasteCell)
+}
+ItemRow.prototype = {
+    constructor: ItemRow,
+    setIgnore: function(ignore) {
+        if (ignore) {
+            this.image.title = this.item.name + " (click to unignore)"
+        } else {
+            this.image.title = this.item.name + " (click to ignore)"
+        }
+    },
+    setBelt: function(itemRate) {
+        while (this.beltCell.hasChildNodes()) {
+            this.beltCell.removeChild(this.beltCell.lastChild)
+        }
+        var beltImage = getImage(solver.items[preferredBelt])
+        this.beltCell.appendChild(beltImage)
+        this.beltCell.appendChild(new Text(" \u00d7"))
+        var beltCount = itemRate.div(preferredBeltSpeed)
+        this.beltCountNode.textContent = alignCount(beltCount)
+    },
+    setPipe: function(itemRate) {
+        if (itemRate.equal(zero)) {
+            this.pipeNode.textContent = " \u00d7 0"
+            return
+        }
+        var pipe = pipeValues(itemRate)
+        var pipeString = ""
+        if (one.less(pipe.pipes)) {
+            pipeString += " \u00d7 " + pipe.pipes.toDecimal(0)
+        }
+        pipeString += " \u2264 " + pipe.length.toDecimal(0)
+        this.pipeNode.textContent = pipeString
+    },
+    setRate: function(itemRate, waste) {
+        this.rateNode.textContent = alignRate(itemRate)
+        this.wasteNode.textContent = alignRate(waste)
+        if (this.item.phase == "solid") {
+            this.setBelt(itemRate)
+        } else if (this.item.phase == "fluid") {
+            this.setPipe(itemRate)
+        }
+    },
+}
+
+function RecipeRow(recipeName, rate, itemRate, waste) {
     this.name = recipeName
     this.recipe = solver.recipes[recipeName]
     this.rate = rate
-    this.factory = null
-    this.count = zero
-    this.power = zero
     this.node = document.createElement("tr")
     this.node.classList.add("recipe-row")
+    this.node.classList.add("display-row")
     var canIgnore = this.recipe.canIgnore()
     if (spec.ignore[recipeName]) {
         if (!canIgnore) {
@@ -100,46 +202,96 @@ function RecipeRow(parentNode, recipeName, rate) {
             this.node.classList.add("ignore")
         }
     }
-    parentNode.appendChild(this.node)
 
-    var nameCell = document.createElement("td")
-    nameCell.className = "right-align"
-    var im = getImage(this.recipe)
-    im.classList.add("display")
+    this.item = this.recipe.products[0].item
+    this.itemRow = new ItemRow(this.node, this.item, canIgnore)
+    this.itemRow.image.addEventListener("click", new IgnoreHandler(this))
+
+    this.factoryRow = new FactoryRow(this.node, this.recipe, this.rate)
+
+    // Set values.
     if (canIgnore) {
-        if (spec.ignore[recipeName]) {
-            im.title += " (click to unignore)"
-        } else {
-            im.title += " (click to ignore)"
-        }
-        im.addEventListener("click", new IgnoreHandler(this))
-        im.classList.add("recipe-icon")
+        this.setIgnore(spec.ignore[recipeName])
     }
-    this.image = im
-    nameCell.appendChild(im)
-    this.node.appendChild(nameCell)
+    this.setRate(rate, itemRate, waste)
+    this.factoryRow.setModules()
+}
+RecipeRow.prototype = {
+    constructor: RecipeRow,
+    appendTo: function(parentNode) {
+        parentNode.appendChild(this.node)
+    },
+    // Call whenever this recipe's status in the ignore list changes.
+    setIgnore: function(ignore) {
+        if (ignore) {
+            this.node.classList.add("ignore")
+        } else {
+            this.node.classList.remove("ignore")
+        }
+        this.itemRow.setIgnore(ignore)
+    },
+    hasModules: function() {
+        return !this.node.classList.contains("no-mods")
+    },
+    setDownArrow: function() {
+        this.factoryRow.downArrow.textContent = "\u2193"
+    },
+    setUpDownArrow: function() {
+        this.factoryRow.downArrow.textContent = "\u2195"
+    },
+    setUpArrow: function() {
+        this.factoryRow.downArrow.textContent = "\u2191"
+    },
+    totalPower: function() {
+        return this.factoryRow.power
+    },
+    csv: function() {
+        var rate = this.rate.mul(this.recipe.gives(this.item, spec))
+        var parts = [
+            this.name,
+            displayRate(rate),
+        ]
+        parts = parts.concat(this.factoryRow.csv())
+        return [parts.join(",")]
+    },
+    // Sets the new recipe-rate for a recipe, and updates the factory count.
+    setRate: function(recipeRate, itemRate, waste) {
+        this.rate = recipeRate
+        this.itemRow.setRate(itemRate, waste)
+        this.factoryRow.displayFactory(recipeRate)
+    },
+    setRates: function(totals, items) {
+        var recipeRate = totals.get(this.name)
+        var itemRate = items[this.item.name]
+        var waste = totals.getWaste(this.item.name)
+        this.setRate(recipeRate, itemRate, waste)
+    },
+    remove: function() {
+        this.node.parentElement.removeChild(this.node)
+    },
+}
 
-    var rateCell = document.createElement("td")
-    rateCell.classList.add("right-align")
-    var tt = document.createElement("tt")
-    rateCell.appendChild(tt)
-    this.rateNode = tt
-    this.node.appendChild(rateCell)
+function FactoryRow(row, recipe) {
+    this.node = row
+    var recipeName = recipe.name
+    this.recipe = recipe
+    this.factory = null
+    this.count = zero
+    this.power = zero
 
     this.factoryCell = document.createElement("td")
-    this.factoryCell.classList.add("pad")
+    this.factoryCell.classList.add("pad", "factory", "right-align", "leftmost")
     this.node.appendChild(this.factoryCell)
 
     var countCell = document.createElement("td")
-    countCell.classList.add("right-align")
-    tt = document.createElement("tt")
+    countCell.classList.add("factory", "right-align")
+    var tt = document.createElement("tt")
     countCell.appendChild(tt)
     this.countNode = tt
     this.node.appendChild(countCell)
 
     this.modulesCell = document.createElement("td")
-    this.modulesCell.classList.add("pad")
-    this.modulesCell.classList.add("module")
+    this.modulesCell.classList.add("pad", "module", "factory")
     this.node.appendChild(this.modulesCell)
 
     this.copyButton = document.createElement("button")
@@ -153,8 +305,7 @@ function RecipeRow(parentNode, recipeName, rate) {
     this.modules = []
 
     var beaconCell = document.createElement("td")
-    beaconCell.classList.add("pad")
-    beaconCell.classList.add("module")
+    beaconCell.classList.add("pad", "module", "factory")
     var beaconHandler = new BeaconHandler(recipeName)
     var beaconDropdown = new Dropdown(
         beaconCell,
@@ -193,7 +344,7 @@ function RecipeRow(parentNode, recipeName, rate) {
     this.node.appendChild(beaconCell)
 
     var downArrowCell = document.createElement("td")
-    downArrowCell.classList.add("module")
+    downArrowCell.classList.add("module", "factory")
     this.downArrow = document.createElement("button")
     this.downArrow.classList.add("ui")
     this.downArrow.textContent = "\u2195"
@@ -203,31 +354,16 @@ function RecipeRow(parentNode, recipeName, rate) {
     this.node.appendChild(downArrowCell)
 
     var powerCell = document.createElement("td")
-    powerCell.classList.add("right-align")
-    powerCell.classList.add("pad")
+    powerCell.classList.add("pad", "factory", "right-align")
     tt = document.createElement("tt")
     powerCell.appendChild(tt)
     this.powerNode = tt
     this.node.appendChild(powerCell)
-
-    // Set values.
-    if (canIgnore) {
-        this.setIgnore(spec.ignore[recipeName])
-    }
-    this.setRate(rate)
-    this.setModules()
 }
-RecipeRow.prototype = {
-    constructor: RecipeRow,
-    // Call whenever this recipe's status in the ignore list changes.
-    setIgnore: function(ignore) {
-        if (ignore) {
-            this.node.classList.add("ignore")
-            this.image.title = this.name + " (click to unignore)"
-        } else {
-            this.node.classList.remove("ignore")
-            this.image.title = this.name + " (click to ignore)"
-        }
+FactoryRow.prototype = {
+    constructor: FactoryRow,
+    setPower: function(watts) {
+        this.powerNode.textContent = alignPower(watts)
     },
     setHasModules: function() {
         this.node.classList.remove("no-mods")
@@ -235,80 +371,14 @@ RecipeRow.prototype = {
     setHasNoModules: function() {
         this.node.classList.add("no-mods")
     },
-    hasModules: function() {
-        return !this.node.classList.contains("no-mods")
-    },
-    setDownArrow: function() {
-        this.downArrow.textContent = "\u2193"
-    },
-    setUpDownArrow: function() {
-        this.downArrow.textContent = "\u2195"
-    },
-    setUpArrow: function() {
-        this.downArrow.textContent = "\u2191"
-    },
-    setPower: function(watts) {
-        this.powerNode.textContent = alignPower(watts)
-    },
-    csv: function() {
-        var itemRate = ""
-        if (this.recipe.products.length == 1) {
-            var ing = this.recipe.products[0]
-            if (ing.item.name == this.recipe.name) {
-                var rate = this.rate.mul(this.recipe.gives(ing.item, spec))
-                itemRate = displayRate(rate)
-            }
-        }
-        var parts = [
-            this.name,
-            displayRate(this.rate),
-            itemRate,
-        ]
-        if (this.count.isZero()) {
-            parts.push("")
-            parts.push("")
-        } else {
-            parts.push(this.factory.name)
-            parts.push(displayCount(this.count))
-        }
-        if (this.factory && this.factory.modules.length > 0) {
-            var modules = []
-            for (var i = 0; i < this.factory.modules.length; i++) {
-                var module = this.factory.modules[i]
-                if (module) {
-                    modules.push(module.shortName())
-                } else {
-                    modules.push("")
-                }
-            }
-            parts.push(modules.join("/"))
-            if (this.factory.beaconModule && !this.factory.beaconCount.isZero()) {
-                parts.push(this.factory.beaconModule.shortName())
-                parts.push(displayCount(this.factory.beaconCount))
-            } else {
-                parts.push("")
-                parts.push("")
-            }
-        } else {
-            parts.push("")
-            parts.push("")
-            parts.push("")
-        }
-        if (this.factory) {
-            parts.push(displayCount(this.power))
-        } else {
-            parts.push("")
-        }
-        return parts.join(",")
-    },
     // Call whenever the minimum factory or factory count might change (e.g. in
     // response to speed modules being added/removed).
     //
     // This may change the factory icon, factory count, number (or presence)
     // of module slots, presence of the beacon info, and/or presence of the
     // module-copy buttons.
-    displayFactory: function() {
-        this.count = spec.getCount(this.recipe, this.rate)
+    displayFactory: function(rate) {
+        this.count = spec.getCount(this.recipe, rate)
         if (this.count.isZero()) {
             this.setHasNoModules()
             return
@@ -318,6 +388,10 @@ RecipeRow.prototype = {
         image.classList.add("display")
         while (this.factoryCell.hasChildNodes()) {
             this.factoryCell.removeChild(this.factoryCell.lastChild)
+        }
+        if (this.recipe.group !== null || this.recipe.name !== this.recipe.products[0].item.name) {
+            this.factoryCell.appendChild(getImage(this.recipe))
+            this.factoryCell.appendChild(new Text(" : "))
         }
         this.factoryCell.appendChild(image)
         this.factoryCell.appendChild(new Text(" \u00d7"))
@@ -334,7 +408,7 @@ RecipeRow.prototype = {
                 var index = this.dropdowns.length
                 var dropdown = new Dropdown(
                     this.modulesCell,
-                    "mod-" + this.name + "-" + index,
+                    "mod-" + this.recipe.name + "-" + index,
                     new ModuleHandler(this, index)
                 )
                 this.dropdowns.push(dropdown)
@@ -406,21 +480,207 @@ RecipeRow.prototype = {
         this.beacon[name].checked = true
         this.beaconCount.value = count.toString()
     },
-    // Sets the new recipe-rate for a recipe, and updates the factory count.
-    setRate: function(rate) {
-        this.rate = rate
-        this.rateNode.textContent = alignRate(rate)
-        this.displayFactory()
+    csv: function() {
+        var parts = []
+        if (this.count.isZero()) {
+            parts.push("")
+            parts.push("")
+        } else {
+            parts.push(this.factory.name)
+            parts.push(displayCount(this.count))
+        }
+        if (this.factory && this.factory.modules.length > 0) {
+            var modules = []
+            for (var i = 0; i < this.factory.modules.length; i++) {
+                var module = this.factory.modules[i]
+                if (module) {
+                    modules.push(module.shortName())
+                } else {
+                    modules.push("")
+                }
+            }
+            parts.push(modules.join("/"))
+            if (this.factory.beaconModule && !this.factory.beaconCount.isZero()) {
+                parts.push(this.factory.beaconModule.shortName())
+                parts.push(displayCount(this.factory.beaconCount))
+            } else {
+                parts.push("")
+                parts.push("")
+            }
+        } else {
+            parts.push("")
+            parts.push("")
+            parts.push("")
+        }
+        if (this.factory) {
+            parts.push(displayCount(this.power))
+        } else {
+            parts.push("")
+        }
+        return parts.join(",")
+    },
+}
+
+function GroupRow(group, itemRates, totals) {
+    this.name = group.id
+    this.group = group
+    this.items = {}
+    for (var i = 0; i < group.recipes.length; i++) {
+        var recipe = group.recipes[i]
+        for (var j = 0; j < recipe.products.length; j++) {
+            var ing = recipe.products[j]
+            this.items[ing.item.name] = ing.item
+        }
+    }
+    this.itemNames = Object.keys(this.items)
+    var recipeCount = group.recipes.length
+    var tableRows = Math.max(this.itemNames.length, recipeCount)
+    this.rows = []
+    this.itemRows = []
+    this.itemRates = []
+    this.factoryRows = []
+    for (var i = 0; i < tableRows; i++) {
+        var row = document.createElement("tr")
+        row.classList.add("display-row")
+        row.classList.add("group-row")
+        if (i < this.itemNames.length) {
+            this.itemRows.push(new ItemRow(row, this.items[this.itemNames[i]], false))
+        } else {
+            row.appendChild(document.createElement("td"))
+            row.appendChild(document.createElement("td"))
+            var dummyWaste = document.createElement("td")
+            dummyWaste.classList.add("waste")
+            row.appendChild(dummyWaste)
+        }
+        if (i < recipeCount) {
+            var recipe = group.recipes[i]
+            this.factoryRows.push(new FactoryRow(row, recipe, totals.get(recipe.name)))
+        } else {
+            for (var j = 0; j < 6; j++) {
+                var cell = document.createElement("td")
+                cell.classList.add("factory")
+                if (j == 0) {
+                    cell.classList.add("leftmost")
+                }
+                row.appendChild(cell)
+            }
+        }
+        this.rows.push(row)
+    }
+    this.rows[0].classList.add("group-top-row")
+    row.classList.add("group-bottom-row")
+    this.setRates(totals, itemRates)
+}
+GroupRow.prototype = {
+    constructor: GroupRow,
+    appendTo: function(parentNode) {
+        for (var i = 0; i < this.rows.length; i++) {
+            parentNode.appendChild(this.rows[i])
+        }
+    },
+    groupMatches: function(group) {
+        return this.group.equal(group)
+    },
+    setRates: function(totals, itemRates) {
+        this.itemRates = []
+        for (var i = 0; i < this.itemNames.length; i++) {
+            var itemName = this.itemNames[i]
+            var rate = itemRates[itemName]
+            this.itemRates.push(rate)
+            var waste = totals.getWaste(itemName)
+            rate = rate.sub(waste)
+            this.itemRows[i].setRate(rate, waste)
+        }
+        for (var i = 0; i < this.factoryRows.length; i++) {
+            var row = this.factoryRows[i]
+            var recipeName = row.recipe.name
+            row.displayFactory(totals.get(recipeName))
+        }
+    },
+    totalPower: function() {
+        var power = zero
+        for (var i = 0; i < this.factoryRows.length; i++) {
+            power = power.add(this.factoryRows[i].power)
+        }
+        return power
+    },
+    csv: function() {
+        var lines = []
+        for (var i = 0; i < this.itemNames.length; i++) {
+            var itemName = this.itemNames[i]
+            var rate = displayRate(this.itemRates[i])
+            var parts = [itemName, rate, "", "", "", "", "", ""]
+            lines.push(parts.join(","))
+        }
+        return lines
+    },
+    hasModules: function() {
+        for (var i = 0; i < this.factoryRows.length; i++) {
+            if (this.factoryRows[i].modules.length > 0) {
+                return true
+            }
+        }
+        return false
+    },
+    setDownArrow: function() {
+        for (var i = 0; i < this.factoryRows.length; i++) {
+            var row = this.factoryRows[i]
+            if (row.modules.length > 0) {
+                row.downArrow.textContent = "\u2193"
+                return
+            }
+        }
+    },
+    setUpDownArrow: function() {
+        for (var i = 0; i < this.factoryRows.length; i++) {
+            this.factoryRows[i].downArrow.textContent = "\u2195"
+        }
+    },
+    setUpArrow: function() {
+        for (var i = this.factoryRows.length - 1; i >= 0; i--) {
+            var row = this.factoryRows[i]
+            if (row.modules.length > 0) {
+                row.downArrow.textContent = "\u2191"
+                return
+            }
+        }
     },
     remove: function() {
-        this.node.parentElement.removeChild(this.node)
+        for (var i = 0; i < this.rows.length; i++) {
+            var row = this.rows[i]
+            row.parentElement.removeChild(row)
+        }
+    },
+}
+
+function RecipeGroup(id) {
+    this.id = id
+    this.recipes = []
+}
+RecipeGroup.prototype = {
+    constructor: RecipeGroup,
+    equal: function(other) {
+        if (this.id !== other.id) {
+            return false
+        }
+        if (this.recipes.length != other.recipes.length) {
+            return false
+        }
+        for (var i = 0; i < this.recipes.length; i++) {
+            if (this.recipes[i].name != other.recipes[i].name) {
+                return false
+            }
+        }
+        return true
     },
 }
 
 function RecipeTable(node) {
     this.node = node
     var headers = [
-        Header("recipe craft/" + rateName, 2),
+        Header("items/" + rateName, 2),
+        Header("belts", 2),
+        Header("waste/" + rateName),
         Header("factories", 2),
         Header("modules", 1),
         Header("beacons", 1),
@@ -428,10 +688,15 @@ function RecipeTable(node) {
         Header("power")
     ]
     var header = document.createElement("tr")
+    header.classList.add("factory-header")
     for (var i = 0; i < headers.length; i++) {
         var th = document.createElement("th")
         if (i == 0) {
             this.recipeHeader = th
+        }
+        if (i == 2) {
+            this.wasteHeader = th
+            th.classList.add("waste")
         }
         th.textContent = headers[i].name
         th.colSpan = headers[i].colSpan
@@ -442,8 +707,12 @@ function RecipeTable(node) {
     }
     node.appendChild(header)
     this.totalRow = document.createElement("tr")
+    this.totalRow.classList.add("display-row")
+    var dummyWaste = document.createElement("td")
+    dummyWaste.classList.add("waste")
+    this.totalRow.appendChild(dummyWaste)
     var totalLabelCell = document.createElement("td")
-    totalLabelCell.colSpan = 7
+    totalLabelCell.colSpan = 9
     totalLabelCell.classList.add("right-align")
     var totalLabel = document.createElement("b")
     totalLabel.textContent = "total power:"
@@ -461,7 +730,8 @@ function RecipeTable(node) {
 RecipeTable.prototype = {
     constructor: RecipeTable,
     setRecipeHeader: function() {
-        this.recipeHeader.textContent = "recipe craft/" + rateName
+        this.recipeHeader.textContent = "items/" + rateName
+        this.wasteHeader.textContent = "waste/" + rateName
     },
     displaySolution: function(totals) {
         this.setRecipeHeader()
@@ -471,41 +741,94 @@ RecipeTable.prototype = {
         } else {
             sortedTotals = sorted(totals.totals)
         }
+        var itemOrder = []
+        var items = {}
+        var groups = []
+        var lastGroupID = null
+        var group = new RecipeGroup(null)
+        for (var i = 0; i < sortedTotals.length; i++) {
+            var recipeName = sortedTotals[i]
+            var recipeRate = totals.totals[recipeName]
+            var recipe = solver.recipes[recipeName]
+            for (var j = 0; j < recipe.products.length; j++) {
+                var ing = recipe.products[j]
+                if (!(ing.item.name in items)) {
+                    itemOrder.push(ing.item.name)
+                    items[ing.item.name] = zero
+                }
+                items[ing.item.name] = items[ing.item.name].add(recipeRate.mul(recipe.gives(ing.item, spec)))
+            }
+            if (recipe.group === null || recipe.group !== lastGroupID) {
+                if (group.recipes.length > 0) {
+                    groups.push(group)
+                }
+                group = new RecipeGroup(recipe.group)
+            }
+            lastGroupID = recipe.group
+            group.recipes.push(recipe)
+        }
+        groups.push(group)
         // XXX: Rework this, too.
-        displaySteps(sortedTotals, totals)
+        //displaySteps(items, itemOrder, totals)
         var last
         var newRowArray = []
         var downArrowShown = false
         var sameRows = true
         var i = 0
         var totalPower = zero
-        var csvLines = ["recipe,rate,item rate,factory,count,modules,beacon module,beacon count,power"]
+        var csvLines = ["item,item rate,factory,count,modules,beacon module,beacon count,power"]
         var csvWidth = csvLines[0].length
-        for (var i = 0; i < sortedTotals.length; i++) {
-            var recipeName = sortedTotals[i]
-            var rate = totals.get(recipeName)
-            var row
-            if (recipeName in this.rows) {
-                row = this.rows[recipeName]
-                if (sameRows && recipeName != this.rowArray[i].name) {
+        var knownRows = {}
+        var drop = []
+        for (var i = 0; i < groups.length; i++) {
+            var group = groups[i]
+            // XXX: Bluh
+            var rowName = group.id
+            if (!rowName) {
+                rowName = group.recipes[0].name
+            }
+            knownRows[rowName] = true
+            var row = this.rows[rowName]
+            var groupMatch = false
+            if (group.id === null || row && row.groupMatches(group)) {
+                groupMatch = true
+            }
+            if (row && groupMatch) {
+                if (sameRows && rowName != this.rowArray[i].name) {
                     sameRows = false
                 }
                 // Don't rearrange the DOM if we don't need to.
                 if (!sameRows) {
-                    this.node.appendChild(row.node)
+                    row.appendTo(this.node)
                 }
-                row.setRate(rate)
+                row.setRates(totals, items)
             } else {
-                row = new RecipeRow(this.node, recipeName, rate)
-                this.rows[recipeName] = row
+                if (group.id === null) {
+                    var rate = totals.get(rowName)
+                    var recipe = group.recipes[0]
+                    var itemName = recipe.products[0].item.name
+                    var itemRate = items[itemName]
+                    var waste = totals.getWaste(rowName)
+                    row = new RecipeRow(rowName, rate, itemRate, waste)
+                } else {
+                    if (row) {
+                        row.remove()
+                    }
+                    row = new GroupRow(group, items, totals)
+                }
+                row.appendTo(this.node)
+                this.rows[rowName] = row
                 sameRows = false
             }
-            totalPower = totalPower.add(row.power)
-            var csvLine = row.csv()
-            if (csvLine.length > csvWidth) {
-                csvWidth = csvLine.length
+            totalPower = totalPower.add(row.totalPower())
+            var newCSVLines = row.csv()
+            for (var j = 0; j < newCSVLines.length; j++) {
+                var csvLine = newCSVLines[j]
+                if (csvLine.length > csvWidth) {
+                    csvWidth = csvLine.length
+                }
+                csvLines.push(csvLine)
             }
-            csvLines.push(csvLine)
             newRowArray.push(row)
             if (row.hasModules()) {
                 last = row
@@ -521,9 +844,8 @@ RecipeTable.prototype = {
         if (last) {
             last.setUpArrow()
         }
-        var drop = []
         for (var recipeName in this.rows) {
-            if (!(recipeName in totals.totals)) {
+            if (!(recipeName in knownRows)) {
                 drop.push(recipeName)
             }
         }
@@ -537,6 +859,17 @@ RecipeTable.prototype = {
         csv.value = csvLines.join("\n") + "\n"
         csv.cols = csvWidth + 2
         csv.rows = csvLines.length + 2
+
+        var wasteCells = document.querySelectorAll("td.waste, th.waste")
+        var showWaste = Object.keys(totals.waste).length > 0
+        for (var i = 0; i < wasteCells.length; i++) {
+            var cell = wasteCells[i]
+            if (showWaste) {
+                cell.classList.remove("waste-hide")
+            } else {
+                cell.classList.add("waste-hide")
+            }
+        }
     },
     getRow: function(recipeName) {
         return this.rows[recipeName]

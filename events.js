@@ -85,6 +85,18 @@ function changeFurnace(event) {
     itemUpdate()
 }
 
+// Triggered when the preferred belt is changed.
+function changeBelt(event) {
+    setPreferredBelt(event.target.value)
+    display()
+}
+
+// Triggered when the minimum pipe length is changed.
+function changePipeLength(event) {
+    setMinPipe(event.target.value)
+    display()
+}
+
 // Triggered when the mining productivity bonus is changed.
 function changeMprod() {
     spec.miningProd = getMprod()

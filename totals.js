@@ -60,4 +60,11 @@ Totals.prototype = {
     get: function(recipeName) {
         return this.totals[recipeName]
     },
+    getWaste: function(itemName) {
+        var waste = this.waste[itemName]
+        if (!waste) {
+            return zero
+        }
+        return waste
+    },
 }

@@ -65,20 +65,17 @@ function makeGraph(totals, ignore) {
         if (ignore[recipeName]) {
             im.classList.add("ignore")
         }
-        var label = sprintf(
-            "%s \u00d7 %s/%s",
-            im.outerHTML,
-            displayRate(rate),
-            rateName
-        )
-        if (!factoryCount.isZero()) {
+        var label = im.outerHTML
+        if (factoryCount.isZero()) {
+            label += sprintf(" \u00d7 %s/%s", displayRate(rate), rateName)
+        } else {
             var factory = spec.getFactory(recipe)
             var im = getImage(factory.factory)
             if (ignore[recipeName]) {
                 im.classList.add("ignore")
             }
             label += sprintf(
-                " (%s \u00d7 %s)",
+                " : %s \u00d7 %s",
                 im.outerHTML,
                 displayCount(factoryCount)
             )

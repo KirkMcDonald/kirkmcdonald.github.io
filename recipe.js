@@ -27,6 +27,7 @@ function Recipe(name, col, row, category, time, ingredients, products) {
     for (var i = 0; i < products.length; i++) {
         products[i].item.addRecipe(this)
     }
+    this.group = null
 }
 Recipe.prototype = {
     constructor: Recipe,

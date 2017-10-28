@@ -97,19 +97,7 @@ PipeConfig.prototype = {
     }
 }
 
-function Belt(name, speed) {
-    this.name = name
-    this.speed = RationalFromFloats(speed, 60)
-}
-
-// XXX: Should derive this from the game data. Mods may add new belt types.
-var BELTS = [
-    new Belt("transport-belt", 800),
-    new Belt("fast-transport-belt", 1600),
-    new Belt("express-transport-belt", 2400)
-]
-
-function displaySteps(sortedTotals, totals) {
+function displaySteps(items, order, totals) {
     var stepTab = document.getElementById("steps_tab")
 
     var oldSteps = document.getElementById("steps")
@@ -117,21 +105,6 @@ function displaySteps(sortedTotals, totals) {
     node.id = "steps"
     stepTab.replaceChild(node, oldSteps)
 
-    var order = []
-    var items = {}
-    for (var i = 0; i < sortedTotals.length; i++) {
-        var recipeName = sortedTotals[i]
-        var recipeRate = totals.totals[recipeName]
-        var recipe = solver.recipes[recipeName]
-        for (var j = 0; j < recipe.products.length; j++) {
-            var ing = recipe.products[j]
-            if (!(ing.item.name in items)) {
-                order.push(ing.item.name)
-                items[ing.item.name] = zero
-            }
-            items[ing.item.name] = items[ing.item.name].add(recipeRate.mul(recipe.gives(ing.item, spec)))
-        }
-    }
     var headers = [
         new Header("items/" + rateName, 2),
         new Header("belts and pipes", BELTS.length * 2)

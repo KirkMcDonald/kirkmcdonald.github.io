@@ -158,6 +158,73 @@ function renderFurnace(settings) {
     cell.replaceChild(node, oldNode)
 }
 
+// belt
+function Belt(name, speed) {
+    this.name = name
+    this.speed = RationalFromFloats(speed, 60)
+}
+
+// XXX: Should derive this from the game data. Mods may add new belt types.
+var BELTS = [
+    new Belt("transport-belt", 800),
+    new Belt("fast-transport-belt", 1600),
+    new Belt("express-transport-belt", 2400)
+]
+
+var DEFAULT_BELT = "transport-belt"
+
+var preferredBelt = DEFAULT_BELT
+var preferredBeltSpeed = null
+
+function renderBelt(settings) {
+    var pref = DEFAULT_BELT
+    if ("belt" in settings) {
+        pref = settings.belt
+    }
+    setPreferredBelt(pref)
+    var oldNode = document.getElementById("belt")
+    var cell = oldNode.parentNode
+    var node = document.createElement("span")
+    node.id = "belt"
+    var dropdown = new Dropdown(node, "belt_dropdown", changeBelt)
+    for (var i = 0; i < BELTS.length; i++) {
+        var belt = BELTS[i]
+        var image = getImage(solver.items[belt.name])
+        dropdown.add(image, belt.name, belt.name === preferredBelt)
+    }
+    cell.replaceChild(node, oldNode)
+}
+
+function setPreferredBelt(name) {
+    for (var i = 0; i < BELTS.length; i++) {
+        var belt = BELTS[i]
+        if (belt.name === name) {
+            preferredBelt = name
+            preferredBeltSpeed = belt.speed
+        }
+    }
+}
+
+// pipe
+var DEFAULT_PIPE = RationalFromFloat(17)
+
+var minPipeLength = DEFAULT_PIPE
+var maxPipeThroughput = null
+
+function renderPipe(settings) {
+    var pipe = DEFAULT_PIPE.toDecimal(0)
+    if ("pipe" in settings) {
+        pipe = settings.pipe
+    }
+    setMinPipe(pipe)
+    document.getElementById("pipe_length").value = minPipeLength.toDecimal(0)
+}
+
+function setMinPipe(lengthString) {
+    minPipeLength = RationalFromString(lengthString)
+    maxPipeThroughput = pipeThroughput(minPipeLength)
+}
+
 // mining productivity bonus
 function renderMiningProd(settings) {
     if ("mprod" in settings) {
@@ -196,6 +263,8 @@ function renderSettings(settings) {
     renderPrecisions(settings)
     renderMinimumAssembler(settings)
     renderFurnace(settings)
+    renderBelt(settings)
+    renderPipe(settings)
     renderMiningProd(settings)
     renderValueFormat(settings)
 }

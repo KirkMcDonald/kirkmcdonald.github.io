@@ -98,7 +98,7 @@ td.setting-label {
 .top {
     vertical-align: top;
 }
-input.prec {
+input.prec, input.length {
     width: 4em;
 }
 input.mprod {
@@ -109,27 +109,38 @@ input.beacon {
     width: 4em;
 }
 #totals {
-    /*border-spacing: 2px;*/
+    border-collapse: collapse;
 }
-tr.recipe-row {
-}
-tr.recipe-row td {
-    padding: 0;
-}
-tr.recipe-row td.pad, th.pad {
+tr.display-row td.pad, th.pad {
     padding-left: 1em;
 }
-tr.recipe-row img.recipe-icon {
+tr.display-row img.recipe-icon {
     cursor: pointer;
 }
-tr.recipe-row .dropdown, tr.recipe-row .dropdown + img.spacer {
-    /*margin-left: 1px;
-    margin-right: 1px;*/
+tr.display-row td.pad-right {
+    padding-right: 1em;
+}
+tr.display-row .dropdown, tr.display-row .dropdown + img.spacer {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+tr.display-row td, tr.factory-header th {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+tr.recipe-row td, tr.group-bottom-row td, tr.factory-header th {
+    border-bottom: 1px solid var(--light);
+}
+tr.group-row td.leftmost {
+    border-left: 1px solid var(--light);
 }
 tr.ignore img.display {
     opacity: 0.2;
 }
 tr.no-mods td.module * {
+    display: none;
+}
+td.waste-hide, th.waste-hide {
     display: none;
 }
 span.displaylink {
@@ -178,6 +189,11 @@ g.node rect {
     stroke: var(--foreground);
     fill: var(--medium);
     stroke-width: 1px;
+    cursor: pointer;
+}
+g.node div {
+    text-align: center;
+    cursor: pointer;
 }
 g.nodeHighlight rect {
     stroke: var(--accent);
