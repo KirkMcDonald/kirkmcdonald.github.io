@@ -151,7 +151,7 @@ function ModuleCopyHandler(row) {
         var needRecalc = false
         for (var i = 0; i < factory.modules.length; i++) {
             needRecalc = factory.setModule(i, module) || needRecalc
-            row.setModule(i, module)
+            row.setDisplayedModule(i, module)
         }
         if (needRecalc || isFactoryTarget(row.name)) {
             itemUpdate()
@@ -211,10 +211,10 @@ function CopyAllHandler(name) {
             }
             var recipe = solver.recipes[recipeName]
             needRecalc = factory.copyModules(f, recipe) || needRecalc || isFactoryTarget(recipeName)
-            var row = recipeTable.getRow(recipeName)
-            if (row) {
-                row.setModules()
-            }
+        }
+        for (var i = 0; i < recipeTable.rowArray.length; i++) {
+            var row = recipeTable.rowArray[i]
+            row.updateDisplayedModules()
         }
         if (needRecalc) {
             itemUpdate()
