@@ -116,5 +116,18 @@ function loadSettings(fragment) {
         var unzip = pako.inflateRaw(window.atob(settings.zip), {to: "string"})
         return loadSettings("#" + unzip)
     }
+    // if settings (excluding items/modules/beacons) is empty, load from localStorage
+    var settingsLessSome = JSON.parse(JSON.stringify(settings)); // make copy
+    delete settingsLessSome.items
+    delete settingsLessSome.modules
+    if (Object.keys(settingsLessSome).length === 0) {
+        if (localStorageEnabled() && localStorage.getItem("settings")) {
+            settingsLessSome = JSON.parse(localStorage.getItem("settings"))
+        }
+    }
+    // merge the settings we just loaded
+    for (var setting in settingsLessSome) {
+        settings[setting] = settingsLessSome[setting]
+    }
     return settings
 }

@@ -1,5 +1,33 @@
 "use strict"
 
+// correctly handle back/forward buttons
+
+var mouseOnPage = true
+document.addEventListener("DOMContentLoaded", function() {
+    document.body.addEventListener("mouseenter", function() {
+        mouseOnPage = true
+    });
+    document.body.addEventListener("mouseleave", function() {
+        mouseOnPage = false
+    });
+});
+window.addEventListener("hashchange", function() {
+    if (!mouseOnPage) {
+        var settings = loadSettings(window.location.hash)
+        if ("tab" in settings) {
+            currentTab = settings.tab + "_tab"
+        }
+        if ("data" in settings && settings.data != currentMod()) {
+            document.getElementById("data_set").value = settings.data
+            changeMod()
+        }
+        renderSettings(settings)
+        loadModules(settings)
+        loadItems(settings, "dontChangeHash")
+        clickTab(currentTab, "dontChangeHash")
+    }
+});
+
 // build target events
 
 // The "+" button to add a new target.
@@ -19,6 +47,10 @@ function ItemHandler(target) {
 // The "x" button to remove a target.
 function RemoveHandler(target) {
     this.handleEvent = function(event) {
+        // don't remove the last element
+        if (build_targets.length <= 1) {
+            return false;
+        }
         build_targets.splice(target.index, 1)
         for (var i=target.index; i < build_targets.length; i++) {
             build_targets[i].index--
@@ -113,6 +145,51 @@ function changeSortOrder(event) {
 function changeFormat(event) {
     displayFormat = event.target.value
     display()
+}
+
+function settingsAction(event) {
+    var action = event.target.value
+    if (action == "reset") {
+        var s = {}
+        s.rate = DEFAULT_RATE
+        s.rp = DEFAULT_RATE_PRECISION
+        s.cp = DEFAULT_COUNT_PRECISION
+        s.min = DEFAULT_MINIMUM
+        s.furnace = DEFAULT_FURNACE
+        s.belt = DEFAULT_BELT
+        s.pipe = DEFAULT_PIPE.toDecimal(0)
+        s.mprod = 0
+        s.vf = DEFAULT_FORMAT[0]
+        renderSettings(s)
+        display()
+        itemUpdate()
+    }
+    else if (action == "load") {
+        // load from localStorage
+        var s = JSON.parse(localStorage.getItem("settings"))
+        renderSettings(s)
+        display()
+        itemUpdate()
+    }
+    else if (action == "save") {
+        // show load settings button
+        var loadBtn = document.getElementById("settings_load").style.display = ""
+
+        // get current settings
+        var s = {}
+        s.rate = rateName
+        s.rp = ratePrecision
+        s.cp = countPrecision
+        s.min = minimumAssembler
+        s.furnace = spec.furnace.name
+        s.belt = preferredBelt
+        s.pipe = minPipeLength.toDecimal(0)
+        s.mprod = spec.miningProd.mul(RationalFromFloat(100)).toString()
+        s.vf = displayFormat[0]
+
+        // save the stringified version
+        localStorage.setItem("settings", JSON.stringify(s))
+    }
 }
 
 // recipe row events
@@ -287,7 +364,7 @@ var tabMap = {
 }
 
 // Triggered when a tab is clicked on.
-function clickTab(tabName) {
+function clickTab(tabName, dontChangeHash) {
     currentTab = tabName
     var tabs = document.getElementsByClassName("tab")
     for (var i=0; i < tabs.length; i++) {
@@ -302,7 +379,7 @@ function clickTab(tabName) {
     document.getElementById(tabName).style.display = "block"
     var button = document.getElementById(tabMap[tabName])
     button.classList.add("active")
-    if (initDone) {
+    if (!dontChangeHash) {
         window.location.hash = "#" + formatSettings()
     }
 }
@@ -323,4 +400,3 @@ function toggleVisible(targetID) {
         target.style.display = "none"
     }
 }
-

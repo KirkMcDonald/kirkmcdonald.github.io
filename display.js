@@ -63,7 +63,7 @@ var globalTotals
 // This function obtains the set of item-rates to solve for from build_targets,
 // the set of modules from spec, and obtains a solution from solver. The
 // factory counts are then obtained from the solution using the spec.
-function itemUpdate() {
+function itemUpdate(dontChangeHash) {
     var rates = {}
     for (var i = 0; i < build_targets.length; i++) {
         var target = build_targets[i]
@@ -71,7 +71,7 @@ function itemUpdate() {
         rates[target.itemName] = rate
     }
     globalTotals = solver.solve(rates, spec.ignore, spec)
-    display()
+    display(dontChangeHash)
 }
 
 function Header(name, colSpan) {
@@ -883,14 +883,16 @@ RecipeTable.prototype = {
 }
 
 // Re-renders the current solution, without re-computing it.
-function display() {
+function display(dontChangeHash) {
     // Update the display of the target rate text boxes, if needed.
     for (var i = 0; i < build_targets.length; i++) {
         build_targets[i].getRate()
     }
     var totals = globalTotals
 
-    window.location.hash = "#" + formatSettings()
+    if (!dontChangeHash) {
+        window.location.hash = "#" + formatSettings()
+    }
 
     if (currentTab == "graph_tab") {
         renderGraph(totals, spec.ignore)
