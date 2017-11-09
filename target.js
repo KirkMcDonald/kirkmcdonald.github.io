@@ -27,6 +27,8 @@ function isFactoryTarget(recipeName) {
     return false
 }
 
+// this is incremented each time a build target is created
+// and never decremented. It ensures unique IDs
 var targetCount = 0
 
 var SELECTED_INPUT = "selected"

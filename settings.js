@@ -141,7 +141,7 @@ function setMinimumAssembler(min) {
 function renderFurnace(settings) {
     var furnace = spec.furnace
     if ("furnace" in settings) {
-        furnace = settings.furnace
+        furnace = {name: settings.furnace}
         spec.setFurnace(furnace.name)
     }
     var oldNode = document.getElementById("furnace")
