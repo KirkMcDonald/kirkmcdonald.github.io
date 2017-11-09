@@ -18,6 +18,18 @@ var shortModules
 // Array of item groups, in turn divided into subgroups. For display purposes.
 var itemGroups
 
+// check if localStorage is usable
+function localStorageEnabled() {
+    var localStorageTest = "localStorageTest";
+    try {
+        localStorage.setItem(localStorageTest, localStorageTest);
+        localStorage.removeItem(localStorageTest);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
 // Set the page back to a state immediately following initial setup, but before
 // the dataset is loaded for the first time.
 //
@@ -174,11 +186,21 @@ function loadData(modName, settings) {
 
         renderSettings(settings)
         loadModules(settings)
-        loadItems(settings, "dontChangeHash")
+        loadItems(settings)
     })
 }
 
 function init() {
+    // hide reset/load/save settings if localStorage is disabled
+    if (!localStorageEnabled) {
+        document.getElementById("settings_load").style.display = "none"
+        document.getElementById("settings_save").style.display = "none"
+    }
+    // if there is no setting saved then hide the "load" button
+    else if (!localStorage.getItem("settings")) {
+        document.getElementById("settings_load").style.display = "none"
+    }
+
     var settings = loadSettings(window.location.hash)
     renderDataSetOptions(settings)
     if ("tab" in settings) {
@@ -186,6 +208,6 @@ function init() {
     }
     loadData(currentMod(), settings)
     // We don't need to call clickVisualize here, as we will properly render
-    // the graph when we call itemUpdate() at the end of initialization.
+    // the graph when we called itemUpdate() at the end of loadData >> loadItems.
     clickTab(currentTab, "dontChangeHash")
 }

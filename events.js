@@ -10,22 +10,22 @@ document.addEventListener("DOMContentLoaded", function() {
     document.body.addEventListener("mouseleave", function() {
         mouseOnPage = false
     });
-    window.addEventListener("hashchange", function() {
-        if (!mouseOnPage) {
-            var settings = loadSettings(window.location.hash)
-            if ("tab" in settings) {
-                currentTab = settings.tab + "_tab"
-            }
-            if ("data" in settings && settings.data != currentMod()) {
-                document.getElementById("data_set").value = settings.data
-                changeMod()
-            }
-            renderSettings(settings)
-            loadModules(settings)
-            loadItems(settings, "dontChangeHash")
-            clickTab(currentTab, "dontChangeHash")
+});
+window.addEventListener("hashchange", function() {
+    if (!mouseOnPage) {
+        var settings = loadSettings(window.location.hash)
+        if ("tab" in settings) {
+            currentTab = settings.tab + "_tab"
         }
-    });
+        if ("data" in settings && settings.data != currentMod()) {
+            document.getElementById("data_set").value = settings.data
+            changeMod()
+        }
+        renderSettings(settings)
+        loadModules(settings)
+        loadItems(settings, "dontChangeHash")
+        clickTab(currentTab, "dontChangeHash")
+    }
 });
 
 // build target events
@@ -145,6 +145,51 @@ function changeSortOrder(event) {
 function changeFormat(event) {
     displayFormat = event.target.value
     display()
+}
+
+function settingsAction(event) {
+    var action = event.target.value
+    if (action == "reset") {
+        var s = {}
+        s.rate = DEFAULT_RATE
+        s.rp = DEFAULT_RATE_PRECISION
+        s.cp = DEFAULT_COUNT_PRECISION
+        s.min = DEFAULT_MINIMUM
+        s.furnace = DEFAULT_FURNACE
+        s.belt = DEFAULT_BELT
+        s.pipe = DEFAULT_PIPE.toDecimal(0)
+        s.mprod = 0
+        s.vf = DEFAULT_FORMAT[0]
+        renderSettings(s)
+        display()
+        itemUpdate()
+    }
+    else if (action == "load") {
+        // load from localStorage
+        var s = JSON.parse(localStorage.getItem("settings"))
+        renderSettings(s)
+        display()
+        itemUpdate()
+    }
+    else if (action == "save") {
+        // show load settings button
+        var loadBtn = document.getElementById("settings_load").style.display = ""
+
+        // get current settings
+        var s = {}
+        s.rate = rateName
+        s.rp = ratePrecision
+        s.cp = countPrecision
+        s.min = minimumAssembler
+        s.furnace = spec.furnace.name
+        s.belt = preferredBelt
+        s.pipe = minPipeLength.toDecimal(0)
+        s.mprod = spec.miningProd.mul(RationalFromFloat(100)).toString()
+        s.vf = displayFormat[0]
+
+        // save the stringified version
+        localStorage.setItem("settings", JSON.stringify(s))
+    }
 }
 
 // recipe row events

@@ -47,6 +47,7 @@ button.ui {
     background: linear-gradient(to bottom, var(--light), var(--medium));
     border: 2px outset var(--light);
     border-radius: 0.4em;
+    cursor: pointer;
 }
 button.ui:active {
     border-style: inset;
@@ -57,6 +58,11 @@ button.ui:focus {
 }
 button#debug_button {
     float: right;
+}
+#settings_tab button {
+    margin-top: 1em;
+    margin-right: 0.5em
+    line-height: 2em;
 }
 img.icon {
     background-repeat: no-repeat;
