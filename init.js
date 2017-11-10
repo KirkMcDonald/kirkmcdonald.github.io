@@ -20,6 +20,19 @@ var itemGroups
 
 var initDone = false
 
+// check if localStorage is usable
+var localStorageEnabled
+function checkLocalStorageEnabled() {
+    var test = "test";
+    try {
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
 // Set the page back to a state immediately following initial setup, but before
 // the dataset is loaded for the first time.
 //
@@ -166,6 +179,17 @@ function loadData(modName, settings) {
 }
 
 function init() {
+    localStorageEnabled = checkLocalStorageEnabled()
+    // hide reset/load/save settings if localStorage is disabled
+    if (!localStorageEnabled) {
+        document.getElementById("settings_load").style.display = "none"
+        document.getElementById("settings_save").style.display = "none"
+    }
+    // if there is no setting saved then hide the "load" button
+    else if (!localStorage.getItem("settings")) {
+        document.getElementById("settings_load").style.display = "none"
+    }
+
     var settings = loadSettings(window.location.hash)
     renderDataSetOptions(settings)
     if ("tab" in settings) {

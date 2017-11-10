@@ -226,6 +226,8 @@ function setMinPipe(lengthString) {
 }
 
 // mining productivity bonus
+var DEFAULT_MINING_PROD = 0
+
 function renderMiningProd(settings) {
     if ("mprod" in settings) {
         var mprod = document.getElementById("mprod")
@@ -341,4 +343,21 @@ function renderSettings(settings) {
     renderDefaultModule(settings)
     renderDefaultBeacon(settings)
     renderValueFormat(settings)
+}
+
+// this is easy to loop through to get missing settings
+var DEFAULT_SETTINGS = {
+    "items": DEFAULT_ITEM + ":f:1",
+    "tab": DEFAULT_TAB,
+    "data": DEFAULT_MODIFICATION,
+    "rate": DEFAULT_RATE,
+    "rp": DEFAULT_RATE_PRECISION,
+    "cp": DEFAULT_COUNT_PRECISION,
+    "min": DEFAULT_MINIMUM,
+    // DEFAULT_FURNACE isn't set till later :( hacky
+    "furnace": "electric-furnace",
+    "belt": DEFAULT_BELT,
+    "pipe": DEFAULT_PIPE.toString(),
+    "mprod": DEFAULT_MINING_PROD,
+    "vf": DEFAULT_FORMAT[0]
 }

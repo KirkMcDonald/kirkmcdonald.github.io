@@ -46,6 +46,36 @@ function RateHandler(target) {
 
 // settings events
 
+function resetSettings() {
+    var settings = JSON.parse(JSON.stringify(DEFAULT_SETTINGS)) // make copy
+    delete settings.items
+    delete settings.tab
+    if (settings.data != currentMod()) {
+        document.getElementById("data_set").value = settings.data
+        changeMod()
+    }
+    renderSettings(settings)
+    itemUpdate()
+}
+
+function loadSettingsLocalStorage() {
+    var settings = JSON.parse(localStorage.getItem("settings"))
+    if (settings.data != currentMod()) {
+        document.getElementById("data_set").value = settings.data
+        changeMod()
+    }
+    renderSettings(settings)
+    itemUpdate()
+}
+
+function saveSettingsLocalStorage() {
+    var settings = loadFullSettings(window.location.hash)
+    delete settings.items
+    delete settings.tab
+    localStorage.setItem("settings", JSON.stringify(settings))
+    document.getElementById("settings_load").style.display = ""
+}
+
 // Obtains current data set from UI element, and resets the world with the new
 // data.
 function changeMod() {
@@ -357,4 +387,3 @@ function toggleVisible(targetID) {
         target.style.display = "none"
     }
 }
-

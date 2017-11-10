@@ -132,5 +132,35 @@ function loadSettings(fragment) {
         var unzip = pako.inflateRaw(window.atob(settings.zip), {to: "string"})
         return loadSettings("#" + unzip)
     }
+
+    var defaults = JSON.parse(JSON.stringify(DEFAULT_SETTINGS)) // make copy
+    delete defaults.items
+    delete defaults.tab
+    for (var name in defaults) {
+        if (settings[name] && settings[name] != defaults[name]) {
+            var customisedSettings = true;
+        }
+    }
+    if (!customisedSettings && localStorageEnabled) {
+        var userDefaults = JSON.parse(localStorage.getItem("settings"))
+        for (var name in userDefaults) {
+            settings[name] = userDefaults[name]
+        }
+        if (userDefaults.data != currentMod()) {
+            document.getElementById("data_set").value = settings.data
+            changeMod()
+        }
+    }
+
+    return settings
+}
+
+function loadFullSettings(fragment) {
+    var settings = loadSettings(fragment)
+    for (var name in DEFAULT_SETTINGS) {
+        if (!(name in settings)) {
+            settings[name] = DEFAULT_SETTINGS[name]
+        }
+    }
     return settings
 }
