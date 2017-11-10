@@ -18,15 +18,15 @@ var shortModules
 // Array of item groups, in turn divided into subgroups. For display purposes.
 var itemGroups
 
-var initDone = false
-
 // Set the page back to a state immediately following initial setup, but before
 // the dataset is loaded for the first time.
 //
 // This is intended to be called when the top-level dataset is changed.
 // Therefore, it also resets the fragment and settings.
-function reset() {
-    window.location.hash = ""
+function reset(keepHash) {
+    if (!keepHash) {
+        window.location.hash = ""
+    }
 
     build_targets = []
     var targetList = document.getElementById("targets")
@@ -46,6 +46,80 @@ function reset() {
     var newTotals = document.createElement("table")
     newTotals.id = "totals"
     oldTotals.parentNode.replaceChild(newTotals, oldTotals)
+}
+
+function loadItems(settings) {
+    // clear current targets
+    build_targets = []
+    var targetList = document.getElementById("targets")
+    targetList.innerHTML = targetList.lastChild.outerHTML
+
+    if ("items" in settings && settings.items != "") {
+        var targets = settings.items.split(",")
+        for (var i=0; i < targets.length; i++) {
+            var targetString = targets[i]
+            var parts = targetString.split(":")
+            var name = parts[0]
+            var target = addTarget(name)
+            var type = parts[1]
+            if (type == "f") {
+                target.setFactories(parts[2])
+            } else if (type == "r") {
+                target.setRate(parts[2])
+            } else {
+                throw new Error("unknown target type")
+            }
+        }
+    } else {
+        addTarget()
+    }
+}
+
+function loadModules(settings) {
+    if ("modules" in settings && settings.modules != "") {
+        var moduleSettings = settings.modules.split(",")
+        for (var i=0; i < moduleSettings.length; i++) {
+            var bothSettings = moduleSettings[i].split(";")
+            var factoryModuleSettings = bothSettings[0]
+            var beaconSettings = bothSettings[1]
+
+            var singleModuleSettings = factoryModuleSettings.split(":")
+            var recipeName = singleModuleSettings[0]
+            var recipe = solver.recipes[recipeName]
+            var moduleNameList = singleModuleSettings.slice(1)
+            for (var j=0; j < moduleNameList.length; j++) {
+                var moduleName = moduleNameList[j]
+                if (moduleName && moduleName != "null") {
+                    var module
+                    if (moduleName in modules) {
+                        module = modules[moduleName]
+                    } else if (moduleName in shortModules) {
+                        module = shortModules[moduleName]
+                    }
+                    if (module) {
+                        spec.setModule(recipe, j, module)
+                    }
+                }
+            }
+            if (beaconSettings) {
+                beaconSettings = beaconSettings.split(":")
+                var moduleName = beaconSettings[0]
+                var module = null
+                if (moduleName in modules) {
+                    module = modules[moduleName]
+                } else if (moduleName in shortModules) {
+                    module = shortModules[moduleName]
+                }
+                var factory = spec.getFactory(recipe)
+                var count = RationalFromFloat(Number(beaconSettings[1]))
+                if (module === spec.defaultBeacon) {
+                    module = null
+                }
+                factory.beaconModule = module
+                factory.beaconCount = count
+            }
+        }
+    }
 }
 
 function loadDataRunner(modName, callback) {
@@ -96,71 +170,8 @@ function loadData(modName, settings) {
         solver = new Solver(items, recipes)
 
         renderSettings(settings)
-
-        if ("items" in settings && settings.items != "") {
-            var targets = settings.items.split(",")
-            for (var i=0; i < targets.length; i++) {
-                var targetString = targets[i]
-                var parts = targetString.split(":")
-                var name = parts[0]
-                var target = addTarget(name)
-                var type = parts[1]
-                if (type == "f") {
-                    target.setFactories(parts[2])
-                } else if (type == "r") {
-                    target.setRate(parts[2])
-                } else {
-                    throw new Error("unknown target type")
-                }
-            }
-        } else {
-            addTarget()
-        }
-        if ("modules" in settings && settings.modules != "") {
-            var moduleSettings = settings.modules.split(",")
-            for (var i=0; i < moduleSettings.length; i++) {
-                var bothSettings = moduleSettings[i].split(";")
-                var factoryModuleSettings = bothSettings[0]
-                var beaconSettings = bothSettings[1]
-
-                var singleModuleSettings = factoryModuleSettings.split(":")
-                var recipeName = singleModuleSettings[0]
-                var recipe = recipes[recipeName]
-                var moduleNameList = singleModuleSettings.slice(1)
-                for (var j=0; j < moduleNameList.length; j++) {
-                    var moduleName = moduleNameList[j]
-                    if (moduleName && moduleName != "null") {
-                        var module
-                        if (moduleName in modules) {
-                            module = modules[moduleName]
-                        } else if (moduleName in shortModules) {
-                            module = shortModules[moduleName]
-                        }
-                        if (module) {
-                            spec.setModule(recipe, j, module)
-                        }
-                    }
-                }
-                if (beaconSettings) {
-                    beaconSettings = beaconSettings.split(":")
-                    var moduleName = beaconSettings[0]
-                    var module = null
-                    if (moduleName in modules) {
-                        module = modules[moduleName]
-                    } else if (moduleName in shortModules) {
-                        module = shortModules[moduleName]
-                    }
-                    var factory = spec.getFactory(recipe)
-                    var count = RationalFromFloat(Number(beaconSettings[1]))
-                    if (module === spec.defaultBeacon) {
-                        module = null
-                    }
-                    factory.beaconModule = module
-                    factory.beaconCount = count
-                }
-            }
-        }
-        initDone = true
+        loadModules(settings)
+        loadItems(settings)
         itemUpdate()
     })
 }
@@ -174,5 +185,5 @@ function init() {
     loadData(currentMod(), settings)
     // We don't need to call clickVisualize here, as we will properly render
     // the graph when we call itemUpdate() at the end of initialization.
-    clickTab(currentTab)
+    clickTab(currentTab, "keepHash")
 }

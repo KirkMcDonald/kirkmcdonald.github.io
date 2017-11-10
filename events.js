@@ -1,5 +1,37 @@
 "use strict"
 
+// correctly handle back/forward buttons
+
+var mouseOnPage = true
+document.addEventListener("DOMContentLoaded", function() {
+    document.body.addEventListener("mouseenter", function() {
+        mouseOnPage = true
+    });
+    document.body.addEventListener("mouseleave", function() {
+        mouseOnPage = false
+    });
+});
+window.addEventListener("hashchange", function() {
+    if (!mouseOnPage) {
+        var settings = loadFullSettings(window.location.hash)
+        if (settings.tab != DEFAULT_SETTINGS.tab) {
+            settings.tab += "_tab"
+        }
+        clickTab(settings.tab, "keepHash")
+
+        if ("data" in settings && settings.data != currentMod()) {
+            document.getElementById("data_set").value = settings.data
+            changeMod(settings)
+        } else {
+            // changeMod >> loadData also does all this so don't repeat it
+            renderSettings(settings)
+            loadModules(settings)
+            loadItems(settings)
+            itemUpdate()
+        }
+    }
+});
+
 // build target events
 
 // The "+" button to add a new target.
@@ -48,11 +80,11 @@ function RateHandler(target) {
 
 // Obtains current data set from UI element, and resets the world with the new
 // data.
-function changeMod() {
+function changeMod(settings) {
     var modName = currentMod()
 
-    reset()
-    loadData(modName)
+    reset("keepHash")
+    loadData(modName, settings)
 }
 
 // Triggered when the display rate is changed.
@@ -321,7 +353,7 @@ var tabMap = {
 }
 
 // Triggered when a tab is clicked on.
-function clickTab(tabName) {
+function clickTab(tabName, keepHash) {
     currentTab = tabName
     var tabs = document.getElementsByClassName("tab")
     for (var i=0; i < tabs.length; i++) {
@@ -336,7 +368,7 @@ function clickTab(tabName) {
     document.getElementById(tabName).style.display = "block"
     var button = document.getElementById(tabMap[tabName])
     button.classList.add("active")
-    if (initDone) {
+    if (!keepHash) {
         window.location.hash = "#" + formatSettings()
     }
 }
@@ -357,4 +389,3 @@ function toggleVisible(targetID) {
         target.style.display = "none"
     }
 }
-
