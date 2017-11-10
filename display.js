@@ -784,7 +784,9 @@ RecipeTable.prototype = {
             lastGroupID = recipe.group
             group.recipes.push(recipe)
         }
-        groups.push(group)
+        if (group.recipes.length > 0) {
+            groups.push(group)
+        }
         // XXX: Rework this, too.
         //displaySteps(items, itemOrder, totals)
         var last
