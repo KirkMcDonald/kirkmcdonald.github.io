@@ -18,8 +18,8 @@ FactoryDef.prototype = {
         }
         return this.moduleSlots < other.moduleSlots
     },
-    makeFactory: function() {
-        return new Factory(this)
+    makeFactory: function(recipe) {
+        return new Factory(this, recipe)
     },
     canBeacon: function() {
         return this.moduleSlots > 0
@@ -38,11 +38,12 @@ MinerDef.prototype.less = function(other) {
     }
     return this.mining_speed.less(other.mining_speed)
 }
-MinerDef.prototype.makeFactory = function() {
-    return new Miner(this)
+MinerDef.prototype.makeFactory = function(recipe) {
+    return new Miner(this, recipe)
 }
 
-function Factory(factoryDef) {
+function Factory(factoryDef, recipe) {
+    this.recipe = recipe
     this.modules = []
     this.setFactory(factoryDef)
     this.beaconModule = null
@@ -72,7 +73,7 @@ Factory.prototype = {
         var speed = one
         for (var i=0; i < this.modules.length; i++) {
             var module = this.modules[i]
-            if (!module) {
+            if (!module && spec.defaultModule && spec.defaultModule.canUse(this.recipe)) {
                 module = spec.defaultModule
             }
             if (!module) {
@@ -93,7 +94,7 @@ Factory.prototype = {
         var prod = one
         for (var i=0; i < this.modules.length; i++) {
             var module = this.modules[i]
-            if (!module) {
+            if (!module && spec.defaultModule && spec.defaultModule.canUse(this.recipe)) {
                 module = spec.defaultModule
             }
             if (!module) {
@@ -107,7 +108,7 @@ Factory.prototype = {
         var power = one
         for (var i=0; i < this.modules.length; i++) {
             var module = this.modules[i]
-            if (!module) {
+            if (!module && spec.defaultModule && spec.defaultModule.canUse(this.recipe)) {
                 module = spec.defaultModule
             }
             if (!module) {
@@ -161,8 +162,8 @@ Factory.prototype = {
     },
 }
 
-function Miner(factory) {
-    Factory.call(this, factory)
+function Miner(factory, recipe) {
+    Factory.call(this, factory, recipe)
 }
 Miner.prototype = Object.create(Factory.prototype)
 Miner.prototype.recipeRate = function(spec, recipe) {
@@ -274,7 +275,7 @@ FactorySpec.prototype = {
             factory.setFactory(factoryDef)
             return factory
         }
-        this.spec[recipe.name] = factoryDef.makeFactory()
+        this.spec[recipe.name] = factoryDef.makeFactory(recipe)
         this.spec[recipe.name].beaconCount = this.defaultBeaconCount
         return this.spec[recipe.name]
     },
