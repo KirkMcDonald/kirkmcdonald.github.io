@@ -139,10 +139,10 @@ function setMinimumAssembler(min) {
 
 // furnace
 function renderFurnace(settings) {
-    var furnace = spec.furnace
+    var furnaceName = spec.furnace.name
     if ("furnace" in settings) {
-        furnace = settings.furnace
-        spec.setFurnace(furnace.name)
+        furnaceName = settings.furnace
+        spec.setFurnace(furnaceName)
     }
     var oldNode = document.getElementById("furnace")
     var cell = oldNode.parentNode
@@ -153,7 +153,7 @@ function renderFurnace(settings) {
     for (var i = 0; i < furnaces.length; i++) {
         var f = furnaces[i]
         var image = getImage(f)
-        dropdown.add(image, f.name, f.name === furnace.name)
+        dropdown.add(image, f.name, f.name === furnaceName)
     }
     cell.replaceChild(node, oldNode)
 }
@@ -239,6 +239,78 @@ function getMprod() {
     return RationalFromFloats(Number(mprod), 100)
 }
 
+// default module
+function renderDefaultModule(settings) {
+    var defaultModule = null
+    if ("dm" in settings) {
+        defaultModule = shortModules[settings.dm]
+    }
+    spec.setDefaultModule(defaultModule)
+
+    var oldDefMod = document.getElementById("default_module")
+    var cell = oldDefMod.parentNode
+    var node = document.createElement("span")
+    node.id = "default_module"
+    var dropdown = new Dropdown(node, "default_module_dropdown", changeDefaultModule)
+
+    var noModImage = getExtraImage("slot_icon_module")
+    noModImage.title = NO_MODULE
+    dropdown.add(noModImage, NO_MODULE, defaultModule === null)
+    var category = ""
+
+    for (var i = 0; i < sortedModules.length; i++) {
+        var name = sortedModules[i]
+        var module = modules[name]
+        if (module.category !== category) {
+            category = module.category
+            dropdown.addBreak()
+        }
+        dropdown.add(getImage(module), module.shortName(), defaultModule === module)
+    }
+    cell.replaceChild(node, oldDefMod)
+}
+
+// default beacon
+function renderDefaultBeacon(settings) {
+    var defaultBeacon = null
+    var defaultCount = zero
+    if ("db" in settings) {
+        defaultBeacon = shortModules[settings.db]
+    }
+    if ("dbc" in settings) {
+        defaultCount = RationalFromString(settings.dbc)
+    }
+    spec.setDefaultBeacon(defaultBeacon, defaultCount)
+
+    var dbcField = document.getElementById("default_beacon_count")
+    dbcField.value = defaultCount.toDecimal(0)
+
+    var oldDefMod = document.getElementById("default_beacon")
+    var cell = oldDefMod.parentNode
+    var node = document.createElement("span")
+    node.id = "default_beacon"
+    var dropdown = new Dropdown(node, "default_beacon_dropdown", changeDefaultBeacon)
+
+    var noModImage = getExtraImage("slot_icon_module")
+    noModImage.title = NO_MODULE
+    dropdown.add(noModImage, NO_MODULE, defaultBeacon === null)
+    var category = ""
+
+    for (var i = 0; i < sortedModules.length; i++) {
+        var name = sortedModules[i]
+        var module = modules[name]
+        if (!module.canBeacon()) {
+            continue
+        }
+        if (module.category !== category) {
+            category = module.category
+            dropdown.addBreak()
+        }
+        dropdown.add(getImage(module), module.shortName(), defaultBeacon === module)
+    }
+    cell.replaceChild(node, oldDefMod)
+}
+
 // value format
 var DEFAULT_FORMAT = "decimal"
 
@@ -266,5 +338,7 @@ function renderSettings(settings) {
     renderBelt(settings)
     renderPipe(settings)
     renderMiningProd(settings)
+    renderDefaultModule(settings)
+    renderDefaultBeacon(settings)
     renderValueFormat(settings)
 }

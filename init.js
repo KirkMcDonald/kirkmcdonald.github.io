@@ -126,7 +126,6 @@ function loadData(modName, settings) {
                 var singleModuleSettings = factoryModuleSettings.split(":")
                 var recipeName = singleModuleSettings[0]
                 var recipe = recipes[recipeName]
-                var factory = spec.getFactory(recipe)
                 var moduleNameList = singleModuleSettings.slice(1)
                 for (var j=0; j < moduleNameList.length; j++) {
                     var moduleName = moduleNameList[j]
@@ -138,24 +137,26 @@ function loadData(modName, settings) {
                             module = shortModules[moduleName]
                         }
                         if (module) {
-                            factory.setModule(j, module)
+                            spec.setModule(recipe, j, module)
                         }
                     }
                 }
                 if (beaconSettings) {
                     beaconSettings = beaconSettings.split(":")
                     var moduleName = beaconSettings[0]
-                    var module
+                    var module = null
                     if (moduleName in modules) {
                         module = modules[moduleName]
                     } else if (moduleName in shortModules) {
                         module = shortModules[moduleName]
                     }
-                    if (module) {
-                        var count = RationalFromFloat(Number(beaconSettings[1]))
-                        factory.beaconModule = module
-                        factory.beaconCount = count
+                    var factory = spec.getFactory(recipe)
+                    var count = RationalFromFloat(Number(beaconSettings[1]))
+                    if (module === spec.defaultBeacon) {
+                        module = null
                     }
+                    factory.beaconModule = module
+                    factory.beaconCount = count
                 }
             }
         }

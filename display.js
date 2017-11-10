@@ -450,19 +450,21 @@ FactoryRow.prototype = {
         } else {
             this.setHasNoModules()
         }
-        this.power = this.factory.powerUsage(this.count)
+        this.power = this.factory.powerUsage(spec, this.count)
         this.setPower(this.power)
     },
     updateDisplayedModules: function() {
-        var factory = spec.getFactory(this.recipe)
-        if (!factory) {
+        var moduleCount = spec.moduleCount(this.recipe)
+        if (moduleCount === 0) {
             return
         }
-        for (var i = 0; i < factory.modules.length; i++) {
-            var module = factory.modules[i]
+        for (var i = 0; i < moduleCount; i++) {
+            var module = spec.getModule(this.recipe, i)
             this.setDisplayedModule(i, module)
         }
-        this.setDisplayedBeacon(factory.beaconModule, factory.beaconCount)
+        // XXX
+        var beacon = spec.getBeaconInfo(this.recipe)
+        this.setDisplayedBeacon(beacon.module, beacon.count)
     },
     setDisplayedModule: function(index, module) {
         var name
@@ -741,6 +743,12 @@ RecipeTable.prototype = {
     setRecipeHeader: function() {
         this.recipeHeader.textContent = "items/" + rateName
         this.wasteHeader.textContent = "waste/" + rateName
+    },
+    updateDisplayedModules: function() {
+        for (var i = 0; i < this.rowArray.length; i++) {
+            var row = this.rowArray[i]
+            row.updateDisplayedModules()
+        }
     },
     displaySolution: function(totals) {
         this.setRecipeHeader()
