@@ -2,22 +2,15 @@
 
 // correctly handle back/forward buttons
 
-var mouseOnPage = true
+var navigationInProgress = false
 document.addEventListener("DOMContentLoaded", function() {
-    document.body.addEventListener("mouseenter", function() {
-        mouseOnPage = true
-    });
-    document.body.addEventListener("mouseleave", function() {
-        mouseOnPage = false
-    });
-});
-window.addEventListener("hashchange", function() {
-    if (!mouseOnPage) {
-        var settings = loadFullSettings(window.location.hash)
-        if (settings.tab != DEFAULT_SETTINGS.tab) {
-            settings.tab += "_tab"
+    window.addEventListener("hashchange", function() {
+        if (navigationInProgress) {
+            return
         }
-        clickTab(settings.tab, "keepHash")
+        navigationInProgress = true
+        var settings = loadSettings(window.location.hash)
+        clickTab(settings.tab)
 
         if ("data" in settings && settings.data != currentMod()) {
             document.getElementById("data_set").value = settings.data
@@ -29,7 +22,8 @@ window.addEventListener("hashchange", function() {
             loadItems(settings)
             itemUpdate()
         }
-    }
+        navigationInProgress = false
+    });
 });
 
 // build target events
@@ -83,7 +77,7 @@ function RateHandler(target) {
 function changeMod(settings) {
     var modName = currentMod()
 
-    reset("keepHash")
+    reset()
     loadData(modName, settings)
 }
 
@@ -353,7 +347,13 @@ var tabMap = {
 }
 
 // Triggered when a tab is clicked on.
-function clickTab(tabName, keepHash) {
+function clickTab(tabName) {
+    if (!tabName) {
+        tabName = DEFAULT_TAB
+    }
+    if (!tabName.endsWith("_tab")) {
+        tabName += "_tab"
+    }
     currentTab = tabName
     var tabs = document.getElementsByClassName("tab")
     for (var i=0; i < tabs.length; i++) {
@@ -368,9 +368,7 @@ function clickTab(tabName, keepHash) {
     document.getElementById(tabName).style.display = "block"
     var button = document.getElementById(tabMap[tabName])
     button.classList.add("active")
-    if (!keepHash) {
-        window.location.hash = "#" + formatSettings()
-    }
+    window.location.hash = "#" + formatSettings()
 }
 
 // Triggered when the "Visualize" tab is clicked on.

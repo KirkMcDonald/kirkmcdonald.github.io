@@ -23,10 +23,8 @@ var itemGroups
 //
 // This is intended to be called when the top-level dataset is changed.
 // Therefore, it also resets the fragment and settings.
-function reset(keepHash) {
-    if (!keepHash) {
-        window.location.hash = ""
-    }
+function reset() {
+    window.location.hash = ""
 
     build_targets = []
     var targetList = document.getElementById("targets")
@@ -172,6 +170,7 @@ function loadData(modName, settings) {
         renderSettings(settings)
         loadModules(settings)
         loadItems(settings)
+        clickTab(settings.tab)
         itemUpdate()
     })
 }
@@ -179,11 +178,7 @@ function loadData(modName, settings) {
 function init() {
     var settings = loadSettings(window.location.hash)
     renderDataSetOptions(settings)
-    if ("tab" in settings) {
-        currentTab = settings.tab + "_tab"
-    }
     loadData(currentMod(), settings)
     // We don't need to call clickVisualize here, as we will properly render
     // the graph when we call itemUpdate() at the end of initialization.
-    clickTab(currentTab, "keepHash")
 }

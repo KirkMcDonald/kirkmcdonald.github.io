@@ -356,19 +356,3 @@ function renderSettings(settings) {
     renderDefaultBeacon(settings)
     renderValueFormat(settings)
 }
-
-// this is easy to loop through to get missing settings
-var DEFAULT_SETTINGS = {
-    "tab": DEFAULT_TAB,
-    "data": DEFAULT_MODIFICATION,
-    "rate": DEFAULT_RATE,
-    "rp": DEFAULT_RATE_PRECISION,
-    "cp": DEFAULT_COUNT_PRECISION,
-    "min": DEFAULT_MINIMUM,
-    // DEFAULT_FURNACE isn't set till later :( hacky
-    "furnace": "electric-furnace",
-    "belt": DEFAULT_BELT,
-    "pipe": DEFAULT_PIPE.toString(),
-    "mprod": DEFAULT_MINING_PROD,
-    "vf": DEFAULT_FORMAT[0]
-}
