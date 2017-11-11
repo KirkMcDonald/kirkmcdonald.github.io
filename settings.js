@@ -56,10 +56,11 @@ var displayRateFactor = displayRates[DEFAULT_RATE]
 var rateName = DEFAULT_RATE
 
 function renderRateOptions(settings) {
+    rateName = DEFAULT_RATE
     if ("rate" in settings) {
         rateName = settings.rate
-        displayRateFactor = displayRates[settings.rate]
     }
+    displayRateFactor = displayRates[rateName]
     var oldNode = document.getElementById("display_rate")
     var cell = oldNode.parentNode
     var node = document.createElement("form")
@@ -93,14 +94,16 @@ var DEFAULT_COUNT_PRECISION = 1
 var countPrecision = DEFAULT_COUNT_PRECISION
 
 function renderPrecisions(settings) {
+    ratePrecision = DEFAULT_RATE_PRECISION
     if ("rp" in settings) {
         ratePrecision = Number(settings.rp)
-        document.getElementById("rprec").value = ratePrecision
     }
+    document.getElementById("rprec").value = ratePrecision
+    countPrecision = DEFAULT_COUNT_PRECISION
     if ("cp" in settings) {
         countPrecision = Number(settings.cp)
-        document.getElementById("fprec").value = countPrecision
     }
+    document.getElementById("fprec").value = countPrecision
 }
 
 // minimum assembler
@@ -138,10 +141,16 @@ function setMinimumAssembler(min) {
 }
 
 // furnace
+
+// Assigned during FactorySpec initialization.
+var DEFAULT_FURNACE
+
 function renderFurnace(settings) {
-    var furnaceName = spec.furnace.name
+    var furnaceName = DEFAULT_FURNACE
     if ("furnace" in settings) {
         furnaceName = settings.furnace
+    }
+    if (furnaceName !== spec.furnace.name) {
         spec.setFurnace(furnaceName)
     }
     var oldNode = document.getElementById("furnace")
@@ -226,11 +235,15 @@ function setMinPipe(lengthString) {
 }
 
 // mining productivity bonus
+var DEFAULT_MINING_PROD = "0"
+
 function renderMiningProd(settings) {
+    var mprod = DEFAULT_MINING_PROD
     if ("mprod" in settings) {
-        var mprod = document.getElementById("mprod")
-        mprod.value = settings.mprod
+        mprod = settings.mprod
     }
+    var mprodInput = document.getElementById("mprod")
+    mprodInput.value = mprod
     spec.miningProd = getMprod()
 }
 
@@ -322,11 +335,12 @@ var displayFormats = {
 }
 
 function renderValueFormat(settings) {
+    displayFormat = DEFAULT_FORMAT
     if ("vf" in settings) {
         displayFormat = displayFormats[settings.vf]
-        var input = document.getElementById(displayFormat + "_format")
-        input.checked = true
     }
+    var input = document.getElementById(displayFormat + "_format")
+    input.checked = true
 }
 
 // all
