@@ -191,8 +191,6 @@ function compareFactories(a, b) {
     return 0
 }
 
-var DEFAULT_FURNACE
-
 function FactorySpec(factories) {
     this.spec = {}
     this.factories = {}
