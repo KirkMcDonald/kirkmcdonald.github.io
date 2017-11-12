@@ -154,13 +154,3 @@ function loadSettings(fragment) {
 
     return settings
 }
-
-function loadFullSettings(fragment) {
-    var settings = loadSettings(fragment)
-    for (var name in DEFAULT_SETTINGS) {
-        if (!(name in settings)) {
-            settings[name] = DEFAULT_SETTINGS[name]
-        }
-    }
-    return settings
-}

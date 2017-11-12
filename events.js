@@ -47,31 +47,47 @@ function RateHandler(target) {
 // settings events
 
 function resetSettings() {
-    var settings = JSON.parse(JSON.stringify(DEFAULT_SETTINGS)) // make copy
-    delete settings.items
-    delete settings.tab
-    if (settings.data != currentMod()) {
-        document.getElementById("data_set").value = settings.data
-        changeMod()
+    var settings = loadSettings(window.location.hash)
+    settingsToReset = ["items", "tab", "data", "rate", "rp", "cp", "min",
+                        "furnace", "belt", "pipe", "mprod", "vf"]
+    for (var i = 0; i < settingsToReset.length; i++) {
+        delete settings[settingsToReset[i]]
     }
-    renderSettings(settings)
-    itemUpdate()
+    if (currentMod() != DEFAULT_MODIFICATION) {
+        document.getElementById("data_set").value = DEFAULT_MODIFICATION
+        changeMod()
+    } else {
+        // changeMod >> loadData calls these, so don't duplicate calls
+        renderSettings(settings)
+        itemUpdate()
+    }
 }
 
 function loadSettingsLocalStorage() {
     var settings = JSON.parse(localStorage.getItem("settings"))
-    if (settings.data != currentMod()) {
+    if ("data" in settings && settings.data != currentMod()) {
         document.getElementById("data_set").value = settings.data
         changeMod()
+    } else if (currentMod() != DEFAULT_MODIFICATION) {
+        document.getElementById("data_set").value = DEFAULT_MODIFICATION
+        changeMod()
+    } else {
+        // changeMod >> loadData calls these, so don't duplicate calls
+        renderSettings(settings)
+        itemUpdate()
     }
-    renderSettings(settings)
-    itemUpdate()
 }
 
 function saveSettingsLocalStorage() {
-    var settings = loadFullSettings(window.location.hash)
-    delete settings.items
-    delete settings.tab
+    var settings = loadSettings(window.location.hash)
+    settingsToSave = ["items", "tab", "data", "rate", "rp", "cp", "min",
+                        "furnace", "belt", "pipe", "mprod", "vf"]
+    for (var name in settings) {
+        // delete setting if not in settingsToSave
+        if (settingsToSave.indexOf(name) == -1) {
+            delete settings[name]
+        }
+    }
     localStorage.setItem("settings", JSON.stringify(settings))
     document.getElementById("settings_load").style.display = ""
 }
@@ -352,6 +368,12 @@ var tabMap = {
 
 // Triggered when a tab is clicked on.
 function clickTab(tabName) {
+    if (!tabName) {
+        tabName = DEFAULT_TAB
+    }
+    if (!tabName.endsWith("_tab")) {
+        tabName += "_tab"
+    }
     currentTab = tabName
     var tabs = document.getElementsByClassName("tab")
     for (var i=0; i < tabs.length; i++) {
