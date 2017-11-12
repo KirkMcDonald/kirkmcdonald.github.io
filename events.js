@@ -48,10 +48,8 @@ function RateHandler(target) {
 
 function resetSettings() {
     var settings = loadSettings(window.location.hash)
-    settingsToReset = ["items", "tab", "data", "rate", "rp", "cp", "min",
-                        "furnace", "belt", "pipe", "mprod", "vf"]
-    for (var i = 0; i < settingsToReset.length; i++) {
-        delete settings[settingsToReset[i]]
+    for (var i = 0; i < LOCALSTORAGE_SAVED_SETTINGS.length; i++) {
+        delete settings[LOCALSTORAGE_SAVED_SETTINGS[i]]
     }
     if (currentMod() != DEFAULT_MODIFICATION) {
         document.getElementById("data_set").value = DEFAULT_MODIFICATION
@@ -80,11 +78,9 @@ function loadSettingsLocalStorage() {
 
 function saveSettingsLocalStorage() {
     var settings = loadSettings(window.location.hash)
-    settingsToSave = ["items", "tab", "data", "rate", "rp", "cp", "min",
-                        "furnace", "belt", "pipe", "mprod", "vf"]
     for (var name in settings) {
         // delete setting if not in settingsToSave
-        if (settingsToSave.indexOf(name) == -1) {
+        if (LOCALSTORAGE_SAVED_SETTINGS.indexOf(name) == -1) {
             delete settings[name]
         }
     }

@@ -356,3 +356,8 @@ function renderSettings(settings) {
     renderDefaultBeacon(settings)
     renderValueFormat(settings)
 }
+
+var LOCALSTORAGE_SAVED_SETTINGS = [
+    "data", "rate", "rp", "cp", "min",
+    "furnace", "belt", "pipe", "mprod", "vf"
+]

@@ -133,22 +133,18 @@ function loadSettings(fragment) {
         return loadSettings("#" + unzip)
     }
 
-    var defaults = JSON.parse(JSON.stringify(DEFAULT_SETTINGS)) // make copy
-    delete defaults.items
-    delete defaults.tab
-    for (var name in defaults) {
-        if (settings[name] && settings[name] != defaults[name]) {
-            var customisedSettings = true;
+    var userHasCustomisedSettingsInHash = false
+    for (var name in settings) {
+        if (LOCALSTORAGE_SAVED_SETTINGS.indexOf(name) != -1) {
+            userHasCustomisedSettingsInHash = true
         }
     }
-    if (!customisedSettings && localStorageEnabled) {
-        var userDefaults = JSON.parse(localStorage.getItem("settings"))
-        for (var name in userDefaults) {
-            settings[name] = userDefaults[name]
-        }
-        if (userDefaults.data != currentMod()) {
-            document.getElementById("data_set").value = settings.data
-            changeMod()
+    if (!userHasCustomisedSettingsInHash) {
+        if (localStorageEnabled && localStorage.getItem("settings")) {
+            var loadedSettings = JSON.parse(localStorage.getItem("settings"))
+            for (var name in loadedSettings) {
+                settings[name] = loadedSettings[name]
+            }
         }
     }
 
