@@ -900,7 +900,7 @@ function display() {
     }
     var totals = globalTotals
 
-    window.location.hash = "#" + formatSettings()
+    updateHash()
 
     if (currentTab == "graph_tab") {
         renderGraph(totals, spec.ignore)

@@ -368,7 +368,7 @@ function clickTab(tabName) {
     document.getElementById(tabName).style.display = "block"
     var button = document.getElementById(tabMap[tabName])
     button.classList.add("active")
-    window.location.hash = "#" + formatSettings()
+    updateHash()
 }
 
 // Triggered when the "Visualize" tab is clicked on.

@@ -1,7 +1,11 @@
 "use strict"
 
-function formatSettings() {
-    var settings = ""
+function updateHash() {
+    if (navigationInProgress) {
+        return
+    }
+
+    var settings = "#"
     if (currentTab != DEFAULT_TAB) {
         settings += "tab=" + currentTab.slice(0, currentTab.indexOf("_")) + "&"
     }
@@ -112,7 +116,7 @@ function formatSettings() {
     if (zip.length < settings.length) {
         return zip
     }
-    return settings
+    window.location.hash = settings
 }
 
 function loadSettings(fragment) {
