@@ -10,8 +10,9 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         navigationInProgress = true
         var settings = loadSettings(window.location.hash)
-        clickTab(settings.tab)
-
+        if ("tab" in settings && settings.tab != currentTab) {
+            clickTab(settings.tab)
+        }
         if ("data" in settings && settings.data != currentMod()) {
             document.getElementById("data_set").value = settings.data
             changeMod(settings)
@@ -332,27 +333,24 @@ function GraphClickHandler(node) {
 
 // tab events
 
-var DEFAULT_TAB = "totals_tab"
+var DEFAULT_TAB = "totals"
 
 var currentTab = DEFAULT_TAB
 
 var tabMap = {
-    "totals_tab": "totals_button",
-    "steps_tab": "steps_button",
-    "graph_tab": "graph_button",
-    "settings_tab": "settings_button",
-    "about_tab": "about_button",
-    "faq_tab": "faq_button",
-    "debug_tab": "debug_button",
+    "totals": "totals_button",
+    "steps": "steps_button",
+    "graph": "graph_button",
+    "settings": "settings_button",
+    "about": "about_button",
+    "faq": "faq_button",
+    "debug": "debug_button",
 }
 
 // Triggered when a tab is clicked on.
 function clickTab(tabName) {
     if (!tabName) {
         tabName = DEFAULT_TAB
-    }
-    if (!tabName.endsWith("_tab")) {
-        tabName += "_tab"
     }
     currentTab = tabName
     var tabs = document.getElementsByClassName("tab")
@@ -364,16 +362,15 @@ function clickTab(tabName) {
     for (var i=0; i < buttons.length; i++) {
         buttons[i].classList.remove("active")
     }
-
-    document.getElementById(tabName).style.display = "block"
+    document.getElementById(tabName + "_tab").style.display = "block"
     var button = document.getElementById(tabMap[tabName])
     button.classList.add("active")
     updateHash()
 }
 
 // Triggered when the "Visualize" tab is clicked on.
-function clickVisualize(event, tabName) {
-    clickTab(event, tabName)
+function clickVisualize(tabName) {
+    clickTab(tabName)
     renderGraph(globalTotals, spec.ignore)
 }
 

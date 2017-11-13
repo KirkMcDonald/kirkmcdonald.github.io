@@ -902,7 +902,7 @@ function display() {
 
     updateHash()
 
-    if (currentTab == "graph_tab") {
+    if (currentTab == "graph") {
         renderGraph(totals, spec.ignore)
     }
     recipeTable.displaySolution(totals)

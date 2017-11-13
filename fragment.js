@@ -7,7 +7,7 @@ function updateHash() {
 
     var settings = "#"
     if (currentTab != DEFAULT_TAB) {
-        settings += "tab=" + currentTab.slice(0, currentTab.indexOf("_")) + "&"
+        settings += "tab=" + currentTab + "&"
     }
     var mod = currentMod()
     if (mod != DEFAULT_MODIFICATION) {
