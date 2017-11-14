@@ -179,6 +179,4 @@ function init() {
     var settings = loadSettings(window.location.hash)
     renderDataSetOptions(settings)
     loadData(currentMod(), settings)
-    // We don't need to call clickVisualize here, as we will properly render
-    // the graph when we call itemUpdate() at the end of initialization.
 }
