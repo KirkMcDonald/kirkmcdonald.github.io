@@ -4,7 +4,6 @@ function updateHash() {
     if (navigationInProgress) {
         return
     }
-    plannedHashUpdate = true;
 
     var settings = "#"
     if (currentTab != DEFAULT_TAB) {
@@ -115,9 +114,12 @@ function updateHash() {
     }
     var zip = "zip=" + window.btoa(pako.deflateRaw(settings, {to: "string"}))
     if (zip.length < settings.length) {
-        return zip
+        settings = zip
     }
-    window.location.hash = settings
+    if (window.location.hash != settings) {
+        plannedHashUpdate = true;
+        window.location.hash = settings
+    }
 }
 
 function loadSettings(fragment) {
