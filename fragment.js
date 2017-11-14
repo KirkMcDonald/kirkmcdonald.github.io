@@ -4,6 +4,7 @@ function updateHash() {
     if (navigationInProgress) {
         return
     }
+    userTriggeredHashUpdate = true;
 
     var settings = "#"
     if (currentTab != DEFAULT_TAB) {
