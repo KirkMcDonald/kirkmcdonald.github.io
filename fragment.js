@@ -1,6 +1,9 @@
 "use strict"
 
 function updateHash() {
+    if (navigationInProgress) {
+        return
+    }
     plannedHashUpdate = true;
 
     var settings = "#"

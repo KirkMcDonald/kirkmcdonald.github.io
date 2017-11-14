@@ -3,6 +3,7 @@
 // correctly handle back/forward buttons
 
 var plannedHashUpdate = false
+var navigationInProgress = false
 document.addEventListener("DOMContentLoaded", function() {
     window.addEventListener("hashchange", function() {
         if (plannedHashUpdate) {
@@ -10,10 +11,8 @@ document.addEventListener("DOMContentLoaded", function() {
             plannedHashUpdate = false
             return
         }
+        navigationInProgress = true
         var settings = loadSettings(window.location.hash)
-        if ("tab" in settings && settings.tab != currentTab) {
-            clickTab(settings.tab)
-        }
         if ("data" in settings && settings.data != currentMod()) {
             document.getElementById("data_set").value = settings.data
             changeMod(settings)
@@ -24,6 +23,8 @@ document.addEventListener("DOMContentLoaded", function() {
             loadItems(settings)
             itemUpdate()
         }
+        clickTab(settings.tab)
+        navigationInProgress = false
     });
 });
 
@@ -335,7 +336,7 @@ function GraphClickHandler(node) {
 
 var DEFAULT_TAB = "totals"
 
-var currentTab = DEFAULT_TAB
+var currentTab
 
 var tabMap = {
     "totals": "totals_button",
@@ -351,6 +352,9 @@ var tabMap = {
 function clickTab(tabName) {
     if (!tabName) {
         tabName = DEFAULT_TAB
+    }
+    if (tabName == currentTab) {
+        return
     }
     currentTab = tabName
     var tabs = document.getElementsByClassName("tab")
