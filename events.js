@@ -2,15 +2,14 @@
 
 // correctly handle back/forward buttons
 
-var userTriggeredHashUpdate = false
+var plannedHashUpdate = false
 document.addEventListener("DOMContentLoaded", function() {
     window.addEventListener("hashchange", function() {
-        if (userTriggeredHashUpdate) {
+        if (plannedHashUpdate) {
             // reset flag for next hashChange
-            userTriggeredHashUpdate = false
+            plannedHashUpdate = false
             return
         }
-        navigationInProgress = true
         var settings = loadSettings(window.location.hash)
         if ("tab" in settings && settings.tab != currentTab) {
             clickTab(settings.tab)

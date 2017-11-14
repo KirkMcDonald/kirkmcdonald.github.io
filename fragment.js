@@ -1,10 +1,7 @@
 "use strict"
 
 function updateHash() {
-    if (navigationInProgress) {
-        return
-    }
-    userTriggeredHashUpdate = true;
+    plannedHashUpdate = true;
 
     var settings = "#"
     if (currentTab != DEFAULT_TAB) {
