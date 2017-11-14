@@ -3,12 +3,8 @@
 // correctly handle back/forward buttons
 
 var userTriggeredHashUpdate = false
-var navigationInProgress = false
 document.addEventListener("DOMContentLoaded", function() {
     window.addEventListener("hashchange", function() {
-        if (navigationInProgress) {
-            return
-        }
         if (userTriggeredHashUpdate) {
             // reset flag for next hashChange
             userTriggeredHashUpdate = false
@@ -29,7 +25,6 @@ document.addEventListener("DOMContentLoaded", function() {
             loadItems(settings)
             itemUpdate()
         }
-        navigationInProgress = false
     });
 });
 
