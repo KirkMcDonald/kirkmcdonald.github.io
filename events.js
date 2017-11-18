@@ -91,7 +91,9 @@ function searchTargets(ev) {
         }
     }
     // hide trailing horizonal rule
-    lastHrWithContent.style.display = "none"
+    if (lastHrWithContent) {
+        lastHrWithContent.style.display = "none"
+    }
 }
 
 // Triggered when a build target's item is changed.
