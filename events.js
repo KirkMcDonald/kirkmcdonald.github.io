@@ -8,6 +8,92 @@ function plusHandler() {
     itemUpdate()
 }
 
+// Triggered when mouse enters the dropdown box
+function resetSearch(ev) {
+    ev.target.getElementsByClassName("search")[0].value = ""
+
+    // unhide all child nodes
+    var elems = ev.target.querySelectorAll("label, br, hr")
+    for (var i = 0; i < elems.length; i++) {
+        elems[i].style.display = ""
+    }
+}
+
+// Triggered when user is searching target
+function searchTargets(ev) {
+    var search = ev.target
+    var search_text = search.value.toLowerCase().replace(/[^a-z0-9]+/g, "")
+
+    if (!search_text) {
+        resetSearch({target: search.parentNode})
+        return
+    }
+
+    // handle enter key press (select target if only one is visible)
+    if (ev.keyCode === 13) {
+        var visibleLabels = [];
+        var labels = search.parentNode.getElementsByTagName("label")
+        for (var i = 0; i < labels.length; i++) {
+            var label = labels[i]
+            if (label.style.display != "none") {
+                visibleLabels.push(label)
+            }
+        }
+        // don't do anything if more than one icon is visible
+        if (visibleLabels.length === 1) {
+            var item = visibleLabels[0].title
+            var selector = "input[value=" + item + "]"
+            var input = search.parentNode.querySelector(selector)
+            input.checked = true
+            input.dispatchEvent(new Event("change"))
+        }
+        return
+    }
+
+    var elems = search.parentNode.querySelectorAll("hr, br, label")
+    var currentHrHasContent, currentBrHasContent;
+    var lastHrWithContent;
+    // hide non-matching labels & icons
+    for (var i = 0; i < elems.length; i++) {
+        var elem = elems[i]
+        if (elem.tagName === "HR") {
+            if (currentHrHasContent) {
+                elem.style.display = ""
+                lastHrWithContent = elem
+            }
+            else {
+                elem.style.display = "none"
+            }
+            currentHrHasContent = false
+            currentBrHasContent = false
+        }
+        else if (elem.tagName === "BR") {
+            if (currentBrHasContent) {
+                elem.style.display = ""
+            }
+            else {
+                elem.style.display = "none"
+            }
+            currentBrHasContent = false
+        }
+        else {
+            var icon = elem.firstChild
+            var title = icon.title.replace("-", "")
+            // if title contains the search phrase
+            if (title.indexOf(search_text) != -1) {
+                elem.style.display = ""
+                currentHrHasContent = true
+                currentBrHasContent = true
+            }
+            else {
+                elem.style.display = "none"
+            }
+        }
+    }
+    // hide trailing horizonal rule
+    lastHrWithContent.style.display = "none"
+}
+
 // Triggered when a build target's item is changed.
 function ItemHandler(target) {
     this.handleEvent = function(event) {
@@ -357,4 +443,3 @@ function toggleVisible(targetID) {
         target.style.display = "none"
     }
 }
-
