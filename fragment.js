@@ -5,7 +5,7 @@ function updateHash() {
         return
     }
 
-    var settings = "#"
+    var settings = ""
     if (currentTab != DEFAULT_TAB) {
         settings += "tab=" + currentTab + "&"
     }
@@ -116,6 +116,7 @@ function updateHash() {
     if (zip.length < settings.length) {
         settings = zip
     }
+    settings = "#" + settings
     if (window.location.hash != settings) {
         plannedHashUpdate = true;
         window.location.hash = settings
