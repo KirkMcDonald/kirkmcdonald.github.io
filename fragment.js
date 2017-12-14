@@ -35,6 +35,15 @@ function formatSettings() {
         var mprod = spec.miningProd.mul(hundred).toString()
         settings += "mprod=" + mprod + "&"
     }
+    if (spec.defaultModule) {
+        settings += "dm=" + spec.defaultModule.shortName() + "&"
+    }
+    if (spec.defaultBeacon) {
+        settings += "db=" + spec.defaultBeacon.shortName() + "&"
+    }
+    if (!spec.defaultBeaconCount.isZero()) {
+        settings += "dbc=" + spec.defaultBeaconCount.toDecimal(0) + "&"
+    }
     if (displayFormat != DEFAULT_FORMAT) {
         settings += "vf=" + displayFormat[0] + "&"
     }
@@ -77,9 +86,16 @@ function formatSettings() {
                 any = true
             }
         }
-        if (factory.beaconModule && !factory.beaconCount.isZero()) {
-            any = true
-            beacon = sprintf("%s:%d", factory.beaconModule.shortName(), factory.beaconCount.toFloat())
+        if (factory.beaconModule || !factory.beaconCount.equal(spec.defaultBeaconCount)) {
+            var beaconModule = factory.beaconModule
+            if (!beaconModule) {
+                beaconModule = spec.defaultBeacon
+            }
+            if (beaconModule) {
+                any = true
+                var moduleName = beaconModule.shortName()
+                beacon = sprintf("%s:%d", moduleName, factory.beaconCount.toFloat())
+            }
         }
         if (any) {
             var recipeSpec = sprintf("%s:%s", recipeName, modules.join(":"))

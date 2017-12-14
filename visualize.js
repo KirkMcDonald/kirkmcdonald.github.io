@@ -224,7 +224,12 @@ function renderGraph(totals, ignore) {
     var maxWidth = RationalFromFloat(8)
     var widthRange = maxWidth.sub(minWidth)
     var rateRange = graph.max.sub(graph.min)
-    var widthFactor = widthRange.div(rateRange)
+    var widthFactor
+    if (rateRange.isZero()) {
+        widthFactor = one
+    } else {
+        widthFactor = widthRange.div(rateRange)
+    }
 
     var nodes = document.querySelector("svg#graph g.nodes")
     var edgePaths = document.querySelector("svg#graph g.edgePaths")

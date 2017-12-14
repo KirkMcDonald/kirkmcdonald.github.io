@@ -133,6 +133,16 @@ limitations under the License.-->
         </tr>
 
         <tr>
+        <td class="setting-label">Default module:</td>
+        <td><span id="default_module"></span></td>
+        </tr>
+
+        <tr>
+        <td class="setting-label">Default beacon:</td>
+        <td><span id="default_beacon"></span> &times; <input id="default_beacon_count" class="beacon" type="number" value="0" onchange="changeDefaultBeaconCount(event)"></td>
+        </tr>
+
+        <tr>
         <td class="setting-label top">Recipe sort order:</td>
         <td><input type="radio" name="sort_order" id="topo_order" value="topo" checked onchange="changeSortOrder(event)">
         <label for="topo_order">Topological order</label><br />

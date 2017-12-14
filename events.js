@@ -103,6 +103,40 @@ function changeMprod() {
     itemUpdate()
 }
 
+// Triggered when the default module is changed.
+function changeDefaultModule(event) {
+    var module
+    if (event.target.value === NO_MODULE) {
+        module = null
+    } else {
+        module = shortModules[event.target.value]
+    }
+    spec.setDefaultModule(module)
+    recipeTable.updateDisplayedModules()
+    itemUpdate()
+}
+
+// Triggered when the default beacon module is changed.
+function changeDefaultBeacon(event) {
+    var module
+    if (event.target.value === NO_MODULE) {
+        module = null
+    } else {
+        module = shortModules[event.target.value]
+    }
+    spec.setDefaultBeacon(module, spec.defaultBeaconCount)
+    recipeTable.updateDisplayedModules()
+    itemUpdate()
+}
+
+// Triggered when the default beacon count is changed.
+function changeDefaultBeaconCount(event) {
+    var count = RationalFromString(event.target.value)
+    spec.setDefaultBeacon(spec.defaultBeacon, count)
+    recipeTable.updateDisplayedModules()
+    itemUpdate()
+}
+
 // Triggered when the recipe sort order is changed.
 function changeSortOrder(event) {
     sortOrder = event.target.value
@@ -135,7 +169,7 @@ function ModuleHandler(row, index) {
     this.handleEvent = function(event) {
         var moduleName = event.target.value
         var module = modules[moduleName]
-        if (spec.getFactory(row.recipe).setModule(index, module) || isFactoryTarget(row.name)) {
+        if (spec.setModule(row.recipe, index, module) || isFactoryTarget(row.recipe.name)) {
             itemUpdate()
         } else {
             display()
@@ -146,14 +180,14 @@ function ModuleHandler(row, index) {
 // Triggered when the right-arrow "copy module" button is pressed.
 function ModuleCopyHandler(row) {
     this.handleEvent = function(event) {
-        var factory = spec.getFactory(row.recipe)
-        var module = factory.getModule(0)
+        var moduleCount = spec.moduleCount(row.recipe)
+        var module = spec.getModule(row.recipe, 0)
         var needRecalc = false
-        for (var i = 0; i < factory.modules.length; i++) {
-            needRecalc = factory.setModule(i, module) || needRecalc
-            row.setModule(i, module)
+        for (var i = 0; i < moduleCount; i++) {
+            needRecalc = spec.setModule(row.recipe, i, module) || needRecalc
+            row.setDisplayedModule(i, module)
         }
-        if (needRecalc || isFactoryTarget(row.name)) {
+        if (needRecalc || isFactoryTarget(row.recipe.name)) {
             itemUpdate()
         } else {
             display()
@@ -173,6 +207,9 @@ function BeaconHandler(recipeName) {
         var moduleName = event.target.value
         var module = modules[moduleName]
         var factory = getFactory(recipeName)
+        if (module === spec.defaultBeacon) {
+            module = null
+        }
         factory.beaconModule = module
         if (isFactoryTarget(recipeName) && !factory.beaconCount.isZero()) {
             itemUpdate()
@@ -188,7 +225,7 @@ function BeaconCountHandler(recipeName) {
         var moduleCount = RationalFromFloats(event.target.value, 1)
         var factory = getFactory(recipeName)
         factory.beaconCount = moduleCount
-        if (isFactoryTarget(recipeName) && factory.beaconModule) {
+        if (isFactoryTarget(recipeName) && (factory.beaconModule || spec.defaultModule)) {
             itemUpdate()
         } else {
             display()
@@ -211,11 +248,8 @@ function CopyAllHandler(name) {
             }
             var recipe = solver.recipes[recipeName]
             needRecalc = factory.copyModules(f, recipe) || needRecalc || isFactoryTarget(recipeName)
-            var row = recipeTable.getRow(recipeName)
-            if (row) {
-                row.setModules()
-            }
         }
+        recipeTable.updateDisplayedModules()
         if (needRecalc) {
             itemUpdate()
         } else {

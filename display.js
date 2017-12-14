@@ -214,7 +214,7 @@ function RecipeRow(recipeName, rate, itemRate, waste) {
         this.setIgnore(spec.ignore[recipeName])
     }
     this.setRate(rate, itemRate, waste)
-    this.factoryRow.setModules()
+    this.factoryRow.updateDisplayedModules()
 }
 RecipeRow.prototype = {
     constructor: RecipeRow,
@@ -241,6 +241,9 @@ RecipeRow.prototype = {
     },
     setUpArrow: function() {
         this.factoryRow.downArrow.textContent = "\u2191"
+    },
+    updateDisplayedModules: function() {
+        this.factoryRow.updateDisplayedModules()
     },
     totalPower: function() {
         return this.factoryRow.power
@@ -447,21 +450,23 @@ FactoryRow.prototype = {
         } else {
             this.setHasNoModules()
         }
-        this.power = this.factory.powerUsage(this.count)
+        this.power = this.factory.powerUsage(spec, this.count)
         this.setPower(this.power)
     },
-    setModules: function() {
-        var factory = spec.getFactory(this.recipe)
-        if (!factory) {
+    updateDisplayedModules: function() {
+        var moduleCount = spec.moduleCount(this.recipe)
+        if (moduleCount === 0) {
             return
         }
-        for (var i = 0; i < factory.modules.length; i++) {
-            var module = factory.modules[i]
-            this.setModule(i, module)
+        for (var i = 0; i < moduleCount; i++) {
+            var module = spec.getModule(this.recipe, i)
+            this.setDisplayedModule(i, module)
         }
-        this.setBeacon(factory.beaconModule, factory.beaconCount)
+        // XXX
+        var beacon = spec.getBeaconInfo(this.recipe)
+        this.setDisplayedBeacon(beacon.module, beacon.count)
     },
-    setModule: function(index, module) {
+    setDisplayedModule: function(index, module) {
         var name
         if (module) {
             name = module.name
@@ -470,7 +475,7 @@ FactoryRow.prototype = {
         }
         this.modules[index][name].checked = true
     },
-    setBeacon: function(module, count) {
+    setDisplayedBeacon: function(module, count) {
         var name
         if (module) {
             name = module.name
@@ -570,6 +575,7 @@ function GroupRow(group, itemRates, totals) {
     this.rows[0].classList.add("group-top-row")
     row.classList.add("group-bottom-row")
     this.setRates(totals, itemRates)
+    this.updateDisplayedModules()
 }
 GroupRow.prototype = {
     constructor: GroupRow,
@@ -643,6 +649,11 @@ GroupRow.prototype = {
                 row.downArrow.textContent = "\u2191"
                 return
             }
+        }
+    },
+    updateDisplayedModules: function() {
+        for (var i = 0; i < this.factoryRows.length; i++) {
+            this.factoryRows[i].updateDisplayedModules()
         }
     },
     remove: function() {
@@ -733,6 +744,12 @@ RecipeTable.prototype = {
         this.recipeHeader.textContent = "items/" + rateName
         this.wasteHeader.textContent = "waste/" + rateName
     },
+    updateDisplayedModules: function() {
+        for (var i = 0; i < this.rowArray.length; i++) {
+            var row = this.rowArray[i]
+            row.updateDisplayedModules()
+        }
+    },
     displaySolution: function(totals) {
         this.setRecipeHeader()
         var sortedTotals
@@ -767,7 +784,9 @@ RecipeTable.prototype = {
             lastGroupID = recipe.group
             group.recipes.push(recipe)
         }
-        groups.push(group)
+        if (group.recipes.length > 0) {
+            groups.push(group)
+        }
         // XXX: Rework this, too.
         //displaySteps(items, itemOrder, totals)
         var last
@@ -870,9 +889,6 @@ RecipeTable.prototype = {
                 cell.classList.add("waste-hide")
             }
         }
-    },
-    getRow: function(recipeName) {
-        return this.rows[recipeName]
     },
 }
 

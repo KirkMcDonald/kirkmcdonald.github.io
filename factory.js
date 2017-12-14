@@ -18,8 +18,8 @@ FactoryDef.prototype = {
         }
         return this.moduleSlots < other.moduleSlots
     },
-    makeFactory: function() {
-        return new Factory(this)
+    makeFactory: function(recipe) {
+        return new Factory(this, recipe)
     },
     canBeacon: function() {
         return this.moduleSlots > 0
@@ -38,11 +38,12 @@ MinerDef.prototype.less = function(other) {
     }
     return this.mining_speed.less(other.mining_speed)
 }
-MinerDef.prototype.makeFactory = function() {
-    return new Miner(this)
+MinerDef.prototype.makeFactory = function(recipe) {
+    return new Miner(this, recipe)
 }
 
-function Factory(factoryDef) {
+function Factory(factoryDef, recipe) {
+    this.recipe = recipe
     this.modules = []
     this.setFactory(factoryDef)
     this.beaconModule = null
@@ -68,39 +69,59 @@ Factory.prototype = {
         this.modules[index] = module
         return needRecalc
     },
-    speedEffect: function() {
+    speedEffect: function(spec) {
         var speed = one
         for (var i=0; i < this.modules.length; i++) {
-            if (!this.modules[i]) {
+            var module = this.modules[i]
+            if (!module && spec.defaultModule && spec.defaultModule.canUse(this.recipe)) {
+                module = spec.defaultModule
+            }
+            if (!module) {
                 continue
             }
-            speed = speed.add(this.modules[i].speed)
+            speed = speed.add(module.speed)
         }
-        if (this.beaconModule) {
-            speed = speed.add(this.beaconModule.speed.mul(this.beaconCount).mul(half))
+        var beaconModule = this.beaconModule
+        if (!beaconModule) {
+            beaconModule = spec.defaultBeacon
+        }
+        if (beaconModule) {
+            speed = speed.add(beaconModule.speed.mul(this.beaconCount).mul(half))
         }
         return speed
     },
     prodEffect: function(spec) {
         var prod = one
         for (var i=0; i < this.modules.length; i++) {
-            if (!this.modules[i]) {
+            var module = this.modules[i]
+            if (!module && spec.defaultModule && spec.defaultModule.canUse(this.recipe)) {
+                module = spec.defaultModule
+            }
+            if (!module) {
                 continue
             }
-            prod = prod.add(this.modules[i].productivity)
+            prod = prod.add(module.productivity)
         }
         return prod
     },
-    powerEffect: function() {
+    powerEffect: function(spec) {
         var power = one
         for (var i=0; i < this.modules.length; i++) {
-            if (!this.modules[i]) {
+            var module = this.modules[i]
+            if (!module && spec.defaultModule && spec.defaultModule.canUse(this.recipe)) {
+                module = spec.defaultModule
+            }
+            if (!module) {
                 continue
             }
-            power = power.add(this.modules[i].power)
+            power = power.add(module.power)
         }
-        if (this.beaconModule) {
-            power = power.add(this.beaconModule.power.mul(this.beaconCount).mul(half))
+        var beaconModule = this.beaconModule
+        if (!beaconModule) {
+            beaconModule = spec.defaultBeacon
+        }
+        if (beaconModule) {
+            power = power.add(beaconModule.power.mul(this.beaconCount).mul(half))
         }
         var minimum = RationalFromFloats(1, 5)
         if (power.less(minimum)) {
@@ -108,7 +129,7 @@ Factory.prototype = {
         }
         return power
     },
-    powerUsage: function(count) {
+    powerUsage: function(spec, count) {
         var power = this.factory.energyUsage
         // Default drain value.
         var drain = power.div(RationalFromFloat(30))
@@ -118,11 +139,11 @@ Factory.prototype = {
             var idle = one.sub(divmod.remainder)
             power = power.add(idle.mul(drain))
         }
-        power = power.mul(this.powerEffect())
+        power = power.mul(this.powerEffect(spec))
         return power
     },
-    recipeRate: function(recipe) {
-        return one.div(recipe.time).mul(this.factory.speed).mul(this.speedEffect())
+    recipeRate: function(spec, recipe) {
+        return one.div(recipe.time).mul(this.factory.speed).mul(this.speedEffect(spec))
     },
     copyModules: function(other, recipe) {
         var length = Math.max(this.modules.length, other.modules.length)
@@ -141,13 +162,13 @@ Factory.prototype = {
     },
 }
 
-function Miner(factory) {
-    Factory.call(this, factory)
+function Miner(factory, recipe) {
+    Factory.call(this, factory, recipe)
 }
 Miner.prototype = Object.create(Factory.prototype)
-Miner.prototype.recipeRate = function(recipe) {
+Miner.prototype.recipeRate = function(spec, recipe) {
     var miner = this.factory
-    return miner.mining_power.sub(recipe.hardness).mul(miner.mining_speed).div(recipe.mining_time).mul(this.speedEffect())
+    return miner.mining_power.sub(recipe.hardness).mul(miner.mining_speed).div(recipe.mining_time).mul(this.speedEffect(spec))
 }
 Miner.prototype.prodEffect = function(spec) {
     var prod = Factory.prototype.prodEffect.call(this, spec)
@@ -169,8 +190,6 @@ function compareFactories(a, b) {
     }
     return 0
 }
-
-var DEFAULT_FURNACE
 
 function FactorySpec(factories) {
     this.spec = {}
@@ -194,6 +213,11 @@ function FactorySpec(factories) {
     DEFAULT_FURNACE = this.furnace.name
     this.miningProd = zero
     this.ignore = {}
+
+    this.defaultModule = null
+    // XXX: Not used yet.
+    this.defaultBeacon = null
+    this.defaultBeaconCount = zero
 }
 FactorySpec.prototype = {
     constructor: FactorySpec,
@@ -235,6 +259,9 @@ FactorySpec.prototype = {
         }
         return factoryDef
     },
+    // TODO: This should be very cheap. Calling getFactoryDef on each call
+    // should not be necessary. Changing the minimum should proactively update
+    // all of the factories to which it applies.
     getFactory: function(recipe) {
         if (!recipe.category) {
             return null
@@ -246,16 +273,82 @@ FactorySpec.prototype = {
             factory.setFactory(factoryDef)
             return factory
         }
-        this.spec[recipe.name] = factoryDef.makeFactory()
+        this.spec[recipe.name] = factoryDef.makeFactory(recipe)
+        this.spec[recipe.name].beaconCount = this.defaultBeaconCount
         return this.spec[recipe.name]
+    },
+    moduleCount: function(recipe) {
+        var factory = this.getFactory(recipe)
+        if (!factory) {
+            return 0
+        }
+        return factory.modules.length
+    },
+    getModule: function(recipe, index) {
+        var factory = this.getFactory(recipe)
+        var module = factory.getModule(index)
+        if (!module && this.defaultModule && this.defaultModule.canUse(recipe)) {
+            module = this.defaultModule
+        }
+        return module
+    },
+    setModule: function(recipe, index, module) {
+        var needRecalc = false
+        if (module === this.defaultModule) {
+            if (module) {
+                needRecalc = module.hasProdEffect()
+            }
+            module = null
+        }
+        var factory = this.getFactory(recipe)
+        needRecalc = factory.setModule(index, module) || needRecalc
+        return needRecalc
+    },
+    getBeaconInfo: function(recipe) {
+        var factory = this.getFactory(recipe)
+        var module = factory.beaconModule
+        if (!module) {
+            module = this.defaultBeacon
+        }
+        return {"module": module, "count": factory.beaconCount}
+    },
+    setDefaultModule: function(module) {
+        // Set any existing uses of the new default to null.
+        for (var recipeName in this.spec) {
+            var factory = this.spec[recipeName]
+            for (var i = 0; i < factory.modules.length; i++) {
+                if (factory.modules[i] === module) {
+                    factory.modules[i] = null
+                }
+            }
+        }
+        this.defaultModule = module
+    },
+    setDefaultBeacon: function(module, count) {
+        for (var recipeName in this.spec) {
+            var factory = this.spec[recipeName]
+            if (factory.beaconModule === module) {
+                factory.beaconModule = null
+            }
+            // Set any beacon counts equal to the old default to the new one.
+            if (factory.beaconCount.equal(this.defaultBeaconCount)) {
+                factory.beaconCount = count
+            }
+        }
+        this.defaultBeacon = module
+        this.defaultBeaconCount = count
     },
     getCount: function(recipe, rate) {
         var factory = this.getFactory(recipe)
         if (!factory) {
             return zero
         }
-        return rate.div(factory.recipeRate(recipe))
-    }
+        return rate.div(factory.recipeRate(this, recipe))
+    },
+    recipeRate: function(recipe) {
+        var factory = this.getFactory(recipe)
+        return factory.recipeRate(this, recipe)
+    },
 }
 
 function getFactories(data) {

@@ -58,10 +58,11 @@ var displayRateFactor = displayRates[DEFAULT_RATE]
 var rateName = DEFAULT_RATE
 
 function renderRateOptions(settings) {
+    rateName = DEFAULT_RATE
     if ("rate" in settings) {
         rateName = settings.rate
-        displayRateFactor = displayRates[settings.rate]
     }
+    displayRateFactor = displayRates[rateName]
     var oldNode = document.getElementById("display_rate")
     var cell = oldNode.parentNode
     var node = document.createElement("form")
@@ -95,14 +96,16 @@ var DEFAULT_COUNT_PRECISION = 1
 var countPrecision = DEFAULT_COUNT_PRECISION
 
 function renderPrecisions(settings) {
+    ratePrecision = DEFAULT_RATE_PRECISION
     if ("rp" in settings) {
         ratePrecision = Number(settings.rp)
-        document.getElementById("rprec").value = ratePrecision
     }
+    document.getElementById("rprec").value = ratePrecision
+    countPrecision = DEFAULT_COUNT_PRECISION
     if ("cp" in settings) {
         countPrecision = Number(settings.cp)
-        document.getElementById("fprec").value = countPrecision
     }
+    document.getElementById("fprec").value = countPrecision
 }
 
 // minimum assembler
@@ -140,11 +143,17 @@ function setMinimumAssembler(min) {
 }
 
 // furnace
+
+// Assigned during FactorySpec initialization.
+var DEFAULT_FURNACE
+
 function renderFurnace(settings) {
-    var furnace = spec.furnace
+    var furnaceName = DEFAULT_FURNACE
     if ("furnace" in settings) {
-        furnace = settings.furnace
-        spec.setFurnace(furnace.name)
+        furnaceName = settings.furnace
+    }
+    if (furnaceName !== spec.furnace.name) {
+        spec.setFurnace(furnaceName)
     }
     var oldNode = document.getElementById("furnace")
     var cell = oldNode.parentNode
@@ -155,7 +164,7 @@ function renderFurnace(settings) {
     for (var i = 0; i < furnaces.length; i++) {
         var f = furnaces[i]
         var image = getImage(f)
-        dropdown.add(image, f.name, f.name === furnace.name)
+        dropdown.add(image, f.name, f.name === furnaceName)
     }
     cell.replaceChild(node, oldNode)
 }
@@ -228,17 +237,93 @@ function setMinPipe(lengthString) {
 }
 
 // mining productivity bonus
+var DEFAULT_MINING_PROD = "0"
+
 function renderMiningProd(settings) {
+    var mprod = DEFAULT_MINING_PROD
     if ("mprod" in settings) {
-        var mprod = document.getElementById("mprod")
-        mprod.value = settings.mprod
+        mprod = settings.mprod
     }
+    var mprodInput = document.getElementById("mprod")
+    mprodInput.value = mprod
     spec.miningProd = getMprod()
 }
 
 function getMprod() {
     var mprod = document.getElementById("mprod").value
     return RationalFromFloats(Number(mprod), 100)
+}
+
+// default module
+function renderDefaultModule(settings) {
+    var defaultModule = null
+    if ("dm" in settings) {
+        defaultModule = shortModules[settings.dm]
+    }
+    spec.setDefaultModule(defaultModule)
+
+    var oldDefMod = document.getElementById("default_module")
+    var cell = oldDefMod.parentNode
+    var node = document.createElement("span")
+    node.id = "default_module"
+    var dropdown = new Dropdown(node, "default_module_dropdown", changeDefaultModule)
+
+    var noModImage = getExtraImage("slot_icon_module")
+    noModImage.title = NO_MODULE
+    dropdown.add(noModImage, NO_MODULE, defaultModule === null)
+    var category = ""
+
+    for (var i = 0; i < sortedModules.length; i++) {
+        var name = sortedModules[i]
+        var module = modules[name]
+        if (module.category !== category) {
+            category = module.category
+            dropdown.addBreak()
+        }
+        dropdown.add(getImage(module), module.shortName(), defaultModule === module)
+    }
+    cell.replaceChild(node, oldDefMod)
+}
+
+// default beacon
+function renderDefaultBeacon(settings) {
+    var defaultBeacon = null
+    var defaultCount = zero
+    if ("db" in settings) {
+        defaultBeacon = shortModules[settings.db]
+    }
+    if ("dbc" in settings) {
+        defaultCount = RationalFromString(settings.dbc)
+    }
+    spec.setDefaultBeacon(defaultBeacon, defaultCount)
+
+    var dbcField = document.getElementById("default_beacon_count")
+    dbcField.value = defaultCount.toDecimal(0)
+
+    var oldDefMod = document.getElementById("default_beacon")
+    var cell = oldDefMod.parentNode
+    var node = document.createElement("span")
+    node.id = "default_beacon"
+    var dropdown = new Dropdown(node, "default_beacon_dropdown", changeDefaultBeacon)
+
+    var noModImage = getExtraImage("slot_icon_module")
+    noModImage.title = NO_MODULE
+    dropdown.add(noModImage, NO_MODULE, defaultBeacon === null)
+    var category = ""
+
+    for (var i = 0; i < sortedModules.length; i++) {
+        var name = sortedModules[i]
+        var module = modules[name]
+        if (!module.canBeacon()) {
+            continue
+        }
+        if (module.category !== category) {
+            category = module.category
+            dropdown.addBreak()
+        }
+        dropdown.add(getImage(module), module.shortName(), defaultBeacon === module)
+    }
+    cell.replaceChild(node, oldDefMod)
 }
 
 // value format
@@ -252,11 +337,12 @@ var displayFormats = {
 }
 
 function renderValueFormat(settings) {
+    displayFormat = DEFAULT_FORMAT
     if ("vf" in settings) {
         displayFormat = displayFormats[settings.vf]
-        var input = document.getElementById(displayFormat + "_format")
-        input.checked = true
     }
+    var input = document.getElementById(displayFormat + "_format")
+    input.checked = true
 }
 
 // all
@@ -268,5 +354,7 @@ function renderSettings(settings) {
     renderBelt(settings)
     renderPipe(settings)
     renderMiningProd(settings)
+    renderDefaultModule(settings)
+    renderDefaultBeacon(settings)
     renderValueFormat(settings)
 }
