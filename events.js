@@ -149,6 +149,12 @@ function changeFormat(event) {
     display()
 }
 
+// Triggered when the theme is changed.
+function changeTheme(event) {
+    theme = getThemeByName(event.target.value)
+    renderTheme()
+}
+
 // recipe row events
 
 function IgnoreHandler(row) {
