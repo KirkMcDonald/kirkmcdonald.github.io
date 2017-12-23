@@ -47,6 +47,9 @@ function formatSettings() {
     if (displayFormat != DEFAULT_FORMAT) {
         settings += "vf=" + displayFormat[0] + "&"
     }
+    if (theme.name != DEFAULT_THEME.name) {
+        settings += "theme=" + theme.name + "&"
+    }
 
     settings += "items="
     var targetStrings = []

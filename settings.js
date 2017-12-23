@@ -345,8 +345,79 @@ function renderValueFormat(settings) {
     input.checked = true
 }
 
+// theme
+// dark: main background, dropdown backgrounds
+// medium: visualization node backgrounds, button backgrounds
+// main: background of main visual area
+// light: input field backgrounds, collapsed dropdown borders
+// foreground: main foreground text color
+// accent: makes things stand out
+// bright: slightly brighter than main foreground color
+function Theme(name, dark, medium, main, light, foreground, accent, bright) {
+    this.name = name
+    this.dark = dark
+    this.medium = medium
+    this.main = main
+    this.light = light
+    this.foreground = foreground
+    this.accent = accent
+    this.bright = bright
+}
+
+var THEMES = [
+    new Theme("Dark", "#171717", "#212427", "#272b30", "#3a3f44", "#c8c8c8", "#ff7200", "#f1fff2"),
+    new Theme("Light", "#adadad", "#dddddd", "#ffffff", "#cccccc", "#000000", "#ff7200", "#000000")
+]
+
+var DEFAULT_THEME = THEMES[0]
+var theme = DEFAULT_THEME
+
+function renderThemeOptions(settings) {
+    var themeSelector = document.getElementById("display_theme")
+    while (themeSelector.firstChild) {
+        themeSelector.removeChild(themeSelector.firstChild);
+    }
+    for (var i = 0; i < THEMES.length; i++) {
+        var themeOpt = THEMES[i]
+        var option = document.createElement("option")
+        option.textContent = themeOpt.name
+        option.value = themeOpt.name
+        if (settings.theme && settings.theme == themeOpt.name || !settings.theme && themeOpt.name == DEFAULT_THEME.name) {
+            option.selected = true
+        }
+        themeSelector.appendChild(option)
+    }
+}
+
+function getThemeByName(theme_name) {
+    for (var i = 0; i < THEMES.length; i++) {
+        if (THEMES[i].name === theme_name) {
+            return THEMES[i]
+        }
+    }
+}
+
+function renderTheme(settings) {
+    if (settings && "theme" in settings) {
+        theme = getThemeByName(settings.theme)
+    }
+
+    console.log("Rendering theme "+theme.name)
+    document.documentElement.style.setProperty('--dark', theme.dark)
+    document.documentElement.style.setProperty('--medium', theme.medium)
+    document.documentElement.style.setProperty('--main', theme.main)
+    document.documentElement.style.setProperty('--light', theme.light)
+    document.documentElement.style.setProperty('--foreground', theme.foreground)
+    document.documentElement.style.setProperty('--accent', theme.accent)
+    document.documentElement.style.setProperty('--bright', theme.bright)
+}
+
+
+
 // all
 function renderSettings(settings) {
+    renderTheme(settings)
+    renderThemeOptions(settings)
     renderRateOptions(settings)
     renderPrecisions(settings)
     renderMinimumAssembler(settings)
