@@ -81,12 +81,14 @@ Factory.prototype = {
             }
             speed = speed.add(module.speed)
         }
-        var beaconModule = this.beaconModule
-        if (!beaconModule) {
-            beaconModule = spec.defaultBeacon
-        }
-        if (beaconModule) {
-            speed = speed.add(beaconModule.speed.mul(this.beaconCount).mul(half))
+        if (this.modules.length > 0) {
+            var beaconModule = this.beaconModule
+            if (!beaconModule) {
+                beaconModule = spec.defaultBeacon
+            }
+            if (beaconModule) {
+                speed = speed.add(beaconModule.speed.mul(this.beaconCount).mul(half))
+            }
         }
         return speed
     },
@@ -116,12 +118,14 @@ Factory.prototype = {
             }
             power = power.add(module.power)
         }
-        var beaconModule = this.beaconModule
-        if (!beaconModule) {
-            beaconModule = spec.defaultBeacon
-        }
-        if (beaconModule) {
-            power = power.add(beaconModule.power.mul(this.beaconCount).mul(half))
+        if (this.modules.length > 0) {
+            var beaconModule = this.beaconModule
+            if (!beaconModule) {
+                beaconModule = spec.defaultBeacon
+            }
+            if (beaconModule) {
+                power = power.add(beaconModule.power.mul(this.beaconCount).mul(half))
+            }
         }
         var minimum = RationalFromFloats(1, 5)
         if (power.less(minimum)) {
