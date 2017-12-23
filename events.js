@@ -1,5 +1,33 @@
 "use strict"
 
+// correctly handle back/forward buttons
+
+var plannedHashUpdate = false
+var navigationInProgress = false
+document.addEventListener("DOMContentLoaded", function() {
+    window.addEventListener("hashchange", function() {
+        if (plannedHashUpdate) {
+            // reset flag for next hashChange
+            plannedHashUpdate = false
+            return
+        }
+        navigationInProgress = true
+        var settings = loadSettings(window.location.hash)
+        if ("data" in settings && settings.data != currentMod()) {
+            document.getElementById("data_set").value = settings.data
+            changeMod(settings)
+        } else {
+            // changeMod >> loadData also does all this so don't repeat it
+            renderSettings(settings)
+            loadModules(settings)
+            loadItems(settings)
+            itemUpdate()
+        }
+        clickTab(settings.tab)
+        navigationInProgress = false
+    });
+});
+
 // build target events
 
 // The "+" button to add a new target.
@@ -48,11 +76,11 @@ function RateHandler(target) {
 
 // Obtains current data set from UI element, and resets the world with the new
 // data.
-function changeMod() {
+function changeMod(settings) {
     var modName = currentMod()
 
     reset()
-    loadData(modName)
+    loadData(modName, settings)
 }
 
 // Triggered when the display rate is changed.
@@ -306,22 +334,28 @@ function GraphClickHandler(node) {
 
 // tab events
 
-var DEFAULT_TAB = "totals_tab"
+var DEFAULT_TAB = "totals"
 
-var currentTab = DEFAULT_TAB
+var currentTab
 
 var tabMap = {
-    "totals_tab": "totals_button",
-    "steps_tab": "steps_button",
-    "graph_tab": "graph_button",
-    "settings_tab": "settings_button",
-    "about_tab": "about_button",
-    "faq_tab": "faq_button",
-    "debug_tab": "debug_button",
+    "totals": "totals_button",
+    "steps": "steps_button",
+    "graph": "graph_button",
+    "settings": "settings_button",
+    "about": "about_button",
+    "faq": "faq_button",
+    "debug": "debug_button",
 }
 
 // Triggered when a tab is clicked on.
 function clickTab(tabName) {
+    if (!tabName) {
+        tabName = DEFAULT_TAB
+    }
+    if (tabName == currentTab) {
+        return
+    }
     currentTab = tabName
     var tabs = document.getElementsByClassName("tab")
     for (var i=0; i < tabs.length; i++) {
@@ -332,18 +366,15 @@ function clickTab(tabName) {
     for (var i=0; i < buttons.length; i++) {
         buttons[i].classList.remove("active")
     }
-
-    document.getElementById(tabName).style.display = "block"
+    document.getElementById(tabName + "_tab").style.display = "block"
     var button = document.getElementById(tabMap[tabName])
     button.classList.add("active")
-    if (initDone) {
-        window.location.hash = "#" + formatSettings()
-    }
+    updateHash()
 }
 
 // Triggered when the "Visualize" tab is clicked on.
-function clickVisualize(event, tabName) {
-    clickTab(event, tabName)
+function clickVisualize(tabName) {
+    clickTab(tabName)
     renderGraph(globalTotals, spec.ignore)
 }
 
@@ -357,4 +388,3 @@ function toggleVisible(targetID) {
         target.style.display = "none"
     }
 }
-

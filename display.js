@@ -900,9 +900,9 @@ function display() {
     }
     var totals = globalTotals
 
-    window.location.hash = "#" + formatSettings()
+    updateHash()
 
-    if (currentTab == "graph_tab") {
+    if (currentTab == "graph") {
         renderGraph(totals, spec.ignore)
     }
     recipeTable.displaySolution(totals)

@@ -1,9 +1,13 @@
 "use strict"
 
-function formatSettings() {
+function updateHash() {
+    if (navigationInProgress) {
+        return
+    }
+
     var settings = ""
     if (currentTab != DEFAULT_TAB) {
-        settings += "tab=" + currentTab.slice(0, currentTab.indexOf("_")) + "&"
+        settings += "tab=" + currentTab + "&"
     }
     var mod = currentMod()
     if (mod != DEFAULT_MODIFICATION) {
@@ -110,9 +114,13 @@ function formatSettings() {
     }
     var zip = "zip=" + window.btoa(pako.deflateRaw(settings, {to: "string"}))
     if (zip.length < settings.length) {
-        return zip
+        settings = zip
     }
-    return settings
+    settings = "#" + settings
+    if (window.location.hash != settings) {
+        plannedHashUpdate = true;
+        window.location.hash = settings
+    }
 }
 
 function loadSettings(fragment) {
