@@ -81,21 +81,27 @@ function formatSettings() {
         var any = false
         for (var i=0; i < factory.modules.length; i++) {
             var module = factory.modules[i]
-            if (module) {
-                modules.push(module.shortName())
+            if (module !== spec.defaultModule) {
+                var moduleName
+                if (module) {
+                    moduleName = module.shortName()
+                } else {
+                    moduleName = "null"
+                }
+                modules.push(moduleName)
                 any = true
             }
         }
-        if (factory.beaconModule || !factory.beaconCount.equal(spec.defaultBeaconCount)) {
+        if (factory.beaconModule !== spec.defaultBeacon || !factory.beaconCount.equal(spec.defaultBeaconCount)) {
             var beaconModule = factory.beaconModule
-            if (!beaconModule) {
-                beaconModule = spec.defaultBeacon
-            }
+            var moduleName
             if (beaconModule) {
-                any = true
-                var moduleName = beaconModule.shortName()
-                beacon = sprintf("%s:%d", moduleName, factory.beaconCount.toFloat())
+                moduleName = beaconModule.shortName()
+            } else {
+                moduleName = "null"
             }
+            beacon = sprintf("%s:%d", moduleName, factory.beaconCount.toFloat())
+            any = true
         }
         if (any) {
             var recipeSpec = sprintf("%s:%s", recipeName, modules.join(":"))

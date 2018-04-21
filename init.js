@@ -129,14 +129,16 @@ function loadData(modName, settings) {
                 var moduleNameList = singleModuleSettings.slice(1)
                 for (var j=0; j < moduleNameList.length; j++) {
                     var moduleName = moduleNameList[j]
-                    if (moduleName && moduleName != "null") {
+                    if (moduleName) {
                         var module
                         if (moduleName in modules) {
                             module = modules[moduleName]
                         } else if (moduleName in shortModules) {
                             module = shortModules[moduleName]
+                        } else if (moduleName === "null") {
+                            module = null
                         }
-                        if (module) {
+                        if (module !== undefined) {
                             spec.setModule(recipe, j, module)
                         }
                     }
@@ -144,17 +146,16 @@ function loadData(modName, settings) {
                 if (beaconSettings) {
                     beaconSettings = beaconSettings.split(":")
                     var moduleName = beaconSettings[0]
-                    var module = null
+                    var module
                     if (moduleName in modules) {
                         module = modules[moduleName]
                     } else if (moduleName in shortModules) {
                         module = shortModules[moduleName]
+                    } else if (moduleName === "null") {
+                        module = null
                     }
                     var factory = spec.getFactory(recipe)
                     var count = RationalFromFloat(Number(beaconSettings[1]))
-                    if (module === spec.defaultBeacon) {
-                        module = null
-                    }
                     factory.beaconModule = module
                     factory.beaconCount = count
                 }

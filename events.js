@@ -168,7 +168,12 @@ function IgnoreHandler(row) {
 function ModuleHandler(row, index) {
     this.handleEvent = function(event) {
         var moduleName = event.target.value
-        var module = modules[moduleName]
+        var module
+        if (moduleName === NO_MODULE) {
+            module = null
+        } else {
+            module = modules[moduleName]
+        }
         if (spec.setModule(row.recipe, index, module) || isFactoryTarget(row.recipe.name)) {
             itemUpdate()
         } else {
@@ -205,11 +210,13 @@ function getFactory(recipeName) {
 function BeaconHandler(recipeName) {
     this.handleEvent = function(event) {
         var moduleName = event.target.value
-        var module = modules[moduleName]
-        var factory = getFactory(recipeName)
-        if (module === spec.defaultBeacon) {
+        var module
+        if (moduleName === NO_MODULE) {
             module = null
+        } else {
+            module = modules[moduleName]
         }
+        var factory = getFactory(recipeName)
         factory.beaconModule = module
         if (isFactoryTarget(recipeName) && !factory.beaconCount.isZero()) {
             itemUpdate()
@@ -225,7 +232,7 @@ function BeaconCountHandler(recipeName) {
         var moduleCount = RationalFromFloats(event.target.value, 1)
         var factory = getFactory(recipeName)
         factory.beaconCount = moduleCount
-        if (isFactoryTarget(recipeName) && (factory.beaconModule || spec.defaultModule)) {
+        if (isFactoryTarget(recipeName) && factory.beaconModule) {
             itemUpdate()
         } else {
             display()
