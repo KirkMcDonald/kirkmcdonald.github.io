@@ -130,14 +130,24 @@ BuildTarget.prototype = {
         var rate = zero
         // XXX: Hmmm...
         var recipe = item.recipes[0]
-        var baseRate = spec.recipeRate(recipe).mul(recipe.gives(item, spec))
+        if (!recipe.category && this.changedFactory) {
+            this.rateChanged()
+        }
+        var baseRate = spec.recipeRate(recipe)
+        if (baseRate) {
+            baseRate = baseRate.mul(recipe.gives(item, spec))
+        }
         if (this.changedFactory) {
             rate = baseRate.mul(this.factoriesValue)
             this.rate.value = displayRate(rate)
         } else {
             rate = this.rateValue
-            var factories = rate.div(baseRate)
-            this.factories.value = displayCount(factories)
+            if (baseRate) {
+                var factories = rate.div(baseRate)
+                this.factories.value = displayCount(factories)
+            } else {
+                this.factories.value = "N/A"
+            }
             this.rate.value = displayRate(rate)
         }
         return rate

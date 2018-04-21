@@ -330,6 +330,9 @@ FactorySpec.prototype = {
     },
     recipeRate: function(recipe) {
         var factory = this.getFactory(recipe)
+        if (!factory) {
+            return null
+        }
         return factory.recipeRate(this, recipe)
     },
 }
