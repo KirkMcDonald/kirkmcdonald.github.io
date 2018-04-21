@@ -14,7 +14,7 @@ var MODIFICATIONS = {
     //"bobs-0-15-35": new Modification("Bob's Mods + base 0.15.35", "bobs-0.15.35.json")
 }
 
-var DEFAULT_MODIFICATION = "0-15-40"
+var DEFAULT_MODIFICATION = "0-16-1"
 
 function renderDataSetOptions(settings) {
     var modSelector = document.getElementById("data_set")
