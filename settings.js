@@ -203,6 +203,44 @@ function setPreferredFuel(name) {
     }
 }
 
+// oil
+function Oil(recipeName, priorityName) {
+    this.name = recipeName
+    this.priority = priorityName
+}
+
+var OIL_OPTIONS = [
+    new Oil("advanced-oil-processing", "default"),
+    new Oil("basic-oil-processing", "basic"),
+    new Oil("coal-liquefaction", "coal")
+]
+
+var priorityName
+
+function renderOil(settings) {
+    var oil = DEFAULT_PRIORITY
+    if ("p" in settings) {
+        oil = settings.p
+    }
+    setOilRecipe(oil)
+    var oldNode = document.getElementById("oil")
+    var cell = oldNode.parentNode
+    var node = document.createElement("span")
+    node.id = "oil"
+    var dropdown = new Dropdown(node, "oil_dropdown", changeOil)
+    for (var i = 0; i < OIL_OPTIONS.length; i++) {
+        var o = OIL_OPTIONS[i]
+        var image = getImage(solver.recipes[o.name])
+        dropdown.add(image, o.priority, o.priority === oil)
+    }
+    cell.replaceChild(node, oldNode)
+}
+
+function setOilRecipe(name) {
+    solver.setPriority(name)
+    priorityName = name
+}
+
 // belt
 function Belt(name, speed) {
     this.name = name
@@ -386,6 +424,7 @@ function renderSettings(settings) {
     renderMinimumAssembler(settings)
     renderFurnace(settings)
     renderFuel(settings)
+    renderOil(settings)
     renderBelt(settings)
     renderPipe(settings)
     renderMiningProd(settings)

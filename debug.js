@@ -58,6 +58,9 @@ function renderDebug() {
         node.appendChild(table)
         var matrixSolver = solver.matrixSolvers[i]
         var header = getSolutionHeader(matrixSolver)
+        var reasonHeader = document.createElement("th")
+        reasonHeader.textContent = "reason"
+        header.insertBefore(reasonHeader, header.firstChild)
         for (var j = 0; j < matrixSolver.outputItems.length; j++) {
             var item = matrixSolver.outputItems[j]
             var cell = document.createElement("th")
@@ -70,11 +73,31 @@ function renderDebug() {
             var solution = matrixSolver.lastSolutions[j]
             var row = document.createElement("tr")
             table.appendChild(row)
+            var reason = ""
+            if (solution.reason) {
+                reason = solution.reason
+            }
+            var reasonCell = document.createElement("td")
+            reasonCell.textContent = reason
+            row.appendChild(reasonCell)
             var zeroOut = 0
             var ignore = 0
-            for (var k = 0; k < solution.rates.length; k++) {
-                var rate = solution.rates[k]
+            var cols
+            if (solution.rates) {
+                cols = solution.rates.length
+            } else {
+                cols = solution.cols - 1
+            }
+            for (var k = 0; k < cols; k++) {
                 var cell = document.createElement("td")
+                var tt = document.createElement("tt")
+                cell.appendChild(tt)
+                if (solution.rates) {
+                    var rate = solution.rates[k]
+                    tt.textContent = alignRate(rate)
+                } else {
+                    tt.textContent = "\u2014"
+                }
                 cell.classList.add("right-align")
                 if (k == solution.zero[zeroOut]) {
                     zeroOut++
@@ -85,9 +108,6 @@ function renderDebug() {
                     cell.classList.add("ignore")
                 }
                 row.appendChild(cell)
-                var tt = document.createElement("tt")
-                tt.textContent = alignRate(rate)
-                cell.appendChild(tt)
             }
         }
     }

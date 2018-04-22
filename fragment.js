@@ -27,6 +27,9 @@ function formatSettings() {
     if (preferredFuel.name != DEFAULT_FUEL) {
         settings += "fuel=" + preferredFuel.name + "&"
     }
+    if (priorityName != DEFAULT_PRIORITY) {
+        settings += "p=" + priorityName + "&"
+    }
     if (preferredBelt != DEFAULT_BELT) {
         settings += "belt=" + preferredBelt + "&"
     }

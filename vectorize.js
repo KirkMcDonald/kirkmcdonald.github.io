@@ -1,6 +1,12 @@
 "use strict"
 
-var PRIORITY = ["uranium-ore", "steam", "crude-oil", "coal", "water"]
+var DEFAULT_PRIORITY = "default"
+
+var PRIORITY = {
+    "default": ["uranium-ore", "steam", "crude-oil", "coal", "water"],
+    "basic": ["uranium-ore", "steam", "water", "crude-oil", "coal"],
+    "coal": ["uranium-ore", "crude-oil", "water", "coal", "steam"]
+}
 var WASTE_ITEM_PRIORITY = ["solid-fuel", "petroleum-gas", "light-oil", "heavy-oil"]
 
 function combinations(n, r) {
@@ -157,10 +163,10 @@ function MatrixSolver(recipes) {
     for (var i = 0; i < items.length; i++) {
         itemIndexes[items[i].name] = i
     }
-    var recipeIndexes = {}
+    this.recipeIndexes = {}
     this.inputColumns = []
     for (var i = 0; i < allRecipes.length; i++) {
-        recipeIndexes[allRecipes[i].name] = i
+        this.recipeIndexes[allRecipes[i].name] = i
         if (i >= recipeArray.length) {
             this.inputColumns.push(i)
         }
@@ -193,14 +199,7 @@ function MatrixSolver(recipes) {
     this.itemIndexes = itemIndexes
     // List of all recipes in matrix, in matrix column order.
     this.recipes = allRecipes
-    // Maps priority number to column number.
-    this.priority = []
-    for (var i = 0; i < PRIORITY.length; i++) {
-        var name = PRIORITY[i]
-        if (name in recipeIndexes) {
-            this.priority.push(recipeIndexes[name])
-        }
-    }
+    this.setPriority(DEFAULT_PRIORITY)
     this.wastePriorities = this.priority.length
     for (var i = 0; i < WASTE_ITEM_PRIORITY.length; i++) {
         var name = WASTE_ITEM_PRIORITY[i]
@@ -212,6 +211,17 @@ function MatrixSolver(recipes) {
 }
 MatrixSolver.prototype = {
     constructor: MatrixSolver,
+    setPriority: function(priorityName) {
+        // Maps priority number to column number.
+        var priority = PRIORITY[priorityName]
+        this.priority = []
+        for (var i = 0; i < priority.length; i++) {
+            var name = priority[i]
+            if (name in this.recipeIndexes) {
+                this.priority.push(this.recipeIndexes[name])
+            }
+        }
+    },
     match: function(products) {
         var result = {}
         for (var itemName in products) {
@@ -240,6 +250,7 @@ MatrixSolver.prototype = {
     ignoreCols: function(itemCols, want) {
         // XXX: Do we need to de-dup this?
         var ignore = []
+        var ignoredItems = 0
         for (var row = 0; row < this.matrix.rows; row++) {
             var providers = itemCols[row].prod
             var users = itemCols[row].use
@@ -247,9 +258,10 @@ MatrixSolver.prototype = {
                 for (var i = 0; i < providers.length; i++) {
                     ignore.push(providers[i])
                 }
+                ignoredItems++
             }
         }
-        return ignore
+        return {columns: ignore, count: ignoredItems}
     },
     // Return whether the given set of indexes will exclude all possible
     // producers of an item.
@@ -321,10 +333,13 @@ MatrixSolver.prototype = {
         // Number of recipes which are the outputs/targets of this matrix.
         var productRecipes = A.cols - this.inputRecipes.length - 1
         // Columns we know we don't need.
-        var ignore = this.ignoreCols(itemCols, want)
+        var ignoreParts = this.ignoreCols(itemCols, want)
+        var ignore = ignoreParts.columns
+        var ignoredItemCount = ignoreParts.count
         // Number of unknowns in the solution.
-        var zeroCount = A.cols - A.rows - ignore.length - 1
+        var zeroCount = A.cols - A.rows - ignore.length + ignoredItemCount - 1
         var solutions = []
+        this.lastSolutions = []
         // Array of arrays, containing different combinations of columns to
         // zero out.
         var c = combinations(productRecipes - ignore.length, zeroCount)
@@ -335,9 +350,11 @@ MatrixSolver.prototype = {
             // Ignore any combination which completely excludes all producers
             // of any item.
             if (this.exclude(indexes, itemCols, ignore)) {
+                this.lastSolutions.push({cols: A.cols, zero: indexes, ignore: ignore, reason: "exclude"})
                 continue
             }
             if (extra && this.excludeWaste(indexes, wantIndexes)) {
+                this.lastSolutions.push({cols: A.cols, zero: indexes, ignore: ignore, reason: "waste"})
                 continue
             }
             // Make copy of matrix and zero out selected columns.
@@ -373,6 +390,7 @@ MatrixSolver.prototype = {
             for (var j = 0; j < rates.length; j++) {
                 var x = rates[j]
                 if (x.less(zero)) {
+                    this.lastSolutions.push({rates: rates, zero: indexes, ignore: ignore, reason: "negative"})
                     continue possible
                 }
                 if (!x.equal(zero)) {
@@ -406,7 +424,6 @@ MatrixSolver.prototype = {
         indexes.sort(function(a, b) {
             return lexicographicOrder(priorities[a], priorities[b])
         })
-        this.lastSolutions = []
         for (var i = 0; i < indexes.length; i++) {
             this.lastSolutions.push(solutions[indexes[i]])
         }

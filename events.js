@@ -91,6 +91,12 @@ function changeFuel(event) {
     itemUpdate()
 }
 
+// Triggered when the preferred oil recipe is changed.
+function changeOil(event) {
+    setOilRecipe(event.target.value)
+    itemUpdate()
+}
+
 // Triggered when the preferred belt is changed.
 function changeBelt(event) {
     setPreferredBelt(event.target.value)

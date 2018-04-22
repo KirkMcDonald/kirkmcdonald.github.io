@@ -26,6 +26,11 @@ function Solver(items, recipes) {
 }
 Solver.prototype = {
     constructor: Solver,
+    setPriority: function(priority) {
+        for (var i = 0; i < this.matrixSolvers.length; i++) {
+            this.matrixSolvers[i].setPriority(priority)
+        }
+    },
     solve: function(rates, ignore, spec) {
         var unknowns = {}
         var totals = new Totals()
