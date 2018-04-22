@@ -31,8 +31,9 @@ Item.prototype = {
         if (ignore[recipe.name]) {
             return totals
         }
-        for (var i=0; i < recipe.ingredients.length; i++) {
-            var ing = recipe.ingredients[i]
+        var ingredients = recipe.ingredients.concat(recipe.fuelIngredient(spec))
+        for (var i=0; i < ingredients.length; i++) {
+            var ing = ingredients[i]
             var subTotals = ing.item.produce(rate.mul(ing.amount), ignore, spec)
             totals.combine(subTotals)
         }

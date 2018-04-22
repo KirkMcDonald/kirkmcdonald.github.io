@@ -15,6 +15,9 @@ var sortedModules
 // Map from short module name to Module object.
 var shortModules
 
+// Array of Fuel objects, sorted by value.
+var fuel
+
 // Array of item groups, in turn divided into subgroups. For display purposes.
 var itemGroups
 
@@ -92,6 +95,9 @@ function loadData(modName, settings) {
 
         var items = graph[0]
         var recipes = graph[1]
+
+        fuel = getFuel(data, items)["chemical"]
+
         itemGroups = getItemGroups(items, data)
         solver = new Solver(items, recipes)
 

@@ -85,6 +85,12 @@ function changeFurnace(event) {
     itemUpdate()
 }
 
+// Triggered when the preferred fuel is changed.
+function changeFuel(event) {
+    setPreferredFuel(event.target.value)
+    itemUpdate()
+}
+
 // Triggered when the preferred belt is changed.
 function changeBelt(event) {
     setPreferredBelt(event.target.value)

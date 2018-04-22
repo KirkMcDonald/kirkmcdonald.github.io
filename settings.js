@@ -169,6 +169,40 @@ function renderFurnace(settings) {
     cell.replaceChild(node, oldNode)
 }
 
+// fuel
+var DEFAULT_FUEL = "coal"
+
+var preferredFuel
+
+function renderFuel(settings) {
+    var fuelName = DEFAULT_FUEL
+    if ("fuel" in settings) {
+        fuelName = settings.fuel
+    }
+    setPreferredFuel(fuelName)
+    var oldNode = document.getElementById("fuel")
+    var cell = oldNode.parentNode
+    var node = document.createElement("span")
+    node.id = "fuel"
+    var dropdown = new Dropdown(node, "fuel_dropdown", changeFuel)
+    for (var i = 0; i < fuel.length; i++) {
+        var f = fuel[i]
+        var image = getImage(f)
+        image.title += " (" + f.valueString() + ")"
+        dropdown.add(image, f.name, f.name === fuelName)
+    }
+    cell.replaceChild(node, oldNode)
+}
+
+function setPreferredFuel(name) {
+    for (var i = 0; i < fuel.length; i++) {
+        var f = fuel[i]
+        if (f.name === name) {
+            preferredFuel = f
+        }
+    }
+}
+
 // belt
 function Belt(name, speed) {
     this.name = name
@@ -351,6 +385,7 @@ function renderSettings(settings) {
     renderPrecisions(settings)
     renderMinimumAssembler(settings)
     renderFurnace(settings)
+    renderFuel(settings)
     renderBelt(settings)
     renderPipe(settings)
     renderMiningProd(settings)

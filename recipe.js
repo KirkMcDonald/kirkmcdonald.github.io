@@ -44,6 +44,17 @@ Recipe.prototype = {
             }
         }
     },
+    fuelIngredient: function(spec) {
+        var factory = spec.getFactory(this)
+        if (!factory || !factory.factory.fuel || factory.factory.fuel !== "chemical") {
+            return []
+        }
+        var basePower = factory.powerUsage(spec, one).power
+        var baseRate = factory.recipeRate(spec, this)
+        var perItemEnergy = basePower.div(baseRate)
+        var fuelAmount = perItemEnergy.div(preferredFuel.value)
+        return [new Ingredient(fuelAmount, preferredFuel.item)]
+    },
     makesResource: function() {
         return false
     },

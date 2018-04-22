@@ -24,6 +24,9 @@ function formatSettings() {
     if (spec.furnace.name != DEFAULT_FURNACE) {
         settings += "furnace=" + spec.furnace.name + "&"
     }
+    if (preferredFuel.name != DEFAULT_FUEL) {
+        settings += "fuel=" + preferredFuel.name + "&"
+    }
     if (preferredBelt != DEFAULT_BELT) {
         settings += "belt=" + preferredBelt + "&"
     }

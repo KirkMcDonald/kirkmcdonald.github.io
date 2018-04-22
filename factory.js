@@ -1,6 +1,6 @@
 "use strict"
 
-function FactoryDef(name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage) {
+function FactoryDef(name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel) {
     this.name = name
     this.icon_col = col
     this.icon_row = row
@@ -9,6 +9,7 @@ function FactoryDef(name, col, row, categories, max_ingredients, speed, moduleSl
     this.speed = speed
     this.moduleSlots = moduleSlots
     this.energyUsage = energyUsage
+    this.fuel = fuel
 }
 FactoryDef.prototype = {
     constructor: FactoryDef,
@@ -26,8 +27,8 @@ FactoryDef.prototype = {
     }
 }
 
-function MinerDef(name, col, row, categories, power, speed, moduleSlots, energyUsage) {
-    FactoryDef.call(this, name, col, row, categories, 0, 0, moduleSlots, energyUsage)
+function MinerDef(name, col, row, categories, power, speed, moduleSlots, energyUsage, fuel) {
+    FactoryDef.call(this, name, col, row, categories, 0, 0, moduleSlots, energyUsage, fuel)
     this.mining_power = power
     this.mining_speed = speed
 }
@@ -125,6 +126,9 @@ Factory.prototype = {
     },
     powerUsage: function(spec, count) {
         var power = this.factory.energyUsage
+        if (this.factory.fuel) {
+            return {"fuel": this.factory.fuel, "power": power.mul(count)}
+        }
         // Default drain value.
         var drain = power.div(RationalFromFloat(30))
         var divmod = count.divmod(one)
@@ -134,7 +138,7 @@ Factory.prototype = {
             power = power.add(idle.mul(drain))
         }
         power = power.mul(this.powerEffect(spec))
-        return power
+        return {"fuel": "electric", "power": power}
     },
     recipeRate: function(spec, recipe) {
         return one.div(recipe.time).mul(this.factory.speed).mul(this.speedEffect(spec))
@@ -348,7 +352,8 @@ function getFactories(data) {
         1,
         one,
         0,
-        zero
+        zero,
+        null
     ))
     var reactorDef = data["reactor"]["nuclear-reactor"]
     factories.push(new FactoryDef(
@@ -359,11 +364,16 @@ function getFactories(data) {
         1,
         one,
         0,
-        zero
+        zero,
+        null
     ))
     for (var type in {"assembling-machine": true, "furnace": true, "rocket-silo": true}) {
         for (var name in data[type]) {
             var d = data[type][name]
+            var fuel = null
+            if (d.energy_source && d.energy_source.type === "burner") {
+                fuel = d.energy_source.fuel_category
+            }
             factories.push(new FactoryDef(
                 d.name,
                 d.icon_col,
@@ -372,7 +382,8 @@ function getFactories(data) {
                 d.ingredient_count,
                 RationalFromFloat(d.crafting_speed),
                 d.module_slots,
-                RationalFromFloat(d.energy_usage)
+                RationalFromFloat(d.energy_usage),
+                fuel
             ))
         }
     }
@@ -380,6 +391,10 @@ function getFactories(data) {
         var d = data["mining-drill"][name]
         if (d.name == "pumpjack") {
             continue
+        }
+        var fuel = null
+        if (d.energy_source && d.energy_source.type === "burner") {
+            fuel = d.energy_source.fuel_category
         }
         factories.push(new MinerDef(
             d.name,
@@ -389,7 +404,8 @@ function getFactories(data) {
             RationalFromFloat(d.mining_power),
             RationalFromFloat(d.mining_speed),
             d.module_slots,
-            RationalFromFloat(d.energy_usage)
+            RationalFromFloat(d.energy_usage),
+            fuel
         ))
     }
     return factories

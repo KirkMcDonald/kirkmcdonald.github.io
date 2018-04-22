@@ -27,7 +27,8 @@ function makeGraph(totals, ignore) {
     var minRate = null
     var maxRate = zero
     var edgeRates = []
-    var addEdge = function(node1, node2, rate, label, name) {
+    var edgeStyles = []
+    var addEdge = function(node1, node2, rate, label, style, name) {
         if (!minRate || rate.less(minRate)) {
             minRate = rate
         }
@@ -35,6 +36,7 @@ function makeGraph(totals, ignore) {
             maxRate = rate
         }
         edgeRates.push(rate)
+        edgeStyles.push(style)
         g.setEdge(node1, node2, label, name)
         var a = edgeIndexMap[node1]
         if (!a) {
@@ -99,15 +101,23 @@ function makeGraph(totals, ignore) {
             continue
         }
         var recipe
+        var ingredients = []
         if (recipeName == "output") {
             recipe = new OutputRecipe()
         } else if (recipeName == "waste") {
             recipe = new WasteRecipe(totals)
         } else {
             recipe = solver.recipes[recipeName]
+            ingredients = recipe.fuelIngredient(spec)
         }
-        for (var i = 0; i < recipe.ingredients.length; i++) {
-            var ing = recipe.ingredients[i]
+        var fuelIngCount = ingredients.length
+        ingredients = ingredients.concat(recipe.ingredients)
+        for (var i = 0; i < ingredients.length; i++) {
+            var ing = ingredients[i]
+            var style = null
+            if (i < fuelIngCount) {
+                style = "edgePathFuel"
+            }
             var totalRate = zero
             for (var j = 0; j < ing.item.recipes.length; j++) {
                 var subRecipe = ing.item.recipes[j]
@@ -132,11 +142,23 @@ function makeGraph(totals, ignore) {
                         displayRate(subRate),
                         rateName
                     )
-                    addEdge(subRecipe.name, recipeName, subRate, {
-                        "label": label,
-                        "labelType": "html",
-                        "labelpos": "c"
-                    }, sprintf("%s-%s-%s", subRecipe.name, recipeName, ing.item.name))
+                    addEdge(
+                        subRecipe.name,
+                        recipeName,
+                        subRate,
+                        {
+                            "label": label,
+                            "labelType": "html",
+                            "labelpos": "c"
+                        },
+                        style,
+                        sprintf(
+                            "%s-%s-%s",
+                            subRecipe.name,
+                            recipeName,
+                            ing.item.name
+                        )
+                    )
                 }
             }
             if (ing.item.name in totals.unfinished) {
@@ -155,7 +177,7 @@ function makeGraph(totals, ignore) {
             }
         }
     }
-    return {g: g, nodes: nodes, edges: edgeIndexMap, min: minRate, max: maxRate, rates: edgeRates}
+    return {g: g, nodes: nodes, edges: edgeIndexMap, min: minRate, max: maxRate, rates: edgeRates, styles: edgeStyles}
 }
 
 function GraphEdge(edge, label) {
@@ -238,6 +260,10 @@ function renderGraph(totals, ignore) {
     var edges = []
     for (var i = 0; i < edgePaths.childNodes.length; i++) {
         var edge = edgePaths.childNodes[i]
+        var style = graph.styles[i]
+        if (style) {
+            edge.classList.add(style)
+        }
         var path = edge.querySelector("path")
         var width = graph.rates[i].sub(graph.min).mul(widthFactor).add(minWidth).toDecimal(1) + "px"
         path.style.setProperty("stroke-width", width)

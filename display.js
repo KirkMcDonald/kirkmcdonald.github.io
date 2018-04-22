@@ -246,7 +246,10 @@ RecipeRow.prototype = {
         this.factoryRow.updateDisplayedModules()
     },
     totalPower: function() {
-        return this.factoryRow.power
+        if (this.factoryRow.power && this.factoryRow.power.fuel === "electric") {
+            return this.factoryRow.power.power
+        }
+        return zero
     },
     csv: function() {
         var rate = this.rate.mul(this.recipe.gives(this.item, spec))
@@ -280,7 +283,7 @@ function FactoryRow(row, recipe) {
     this.recipe = recipe
     this.factory = null
     this.count = zero
-    this.power = zero
+    this.power = null
 
     this.factoryCell = document.createElement("td")
     this.factoryCell.classList.add("pad", "factory", "right-align", "leftmost")
@@ -356,8 +359,11 @@ function FactoryRow(row, recipe) {
     downArrowCell.appendChild(this.downArrow)
     this.node.appendChild(downArrowCell)
 
+    this.fuelCell = document.createElement("td")
+    this.fuelCell.classList.add("pad", "factory")
+    this.node.appendChild(this.fuelCell)
     var powerCell = document.createElement("td")
-    powerCell.classList.add("pad", "factory", "right-align")
+    powerCell.classList.add("factory", "right-align")
     tt = document.createElement("tt")
     powerCell.appendChild(tt)
     this.powerNode = tt
@@ -365,8 +371,18 @@ function FactoryRow(row, recipe) {
 }
 FactoryRow.prototype = {
     constructor: FactoryRow,
-    setPower: function(watts) {
-        this.powerNode.textContent = alignPower(watts)
+    setPower: function(power) {
+        while (this.fuelCell.hasChildNodes()) {
+            this.fuelCell.removeChild(this.fuelCell.lastChild)
+        }
+        if (power.fuel === "electric") {
+            this.powerNode.textContent = alignPower(power.power)
+        } else if (power.fuel === "chemical") {
+            var fuelImage = getImage(preferredFuel)
+            this.fuelCell.appendChild(fuelImage)
+            this.fuelCell.appendChild(new Text(" \u00d7"))
+            this.powerNode.textContent = alignRate(power.power.div(preferredFuel.value)) + "/" + rateName
+        }
     },
     setHasModules: function() {
         this.node.classList.remove("no-mods")
@@ -518,7 +534,7 @@ FactoryRow.prototype = {
             parts.push("")
         }
         if (this.factory) {
-            parts.push(displayCount(this.power))
+            parts.push(displayCount(this.power.power))
         } else {
             parts.push("")
         }
@@ -606,7 +622,10 @@ GroupRow.prototype = {
     totalPower: function() {
         var power = zero
         for (var i = 0; i < this.factoryRows.length; i++) {
-            power = power.add(this.factoryRows[i].power)
+            var p = this.factoryRows[i].power
+            if (p.fuel === "electric") {
+                power = power.add(p.power)
+            }
         }
         return power
     },
@@ -696,7 +715,7 @@ function RecipeTable(node) {
         Header("modules", 1),
         Header("beacons", 1),
         Header(""),
-        Header("power")
+        Header("power", 2)
     ]
     var header = document.createElement("tr")
     header.classList.add("factory-header")

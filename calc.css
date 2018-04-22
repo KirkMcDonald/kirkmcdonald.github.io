@@ -204,6 +204,9 @@ g.edgePath path {
 g.edgePathHighlight path {
     stroke: var(--accent);
 }
+g.edgePathFuel path {
+    stroke-dasharray: 10,5;
+}
 g.edgeLabel div {
     border: 1px solid transparent;
     border-radius: 0.4em;
