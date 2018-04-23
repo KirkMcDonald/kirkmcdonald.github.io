@@ -40,7 +40,7 @@ Item.prototype = {
         return totals
     },
     renderTooltip: function(extra) {
-        if (this.recipes.length === 1) {
+        if (this.recipes.length === 1 && this.recipes[0].name === this.name) {
             return this.recipes[0].renderTooltip(extra)
         }
         var t = document.createElement("div")
