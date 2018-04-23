@@ -36,6 +36,67 @@ Module.prototype = {
     },
     hasProdEffect: function() {
         return !this.productivity.isZero()
+    },
+    renderTooltip: function() {
+        var t = document.createElement("div")
+        t.classList.add("frame")
+        var title = document.createElement("h3")
+        var im = getImage(this, true)
+        title.appendChild(im)
+        title.appendChild(new Text(formatName(this.name)))
+        t.appendChild(title)
+        var b
+        var hundred = RationalFromFloat(100)
+        var first = false
+        if (!this.power.isZero()) {
+            var power = this.power.mul(hundred)
+            if (first) {
+                t.appendChild(document.createElement("br"))
+            } else {
+                first = true
+            }
+            b = document.createElement("b")
+            b.textContent = "Energy consumption: "
+            t.appendChild(b)
+            var sign = ""
+            if (!this.power.less(zero)) {
+                sign = "+"
+            }
+            t.appendChild(new Text(sign + power.toDecimal() + "%"))
+        }
+        if (!this.speed.isZero()) {
+            var speed = this.speed.mul(hundred)
+            if (first) {
+                t.appendChild(document.createElement("br"))
+            } else {
+                first = true
+            }
+            b = document.createElement("b")
+            b.textContent = "Speed: "
+            t.appendChild(b)
+            var sign = ""
+            if (!this.speed.less(zero)) {
+                sign = "+"
+            }
+            t.appendChild(new Text(sign + speed.toDecimal() + "%"))
+        }
+        if (!this.productivity.isZero()) {
+            var productivity = this.productivity.mul(hundred)
+            if (first) {
+                t.appendChild(document.createElement("br"))
+            } else {
+                first = true
+            }
+            b = document.createElement("b")
+            b.textContent = "Productivity: "
+            t.appendChild(b)
+            var sign = ""
+            if (!this.productivity.less(zero)) {
+                sign = "+"
+            }
+            t.appendChild(new Text(sign + productivity.toDecimal() + "%"))
+        }
+        return t
     }
 }
 

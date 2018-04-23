@@ -1,5 +1,10 @@
 "use strict"
 
+function formatName(name) {
+    name = name.replace(new RegExp("-", 'g'), " ")
+    return name[0].toUpperCase() + name.slice(1)
+}
+
 function displayRate(x) {
     x = x.mul(displayRateFactor)
     if (displayFormat == "rational") {
@@ -25,7 +30,10 @@ function align(s, prec) {
     if (idx == -1) {
         idx = s.length
     }
-    var toAdd = prec - s.length + idx + 1
+    var toAdd = prec - s.length + idx
+    if (prec > 0) {
+        toAdd += 1
+    }
     while (toAdd > 0) {
         s += "\u00A0"
         toAdd--
@@ -43,14 +51,17 @@ function alignCount(x) {
 
 var powerSuffixes = ["\u00A0W", "kW", "MW", "GW", "TW", "PW"]
 
-function alignPower(x) {
+function alignPower(x, prec) {
+    if (prec === undefined) {
+        prec = countPrecision
+    }
     var thousand = RationalFromFloat(1000)
     var i = 0
     while (thousand.less(x) && i < powerSuffixes.length - 1) {
         x = x.div(thousand)
         i++
     }
-    return alignCount(x) + " " + powerSuffixes[i]
+    return align(displayCount(x), prec) + " " + powerSuffixes[i]
 }
 
 var sortOrder = "topo"
@@ -90,17 +101,65 @@ function pipeValues(rate) {
     return {pipes: pipes, length: length}
 }
 
+function ItemIcon(item, canIgnore) {
+    this.item = item
+    this.name = item.name
+    this.extra = null
+    if (canIgnore) {
+        this.extra = document.createElement("span")
+        this.span = document.createElement("span")
+        this.extra.appendChild(this.span)
+        this.extra.appendChild(document.createElement("br"))
+    }
+    this.icon_col = item.icon_col
+    this.icon_row = item.icon_row
+}
+ItemIcon.prototype = {
+    constructor: ItemIcon,
+    setText: function(text) {
+        this.span.textContent = text
+    },
+    renderTooltip: function() {
+        return this.item.renderTooltip(this.extra)
+    }
+}
+
+function BeltIcon() {
+    this.item = solver.items[preferredBelt]
+    this.name = this.item.name
+    this.icon_col = this.item.icon_col
+    this.icon_row = this.item.icon_row
+}
+BeltIcon.prototype = {
+    constructor: BeltIcon,
+    renderTooltip: function() {
+        var t = document.createElement("div")
+        t.classList.add("frame")
+        var title = document.createElement("h3")
+        var im = getImage(this, true)
+        title.appendChild(im)
+        title.appendChild(new Text(formatName(this.name)))
+        t.appendChild(title)
+        var b = document.createElement("b")
+        b.textContent = "Max throughput: "
+        t.appendChild(b)
+        t.appendChild(new Text(displayRate(preferredBeltSpeed) + " items/" + rateName))
+        return t
+    }
+}
+
 function ItemRow(row, item, canIgnore) {
     this.item = item
     var nameCell = document.createElement("td")
     nameCell.className = "right-align"
-    var im = getImage(item)
+    this.itemIcon = new ItemIcon(item, canIgnore)
+    var im = getImage(this.itemIcon)
     im.classList.add("display")
     if (canIgnore) {
         if (spec.ignore[item.name]) {
-            im.title += " (click to unignore)"
+            this.itemIcon.setText("(Click to unignore.)")
         } else {
-            im.title += " (click to ignore)"
+            this.itemIcon.setText("(Click to ignore.)")
         }
         im.classList.add("recipe-icon")
     }
@@ -148,16 +207,16 @@ ItemRow.prototype = {
     constructor: ItemRow,
     setIgnore: function(ignore) {
         if (ignore) {
-            this.image.title = this.item.name + " (click to unignore)"
+            this.itemIcon.setText("(Click to unignore.)")
         } else {
-            this.image.title = this.item.name + " (click to ignore)"
+            this.itemIcon.setText("(Click to ignore.)")
         }
     },
     setBelt: function(itemRate) {
         while (this.beltCell.hasChildNodes()) {
             this.beltCell.removeChild(this.beltCell.lastChild)
         }
-        var beltImage = getImage(solver.items[preferredBelt])
+        var beltImage = getImage(new BeltIcon())
         this.beltCell.appendChild(beltImage)
         this.beltCell.appendChild(new Text(" \u00d7"))
         var beltCount = itemRate.div(preferredBeltSpeed)

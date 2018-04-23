@@ -161,6 +161,12 @@ function changeFormat(event) {
     display()
 }
 
+// Triggered when fancy tooltip box is toggled.
+function changeTooltip(event) {
+    tooltipsEnabled = event.target.checked
+    display()
+}
+
 // recipe row events
 
 function IgnoreHandler(row) {

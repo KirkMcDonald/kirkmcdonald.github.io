@@ -19,6 +19,8 @@
     <script src="third_party/BigInteger.min.js"></script>
     <script src="third_party/pako.min.js"></script>
     <script src="third_party/sprintf.js"></script>
+    <script src="third_party/popper.min.js"></script>
+    <script src="third_party/tooltip.min.js"></script>
     <script src="sort.js"></script>
     <script src="rational.js"></script>
     <script src="matrix.js"></script>
@@ -167,6 +169,11 @@ limitations under the License.-->
         <label for="decimal_format">Decimals</label><br />
         <input type="radio" name="format" id="rational_format" value="rational" onchange="changeFormat(event)">
         <label for="rational_format">Rationals</label></td>
+        </tr>
+
+        <tr>
+        <td class="setting-label"><label for="tooltip">Fancy tooltips (experimental):</label></td>
+        <td><input type="checkbox" id="tooltip" onchange="changeTooltip(event)"></td>
         </tr>
         </table>
     </div>

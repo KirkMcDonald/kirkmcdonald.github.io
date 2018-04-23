@@ -53,7 +53,7 @@ Dropdown.prototype = {
         var label = document.createElement("label")
         label.htmlFor = id
         label.appendChild(labelContent)
-        label.title = value
+        //label.title = value
         this.dropdown.appendChild(label)
         return input
     },

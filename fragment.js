@@ -53,6 +53,9 @@ function formatSettings() {
     if (displayFormat != DEFAULT_FORMAT) {
         settings += "vf=" + displayFormat[0] + "&"
     }
+    if (tooltipsEnabled != DEFAULT_TOOLTIP) {
+        settings += "t=on&"
+    }
 
     settings += "items="
     var targetStrings = []

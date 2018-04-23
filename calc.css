@@ -1,6 +1,8 @@
 :root {
     /* main background, dropdown backgrounds */
     --dark: #171717;
+    /* tooltip background; should be same as dark, but with alpha channel */
+    --dark-overlay: rgba(23, 23, 23, 0.8);
     /* visualization node backgrounds, button backgrounds */
     --medium: #212427;
     /* background of main visual area */
@@ -64,6 +66,44 @@ img.icon {
     height: 32px;
     width: 32px;
     vertical-align: middle;
+}
+/* tooltips */
+div.tooltip {
+    opacity: 1;
+    z-index: 20;
+}
+div.tooltip .frame {
+    border: 2px solid var(--bright);
+    border-radius: 5px;
+    background-color: var(--dark-overlay);
+    padding: 0.4em;
+    text-align: left;
+    opacity: 1;
+    z-index: 20;
+}
+div.tooltip h3 {
+    margin: 0;
+}
+div.tooltip h3:not(:last-child) {
+    margin-bottom: 0.5em;
+}
+div.tooltip div.product {
+    position: relative;
+    display: inline-block;
+    background-color: var(--light);
+    margin-top: 5px;
+}
+div.tooltip div.product span.count {
+    position: absolute;
+    right: 1px;
+    bottom: 1px;
+    font-size: 12px;
+    font-family: monospace;
+    color: var(--bright);
+    text-shadow: -1px -1px 0px var(--dark), -1px 1px 0px var(--dark), 1px -1px 0px var(--dark), 1px 1px 0px var(--dark);
+}
+div.tooltip img.ingredient {
+    background-color: var(--light);
 }
 /* build targets */
 .targetButton {

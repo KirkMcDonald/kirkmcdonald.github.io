@@ -71,6 +71,55 @@ Recipe.prototype = {
             }
         }
         return true
+    },
+    renderTooltip: function(extra) {
+        var t = document.createElement("div")
+        t.classList.add("frame")
+        var title = document.createElement("h3")
+        var im = getImage(this, true)
+        title.appendChild(im)
+        var name = formatName(this.name)
+        if (this.products.length === 1 && this.products[0].item.name === this.name && one.less(this.products[0].amount)) {
+            name = this.products[0].amount.toDecimal() + " \u00d7 " + name
+        }
+        title.appendChild(new Text("\u00A0" + name))
+        t.appendChild(title)
+        if (extra) {
+            t.appendChild(extra)
+        }
+        if (this.ingredients.length === 0) {
+            return t
+        }
+        if (this.products.length > 1 || this.products[0].item.name !== this.name) {
+            t.appendChild(new Text("Products: "))
+            for (var i = 0; i < this.products.length; i++) {
+                var ing = this.products[i]
+                var p = document.createElement("div")
+                p.classList.add("product")
+                p.appendChild(getImage(ing.item, true))
+                var count = document.createElement("span")
+                count.classList.add("count")
+                count.textContent = ing.amount.toDecimal()
+                p.appendChild(count)
+                t.appendChild(p)
+                t.appendChild(new Text("\u00A0"))
+            }
+            t.appendChild(document.createElement("br"))
+        }
+        var time = document.createElement("b")
+        time.textContent = "Time: "
+        t.appendChild(time)
+        t.appendChild(new Text(this.time.toDecimal() + "s"))
+        for (var i = 0; i < this.ingredients.length; i++) {
+            var ing = this.ingredients[i]
+            t.appendChild(document.createElement("br"))
+            var p = document.createElement("div")
+            p.classList.add("product")
+            p.appendChild(getImage(ing.item, true))
+            t.appendChild(p)
+            t.appendChild(new Text("\u00A0" + ing.amount.toDecimal() + " \u00d7 " + formatName(ing.item.name)))
+        }
+        return t
     }
 }
 

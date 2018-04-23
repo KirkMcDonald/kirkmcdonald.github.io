@@ -38,6 +38,22 @@ Item.prototype = {
             totals.combine(subTotals)
         }
         return totals
+    },
+    renderTooltip: function(extra) {
+        if (this.recipes.length === 1) {
+            return this.recipes[0].renderTooltip(extra)
+        }
+        var t = document.createElement("div")
+        t.classList.add("frame")
+        var title = document.createElement("h3")
+        var im = getImage(this, true)
+        title.appendChild(im)
+        title.appendChild(new Text(formatName(this.name)))
+        t.appendChild(title)
+        if (extra) {
+            t.appendChild(extra)
+        }
+        return t
     }
 }
 

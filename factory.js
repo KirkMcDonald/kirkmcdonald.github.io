@@ -24,6 +24,38 @@ FactoryDef.prototype = {
     },
     canBeacon: function() {
         return this.moduleSlots > 0
+    },
+    renderTooltip: function() {
+        var t = document.createElement("div")
+        t.classList.add("frame")
+        var title = document.createElement("h3")
+        var im = getImage(this, true)
+        title.appendChild(im)
+        title.appendChild(new Text(formatName(this.name)))
+        t.appendChild(title)
+        var b
+        if (this.max_ing) {
+            b = document.createElement("b")
+            b.textContent = "Max ingredients: "
+            t.appendChild(b)
+            t.appendChild(new Text(this.max_ing))
+            t.appendChild(document.createElement("br"))
+        }
+        b = document.createElement("b")
+        b.textContent = "Energy consumption: "
+        t.appendChild(b)
+        t.appendChild(new Text(alignPower(this.energyUsage, 0)))
+        t.appendChild(document.createElement("br"))
+        b = document.createElement("b")
+        b.textContent = "Crafting speed: "
+        t.appendChild(b)
+        t.appendChild(new Text(this.speed.toDecimal()))
+        t.appendChild(document.createElement("br"))
+        b = document.createElement("b")
+        b.textContent = "Module slots: "
+        t.appendChild(b)
+        t.appendChild(new Text(this.moduleSlots))
+        return t
     }
 }
 
@@ -41,6 +73,35 @@ MinerDef.prototype.less = function(other) {
 }
 MinerDef.prototype.makeFactory = function(spec, recipe) {
     return new Miner(this, spec, recipe)
+}
+MinerDef.prototype.renderTooltip = function() {
+    var t = document.createElement("div")
+    t.classList.add("frame")
+    var title = document.createElement("h3")
+    var im = getImage(this, true)
+    title.appendChild(im)
+    title.appendChild(new Text(formatName(this.name)))
+    t.appendChild(title)
+    var b = document.createElement("b")
+    b.textContent = "Energy consumption: "
+    t.appendChild(b)
+    t.appendChild(new Text(alignPower(this.energyUsage, 0)))
+    t.appendChild(document.createElement("br"))
+    b = document.createElement("b")
+    b.textContent = "Mining power: "
+    t.appendChild(b)
+    t.appendChild(new Text(this.mining_power.toDecimal()))
+    t.appendChild(document.createElement("br"))
+    b = document.createElement("b")
+    b.textContent = "Mining speed: "
+    t.appendChild(b)
+    t.appendChild(new Text(this.mining_speed.toDecimal()))
+    t.appendChild(document.createElement("br"))
+    b = document.createElement("b")
+    b.textContent = "Module slots: "
+    t.appendChild(b)
+    t.appendChild(new Text(this.moduleSlots))
+    return t
 }
 
 function Factory(factoryDef, spec, recipe) {

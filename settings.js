@@ -417,8 +417,23 @@ function renderValueFormat(settings) {
     input.checked = true
 }
 
+// tooltips
+var DEFAULT_TOOLTIP = false
+
+var tooltipsEnabled = DEFAULT_TOOLTIP
+
+function renderTooltip(settings) {
+    tooltipsEnabled = DEFAULT_TOOLTIP
+    if ("t" in settings) {
+        tooltipsEnabled = settings.t === "on"
+    }
+    var input = document.getElementById("tooltip")
+    input.checked = tooltipsEnabled
+}
+
 // all
 function renderSettings(settings) {
+    renderTooltip(settings)
     renderRateOptions(settings)
     renderPrecisions(settings)
     renderMinimumAssembler(settings)
