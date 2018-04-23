@@ -161,9 +161,11 @@ function loadData(modName, settings) {
                         module = null
                     }
                     var factory = spec.getFactory(recipe)
-                    var count = RationalFromFloat(Number(beaconSettings[1]))
-                    factory.beaconModule = module
-                    factory.beaconCount = count
+                    if (factory) {
+                        var count = RationalFromFloat(Number(beaconSettings[1]))
+                        factory.beaconModule = module
+                        factory.beaconCount = count
+                    }
                 }
             }
         }

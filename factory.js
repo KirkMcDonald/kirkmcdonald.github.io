@@ -350,6 +350,9 @@ FactorySpec.prototype = {
     },
     setModule: function(recipe, index, module) {
         var factory = this.getFactory(recipe)
+        if (!factory) {
+            return false
+        }
         return factory.setModule(index, module)
     },
     getBeaconInfo: function(recipe) {
