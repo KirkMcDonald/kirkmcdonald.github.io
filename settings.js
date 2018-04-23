@@ -241,6 +241,30 @@ function setOilRecipe(name) {
     priorityName = name
 }
 
+// kovarex
+var DEFAULT_KOVAREX = true
+
+var kovarexEnabled
+
+function renderKovarex(settings) {
+    var k = DEFAULT_KOVAREX
+    if ("k" in settings) {
+        k = settings.k !== "off"
+    }
+    setKovarex(k)
+    var input = document.getElementById("kovarex")
+    input.checked = k
+}
+
+function setKovarex(enabled) {
+    kovarexEnabled = enabled
+    if (enabled) {
+        solver.setDisabledRecipes({})
+    } else {
+        solver.setDisabledRecipes({"kovarex-enrichment-process": true})
+    }
+}
+
 // belt
 function Belt(name, speed) {
     this.name = name

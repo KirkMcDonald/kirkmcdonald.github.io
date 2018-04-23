@@ -8,6 +8,7 @@ function UnknownRecipe(item) {
 function Solver(items, recipes) {
     this.items = items
     this.recipes = recipes
+    this.disabledRecipes = {}
     var groups = findGroups(items, recipes)
     // XXX: This is a hack. It assumes that there are exactly two groups, and
     // manually resolves the dependency between them instead of determining the
@@ -31,6 +32,9 @@ Solver.prototype = {
             this.matrixSolvers[i].setPriority(priority)
         }
     },
+    setDisabledRecipes: function(recipes) {
+        this.disabledRecipes = recipes
+    },
     solve: function(rates, ignore, spec) {
         var unknowns = {}
         var totals = new Totals()
@@ -49,9 +53,9 @@ Solver.prototype = {
             if (Object.keys(match).length == 0) {
                 continue
             }
-            var solution = solver.solveFor(match, spec, false)
+            var solution = solver.solveFor(match, spec, this.disabledRecipes, false)
             if (!solution) {
-                solution = solver.solveFor(match, spec, true)
+                solution = solver.solveFor(match, spec, this.disabledRecipes, true)
                 if (!solution) {
                     continue
                 }

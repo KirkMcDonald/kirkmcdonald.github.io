@@ -296,7 +296,7 @@ MatrixSolver.prototype = {
     excludeWaste: function(indexes, wantIndexes) {
         return !intersectArrays(indexes, wantIndexes)
     },
-    solveFor: function(products, spec, extra) {
+    solveFor: function(products, spec, disabled, extra) {
         // Array of desired item-rates.
         var want = []
         for (var i = 0; i < this.matrix.rows; i++) {
@@ -324,6 +324,13 @@ MatrixSolver.prototype = {
             A.setColumn(A.cols - 1, want)
         } else {
             A = this.matrix.appendColumn(want)
+        }
+        // Zero out disabled recipes
+        for (var recipeName in disabled) {
+            if (recipeName in this.recipeIndexes) {
+                var i = this.recipeIndexes[recipeName]
+                A.zeroColumn(i)
+            }
         }
         // Information about which recipes are relevant to each item.
         var itemCols = []

@@ -97,6 +97,12 @@ function changeOil(event) {
     itemUpdate()
 }
 
+// Triggered when the Kovarex checkbox is toggled.
+function changeKovarex(event) {
+    setKovarex(event.target.checked)
+    itemUpdate()
+}
+
 // Triggered when the preferred belt is changed.
 function changeBelt(event) {
     setPreferredBelt(event.target.value)

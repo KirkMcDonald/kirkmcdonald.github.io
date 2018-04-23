@@ -30,6 +30,9 @@ function formatSettings() {
     if (priorityName != DEFAULT_PRIORITY) {
         settings += "p=" + priorityName + "&"
     }
+    if (kovarexEnabled != DEFAULT_KOVAREX) {
+        settings += "k=off&"
+    }
     if (preferredBelt != DEFAULT_BELT) {
         settings += "belt=" + preferredBelt + "&"
     }
