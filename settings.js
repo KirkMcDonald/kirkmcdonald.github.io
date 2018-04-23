@@ -464,6 +464,7 @@ function renderSettings(settings) {
     renderFurnace(settings)
     renderFuel(settings)
     renderOil(settings)
+    renderKovarex(settings)
     renderBelt(settings)
     renderPipe(settings)
     renderMiningProd(settings)
