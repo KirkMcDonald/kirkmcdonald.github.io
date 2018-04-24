@@ -332,7 +332,7 @@ function renderBelt(settings) {
     var dropdown = new Dropdown(node, "belt_dropdown", changeBelt)
     for (var i = 0; i < BELTS.length; i++) {
         var belt = BELTS[i]
-        var image = getImage(solver.items[belt.name])
+        var image = getImage(new BeltIcon(solver.items[belt.name], belt.speed))
         dropdown.add(image, belt.name, belt.name === preferredBelt)
     }
     cell.replaceChild(node, oldNode)

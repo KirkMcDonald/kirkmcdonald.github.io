@@ -124,8 +124,15 @@ ItemIcon.prototype = {
     }
 }
 
-function BeltIcon() {
-    this.item = solver.items[preferredBelt]
+function BeltIcon(beltItem, beltSpeed) {
+    if (!beltItem) {
+        beltItem = solver.items[preferredBelt]
+    }
+    if (!beltSpeed) {
+        beltSpeed = preferredBeltSpeed
+    }
+    this.item = beltItem
+    this.speed = beltSpeed
     this.name = this.item.name
     this.icon_col = this.item.icon_col
     this.icon_row = this.item.icon_row
@@ -143,7 +150,7 @@ BeltIcon.prototype = {
         var b = document.createElement("b")
         b.textContent = "Max throughput: "
         t.appendChild(b)
-        t.appendChild(new Text(displayRate(preferredBeltSpeed) + " items/" + rateName))
+        t.appendChild(new Text(displayRate(this.speed) + " items/" + rateName))
         return t
     }
 }
