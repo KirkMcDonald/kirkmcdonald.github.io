@@ -9,6 +9,9 @@ function formatSettings() {
     if (mod != DEFAULT_MODIFICATION) {
         settings += "data=" + mod + "&"
     }
+    if (colorScheme.name != DEFAULT_COLOR_SCHEME) {
+        settings += "c=" + colorScheme.name + "&"
+    }
     if (rateName != DEFAULT_RATE) {
         settings += "rate=" + rateName + "&"
     }

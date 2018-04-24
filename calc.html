@@ -25,6 +25,7 @@
     <script src="rational.js"></script>
     <script src="matrix.js"></script>
     <script src="dropdown.js"></script>
+    <script src="color.js"></script>
     <script src="vectorize.js"></script>
     <script src="subgraphs.js"></script>
     <script src="factory.js"></script>
@@ -94,6 +95,11 @@ limitations under the License.-->
         <tr>
         <td class="setting-label">Use recipe set:</td>
         <td><select id="data_set" onchange="changeMod()"></select></td>
+        </tr>
+
+        <tr>
+        <td class="setting-label">Color scheme:</td>
+        <td><select id="color_scheme" onchange="changeColor(event)"></select></td>
         </tr>
 
         <tr>

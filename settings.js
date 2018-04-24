@@ -36,6 +36,42 @@ function currentMod() {
     return elem.value
 }
 
+// color scheme
+var DEFAULT_COLOR_SCHEME = "default"
+
+var colorScheme
+
+function renderColorScheme(settings) {
+    var color = DEFAULT_COLOR_SCHEME
+    if ("c" in settings) {
+        color = settings.c
+    }
+    setColorScheme(color)
+    var colorSelector = document.getElementById("color_scheme")
+    if (!colorSelector.hasChildNodes()) {
+        for (var i = 0; i < colorSchemes.length; i++) {
+            var scheme = colorSchemes[i]
+            var option = document.createElement("option")
+            option.textContent = scheme.displayName
+            option.value = scheme.name
+            if (scheme.name === color) {
+                option.selected = true
+            }
+            colorSelector.appendChild(option)
+        }
+    }
+}
+
+function setColorScheme(schemeName) {
+    for (var i = 0; i < colorSchemes.length; i++) {
+        if (colorSchemes[i].name === schemeName) {
+            colorScheme = colorSchemes[i]
+            colorScheme.apply()
+            return
+        }
+    }
+}
+
 // display rate
 var seconds = one
 var minutes = RationalFromFloat(60)
@@ -458,6 +494,7 @@ function renderTooltip(settings) {
 // all
 function renderSettings(settings) {
     renderTooltip(settings)
+    renderColorScheme(settings)
     renderRateOptions(settings)
     renderPrecisions(settings)
     renderMinimumAssembler(settings)

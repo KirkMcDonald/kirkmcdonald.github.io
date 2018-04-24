@@ -55,6 +55,11 @@ function changeMod() {
     loadData(modName)
 }
 
+function changeColor(event) {
+    setColorScheme(event.target.value)
+    display()
+}
+
 // Triggered when the display rate is changed.
 function displayRateHandler(event) {
     var value = event.target.value
