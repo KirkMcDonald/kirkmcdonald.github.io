@@ -25,7 +25,7 @@ var colorSchemes = [
             "--dark-overlay": "rgba(23, 23, 23, 0.8)",
             "--medium": "#212427",
             "--main": "#272b30",
-            "--light": "#3a3f33",
+            "--light": "#3a3f44",
             "--foreground": "#c8c8c8",
             "--accent": "#ff7200",
             "--bright": "#f1fff2"
