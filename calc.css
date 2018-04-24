@@ -307,11 +307,20 @@ div.graph {
     border-color: var(--accent);
     border-style: solid;
 }
-.dropdown input {
+.dropdown input[type=radio] {
     position: absolute;
     top: -50;
     left: -50;
     opacity: 0;
+}
+.dropdown .search {
+    display: none;
+    width: 100%;
+    padding-left: 0.4em;
+    margin-bottom: 0.4em;
+}
+.dropdown:hover .search {
+    display: block;
 }
 .dropdown label {
     display: none;

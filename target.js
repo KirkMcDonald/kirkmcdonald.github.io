@@ -57,6 +57,18 @@ function BuildTarget(index, itemName) {
         new ItemHandler(this),
         "itemDropdown"
     )
+
+    // add search box to dropdown
+    var search = document.createElement("input")
+    search.classList.add("search")
+    search.placeholder = "Search"
+    search.addEventListener("keyup", searchTargets)
+    dropdown.dropdown.prepend(search)
+    dropdown.dropdown.addEventListener("mouseenter", function(ev) {
+        ev.target.getElementsByClassName("search")[0].focus()
+    })
+    dropdown.dropdown.addEventListener("mouseleave", resetSearch)
+
     // Use a single global target count, as a given target's index can change.
     targetCount++
 
