@@ -20,6 +20,8 @@ function WasteRecipe(totals) {
     }
 }
 
+var image_id = zero
+
 function makeGraph(totals, ignore) {
     var edgeIndexMap = {}
     var edge = 0
@@ -28,6 +30,7 @@ function makeGraph(totals, ignore) {
     var maxRate = zero
     var edgeRates = []
     var edgeStyles = []
+    var images = {}
     var addEdge = function(node1, node2, rate, label, style, name) {
         if (!minRate || rate.less(minRate)) {
             minRate = rate
@@ -56,6 +59,14 @@ function makeGraph(totals, ignore) {
         g.setNode(name, label)
         nodes.push(name)
     }
+    var image = function(obj) {
+        var id = "im" + image_id.toDecimal()
+        image_id = image_id.add(one)
+        var im = getImage(obj, true)
+        im.id = id
+        images[id] = obj
+        return im
+    }
     var g = new dagreD3.graphlib.Graph({multigraph: true})
     g.setGraph({})
     g.setDefaultEdgeLabel(function() { return  {} })
@@ -63,7 +74,7 @@ function makeGraph(totals, ignore) {
         var rate = totals.totals[recipeName]
         var recipe = solver.recipes[recipeName]
         var factoryCount = spec.getCount(recipe, rate)
-        var im = getImage(recipe)
+        var im = image(recipe)
         if (ignore[recipeName]) {
             im.classList.add("ignore")
         }
@@ -72,7 +83,7 @@ function makeGraph(totals, ignore) {
             label += sprintf(" \u00d7 %s/%s", displayRate(rate), rateName)
         } else {
             var factory = spec.getFactory(recipe)
-            var im = getImage(factory.factory)
+            var im = image(factory.factory)
             if (ignore[recipeName]) {
                 im.classList.add("ignore")
             }
@@ -138,7 +149,7 @@ function makeGraph(totals, ignore) {
                     var subRate = totals.totals[subRecipe.name].mul(subRecipe.gives(ing.item, spec)).mul(ratio)
                     var label = sprintf(
                         "%s \u00d7 %s/%s",
-                        getImage(ing.item).outerHTML,
+                        image(ing.item).outerHTML,
                         displayRate(subRate),
                         rateName
                     )
@@ -165,7 +176,7 @@ function makeGraph(totals, ignore) {
                 var rate = totals.totals[recipeName].mul(ing.amount)
                 var label = sprintf(
                     "%s \u00d7 %s/%s",
-                    getImage(ing.item).outerHTML,
+                    image(ing.item).outerHTML,
                     displayRate(rate),
                     rateName
                 )
@@ -177,7 +188,7 @@ function makeGraph(totals, ignore) {
             }
         }
     }
-    return {g: g, nodes: nodes, edges: edgeIndexMap, min: minRate, max: maxRate, rates: edgeRates, styles: edgeStyles}
+    return {g: g, nodes: nodes, edges: edgeIndexMap, min: minRate, max: maxRate, rates: edgeRates, styles: edgeStyles, images: images}
 }
 
 function GraphEdge(edge, label) {
@@ -290,5 +301,13 @@ function renderGraph(totals, ignore) {
         node.addEventListener("mouseover", new GraphMouseOverHandler(graphNode))
         node.addEventListener("mouseout", new GraphMouseLeaveHandler(graphNode))
         node.addEventListener("click", new GraphClickHandler(graphNode))
+    }
+    if (tooltipsEnabled) {
+        for (var id in graph.images) {
+            var obj = graph.images[id]
+            var im = document.getElementById(id)
+            im.title = ""
+            addTooltip(im, obj)
+        }
     }
 }

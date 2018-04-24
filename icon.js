@@ -19,19 +19,23 @@ function getImage(obj, suppressTooltip) {
     im.style.setProperty("background", "url(images/sprite-sheet-" + sheet_hash + ".png)")
     im.style.setProperty("background-position", x + "px " + y + "px")
     if (tooltipsEnabled && obj.renderTooltip && !suppressTooltip) {
-        var node = obj.renderTooltip()
-        var t = new Tooltip(im, {
-            placement: "right",
-            title: node,
-            html: true,
-            offset: "0, 20",
-            container: document.body,
-            boundariesElement: "window"
-        })
+        addTooltip(im, obj)
     } else {
         im.title = obj.name
     }
     return im
+}
+
+function addTooltip(im, obj) {
+    var node = obj.renderTooltip()
+    new Tooltip(im, {
+        placement: "right",
+        title: node,
+        html: true,
+        offset: "0, 20",
+        container: document.body,
+        boundariesElement: "window"
+    })
 }
 
 function blankImage() {

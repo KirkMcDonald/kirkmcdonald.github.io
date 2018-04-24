@@ -188,7 +188,7 @@ function ItemRow(row, item, canIgnore) {
         pipeCell.classList.add("pad-right")
         row.appendChild(pipeCell)
         var pipeItem = solver.items["pipe"]
-        pipeCell.appendChild(getImage(pipeItem))
+        pipeCell.appendChild(getImage(pipeItem, true))
         this.pipeNode = document.createElement("tt")
         pipeCell.appendChild(this.pipeNode)
     } else {
