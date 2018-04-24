@@ -405,10 +405,21 @@ FactorySpec.prototype = {
     },
 }
 
+function renderTooltipBase() {
+    var t = document.createElement("div")
+    t.classList.add("frame")
+    var title = document.createElement("h3")
+    var im = getImage(this, true)
+    title.appendChild(im)
+    title.appendChild(new Text(formatName(this.name)))
+    t.appendChild(title)
+    return t
+}
+
 function getFactories(data) {
     var factories = []
     var pumpDef = data["offshore-pump"]["offshore-pump"]
-    factories.push(new FactoryDef(
+    var pump = new FactoryDef(
         "offshore-pump",
         pumpDef.icon_col,
         pumpDef.icon_row,
@@ -418,9 +429,11 @@ function getFactories(data) {
         0,
         zero,
         null
-    ))
+    )
+    pump.renderTooltip = renderTooltipBase
+    factories.push(pump)
     var reactorDef = data["reactor"]["nuclear-reactor"]
-    factories.push(new FactoryDef(
+    var reactor = new FactoryDef(
         "nuclear-reactor",
         reactorDef.icon_col,
         reactorDef.icon_row,
@@ -430,7 +443,9 @@ function getFactories(data) {
         0,
         zero,
         null
-    ))
+    )
+    reactor.renderTooltip = renderTooltipBase
+    factories.push(reactor)
     for (var type in {"assembling-machine": true, "furnace": true, "rocket-silo": true}) {
         for (var name in data[type]) {
             var d = data[type][name]
