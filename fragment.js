@@ -60,7 +60,7 @@ function formatSettings() {
         settings += "vf=" + displayFormat[0] + "&"
     }
     if (tooltipsEnabled != DEFAULT_TOOLTIP) {
-        settings += "t=on&"
+        settings += "t=off&"
     }
 
     settings += "items="

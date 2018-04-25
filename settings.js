@@ -478,14 +478,14 @@ function renderValueFormat(settings) {
 }
 
 // tooltips
-var DEFAULT_TOOLTIP = false
+var DEFAULT_TOOLTIP = true
 
 var tooltipsEnabled = DEFAULT_TOOLTIP
 
 function renderTooltip(settings) {
     tooltipsEnabled = DEFAULT_TOOLTIP
     if ("t" in settings) {
-        tooltipsEnabled = settings.t === "on"
+        tooltipsEnabled = settings.t !== "off"
     }
     var input = document.getElementById("tooltip")
     input.checked = tooltipsEnabled
