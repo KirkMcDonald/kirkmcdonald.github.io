@@ -808,7 +808,7 @@ function RecipeTable(node) {
     dummyWaste.classList.add("waste")
     this.totalRow.appendChild(dummyWaste)
     var totalLabelCell = document.createElement("td")
-    totalLabelCell.colSpan = 9
+    totalLabelCell.colSpan = 10
     totalLabelCell.classList.add("right-align")
     var totalLabel = document.createElement("b")
     totalLabel.textContent = "total power:"
