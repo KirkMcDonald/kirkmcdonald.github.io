@@ -11,7 +11,7 @@ function Sprite(name, col, row) {
     this.icon_row = row
 }
 
-function getImage(obj, suppressTooltip, tooltipOffset) {
+function getImage(obj, suppressTooltip, tooltipTarget) {
     var im = blankImage()
     im.classList.add("icon")
     var x = -obj.icon_col * PX_WIDTH
@@ -19,27 +19,16 @@ function getImage(obj, suppressTooltip, tooltipOffset) {
     im.style.setProperty("background", "url(images/sprite-sheet-" + sheet_hash + ".png)")
     im.style.setProperty("background-position", x + "px " + y + "px")
     if (tooltipsEnabled && obj.renderTooltip && !suppressTooltip) {
-        addTooltip(im, obj, tooltipOffset)
+        addTooltip(im, obj, tooltipTarget)
     } else {
         im.title = obj.name
     }
     return im
 }
 
-function addTooltip(im, obj, offsetPx) {
+function addTooltip(im, obj, target) {
     var node = obj.renderTooltip()
-    var offsetStr = "0, 20"
-    if (offsetPx) {
-        offsetStr = "0, " + String(offsetPx)
-    }
-    new Tooltip(im, {
-        placement: "right",
-        title: node,
-        html: true,
-        offset: offsetStr,
-        container: document.body,
-        boundariesElement: "window"
-    })
+    return new Tooltip(im, node, target)
 }
 
 function blankImage() {

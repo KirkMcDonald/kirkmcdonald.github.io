@@ -85,9 +85,7 @@ function BuildTarget(index, itemName) {
             for (var k = 0; k < subgroup.length; k++) {
                 var currentItem = subgroup[k]
                 var currentItemName = currentItem.name
-                var col = k % 10
-                var offset = (10 - col) * 36 + 20
-                var image = getImage(currentItem, false, offset)
+                var image = getImage(currentItem, false, dropdown.dropdown)
                 if (!image) {
                     continue
                 }

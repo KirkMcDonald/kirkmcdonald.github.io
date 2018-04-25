@@ -77,8 +77,8 @@ function searchTargets(ev) {
             currentBrHasContent = false
         }
         else {
-            var icon = elem.firstChild
-            var title = icon.title.replace("-", "")
+            var input = document.getElementById(elem.htmlFor)
+            var title = input.value.replace(/-/g, "")
             // if title contains the search phrase
             if (title.indexOf(search_text) != -1) {
                 elem.style.display = ""
