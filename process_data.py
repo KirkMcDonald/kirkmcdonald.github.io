@@ -80,7 +80,8 @@ def main():
         data = json.load(f)
     item_types = ["ammo", "armor", "blueprint", "blueprint-book", "capsule", "deconstruction-item", "fluid", "gun", "item", "item-with-entity-data", "mining-tool", "module", "rail-planner", "repair-tool", "tool"]
     no_module_icon = data["utility-sprites"]["default"]["slot_icon_module"]["filename"]
-    icon_paths = {no_module_icon}
+    clock_icon = data["utility-sprites"]["default"]["clock"]["filename"]
+    icon_paths = {no_module_icon, clock_icon}
     # Normalize items
     item_groups = {d["name"]: {"order": d["order"], "subgroups": {}} for d in data["item-group"].values()}
     item_subgroups = data["item-subgroup"]
@@ -212,15 +213,21 @@ def main():
         os.replace(temp_name, im_name)
     else:
         os.remove(temp_name)
-    col, row = icon_map[no_module_icon]
+    mod_col, mod_row = icon_map[no_module_icon]
+    clock_col, clock_row = icon_map[clock_icon]
     new_data["sprites"] = {
         "hash": sprite_hash,
         "extra": {
             "slot_icon_module": {
                 "name": "no module",
-                "icon_col": col,
-                "icon_row": row,
-            }
+                "icon_col": mod_col,
+                "icon_row": mod_row,
+            },
+            "clock": {
+                "name": "time",
+                "icon_col": clock_col,
+                "icon_row": clock_row,
+            },
         },
     }
     version = data["module_info"]["core"]["version"]

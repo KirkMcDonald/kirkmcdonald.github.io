@@ -106,10 +106,11 @@ Recipe.prototype = {
             }
             t.appendChild(document.createElement("br"))
         }
-        var time = document.createElement("b")
-        time.textContent = "Time: "
+        var time = document.createElement("div")
+        time.classList.add("product")
+        time.appendChild(getExtraImage("clock"))
         t.appendChild(time)
-        t.appendChild(new Text(this.time.toDecimal() + "s"))
+        t.appendChild(new Text("\u00A0" + this.time.toDecimal()))
         for (var i = 0; i < this.ingredients.length; i++) {
             var ing = this.ingredients[i]
             t.appendChild(document.createElement("br"))
