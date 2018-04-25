@@ -5,25 +5,86 @@ function UnknownRecipe(item) {
     this.item = item
 }
 
+function walk(item, seen, solvers) {
+    for (var i = 0; i < solvers.length; i++) {
+        var m = solvers[i]
+        if (item.name in m.outputs) {
+            return m
+        }
+    }
+    seen[item.name] = item
+    for (var i = 0; i < item.recipes.length; i++) {
+        var recipe = item.recipes[i]
+        for (var j = 0; j < recipe.ingredients.length; j++) {
+            var ing = recipe.ingredients[j]
+            if (ing.item.name in seen) {
+                continue
+            }
+            var m = walk(ing.item, seen, solvers)
+            if (m) {
+                return m
+            }
+        }
+    }
+    return null
+}
+
+function insertBefore(array, newItem, existingItem) {
+    if (!existingItem) {
+        array.push(newItem)
+        return
+    }
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] === existingItem) {
+            array.splice(i, 0, newItem)
+            return
+        }
+    }
+    array.push(newItem)
+}
+
+function topologicalOrder(matrixSolvers) {
+    var result = []
+    for (var i = 0; i < matrixSolvers.length; i++) {
+        var m = matrixSolvers[i]
+        var items = {}
+        // Obtain set of items depended on by the group.
+        for (var j = 0; j < m.inputRecipes.length; j++) {
+            var recipe = m.inputRecipes[j]
+            for (var k = 0; k < recipe.ingredients.length; k++) {
+                var ing = recipe.ingredients[k]
+                items[ing.item.name] = ing.item
+            }
+        }
+        var dep = null
+        for (var itemName in items) {
+            var item = items[itemName]
+            var m2 = walk(item, {}, matrixSolvers)
+            if (m2) {
+                dep = m2
+                break
+            }
+        }
+        insertBefore(result, m, dep)
+    }
+    return result
+}
+
 function Solver(items, recipes) {
     this.items = items
     this.recipes = recipes
     this.disabledRecipes = {}
     var groups = findGroups(items, recipes)
-    // XXX: This is a hack. It assumes that there are exactly two groups, and
-    // manually resolves the dependency between them instead of determining the
-    // dependency algorithmically.
-    if ("uranium-processing" in groups[1]) {
-        groups = [groups[1], groups[0]]
-    }
     this.matrixSolvers = []
     for (var i = 0; i < groups.length; i++) {
         var group = groups[i]
         this.matrixSolvers.push(new MatrixSolver(group))
+        // The order in which these group IDs are assigned does not matter.
         for (var recipeName in group) {
             group[recipeName].group = i
         }
     }
+    this.matrixSolvers = topologicalOrder(this.matrixSolvers)
 }
 Solver.prototype = {
     constructor: Solver,
