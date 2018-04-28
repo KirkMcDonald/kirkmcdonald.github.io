@@ -977,6 +977,8 @@ RecipeTable.prototype = {
     },
 }
 
+var timesDisplayed = zero
+
 // Re-renders the current solution, without re-computing it.
 function display() {
     // Update the display of the target rate text boxes, if needed.
@@ -992,4 +994,8 @@ function display() {
     }
     recipeTable.displaySolution(totals)
     renderDebug()
+
+    timesDisplayed = timesDisplayed.add(one)
+    var dc = document.getElementById("display_count")
+    dc.textContent = timesDisplayed.toDecimal()
 }
