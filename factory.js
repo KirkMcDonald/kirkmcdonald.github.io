@@ -120,7 +120,7 @@ Factory.prototype = {
             this.modules.length = factoryDef.moduleSlots
         }
         var toAdd = null
-        if (spec.defaultModule.canUse(this.recipe)) {
+        if (spec.defaultModule && spec.defaultModule.canUse(this.recipe)) {
             toAdd = spec.defaultModule
         }
         while (this.modules.length < factoryDef.moduleSlots) {
