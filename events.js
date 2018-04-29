@@ -346,7 +346,7 @@ function BeaconHandler(recipeName) {
 // Triggered when a beacon module count is changed.
 function BeaconCountHandler(recipeName) {
     this.handleEvent = function(event) {
-        var moduleCount = RationalFromFloats(event.target.value, 1)
+        var moduleCount = RationalFromString(event.target.value)
         var factory = getFactory(recipeName)
         factory.beaconCount = moduleCount
         if (isFactoryTarget(recipeName) && factory.beaconModule) {
