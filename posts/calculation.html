@@ -34,7 +34,8 @@ table.matrix td.comment {
 <a class="toc" href="#basics">1. Basics</a><br>
 <a class="toc" href="#complex-recipes">2. Complex recipes</a><br>
 <a class="toc" href="#handling-multiple-unknowns">3. Handling multiple unknowns</a><br>
-<a class="toc" href="#no-solution-found">4. No solution found</a>
+<a class="toc" href="#no-solution-found">4. No solution found</a><br>
+<a class="toc" href="#linear-programming">5. Linear programming</a>
 
 <h2 id="basics">Basics</h2>
 
@@ -297,7 +298,7 @@ functionPlot({
 <p>
 In mathematical terms, let's call the recipe matrix <b>A</b>, the vector of ratios we want to solve for <b>x</b>, and the vector of desired outputs <b>b</b>. Together, these satisfy the relationship <b>Ax</b> = <b>b</b>. However, it is very important that all of the components of <b>x</b> are positive. A negative value in <b>x</b> would represent trying to operate a recipe in reverse, which is not something that makes sense in the context of the game.
 <p>
-Thus, the vertical lines in the above plot represent the minimum and maximum values for x<sub>crude oil</sub> such that all of the values in <b>x</b> will be greater than or equal to zero. Or, in game terms, they represent the minimum and maximum amounts of oil we could spend in order to produce 4.5 units of petroleum gas and 1 unit of heavy oil, with no other oil products left over.
+Thus, the vertical lines in the above plot represent the minimum and maximum values for x<sub>crude oil</sub> such that all of the values in <b>x</b> will be greater than or equal to zero. Or, in game terms, they represent the minimum and maximum amounts of oil we could spend in order to produce 45 units of petroleum gas and 1 unit of heavy oil, with no other oil products left over.
 <p>
 In order to choose a value for x<sub>crude oil</sub>, we need to establish an order of priorities. Ultimately, we are trying to find the most efficient production chain for the items we want to make, where efficiency is defined as using as few resources as possible. But, as we can see with water and crude oil in the above plot, sometimes resources are used in inverse proportion to one another. Using less crude oil would mean using more water, and vice versa.
 <p>
@@ -625,6 +626,184 @@ vectors.on("mousemove", vectormousemove)
 <p>
 The situation with the complete recipe graph is analogous, except with a third dimension representing petroleum gas.
 <p>
-The shortcoming of representing the recipe graph as a vector space is that it becomes difficult to find partial solutions. The mathematics involved want solutions which will completely zero out, but in the actual game, you have a certain amount of wiggle room in which you can stockpile excess materials, use circuit networks to intelligently regulate your oil cracking, and so forth.
+This can be overcome by introducing new vectors which can "waste" any given item. So long as these matrix columns are treated with the lowest priority, they should be used only when required.
+
+<h2 id="linear-programming">Linear programming</h2>
+
+The naive linear algebraic approach described above is simple, but has some clear shortcomings. As the recipe graph grows more lopsided, there is a combinatoric explosion of possible solutions, which quickly becomes computationally prohibitive. Luckily, we have linear programming.
 <p>
-Exact solutions are useful to know for the purposes of planning your factory, but they can't substitute for actually playing the game.
+The chief difficulty of representing a Factorio recipe graph as a linear program lies in crafting the objective function. The linear algebra approach described in the previous sections has the advantage of returning each possible solution as a tuple of costs, which may be compared to each other in whichever way is found most convenient.
+<p>
+When specifying the recipe graph as a linear program, however, the costs have to be specified as a linear combination, which ultimately has to yield a scalar value. There is a way to do this, but first let's go through the relatively simple example of the oil processing pipeline.
+<p>
+Here's a matrix we used earlier:
+
+<table class="matrix">
+<tr>
+    <th></th>
+    <th><img src="heavy-oil-cracking.png"></th>
+    <th><img src="light-oil-cracking.png"></th>
+    <th><img src="basic-oil-processing.png"></th>
+    <th><img src="advanced-oil-processing.png"></th>
+    <th><img src="water.png"></th>
+    <th><img src="crude-oil.png"></th>
+    <th>output</th>
+</tr>
+<tr>
+    <th><img src="heavy-oil.png"></th>
+    <td>-40</td><td>0</td><td>30</td><td>10</td><td>0</td><td>0</td><td>10</td>
+</tr>
+<tr>
+    <th><img src="light-oil.png"></th>
+    <td>30</td><td>-30</td><td>30</td><td>45</td><td>0</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <th><img src="petroleum-gas.png"></th>
+    <td>0</td><td>20</td><td>40</td><td>55</td><td>0</td><td>0</td><td>45</td>
+</tr>
+<tr>
+    <th><img src="water.png"></th>
+    <td>-30</td><td>-30</td><td>0</td><td>-50</td><td>1</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <th><img src="crude-oil.png"></th>
+    <td>0</td><td>0</td><td>-100</td><td>-100</td><td>0</td><td>1</td><td>0</td>
+</tr>
+</table>
+
+In linear programming terms, we want to <b>minimize</b> our resource expenditures, while producing <b>at least</b> the rate of items we're interested in. In other words:
+<p>
+<b>Minimize</b> C = <b>x</b><sub>crude oil</sub> <b>subject to:</b>
+<blockquote>-40<b>x</b><sub>1</sub> + 30<b>x</b><sub>3</sub> + 10<b>x</b><sub>4</sub> &ge; 10<br>
+30<b>x</b><sub>1</sub> - 30<b>x</b><sub>2</sub> + 30<b>x</b><sub>3</sub> + 45<b>x</b><sub>4</sub> &ge; 0<br>
+20<b>x</b><sub>2</sub> + 40<b>x</b><sub>3</sub> + 55<b>x</b><sub>4</sub> &ge; 45<br>
+-30<b>x</b><sub>1</sub> - 30<b>x</b><sub>2</sub> - 50<b>x</b><sub>4</sub> + <b>x</b><sub>water</sub> &ge; 0<br>
+-100<b>x</b><sub>3</sub> - 100<b>x</b><sub>4</sub> + <b>x</b><sub>crude oil</sub> &ge; 0<br>
+&forall;i: <b>x</b><sub>i</sub> &ge; 0
+</blockquote>
+
+Note that, at this point, we are specifying crude oil as the only cost because we know ahead of time that we want it to be so. I will address the general case of determining a cost function later.
+<p>
+The tableau for our linear program looks like this:
+
+<table class="matrix">
+<tr>
+    <th><img src="heavy-oil-cracking.png"></th>
+    <th><img src="light-oil-cracking.png"></th>
+    <th><img src="basic-oil-processing.png"></th>
+    <th><img src="advanced-oil-processing.png"></th>
+    <th><img src="water.png"></th>
+    <th><img src="crude-oil.png"></th>
+    <th>s<sub>1</sub></th>
+    <th>s<sub>2</sub></th>
+    <th>s<sub>3</sub></th>
+    <th>s<sub>4</sub></th>
+    <th>s<sub>5</sub></th>
+    <th>C</th>
+    <th>answer</th>
+</tr>
+<tr>
+    <td>-40</td><td>0</td><td>30</td><td>10</td><td>0</td><td>0</td><td>-1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>10</td>
+</tr>
+<tr>
+    <td>30</td><td>-30</td><td>30</td><td>45</td><td>0</td><td>0</td><td>0</td><td>-1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <td>0</td><td>20</td><td>40</td><td>55</td><td>0</td><td>0</td><td>0</td><td>0</td><td>-1</td><td>0</td><td>0</td><td>0</td><td>45</td>
+</tr>
+<tr>
+    <td>-30</td><td>-30</td><td>0</td><td>-50</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>-1</td><td>0</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <td>0</td><td>0</td><td>-100</td><td>-100</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>-1</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td>
+</tr>
+</table>
+
+This program is not in the standard form, but we can get there with a bit of number-wrangling. Applying the simplex method to the matrix from there is fairly trivial. We ultimately end up with the following:
+
+<table class="matrix">
+<tr>
+    <th><img src="heavy-oil-cracking.png"></th>
+    <th><img src="light-oil-cracking.png"></th>
+    <th><img src="basic-oil-processing.png"></th>
+    <th><img src="advanced-oil-processing.png"></th>
+    <th><img src="water.png"></th>
+    <th><img src="crude-oil.png"></th>
+    <th>s<sub>1</sub></th>
+    <th>s<sub>2</sub></th>
+    <th>s<sub>3</sub></th>
+    <th>s<sub>4</sub></th>
+    <th>s<sub>5</sub></th>
+    <th>C</th>
+    <th>answer</th>
+</tr>
+<tr>
+    <td>-400/13</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>-50/39</td><td>-80/117</td><td>-40/39</td><td> 0</td><td>-1</td><td>0</td><td>2300/39</td>
+</tr>
+<tr>
+    <td>-7/13</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1/390</td><td>5/234</td><td>-7/390</td><td>0</td><td>0</td><td>0</td><td>61/78</td>
+</tr>
+<tr>
+    <td>400/13</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>21/13</td><td>5/39</td><td>-17/13</td><td>-1</td><td>0</td><td>0</td><td>555/13</td>
+</tr>
+<tr>
+    <td>20/13</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>2/65</td><td>-2/195</td><td>-1/65</td><td>0</td><td>0</td><td>0</td><td>5/13</td>
+</tr>
+<tr>
+    <td>-24/13</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>-17/390</td><td>2/585</td><td>1/195</td><td>0</td><td>0</td><td>0</td><td>8/39</td>
+</tr>
+<tr>
+    <td>400/13</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>50/39</td><td>80/117</td><td>40/39</td><td>0</td><td>1</td><td>1</td><td>-2300/39</td>
+</tr>
+</table>
+
+Or, in plainer terms:
+
+<table class="matrix">
+<tr>
+    <th><img src="heavy-oil-cracking.png"></th>
+    <th><img src="light-oil-cracking.png"></th>
+    <th><img src="basic-oil-processing.png"></th>
+    <th><img src="advanced-oil-processing.png"></th>
+    <th><img src="water.png"></th>
+    <th><img src="crude-oil.png"></th>
+</tr>
+<tr><td>0.00</td><td>0.78</td><td>0.21</td><td>0.38</td><td>42.69</td><td>58.97</td></td>
+</table>
+
+Notice that this is the same result that we obtained earlier.
+<p>
+Now let's circle back to the cost function.
+<p>
+Ultimately, we want to prioritize our resource usage according to an a priori notion of how "difficult" each resource is to acquire. Crude oil is somewhat difficult to obtain compared to water, which is effectively free. Therefore, our cost function should value crude oil more highly than water. The question is: How <em>much</em> more?
+<p>
+Let's see what happens to the above solution if we define water to have a fixed cost of 1, while adjusting the cost of crude oil:
+<p>
+<img src="oil-costs.png">
+<p>
+As we increase the cost coefficient of oil, the solution jumps, discontinuously, from one value for <b>x</b> to another. Past a certain point, it settles on a single solution, which will remain the same as the cost coefficient increases to infinity. This solution is the same one we get when we set water's cost to 0 and crude oil's cost to 1.
+<p>
+The cost function is a linear function, and the ratio of these costs defines the slope of the resulting line. As that slope changes, the cost function will reach different vertices on the boundary of the feasible region. Once the slope exceeds that final critical value, the vertex it will reach will remain the same no matter how much steeper that slope becomes, all the way up to infinity (a completely vertical line).
+<p>
+It follows, then, that the ratio in the costs between these resources may be any value that we know to be greater than or equal to this highest critical ratio. Actually <em>calculating</em> this critical value basically requires a linear program of its own, but it turns out we can <em>assume</em> that it will always be less than the ratio between the largest absolute value in the linear program and the smallest. In the example we've been using, that ratio is 10.
+<p>
+To restate our goal, we want our cost function to represent a lexicographical ordering of our resources: First minimize our use of crude oil, then (if multiple solutions would use equal amounts of crude oil) minimize our use of water. Given this, we can revise our cost function to:
+
+<blockquote>C = <b>x</b><sub>water</sub> + 10<b>x</b><sub>crude oil</sub></blockquote>
+
+The resulting solution remains the same as above.
+<p>
+Now let's discuss the <b>surplus variables</b>. These represent quantities of items which we produce as surplus, in addition to the amounts we requested. While our priority is still, first and foremost, to minimize our resource expenditures, we also want to avoid making extra items that we don't need to. We can represent this with another change to the cost function:
+
+<blockquote>C = 50<b>x</b><sub>water</sub> + 500<b>x</b><sub>crude oil</sub> + <b>s</b><sub>1</sub> + <b>s</b><sub>2</sub> + <b>s</b><sub>3</sub> + <b>s</b><sub>4</sub> + <b>s</b><sub>5</sub></blockquote>
+
+The surplus variables represent their own distinct priority level. If we define the ratio described above as R, and the number of items at each priority level as N, then the coefficient for each priority level can be defined something like this:
+
+<blockquote>P<sub>n</sub> = P<sub>n - 1</sub> &times; R &times; N<sub>n - 1</sub></blockquote>
+
+Where P<sub>1</sub> is defined to be 1. Thus, the cost coefficient for water is 10 (the overall cost ratio) times 5 (the number of surplus variables).
+<p>
+Once again, the solution we obtain from using this cost function remains the same as above.
