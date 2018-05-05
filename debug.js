@@ -95,26 +95,24 @@ function renderDebug() {
             node.appendChild(table)
         }
         var A = matrixSolver.lastSolution
-        /*if (A) {
-            var table = renderMatrix(matrixSolver, A, false)
+        if (A) {
+            var basis = getBasis(A)
+            var table = document.createElement("table")
+            table.border = "1"
+            var header = getSolutionHeader(matrixSolver)
+            table.appendChild(header)
+            var row = document.createElement("tr")
+            table.appendChild(row)
+            for (var j = 0; j < basis.length; j++) {
+                var cell = document.createElement("td")
+                cell.classList.add("right-align")
+                row.appendChild(cell)
+                var x = basis[j]
+                var tt = document.createElement("tt")
+                tt.textContent = x.toDecimal(3)
+                cell.appendChild(tt)
+            }
             node.appendChild(table)
-        }*/
-        var basis = getBasis(A)
-        var table = document.createElement("table")
-        table.border = "1"
-        var header = getSolutionHeader(matrixSolver)
-        table.appendChild(header)
-        var row = document.createElement("tr")
-        table.appendChild(row)
-        for (var j = 0; j < basis.length; j++) {
-            var cell = document.createElement("td")
-            cell.classList.add("right-align")
-            row.appendChild(cell)
-            var x = basis[j]
-            var tt = document.createElement("tt")
-            tt.textContent = x.toDecimal(3)
-            cell.appendChild(tt)
         }
-        node.appendChild(table)
     }
 }
