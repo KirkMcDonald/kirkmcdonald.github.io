@@ -249,10 +249,19 @@ var OIL_OPTIONS = [
     new Oil("coal-liquefaction", "coal")
 ]
 
-var priorityName
+var DEFAULT_OIL = "default"
+
+var OIL_EXCLUSION = {
+    "default": {},
+    "basic": {"advanced-oil-processing": true},
+    "coal": {"advanced-oil-processing": true, "basic-oil-processing": true}
+}
+
+var oilGroup = DEFAULT_OIL
 
 function renderOil(settings) {
-    var oil = DEFAULT_PRIORITY
+    var oil = DEFAULT_OIL
+    // Named "p" for historical reasons.
     if ("p" in settings) {
         oil = settings.p
     }
@@ -271,8 +280,9 @@ function renderOil(settings) {
 }
 
 function setOilRecipe(name) {
-    solver.setPriority(name)
-    priorityName = name
+    solver.removeDisabledRecipes(OIL_EXCLUSION[oilGroup])
+    oilGroup = name
+    solver.addDisabledRecipes(OIL_EXCLUSION[oilGroup])
 }
 
 // kovarex
@@ -293,9 +303,9 @@ function renderKovarex(settings) {
 function setKovarex(enabled) {
     kovarexEnabled = enabled
     if (enabled) {
-        solver.setDisabledRecipes({})
+        solver.removeDisabledRecipes({"kovarex-enrichment-process": true})
     } else {
-        solver.setDisabledRecipes({"kovarex-enrichment-process": true})
+        solver.addDisabledRecipes({"kovarex-enrichment-process": true})
     }
 }
 

@@ -110,7 +110,7 @@ Rational.prototype = {
     },
     abs: function() {
         if (this.less(zero)) {
-            return this.mul(new Rational(bigInt.minusOne, bigInt.one))
+            return this.mul(minusOne)
         }
         return this
     },

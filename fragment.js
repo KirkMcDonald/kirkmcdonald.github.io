@@ -30,8 +30,8 @@ function formatSettings() {
     if (preferredFuel.name != DEFAULT_FUEL) {
         settings += "fuel=" + preferredFuel.name + "&"
     }
-    if (priorityName != DEFAULT_PRIORITY) {
-        settings += "p=" + priorityName + "&"
+    if (oilGroup != DEFAULT_OIL) {
+        settings += "p=" + oilGroup + "&"
     }
     if (kovarexEnabled != DEFAULT_KOVAREX) {
         settings += "k=off&"

@@ -10,7 +10,7 @@ function OutputRecipe() {
     }
 }
 
-function WasteRecipe(totals) {
+function SurplusRecipe(totals) {
     this.ingredients = []
     for (var itemName in totals.waste) {
         var rate = totals.waste[itemName]
@@ -100,7 +100,7 @@ function makeGraph(totals, ignore) {
     }
     var fakeNodes = ["output"]
     if (Object.keys(totals.waste).length > 0) {
-        fakeNodes.push("waste")
+        fakeNodes.push("surplus")
     }
     for (var i = 0; i < fakeNodes.length; i++) {
         addNode(fakeNodes[i], {"label": fakeNodes[i], "labelType": "html"})
@@ -115,8 +115,8 @@ function makeGraph(totals, ignore) {
         var ingredients = []
         if (recipeName == "output") {
             recipe = new OutputRecipe()
-        } else if (recipeName == "waste") {
-            recipe = new WasteRecipe(totals)
+        } else if (recipeName == "surplus") {
+            recipe = new SurplusRecipe(totals)
         } else {
             recipe = solver.recipes[recipeName]
             ingredients = recipe.fuelIngredient(spec)
@@ -140,7 +140,7 @@ function makeGraph(totals, ignore) {
                 var subRecipe = ing.item.recipes[j]
                 if (subRecipe.name in totals.totals) {
                     var rate
-                    if (recipeName == "output" || recipeName == "waste") {
+                    if (recipeName == "output" || recipeName == "surplus") {
                         rate = ing.amount
                     } else {
                         rate = totals.totals[recipeName].mul(ing.amount)

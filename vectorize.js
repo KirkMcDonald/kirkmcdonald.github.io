@@ -1,120 +1,6 @@
 "use strict"
 
-var DEFAULT_PRIORITY = "default"
-
-var PRIORITY = {
-    "default": ["uranium-ore", "steam", "crude-oil", "coal", "water"],
-    "basic": ["uranium-ore", "steam", "water", "crude-oil", "coal"],
-    "coal": ["uranium-ore", "crude-oil", "water", "coal", "steam"]
-}
-var WASTE_ITEM_PRIORITY = ["solid-fuel", "petroleum-gas", "light-oil", "heavy-oil"]
-
-function combinations(n, r) {
-    if (r > n) {
-        return []
-    }
-    var result = []
-    var indices = []
-    for (var i = 0; i < r; i++) {
-        indices.push(i)
-    }
-    result.push(indices.slice())
-    while (true) {
-        var i = r - 1
-        for (; i >= 0; i--) {
-            if (indices[i] != i + n - r) {
-                break
-            }
-        }
-        if (i < 0) {
-            return result
-        }
-        indices[i] += 1
-        for (var j = i + 1; j < r; j++) {
-            indices[j] = indices[j - 1] + 1
-        }
-        result.push(indices.slice())
-    }
-}
-
-// Combine list of indexes (output from combinations) with indexes being
-// ignored. Also don't zero out guaranteed columns (input recipes).
-function applyIgnore(indexes, ignore, guarantee, n) {
-    var result = []
-    var lookup = []
-    var j = 0
-    var g = 0
-    for (var i = 0; i < n; i++) {
-        if (i == ignore[j]) {
-            j++
-            continue
-        }
-        while ((i + g) == guarantee[g]) {
-            g++
-        }
-        lookup.push(i + g)
-    }
-    j = 0
-    for (var i = 0; i < indexes.length; i++) {
-        var val = lookup[indexes[i]]
-        while (j < ignore.length && ignore[j] < val) {
-            result.push(ignore[j])
-            j++
-        }
-        result.push(val)
-    }
-    for (; j < ignore.length; j++) {
-        result.push(ignore[j])
-    }
-    return result
-}
-
-// Assumes same length.
-function lexicographicOrder(a, b) {
-    for (var i = 0; i < a.length; i++) {
-        if (a[i].equal(b[i])) {
-            continue
-        }
-        if (a[i].less(b[i])) {
-            return -1
-        } else {
-            return 1
-        }
-    }
-    return 0
-}
-
-// Given two sorted arrays of integers, return whether a is a subset of b.
-function subset(a, b) {
-    var j = 0
-    for (var i = 0; i < a.length; i++) {
-        while (j < b.length && b[j] < a[i]) {
-            j++
-        }
-        if (j == b.length || b[j] != a[i]) {
-            return false
-        }
-    }
-    return true
-}
-
-// Given two sorted arrays of integers, return whether there are any elements
-// in common.
-function intersectArrays(a, b) {
-    var j = 0;
-    for (var i = 0; i < a.length; i++) {
-        while (j < b.length && b[j] < a[i]) {
-            j++
-        }
-        if (j == b.length) {
-            return false
-        }
-        if (a[i] == b[j]) {
-            return true
-        }
-    }
-    return false
-}
+var PRIORITY = ["uranium-ore", "steam", "crude-oil", "coal", "water"]
 
 function MatrixSolver(recipes) {
     var products = {}
@@ -171,7 +57,9 @@ function MatrixSolver(recipes) {
             this.inputColumns.push(i)
         }
     }
-    var recipeMatrix = new Matrix(items.length, allRecipes.length)
+    var rows = items.length + 2
+    var cols = allRecipes.length + items.length + 3
+    var recipeMatrix = new Matrix(rows, cols)
     for (var i = 0; i < recipeArray.length; i++) {
         var recipe = recipeArray[i]
         for (var j = 0; j < recipe.ingredients.length; j++) {
@@ -184,6 +72,8 @@ function MatrixSolver(recipes) {
             var k = itemIndexes[ing.item.name]
             recipeMatrix.addIndex(k, i, ing.amount)
         }
+        // Recipe tax.
+        recipeMatrix.setIndex(items.length, i, minusOne)
     }
     for (var i = 0; i < this.inputRecipes.length; i++) {
         var recipe = this.inputRecipes[i]
@@ -193,35 +83,26 @@ function MatrixSolver(recipes) {
             recipeMatrix.addIndex(k, i + recipeArray.length, ing.amount)
         }
     }
+    // Add "recipe tax," so that wasted items will be wasted directly.
+    // There is no surplus variable for this value.
+    recipeMatrix.setIndex(items.length, allRecipes.length, one)
+    recipeMatrix.setIndex(items.length + 1, allRecipes.length, one)
+    // Add surplus variables.
+    for (var i = 0; i < items.length; i++) {
+        var col = allRecipes.length + i + 1
+        recipeMatrix.setIndex(i, col, minusOne)
+    }
     // The matrix. (matrix.js)
     this.matrix = recipeMatrix
     // Map from item name to row number.
     this.itemIndexes = itemIndexes
     // List of all recipes in matrix, in matrix column order.
     this.recipes = allRecipes
-    this.setPriority(DEFAULT_PRIORITY)
-    this.wastePriorities = this.priority.length
-    for (var i = 0; i < WASTE_ITEM_PRIORITY.length; i++) {
-        var name = WASTE_ITEM_PRIORITY[i]
-        if (name in wasteItems) {
-            this.priority.push(this.recipes.length + wasteItems[name])
-        }
-    }
-    this.lastSolutions = []
+    this.lastProblem = null
+    this.lastSolution = null
 }
 MatrixSolver.prototype = {
     constructor: MatrixSolver,
-    setPriority: function(priorityName) {
-        // Maps priority number to column number.
-        var priority = PRIORITY[priorityName]
-        this.priority = []
-        for (var i = 0; i < priority.length; i++) {
-            var name = priority[i]
-            if (name in this.recipeIndexes) {
-                this.priority.push(this.recipeIndexes[name])
-            }
-        }
-    },
     match: function(products) {
         var result = {}
         for (var itemName in products) {
@@ -231,99 +112,48 @@ MatrixSolver.prototype = {
         }
         return result
     },
-    // Get the input/output column indexes for each item.
-    itemCols: function(row) {
-        var prodCols = []
-        var useCols = []
-        var productRecipes = this.matrix.cols - this.inputRecipes.length
-        for (var col = 0; col < productRecipes; col++) {
-            var x = this.matrix.index(row, col)
-            if (zero.less(x)) {
-                prodCols.push(col)
-            } else if (x.less(zero)) {
-                useCols.push(col)
-            }
-        }
-        return {prod: prodCols, use: useCols}
-    },
-    // Get the columns for recipes that produce an item that nothing needs.
-    ignoreCols: function(itemCols, want) {
-        // XXX: Do we need to de-dup this?
-        var ignore = []
-        var ignoredItems = 0
-        for (var row = 0; row < this.matrix.rows; row++) {
-            var providers = itemCols[row].prod
-            var users = itemCols[row].use
-            if (want[row].isZero() && users.length == 0) {
-                for (var i = 0; i < providers.length; i++) {
-                    ignore.push(providers[i])
-                }
-                ignoredItems++
-            }
-        }
-        return {columns: ignore, count: ignoredItems}
-    },
-    // Return whether the given set of indexes will exclude all possible
-    // producers of an item.
-    exclude: function(indexes, itemCols, ignore) {
-        var strippedIndexes = []
-        var j = 0
-        for (var i = 0; i < indexes.length; i++) {
-            while (j < ignore.length && ignore[j] < indexes[i]) {
-                j++
-            }
-            if (j < ignore.length && ignore[j] == indexes[i]) {
+    getPriorityRatio: function(A) {
+        var min = null
+        var max = null
+        for (var i = 0; i < A.mat.length; i++) {
+            var x = A.mat[i].abs()
+            if (x.isZero()) {
                 continue
             }
-            strippedIndexes.push(indexes[i])
+            if (min === null || x.less(min)) {
+                min = x
+            }
+            if (max === null || max.less(x)) {
+                max = x
+            }
         }
-        for (var row = 0; row < this.matrix.rows; row++) {
-            var cols = itemCols[row]
-            var providers = cols.prod
-            var users = cols.use
-            // Is an input item/recipe, already excluded.
-            if (providers.length == 0) {
+        return max.div(min)
+    },
+    setCost: function(A) {
+        var ratio = this.getPriorityRatio(A)
+        // Cost == 1 already "spent" on recipe tax.
+        var cost = ratio
+        // Maps priority number to column number.
+        for (var i = PRIORITY.length - 1; i >= 0; i--) {
+            var name = PRIORITY[i]
+            var col = this.recipeIndexes[name]
+            if (!col) {
                 continue
             }
-            if (subset(providers, strippedIndexes)) {
-                return true
-            }
+            A.setIndex(A.rows - 1, col, cost)
+            cost = cost.mul(ratio)
         }
-        return false
+        // Coefficient for cost value itself.
+        A.setIndex(A.rows - 1, A.cols - 2, one)
     },
-    // Return whether the given set of indexes will permit wasting all of our
-    // desired outputs.
-    excludeWaste: function(indexes, wantIndexes) {
-        return !intersectArrays(indexes, wantIndexes)
-    },
-    solveFor: function(products, spec, disabled, extra) {
-        // Array of desired item-rates.
-        var want = []
-        for (var i = 0; i < this.matrix.rows; i++) {
-            want.push(zero)
-        }
+    solveFor: function(products, spec, disabled) {
+        var A = this.matrix.copy()
         for (var itemName in products) {
             if (itemName in this.itemIndexes) {
-                want[this.itemIndexes[itemName]] = products[itemName]
+                var row = this.itemIndexes[itemName]
+                var rate = products[itemName]
+                A.setIndex(row, A.cols - 1, rate)
             }
-        }
-        var wantIndexes = []
-        for (var i = 0; i < want.length; i++) {
-            if (!want[i].equal(zero)) {
-                wantIndexes.push(i + this.recipes.length)
-            }
-        }
-        var A
-        if (extra) {
-            var toAdd = this.outputItems.length + 1
-            A = this.matrix.appendColumns(toAdd)
-            for (var i = 0; i < this.outputItems.length; i++) {
-                var row = this.itemIndexes[this.outputItems[i].name]
-                A.setIndex(row, this.recipes.length + i, minusOne)
-            }
-            A.setColumn(A.cols - 1, want)
-        } else {
-            A = this.matrix.appendColumn(want)
         }
         // Zero out disabled recipes
         for (var recipeName in disabled) {
@@ -332,126 +162,37 @@ MatrixSolver.prototype = {
                 A.zeroColumn(i)
             }
         }
-        // Information about which recipes are relevant to each item.
-        var itemCols = []
-        for (var i = 0; i < this.matrix.rows; i++) {
-            itemCols.push(this.itemCols(i))
-        }
-        // Number of recipes which are the outputs/targets of this matrix.
-        var productRecipes = A.cols - this.inputRecipes.length - 1
-        // Columns we know we don't need.
-        var ignoreParts = this.ignoreCols(itemCols, want)
-        var ignore = ignoreParts.columns
-        var ignoredItemCount = ignoreParts.count
-        // Number of unknowns in the solution.
-        var zeroCount = A.cols - A.rows - ignore.length + ignoredItemCount - 1
-        var solutions = []
-        this.lastSolutions = []
-        // Array of arrays, containing different combinations of columns to
-        // zero out.
-        var c = combinations(productRecipes - ignore.length, zeroCount)
-        possible: for (var i = 0; i < c.length; i++) {
-            // Adjust array of columns we will zero out to account for columns
-            // we are ignoring.
-            var indexes = applyIgnore(c[i], ignore, this.inputColumns, productRecipes)
-            // Ignore any combination which completely excludes all producers
-            // of any item.
-            if (this.exclude(indexes, itemCols, ignore)) {
-                this.lastSolutions.push({cols: A.cols, zero: indexes, ignore: ignore, reason: "exclude"})
-                continue
-            }
-            if (extra && this.excludeWaste(indexes, wantIndexes)) {
-                this.lastSolutions.push({cols: A.cols, zero: indexes, ignore: ignore, reason: "waste"})
-                continue
-            }
-            // Make copy of matrix and zero out selected columns.
-            var A_prime = A.copy()
-            for (var j = 0; j < indexes.length; j++) {
-                A_prime.zeroColumn(indexes[j])
-            }
-            // Apply productivity effects.
-            for (var j = 0; j < this.recipes.length; j++) {
-                var recipe = this.recipes[j]
-                var factory = spec.getFactory(recipe)
-                if (factory) {
-                    var prod = factory.prodEffect(spec)
-                    A_prime.mulPosColumn(j, prod)
-                }
-            }
-            // Solve.
-            var pivots = A_prime.rref()
-            var rates = []
-            for (var j = 0; j < A_prime.cols - 1; j++) {
-                rates.push(zero)
-            }
-            for (var j = 0; j < pivots.length; j++) {
-                var pivot = pivots[j]
-                if (pivot == rates.length) {
-                    continue
-                }
-                rates[pivot] = A_prime.index(j, A_prime.cols - 1)
-            }
-            // Verify that all values in the solution are positive. Skip this
-            // solution if any are negative or all are zero.
-            var any = false
-            for (var j = 0; j < rates.length; j++) {
-                var x = rates[j]
-                if (x.less(zero)) {
-                    this.lastSolutions.push({rates: rates, zero: indexes, ignore: ignore, reason: "negative"})
-                    continue possible
-                }
-                if (!x.equal(zero)) {
-                    any = true
-                }
-            }
-            if (any) {
-                solutions.push({rates: rates, zero: indexes, ignore: ignore})
-            }
-        }
-        if (solutions.length == 0) {
-            return null
-        }
-        // Sort all found solutions in resource-priority order.
-        // XXX: A full sort isn't necessary. Simply finding the minimum will do.
-        var indexes = []
-        var priorities = []
-        for (var i = 0; i < solutions.length; i++) {
-            var solution = solutions[i]
-            indexes.push(i)
-            var pri = []
-            var end = this.priority.length
-            if (!extra) {
-                end = this.wastePriorities
-            }
-            for (var p = 0; p < end; p++) {
-                pri.push(solution.rates[this.priority[p]])
-            }
-            priorities.push(pri)
-        }
-        indexes.sort(function(a, b) {
-            return lexicographicOrder(priorities[a], priorities[b])
-        })
-        for (var i = 0; i < indexes.length; i++) {
-            this.lastSolutions.push(solutions[indexes[i]])
-        }
-        // Convert array of rates into map from recipe name to rate.
-        var rates = solutions[indexes[0]].rates
-        solution = {}
+        // Apply productivity effects.
         for (var i = 0; i < this.recipes.length; i++) {
-            var rate = rates[i]
+            var recipe = this.recipes[i]
+            var factory = spec.getFactory(recipe)
+            if (factory) {
+                var prod = factory.prodEffect(spec)
+                A.mulPosColumn(i, prod)
+            }
+        }
+        this.setCost(A)
+        this.lastProblem = A.copy()
+        // Solve.
+        eliminateNegativeBases(A)
+        simplex(A)
+        var x = getBasis(A)
+        // Convert array of rates into map from recipe name to rate.
+        var solution = {}
+        for (var i = 0; i < this.recipes.length; i++) {
+            var rate = x[i]
             if (zero.less(rate)) {
                 solution[this.recipes[i].name] = rate
             }
         }
         var waste = {}
-        if (extra) {
-            for (var i = 0; i < this.outputItems.length; i++) {
-                var rate = rates[this.recipes.length + i]
-                if (zero.less(rate)) {
-                    waste[this.outputItems[i].name] = rate
-                }
+        for (var i = 0; i < this.outputItems.length; i++) {
+            var rate = x[this.recipes.length + i + 1]
+            if (zero.less(rate)) {
+                waste[this.outputItems[i].name] = rate
             }
         }
+        this.lastSolution = A
         return {solution: solution, waste: waste}
     }
 }

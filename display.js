@@ -776,7 +776,7 @@ function RecipeTable(node) {
     var headers = [
         Header("items/" + rateName, 2),
         Header("belts", 2),
-        Header("waste/" + rateName),
+        Header("surplus/" + rateName),
         Header("factories", 2),
         Header("modules", 1),
         Header("beacons", 1),
@@ -827,7 +827,7 @@ RecipeTable.prototype = {
     constructor: RecipeTable,
     setRecipeHeader: function() {
         this.recipeHeader.textContent = "items/" + rateName
-        this.wasteHeader.textContent = "waste/" + rateName
+        this.wasteHeader.textContent = "surplus/" + rateName
     },
     updateDisplayedModules: function() {
         for (var i = 0; i < this.rowArray.length; i++) {

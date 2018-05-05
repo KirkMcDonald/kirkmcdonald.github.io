@@ -62,6 +62,12 @@ Matrix.prototype = {
             this.setIndex(i, col, x.mul(value))
         }
     },
+    mulRow: function(row, value) {
+        for (var i = 0; i < this.cols; i++) {
+            var x = this.index(row, i)
+            this.setIndex(row, i, x.mul(value))
+        }
+    },
     appendColumn: function(column) {
         var mat = []
         for (var i = 0; i < this.rows; i++) {

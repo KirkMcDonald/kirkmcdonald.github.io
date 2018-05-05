@@ -88,13 +88,15 @@ function Solver(items, recipes) {
 }
 Solver.prototype = {
     constructor: Solver,
-    setPriority: function(priority) {
-        for (var i = 0; i < this.matrixSolvers.length; i++) {
-            this.matrixSolvers[i].setPriority(priority)
+    addDisabledRecipes: function(recipes) {
+        for (var recipeName in recipes) {
+            this.disabledRecipes[recipeName] = true
         }
     },
-    setDisabledRecipes: function(recipes) {
-        this.disabledRecipes = recipes
+    removeDisabledRecipes: function(recipes) {
+        for (var recipeName in recipes) {
+            delete this.disabledRecipes[recipeName]
+        }
     },
     solve: function(rates, ignore, spec) {
         var unknowns = {}
@@ -114,13 +116,7 @@ Solver.prototype = {
             if (Object.keys(match).length == 0) {
                 continue
             }
-            var solution = solver.solveFor(match, spec, this.disabledRecipes, false)
-            if (!solution) {
-                solution = solver.solveFor(match, spec, this.disabledRecipes, true)
-                if (!solution) {
-                    continue
-                }
-            }
+            var solution = solver.solveFor(match, spec, this.disabledRecipes)
             for (var itemName in match) {
                 delete totals.unfinished[itemName]
             }
