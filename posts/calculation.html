@@ -796,14 +796,60 @@ To restate our goal, we want our cost function to represent a lexicographical or
 
 The resulting solution remains the same as above.
 <p>
-Now let's discuss the <b>surplus variables</b>. These represent quantities of items which we produce as surplus, in addition to the amounts we requested. While our priority is still, first and foremost, to minimize our resource expenditures, we also want to avoid making extra items that we don't need to. We can represent this with another change to the cost function:
+Now let's discuss the <b>surplus variables</b>. These represent quantities of items which we produce as surplus, in addition to the amounts we requested. While our priority is still, first and foremost, to minimize our resource expenditures, we also want to avoid making extra items that we don't need to.
+<p>
+For example, if a solution requires producing surplus petroleum gas, this cost function means that converting all of that excess petroleum gas into solid fuel and then claiming that as surplus instead will be an equal solution.
+<p>
+We can avoid this by introducing a new pseudo-item that it costs all recipes to use, and minimizing that use of this value at the lowest priority. Let's call this the <b>recipe tax</b>.
 
-<blockquote>C = 50<b>x</b><sub>water</sub> + 500<b>x</b><sub>crude oil</sub> + <b>s</b><sub>1</sub> + <b>s</b><sub>2</sub> + <b>s</b><sub>3</sub> + <b>s</b><sub>4</sub> + <b>s</b><sub>5</sub></blockquote>
+<blockquote>C = 10<b>x</b><sub>water</sub> + 100<b>x</b><sub>crude oil</sub> + <b>x</b><sub>tax</sub></blockquote>
 
-The surplus variables represent their own distinct priority level. If we define the ratio described above as R, and the number of items at each priority level as N, then the coefficient for each priority level can be defined something like this:
+And our tableau with this new pseudo-item and cost function ends up looking like this:
+
+<table class="matrix">
+<tr>
+    <th><img src="heavy-oil-cracking.png"></th>
+    <th><img src="light-oil-cracking.png"></th>
+    <th><img src="basic-oil-processing.png"></th>
+    <th><img src="advanced-oil-processing.png"></th>
+    <th><img src="water.png"></th>
+    <th><img src="crude-oil.png"></th>
+    <th>tax</th>
+    <th>s<sub>1</sub></th>
+    <th>s<sub>2</sub></th>
+    <th>s<sub>3</sub></th>
+    <th>s<sub>4</sub></th>
+    <th>s<sub>5</sub></th>
+    <th>C</th>
+    <th>answer</th>
+</tr>
+<tr>
+    <td>-40</td><td>0</td><td>30</td><td>10</td><td>0</td><td>0</td><td>0</td><td>-1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>10</td>
+</tr>
+<tr>
+    <td>30</td><td>-30</td><td>30</td><td>45</td><td>0</td><td>0</td><td>0</td><td>0</td><td>-1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <td>0</td><td>20</td><td>40</td><td>55</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>-1</td><td>0</td><td>0</td><td>0</td><td>45</td>
+</tr>
+<tr>
+    <td>-30</td><td>-30</td><td>0</td><td>-50</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>-1</td><td>0</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <td>0</td><td>0</td><td>-100</td><td>-100</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>-1</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+</tr>
+<tr>
+    <td>0</td><td>0</td><td>0</td><td>0</td><td>10</td><td>100</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td>
+</tr>
+</table>
+
+Notice that this "tax" has no surplus variable. We can be assured that it will balance out to zero. And, once again, the solution we obtain remains the same as above. (Along similar lines, we don't actually require surplus variables for the input resources, but it does no harm to include them.)
+<p>
+One possible additional feature is placing multiple input items at the same priority level. If we define the ratio described above as R, and the number of items at each priority level as N, then the coefficient for each priority level can be defined something like this:
 
 <blockquote>P<sub>n</sub> = P<sub>n - 1</sub> &times; R &times; N<sub>n - 1</sub></blockquote>
 
-Where P<sub>1</sub> is defined to be 1. Thus, the cost coefficient for water is 10 (the overall cost ratio) times 5 (the number of surplus variables).
-<p>
-Once again, the solution we obtain from using this cost function remains the same as above.
+Where P<sub>1</sub> is defined to be 1.
