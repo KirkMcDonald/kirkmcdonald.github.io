@@ -57,41 +57,41 @@ function MatrixSolver(recipes) {
             this.inputColumns.push(i)
         }
     }
-    var rows = items.length + 2
-    var cols = allRecipes.length + items.length + 3
+    var rows = allRecipes.length + 2
+    var cols = items.length + allRecipes.length + 3
     var recipeMatrix = new Matrix(rows, cols)
     for (var i = 0; i < recipeArray.length; i++) {
         var recipe = recipeArray[i]
         for (var j = 0; j < recipe.ingredients.length; j++) {
             var ing = recipe.ingredients[j]
             var k = itemIndexes[ing.item.name]
-            recipeMatrix.addIndex(k, i, zero.sub(ing.amount))
+            recipeMatrix.addIndex(i, k, zero.sub(ing.amount))
         }
         for (var j = 0; j < recipe.products.length; j++) {
             var ing = recipe.products[j]
             var k = itemIndexes[ing.item.name]
-            recipeMatrix.addIndex(k, i, ing.amount)
+            recipeMatrix.addIndex(i, k, ing.amount)
         }
         // Recipe tax.
-        recipeMatrix.setIndex(items.length, i, minusOne)
+        recipeMatrix.setIndex(i, items.length, minusOne)
     }
     for (var i = 0; i < this.inputRecipes.length; i++) {
         var recipe = this.inputRecipes[i]
         for (var j = 0; j < recipe.products.length; j++) {
             var ing = recipe.products[j]
             var k = itemIndexes[ing.item.name]
-            recipeMatrix.addIndex(k, i + recipeArray.length, ing.amount)
+            recipeMatrix.addIndex(i + recipeArray.length, k, ing.amount)
         }
     }
     // Add "recipe tax," so that wasted items will be wasted directly.
     // There is no surplus variable for this value.
-    recipeMatrix.setIndex(items.length, allRecipes.length, one)
-    recipeMatrix.setIndex(items.length + 1, allRecipes.length, one)
+    recipeMatrix.setIndex(allRecipes.length, items.length, one)
     // Add surplus variables.
-    for (var i = 0; i < items.length; i++) {
-        var col = allRecipes.length + i + 1
-        recipeMatrix.setIndex(i, col, minusOne)
+    for (var i = 0; i < allRecipes.length; i++) {
+        var col = items.length + i + 1
+        recipeMatrix.setIndex(i, col, one)
     }
+    recipeMatrix.setIndex(rows - 1, col + 1, one)
     // The matrix. (matrix.js)
     this.matrix = recipeMatrix
     // Map from item name to row number.
@@ -130,36 +130,36 @@ MatrixSolver.prototype = {
         return max.div(min)
     },
     setCost: function(A) {
+        // Recipe tax cost.
+        A.setIndex(this.recipes.length, A.cols - 1, one)
         var ratio = this.getPriorityRatio(A)
         // Cost == 1 already "spent" on recipe tax.
         var cost = ratio
         // Maps priority number to column number.
         for (var i = PRIORITY.length - 1; i >= 0; i--) {
             var name = PRIORITY[i]
-            var col = this.recipeIndexes[name]
-            if (!col) {
+            var row = this.recipeIndexes[name]
+            if (!row) {
                 continue
             }
-            A.setIndex(A.rows - 1, col, cost)
+            A.setIndex(row, A.cols - 1, cost)
             cost = cost.mul(ratio)
         }
-        // Coefficient for cost value itself.
-        A.setIndex(A.rows - 1, A.cols - 2, one)
     },
     solveFor: function(products, spec, disabled) {
         var A = this.matrix.copy()
         for (var itemName in products) {
             if (itemName in this.itemIndexes) {
-                var row = this.itemIndexes[itemName]
+                var col = this.itemIndexes[itemName]
                 var rate = products[itemName]
-                A.setIndex(row, A.cols - 1, rate)
+                A.setIndex(A.rows - 1, col, zero.sub(rate))
             }
         }
         // Zero out disabled recipes
         for (var recipeName in disabled) {
             if (recipeName in this.recipeIndexes) {
                 var i = this.recipeIndexes[recipeName]
-                A.zeroColumn(i)
+                A.zeroRow(i)
             }
         }
         // Apply productivity effects.
@@ -168,26 +168,31 @@ MatrixSolver.prototype = {
             var factory = spec.getFactory(recipe)
             if (factory) {
                 var prod = factory.prodEffect(spec)
-                A.mulPosColumn(i, prod)
+                for (var j = 0; j < this.items.length; j++) {
+                    var n = A.index(i, j)
+                    if (!zero.less(n)) {
+                        continue
+                    }
+                    A.setIndex(i, j, n.mul(prod))
+                }
             }
         }
         this.setCost(A)
         this.lastProblem = A.copy()
         // Solve.
-        eliminateNegativeBases(A)
         simplex(A)
-        var x = getBasis(A)
         // Convert array of rates into map from recipe name to rate.
         var solution = {}
         for (var i = 0; i < this.recipes.length; i++) {
-            var rate = x[i]
+            var col = this.items.length + i + 1
+            var rate = A.index(A.rows - 1, col)
             if (zero.less(rate)) {
                 solution[this.recipes[i].name] = rate
             }
         }
         var waste = {}
         for (var i = 0; i < this.outputItems.length; i++) {
-            var rate = x[this.recipes.length + i + 1]
+            var rate = A.index(A.rows - 1, i)
             if (zero.less(rate)) {
                 waste[this.outputItems[i].name] = rate
             }

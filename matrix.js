@@ -102,6 +102,12 @@ Matrix.prototype = {
             this.setIndex(i, col, zero)
         }
     },
+    // Sets a row to all zeros.
+    zeroRow: function(row) {
+        for (var i = 0; i < this.cols; i++) {
+            this.setIndex(row, i, zero)
+        }
+    },
     swapRows: function(a, b) {
         for (var i = 0; i < this.cols; i++) {
             var temp = this.index(a, i)
