@@ -23,6 +23,7 @@ function getImage(obj, suppressTooltip, tooltipTarget) {
     } else {
         im.title = obj.name
     }
+    im.alt = obj.name
     return im
 }
 
