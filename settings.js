@@ -165,7 +165,7 @@ function renderMinimumAssembler(settings) {
     var dropdown = new Dropdown(node, "assembler_dropdown", changeMin)
     for (var i = 0; i < assemblers.length; i++) {
         var assembler = assemblers[i]
-        var image = getImage(assembler)
+        var image = getImage(assembler, false, dropdown.dropdown)
         dropdown.add(image, String(i + 1), String(i + 1) === min)
     }
     cell.replaceChild(node, oldNode)
@@ -197,7 +197,7 @@ function renderFurnace(settings) {
     var furnaces = spec.factories["smelting"]
     for (var i = 0; i < furnaces.length; i++) {
         var f = furnaces[i]
-        var image = getImage(f)
+        var image = getImage(f, false, dropdown.dropdown)
         dropdown.add(image, f.name, f.name === furnaceName)
     }
     cell.replaceChild(node, oldNode)
@@ -221,7 +221,7 @@ function renderFuel(settings) {
     var dropdown = new Dropdown(node, "fuel_dropdown", changeFuel)
     for (var i = 0; i < fuel.length; i++) {
         var f = fuel[i]
-        var image = getImage(f)
+        var image = getImage(f, false, dropdown.dropdown)
         image.title += " (" + f.valueString() + ")"
         dropdown.add(image, f.name, f.name === fuelName)
     }
@@ -273,7 +273,7 @@ function renderOil(settings) {
     var dropdown = new Dropdown(node, "oil_dropdown", changeOil)
     for (var i = 0; i < OIL_OPTIONS.length; i++) {
         var o = OIL_OPTIONS[i]
-        var image = getImage(solver.recipes[o.name])
+        var image = getImage(solver.recipes[o.name], false, dropdown.dropdown)
         dropdown.add(image, o.priority, o.priority === oil)
     }
     cell.replaceChild(node, oldNode)
@@ -340,7 +340,7 @@ function renderBelt(settings) {
     var dropdown = new Dropdown(node, "belt_dropdown", changeBelt)
     for (var i = 0; i < BELTS.length; i++) {
         var belt = BELTS[i]
-        var image = getImage(new BeltIcon(solver.items[belt.name], belt.speed))
+        var image = getImage(new BeltIcon(solver.items[belt.name], belt.speed), false, dropdown.dropdown)
         dropdown.add(image, belt.name, belt.name === preferredBelt)
     }
     cell.replaceChild(node, oldNode)
@@ -420,7 +420,8 @@ function renderDefaultModule(settings) {
             category = module.category
             dropdown.addBreak()
         }
-        dropdown.add(getImage(module), module.shortName(), defaultModule === module)
+        var im = getImage(module, false, dropdown.dropdown)
+        dropdown.add(im, module.shortName(), defaultModule === module)
     }
     cell.replaceChild(node, oldDefMod)
 }
@@ -461,7 +462,8 @@ function renderDefaultBeacon(settings) {
             category = module.category
             dropdown.addBreak()
         }
-        dropdown.add(getImage(module), module.shortName(), defaultBeacon === module)
+        var im = getImage(module, false, dropdown.dropdown)
+        dropdown.add(im, module.shortName(), defaultBeacon === module)
     }
     cell.replaceChild(node, oldDefMod)
 }
