@@ -168,12 +168,23 @@ MatrixSolver.prototype = {
             var factory = spec.getFactory(recipe)
             if (factory) {
                 var prod = factory.prodEffect(spec)
-                for (var j = 0; j < this.items.length; j++) {
-                    var n = A.index(i, j)
-                    if (!zero.less(n)) {
-                        continue
-                    }
-                    A.setIndex(i, j, n.mul(prod))
+                if (prod.equal(one)) {
+                    continue
+                }
+                for (var j = 0; j < recipe.products.length; j++) {
+                    var ing = recipe.products[j]
+                    var k = this.itemIndexes[ing.item.name]
+                    A.setIndex(i, k, zero)
+                }
+                for (var j = 0; j < recipe.ingredients.length; j++) {
+                    var ing = recipe.ingredients[j]
+                    var k = this.itemIndexes[ing.item.name]
+                    A.setIndex(i, k, zero.sub(ing.amount))
+                }
+                for (var j = 0; j < recipe.products.length; j++) {
+                    var ing = recipe.products[j]
+                    var k = this.itemIndexes[ing.item.name]
+                    A.addIndex(i, k, ing.amount.mul(prod))
                 }
             }
         }
