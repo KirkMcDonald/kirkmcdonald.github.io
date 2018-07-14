@@ -125,7 +125,8 @@ Solver.prototype = {
                 var recipe = this.recipes[recipeName]
                 if (solver.inputRecipes.indexOf(recipe) !== -1) {
                     var ing = recipe.products[0]
-                    var subTotals = ing.item.produce(rate.mul(ing.amount), ignore, spec)
+                    var subRate = recipe.gives(ing.item, spec).mul(rate)
+                    var subTotals = ing.item.produce(subRate, ignore, spec)
                     totals.combine(subTotals, true)
                 } else {
                     totals.add(recipeName, rate)

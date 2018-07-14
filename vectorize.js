@@ -179,7 +179,9 @@ MatrixSolver.prototype = {
                 for (var j = 0; j < recipe.ingredients.length; j++) {
                     var ing = recipe.ingredients[j]
                     var k = this.itemIndexes[ing.item.name]
-                    A.setIndex(i, k, zero.sub(ing.amount))
+                    if (k !== undefined) {
+                        A.setIndex(i, k, zero.sub(ing.amount))
+                    }
                 }
                 for (var j = 0; j < recipe.products.length; j++) {
                     var ing = recipe.products[j]
