@@ -309,6 +309,9 @@ FactorySpec.prototype = {
             return this.furnace
         }
         var factories = this.factories[recipe.category]
+        if (!factories) {
+            return null
+        }
         if (!this.useMinimum(recipe)) {
             return factories[factories.length - 1]
         }
@@ -330,6 +333,9 @@ FactorySpec.prototype = {
             return null
         }
         var factoryDef = this.getFactoryDef(recipe)
+        if (!factoryDef) {
+            return null
+        }
         var factory = this.spec[recipe.name]
         // If the minimum changes, update the factory the next time we get it.
         if (factory) {
