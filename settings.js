@@ -7,7 +7,7 @@ function Modification(name, filename) {
 }
 
 var MODIFICATIONS = {
-    "0-16-37": new Modification("Vanilla 0.16.37", "vanilla-0.16.37.json"),
+    "0-16-51": new Modification("Vanilla 0.16.51", "vanilla-0.16.51.json"),
     "0-16-37x": new Modification("Vanilla 0.16.37 - Expensive", "vanilla-0.16.37-expensive.json"),
     //"bobs-0-15-35": new Modification("Bob's Mods + base 0.15.35", "bobs-0.15.35.json")
 }
