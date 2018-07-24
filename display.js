@@ -500,9 +500,11 @@ FactoryRow.prototype = {
                 var inputs = {}
                 this.modules.push(inputs)
 
+                var installedModule = this.factory.modules[index]
+
                 var noModImage = getExtraImage("slot_icon_module")
                 noModImage.title = NO_MODULE
-                var input = dropdown.add(noModImage, NO_MODULE, true)
+                var input = dropdown.add(noModImage, NO_MODULE, !installedModule)
                 inputs[NO_MODULE] = input
                 var category = ""
 
@@ -516,7 +518,7 @@ FactoryRow.prototype = {
                         category = module.category
                         dropdown.addBreak()
                     }
-                    inputs[name] = dropdown.add(getImage(module), name, false)
+                    inputs[name] = dropdown.add(getImage(module), name, module === installedModule)
                 }
             }
         }
