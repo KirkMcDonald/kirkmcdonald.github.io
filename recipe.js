@@ -23,6 +23,9 @@ function Recipe(name, col, row, category, time, ingredients, products) {
     this.category = category
     this.time = time
     this.ingredients = ingredients
+    for (var i = 0; i < ingredients.length; i++) {
+        ingredients[i].item.addUse(this)
+    }
     this.products = products
     for (var i = 0; i < products.length; i++) {
         products[i].item.addRecipe(this)

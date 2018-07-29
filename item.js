@@ -5,6 +5,7 @@ function Item(name, col, row, phase, group, subgroup, order) {
     this.icon_col = col
     this.icon_row = row
     this.recipes = []
+    this.uses = []
     this.phase = phase
     this.group = group
     this.subgroup = subgroup
@@ -14,6 +15,9 @@ Item.prototype = {
     constructor: Item,
     addRecipe: function(recipe) {
         this.recipes.push(recipe)
+    },
+    addUse: function(recipe) {
+        this.uses.push(recipe)
     },
     isWeird: function() {
         return this.recipes.length > 1 || this.recipes[0].products.length > 1
