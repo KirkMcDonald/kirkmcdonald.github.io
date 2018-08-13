@@ -2,7 +2,7 @@
 
 function pivot(A, row, col) {
     var x = A.index(row, col)
-    A.mulRow(row, one.div(x))
+    A.mulRow(row, x.reciprocate())
     for (var r = 0; r < A.rows; r++) {
         if (r === row) {
             continue
