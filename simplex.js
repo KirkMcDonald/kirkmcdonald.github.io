@@ -8,6 +8,10 @@ function pivot(A, row, col) {
             continue
         }
         var ratio = A.index(r, col)
+        if (ratio.isZero()) {
+            continue
+        }
+
         for (var c = 0; c < A.cols; c++) {
             x = A.index(r, c).sub(A.index(row, c).mul(ratio))
             A.setIndex(r, c, x)
