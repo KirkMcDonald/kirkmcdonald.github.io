@@ -165,6 +165,9 @@ MatrixSolver.prototype = {
         // Apply productivity effects.
         for (var i = 0; i < this.recipes.length; i++) {
             var recipe = this.recipes[i]
+            if (recipe.name in disabled) {
+                continue
+            }
             var factory = spec.getFactory(recipe)
             if (factory) {
                 var prod = factory.prodEffect(spec)
