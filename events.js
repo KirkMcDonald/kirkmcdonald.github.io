@@ -473,6 +473,12 @@ function clickVisualize(event, tabName) {
     renderGraph(globalTotals, spec.ignore)
 }
 
+// debug event
+function toggleDebug(event) {
+    showDebug = event.target.checked
+    display()
+}
+
 // utility events
 
 function toggleVisible(targetID) {
