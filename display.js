@@ -999,7 +999,9 @@ function display() {
         renderGraph(totals, spec.ignore)
     }
     recipeTable.displaySolution(totals)
-    renderDebug()
+    if (showDebug) {
+        renderDebug()
+    }
 
     timesDisplayed = timesDisplayed.add(one)
     var dc = document.getElementById("display_count")

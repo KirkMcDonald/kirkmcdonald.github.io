@@ -9,7 +9,7 @@ function Modification(name, filename) {
 var MODIFICATIONS = {
     "0-16-37": new Modification("Vanilla 0.16.37", "vanilla-0.16.37.json"),
     "0-16-37x": new Modification("Vanilla 0.16.37 - Expensive", "vanilla-0.16.37-expensive.json"),
-    //"bobs-0-15-35": new Modification("Bob's Mods + base 0.15.35", "bobs-0.15.35.json")
+    //"bobs-0-16-37": new Modification("Bob's Mods + base 0.16.37 (Experimental)", "bobs-0.16.37.json")
 }
 
 var DEFAULT_MODIFICATION = "0-16-37"
@@ -499,6 +499,20 @@ function renderTooltip(settings) {
     }
     var input = document.getElementById("tooltip")
     input.checked = tooltipsEnabled
+}
+
+// debug tab
+var DEFAULT_DEBUG = false
+
+var showDebug = DEFAULT_DEBUG
+
+function renderShowDebug(settings) {
+    showDebug = DEFAULT_DEBUG
+    if ("debug" in settings) {
+        showDebug = settings.debug === "on"
+    }
+    var debug = document.getElementById("render_debug")
+    debug.checked = showDebug
 }
 
 // all

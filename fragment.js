@@ -5,6 +5,9 @@ function formatSettings() {
     if (currentTab != DEFAULT_TAB) {
         settings += "tab=" + currentTab.slice(0, currentTab.indexOf("_")) + "&"
     }
+    if (showDebug != DEFAULT_DEBUG) {
+        settings += "debug=on&"
+    }
     var mod = currentMod()
     if (mod != DEFAULT_MODIFICATION) {
         settings += "data=" + mod + "&"
