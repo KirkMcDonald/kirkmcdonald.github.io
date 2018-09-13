@@ -20,7 +20,7 @@ Item.prototype = {
         this.uses.push(recipe)
     },
     isWeird: function() {
-        return this.recipes.length > 1 || this.recipes[0].products.length > 1
+        return this.recipes.length > 1 || this.recipes[0].solveGroup !== null
     },
     produce: function(rate, ignore, spec) {
         var totals = new Totals(rate, this)

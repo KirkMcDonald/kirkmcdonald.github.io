@@ -33,13 +33,28 @@ Subgraph.prototype = {
     }
 }
 
-function SubgraphMap(recipes) {
+function SubgraphMap(spec, recipes) {
     this.groups = {}
+    this.extraUses = {}
     for (var recipeName in recipes) {
         var recipe = recipes[recipeName]
         var g = {}
         g[recipeName] = recipe
-        this.groups[recipeName] = new Subgraph(g)
+        var s = new Subgraph(g)
+        this.groups[recipeName] = s
+        var fuelIngredient = recipe.fuelIngredient(spec)
+        for (var i = 0; i < fuelIngredient.length; i++) {
+            var ing = fuelIngredient[i]
+            if (ing.item.name in this.extraUses) {
+                this.extraUses[ing.item.name].push(recipe)
+            } else {
+                this.extraUses[ing.item.name] = [recipe]
+            }
+            if (ing.item.name in s.products) {
+                continue
+            }
+            s.ingredients[ing.item.name] = ing.item
+        }
     }
 }
 SubgraphMap.prototype = {
@@ -78,6 +93,17 @@ SubgraphMap.prototype = {
         }
         return groups
     },
+    getInterestingGroups: function() {
+        var result = []
+        var groups = this.groupObjects()
+        for (var id in groups) {
+            var g = groups[id]
+            if (g.isInteresting()) {
+                result.push(g.recipes)
+            }
+        }
+        return result
+    },
     neighbors: function(group, invert) {
         var itemSet
         if (invert) {
@@ -92,6 +118,9 @@ SubgraphMap.prototype = {
             var recipeSet
             if (invert) {
                 recipeSet = item.uses
+                if (itemName in this.extraUses) {
+                    recipeSet = recipeSet.concat(this.extraUses[itemName])
+                }
             } else {
                 recipeSet = item.recipes
             }
@@ -184,8 +213,12 @@ function getItemProducts(item, groupmap, prodmap) {
         return prodmap[item.name]
     }
     var groups = {}
-    for (var i = 0; i < item.uses.length; i++) {
-        var recipe = item.uses[i]
+    var uses = item.uses
+    if (item.name in groupmap.extraUses) {
+        uses = uses.concat(groupmap.extraUses[item.name])
+    }
+    for (var i = 0; i < uses.length; i++) {
+        var recipe = uses[i]
         var group = groupmap.get(recipe)
         groups[group.id] = group
     }
@@ -206,8 +239,8 @@ function getItemProducts(item, groupmap, prodmap) {
     return prods
 }
 
-function findGroups(items, recipes) {
-    var groups = new SubgraphMap(recipes)
+function findGroups(spec, items, recipes) {
+    var groups = new SubgraphMap(spec, recipes)
     // 1) Condense all recipes that produce a given item.
     for (var itemName in items) {
         var item = items[itemName]
@@ -215,6 +248,9 @@ function findGroups(items, recipes) {
             groups.merge(item.recipes)
         }
     }
+
+    // Get the "simple" groups, which are used for display purposes.
+    var simpleGroups = groups.getInterestingGroups()
 
     // 2) Condense all recipe cycles.
     var groupCycles = findCycles(groups)
@@ -352,13 +388,5 @@ function findGroups(items, recipes) {
         groups.mergeGroups(s)
     }
 
-    groupObjs = groups.groupObjects()
-    var result = []
-    for (var id in groupObjs) {
-        var g = groupObjs[id]
-        if (Object.keys(g.recipes).length > 1) {
-            result.push(g.recipes)
-        }
-    }
-    return result
+    return {"groups": groups.getInterestingGroups(), "simple": simpleGroups}
 }

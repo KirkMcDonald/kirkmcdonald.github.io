@@ -175,12 +175,14 @@ function changeMin(event) {
 // Triggered when the furnace is changed.
 function changeFurnace(event) {
     spec.setFurnace(event.target.value)
+    solver.findSubgraphs(spec)
     itemUpdate()
 }
 
 // Triggered when the preferred fuel is changed.
 function changeFuel(event) {
     setPreferredFuel(event.target.value)
+    solver.findSubgraphs(spec)
     itemUpdate()
 }
 

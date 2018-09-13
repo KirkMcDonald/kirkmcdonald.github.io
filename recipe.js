@@ -30,7 +30,8 @@ function Recipe(name, col, row, category, time, ingredients, products) {
     for (var i = 0; i < products.length; i++) {
         products[i].item.addRecipe(this)
     }
-    this.group = null
+    this.displayGroup = null
+    this.solveGroup = null
 }
 Recipe.prototype = {
     constructor: Recipe,
@@ -57,6 +58,9 @@ Recipe.prototype = {
         var perItemEnergy = basePower.div(baseRate)
         var fuelAmount = perItemEnergy.div(preferredFuel.value)
         return [new Ingredient(fuelAmount, preferredFuel.item)]
+    },
+    getIngredients: function(spec) {
+        return this.ingredients.concat(this.fuelIngredient(spec))
     },
     makesResource: function() {
         return false

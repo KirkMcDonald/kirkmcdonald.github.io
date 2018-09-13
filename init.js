@@ -103,6 +103,8 @@ function loadData(modName, settings) {
 
         renderSettings(settings)
 
+        solver.findSubgraphs(spec)
+
         if ("items" in settings && settings.items != "") {
             var targets = settings.items.split(",")
             for (var i=0; i < targets.length; i++) {

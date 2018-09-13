@@ -2,7 +2,7 @@
 
 var PRIORITY = ["uranium-ore", "steam", "crude-oil", "coal", "water"]
 
-function MatrixSolver(recipes) {
+function MatrixSolver(spec, recipes) {
     var products = {}
     var ingredients = {}
     var recipeArray = []
@@ -13,8 +13,9 @@ function MatrixSolver(recipes) {
             var ing = recipe.products[i]
             products[ing.item.name] = ing.item
         }
-        for (var i = 0; i < recipe.ingredients.length; i++) {
-            var ing = recipe.ingredients[i]
+        var ings = recipe.getIngredients(spec)
+        for (var i = 0; i < ings.length; i++) {
+            var ing = ings[i]
             ingredients[ing.item.name] = ing.item
         }
     }
@@ -62,8 +63,9 @@ function MatrixSolver(recipes) {
     var recipeMatrix = new Matrix(rows, cols)
     for (var i = 0; i < recipeArray.length; i++) {
         var recipe = recipeArray[i]
-        for (var j = 0; j < recipe.ingredients.length; j++) {
-            var ing = recipe.ingredients[j]
+        var ings = recipe.getIngredients(spec)
+        for (var j = 0; j < ings.length; j++) {
+            var ing = ings[j]
             var k = itemIndexes[ing.item.name]
             recipeMatrix.addIndex(i, k, zero.sub(ing.amount))
         }
@@ -179,8 +181,9 @@ MatrixSolver.prototype = {
                     var k = this.itemIndexes[ing.item.name]
                     A.setIndex(i, k, zero)
                 }
-                for (var j = 0; j < recipe.ingredients.length; j++) {
-                    var ing = recipe.ingredients[j]
+                var ings = recipe.getIngredients(spec)
+                for (var j = 0; j < ings.length; j++) {
+                    var ing = ings[j]
                     var k = this.itemIndexes[ing.item.name]
                     if (k !== undefined) {
                         A.setIndex(i, k, zero.sub(ing.amount))

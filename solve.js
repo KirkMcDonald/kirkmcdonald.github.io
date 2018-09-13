@@ -74,20 +74,36 @@ function Solver(items, recipes) {
     this.items = items
     this.recipes = recipes
     this.disabledRecipes = {}
-    var groups = findGroups(items, recipes)
     this.matrixSolvers = []
-    for (var i = 0; i < groups.length; i++) {
-        var group = groups[i]
-        this.matrixSolvers.push(new MatrixSolver(group))
-        // The order in which these group IDs are assigned does not matter.
-        for (var recipeName in group) {
-            group[recipeName].group = i
-        }
-    }
-    this.matrixSolvers = topologicalOrder(this.matrixSolvers)
 }
 Solver.prototype = {
     constructor: Solver,
+    findSubgraphs: function(spec) {
+        var r = findGroups(spec, this.items, this.recipes)
+        // Clear all group tags.
+        for (var recipeName in this.recipes) {
+            var recipe = this.recipes[recipeName]
+            recipe.displayGroup = null
+            recipe.solveGroup = null
+        }
+        for (var i = 0; i < r.simple.length; i++) {
+            var group = r.simple[i]
+            // The order in which these group IDs are assigned does not matter.
+            for (var recipeName in group) {
+                group[recipeName].displayGroup = i
+            }
+        }
+        var groups = r.groups
+        this.matrixSolvers = []
+        for (var i = 0; i < groups.length; i++) {
+            var group = groups[i]
+            this.matrixSolvers.push(new MatrixSolver(spec, group))
+            for (var recipeName in group) {
+                group[recipeName].solveGroup = i
+            }
+        }
+        this.matrixSolvers = topologicalOrder(this.matrixSolvers)
+    },
     addDisabledRecipes: function(recipes) {
         for (var recipeName in recipes) {
             this.disabledRecipes[recipeName] = true

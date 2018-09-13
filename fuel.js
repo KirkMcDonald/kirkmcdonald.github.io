@@ -28,10 +28,6 @@ function getFuel(data, items) {
     var fuelCategories = {}
     for (var i = 0; i < data.fuel.length; i++) {
         var fuelName = data.fuel[i]
-        // XXX: Due to certain bugs, don't permit certain fuels.
-        if (fuelName === "small-electric-pole") {
-            continue
-        }
         var d = data.items[fuelName]
         var fuel = new Fuel(
             fuelName,

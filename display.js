@@ -474,7 +474,7 @@ FactoryRow.prototype = {
         while (this.factoryCell.hasChildNodes()) {
             this.factoryCell.removeChild(this.factoryCell.lastChild)
         }
-        if (this.recipe.group !== null || this.recipe.name !== this.recipe.products[0].item.name) {
+        if (this.recipe.displayGroup !== null || this.recipe.name !== this.recipe.products[0].item.name) {
             this.factoryCell.appendChild(getImage(this.recipe))
             this.factoryCell.appendChild(new Text(" : "))
         }
@@ -637,6 +637,8 @@ function GroupRow(group, itemRates, totals) {
         } else {
             row.appendChild(document.createElement("td"))
             row.appendChild(document.createElement("td"))
+            row.appendChild(document.createElement("td"))
+            row.appendChild(document.createElement("td"))
             var dummyWaste = document.createElement("td")
             dummyWaste.classList.add("waste")
             row.appendChild(dummyWaste)
@@ -645,7 +647,7 @@ function GroupRow(group, itemRates, totals) {
             var recipe = group.recipes[i]
             this.factoryRows.push(new FactoryRow(row, recipe, totals.get(recipe.name)))
         } else {
-            for (var j = 0; j < 6; j++) {
+            for (var j = 0; j < 7; j++) {
                 var cell = document.createElement("td")
                 cell.classList.add("factory")
                 if (j == 0) {
@@ -845,11 +847,11 @@ RecipeTable.prototype = {
         } else {
             sortedTotals = sorted(totals.totals)
         }
-        var itemOrder = []
+        //var itemOrder = []
         var items = {}
         var groups = []
-        var lastGroupID = null
-        var group = new RecipeGroup(null)
+        var groupMap = {}
+        var group
         for (var i = 0; i < sortedTotals.length; i++) {
             var recipeName = sortedTotals[i]
             var recipeRate = totals.totals[recipeName]
@@ -857,22 +859,24 @@ RecipeTable.prototype = {
             for (var j = 0; j < recipe.products.length; j++) {
                 var ing = recipe.products[j]
                 if (!(ing.item.name in items)) {
-                    itemOrder.push(ing.item.name)
+                    //itemOrder.push(ing.item.name)
                     items[ing.item.name] = zero
                 }
                 items[ing.item.name] = items[ing.item.name].add(recipeRate.mul(recipe.gives(ing.item, spec)))
             }
-            if (recipe.group === null || recipe.group !== lastGroupID) {
-                if (group.recipes.length > 0) {
+            if (recipe.displayGroup === null) {
+                group = new RecipeGroup(null)
+                groups.push(group)
+            } else {
+                if (recipe.displayGroup in groupMap) {
+                    group = groupMap[recipe.displayGroup]
+                } else {
+                    group = new RecipeGroup(recipe.displayGroup)
+                    groupMap[recipe.displayGroup] = group
                     groups.push(group)
                 }
-                group = new RecipeGroup(recipe.group)
             }
-            lastGroupID = recipe.group
             group.recipes.push(recipe)
-        }
-        if (group.recipes.length > 0) {
-            groups.push(group)
         }
         // XXX: Rework this, too.
         //displaySteps(items, itemOrder, totals)
