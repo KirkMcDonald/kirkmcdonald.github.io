@@ -450,6 +450,21 @@ function getFactories(data) {
     )
     reactor.renderTooltip = renderTooltipBase
     factories.push(reactor)
+    var boilerDef = data["boiler"]["boiler"]
+    var boiler = new FactoryDef(
+        "boiler",
+        boilerDef.icon_col,
+        boilerDef.icon_row,
+        ["boiler"],
+        1,
+        one,
+        0,
+        // XXX: Should derive this from game data.
+        RationalFromFloat(3600000),
+        "chemical"
+    )
+    boiler.renderTooltip = renderTooltipBase
+    factories.push(boiler)
     for (var type in {"assembling-machine": true, "furnace": true, "rocket-silo": true}) {
         for (var name in data[type]) {
             var d = data[type][name]

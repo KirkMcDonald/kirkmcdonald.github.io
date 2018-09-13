@@ -210,6 +210,16 @@ function getRecipeGraph(data) {
             new Ingredient(one, getItem(data, items, "satellite"))
         ], [new Ingredient(RationalFromFloat(1000), getItem(data, items, "space-science-pack"))]
     )
+    var steam = data.items["steam"]
+    recipes["steam"] = new Recipe(
+        "steam",
+        steam.icon_col,
+        steam.icon_row,
+        "boiler",
+        RationalFromFloats(1, 60),
+        [new Ingredient(one, getItem(data, items, "water"))],
+        [new Ingredient(one, getItem(data, items, "steam"))]
+    )
 
     for (var name in data.recipes) {
         var recipe = data.recipes[name]
