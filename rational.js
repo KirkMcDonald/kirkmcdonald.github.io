@@ -146,6 +146,9 @@ Rational.prototype = {
         var mod = this.sub(other.mul(div))
         return {quotient: div, remainder: mod}
     },
+    reciprocate: function () {
+        return new Rational(this.q, this.p)
+    },
 }
 
 function RationalFromString(s) {

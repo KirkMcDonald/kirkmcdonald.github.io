@@ -206,7 +206,7 @@ Factory.prototype = {
         return {"fuel": "electric", "power": power}
     },
     recipeRate: function(spec, recipe) {
-        return one.div(recipe.time).mul(this.factory.speed).mul(this.speedEffect(spec))
+        return recipe.time.reciprocate().mul(this.factory.speed).mul(this.speedEffect(spec))
     },
     copyModules: function(other, recipe) {
         var length = Math.max(this.modules.length, other.modules.length)

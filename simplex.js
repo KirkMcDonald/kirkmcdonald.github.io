@@ -2,12 +2,16 @@
 
 function pivot(A, row, col) {
     var x = A.index(row, col)
-    A.mulRow(row, one.div(x))
+    A.mulRow(row, x.reciprocate())
     for (var r = 0; r < A.rows; r++) {
         if (r === row) {
             continue
         }
         var ratio = A.index(r, col)
+        if (ratio.isZero()) {
+            continue
+        }
+
         for (var c = 0; c < A.cols; c++) {
             x = A.index(r, c).sub(A.index(row, c).mul(ratio))
             A.setIndex(r, c, x)
