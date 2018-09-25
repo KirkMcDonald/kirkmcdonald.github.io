@@ -114,7 +114,15 @@ function loadData(modName, settings) {
                 var target = addTarget(name)
                 var type = parts[1]
                 if (type == "f") {
-                    target.setFactories(parts[2])
+                    var j = parts[2].indexOf(";")
+                    if (j === -1) {
+                        target.setFactories(0, parts[2])
+                    } else {
+                        var count = parts[2].slice(0, j)
+                        var idx = Number(parts[2].slice(j+1))
+                        target.setFactories(idx, count)
+                        target.displayRecipes()
+                    }
                 } else if (type == "r") {
                     target.setRate(parts[2])
                 } else {

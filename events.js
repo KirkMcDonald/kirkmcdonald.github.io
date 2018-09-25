@@ -100,6 +100,16 @@ function searchTargets(ev) {
 function ItemHandler(target) {
     this.handleEvent = function(event) {
         target.itemName = event.target.value
+        target.recipeIndex = 0
+        target.displayRecipes()
+        itemUpdate()
+    }
+}
+
+// Triggered when a build target's recipe selector is changed.
+function RecipeSelectorHandler(target) {
+    this.handleEvent = function(event) {
+        target.recipeIndex = event.target.value
         itemUpdate()
     }
 }

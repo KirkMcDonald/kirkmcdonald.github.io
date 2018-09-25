@@ -73,6 +73,9 @@ function formatSettings() {
         var targetString = ""
         if (target.changedFactory) {
             targetString = sprintf("%s:f:%s", target.itemName, target.factories.value)
+            if (target.recipeIndex != 0) {
+                targetString += ";" + target.recipeIndex
+            }
         } else {
             targetString = sprintf("%s:r:%s", target.itemName, target.rateValue.mul(displayRateFactor).toString())
         }
