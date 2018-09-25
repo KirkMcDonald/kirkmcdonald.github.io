@@ -28,6 +28,7 @@ function isFactoryTarget(recipeName) {
 }
 
 var targetCount = 0
+var recipeSelectorCount = 0
 
 var SELECTED_INPUT = "selected"
 
@@ -37,6 +38,7 @@ function BuildTarget(index, itemName) {
     }
     this.index = index
     this.itemName = itemName
+    this.recipeIndex = 0
     this.changedFactory = true
     this.factoriesValue = one
     this.rateValue = zero
@@ -109,6 +111,9 @@ function BuildTarget(index, itemName) {
     this.factoryLabel.textContent = " Factories: "
     this.element.appendChild(this.factoryLabel)
 
+    this.recipeSelector = document.createElement("span")
+    this.element.appendChild(this.recipeSelector)
+
     this.factories = document.createElement("input")
     this.factories.addEventListener("change", new FactoryHandler(this))
     this.factories.type = "text"
@@ -128,11 +133,37 @@ function BuildTarget(index, itemName) {
     this.rate.size = 5
     this.rate.title = "Enter a value to specify the rate. The number of factories will be determined based on the rate."
     this.element.appendChild(this.rate)
+    this.displayRecipes()
 }
 BuildTarget.prototype = {
     constructor: BuildTarget,
     setRateLabel: function() {
         this.rateLabel.textContent = " Items/" + longRateNames[rateName] + ": "
+    },
+    displayRecipes: function() {
+        while (this.recipeSelector.hasChildNodes()) {
+            this.recipeSelector.removeChild(this.recipeSelector.lastChild)
+        }
+        var item = solver.items[this.itemName]
+        if (item.recipes.length <= 1) {
+            return
+        }
+        var dropdown = new Dropdown(
+            this.recipeSelector,
+            "target-recipe-" + recipeSelectorCount,
+            new RecipeSelectorHandler(this)
+        )
+        recipeSelectorCount++
+        for (var i = 0; i < item.recipes.length; i++) {
+            var recipe = item.recipes[i]
+            var image = getImage(recipe, false, dropdown.dropdown)
+            dropdown.add(
+                image,
+                i,
+                this.recipeIndex == i
+            )
+        }
+        this.recipeSelector.appendChild(new Text(" \u00d7 "))
     },
     // Returns the rate at which this item is being requested. Also updates
     // the text boxes in response to changes in options.
@@ -141,7 +172,7 @@ BuildTarget.prototype = {
         var item = solver.items[this.itemName]
         var rate = zero
         // XXX: Hmmm...
-        var recipe = item.recipes[0]
+        var recipe = item.recipes[this.recipeIndex]
         if (!recipe.category && this.changedFactory) {
             this.rateChanged()
         }
@@ -172,7 +203,8 @@ BuildTarget.prototype = {
         this.rateValue = zero
         this.rate.value = ""
     },
-    setFactories: function(factories) {
+    setFactories: function(index, factories) {
+        this.recipeIndex = index
         this.factories.value = factories
         this.factoriesChanged()
     },
