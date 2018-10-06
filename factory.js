@@ -104,6 +104,22 @@ MinerDef.prototype.renderTooltip = function() {
     return t
 }
 
+function RocketLaunchDef(name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel) {
+    FactoryDef.call(this, name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel)
+}
+RocketLaunchDef.prototype = Object.create(FactoryDef.prototype)
+RocketLaunchDef.prototype.makeFactory = function(spec, recipe) {
+    return new RocketLaunch(this, spec, recipe)
+}
+
+function RocketSiloDef(name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel) {
+    FactoryDef.call(this, name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel)
+}
+RocketSiloDef.prototype = Object.create(FactoryDef.prototype)
+RocketSiloDef.prototype.makeFactory = function(spec, recipe) {
+    return new RocketSilo(this, spec, recipe)
+}
+
 function Factory(factoryDef, spec, recipe) {
     this.recipe = recipe
     this.modules = []
@@ -236,6 +252,40 @@ Miner.prototype.recipeRate = function(spec, recipe) {
 Miner.prototype.prodEffect = function(spec) {
     var prod = Factory.prototype.prodEffect.call(this, spec)
     return prod.add(spec.miningProd)
+}
+
+var rocketLaunchDuration = RationalFromFloats(2475, 60)
+
+function launchRate(spec) {
+    var partFactory = spec.spec["rocket-part"]
+    var partRecipe = partFactory.recipe
+    var partItem = solver.items["rocket-part"]
+    var gives = partRecipe.gives(partItem, spec)
+    // The base rate at which the silo can make rocket parts.
+    var rate = Factory.prototype.recipeRate.call(partFactory, spec, partRecipe)
+    // Number of times to complete the rocket part recipe per launch.
+    var perLaunch = RationalFromFloat(100).div(gives)
+    // Total length of time required to launch a rocket.
+    var time = perLaunch.div(rate).add(rocketLaunchDuration)
+    var launchRate = time.reciprocate()
+    var partRate = perLaunch.div(time)
+    return {part: partRate, launch: launchRate}
+}
+
+function RocketLaunch(factory, spec, recipe) {
+    Factory.call(this, factory, spec, recipe)
+}
+RocketLaunch.prototype = Object.create(Factory.prototype)
+RocketLaunch.prototype.recipeRate = function(spec, recipe) {
+    return launchRate(spec).launch
+}
+
+function RocketSilo(factory, spec, recipe) {
+    Factory.call(this, factory, spec, recipe)
+}
+RocketSilo.prototype = Object.create(Factory.prototype)
+RocketSilo.prototype.recipeRate = function(spec, recipe) {
+    return launchRate(spec).part
 }
 
 var assembly_machine_categories = {
@@ -465,7 +515,21 @@ function getFactories(data) {
     )
     boiler.renderTooltip = renderTooltipBase
     factories.push(boiler)
-    for (var type in {"assembling-machine": true, "furnace": true, "rocket-silo": true}) {
+    var siloDef = data["rocket-silo"]["rocket-silo"]
+    var launch = new RocketLaunchDef(
+        "rocket-silo",
+        siloDef.icon_col,
+        siloDef.icon_row,
+        ["rocket-launch"],
+        2,
+        one,
+        0,
+        zero,
+        null
+    )
+    launch.renderTooltip = renderTooltipBase
+    factories.push(launch)
+    for (var type in {"assembling-machine": true, "furnace": true}) {
         for (var name in data[type]) {
             var d = data[type][name]
             var fuel = null
@@ -484,6 +548,20 @@ function getFactories(data) {
                 fuel
             ))
         }
+    }
+    for (var name in data["rocket-silo"]) {
+        var d = data["rocket-silo"][name]
+        factories.push(new RocketSiloDef(
+            d.name,
+            d.icon_col,
+            d.icon_row,
+            d.crafting_categories,
+            d.ingredient_count,
+            RationalFromFloat(d.crafting_speed),
+            d.module_slots,
+            RationalFromFloat(d.energy_usage),
+            fuel
+        ))
     }
     for (var name in data["mining-drill"]) {
         var d = data["mining-drill"][name]

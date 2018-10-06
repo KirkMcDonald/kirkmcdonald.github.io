@@ -203,7 +203,7 @@ function getRecipeGraph(data) {
         "rocket-launch",
         rocket.icon_col,
         rocket.icon_row,
-        null,
+        "rocket-launch",
         one,
         [
             new Ingredient(RationalFromFloat(100), getItem(data, items, "rocket-part")),

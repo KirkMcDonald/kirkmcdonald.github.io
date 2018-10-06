@@ -14,6 +14,12 @@ function addTarget(itemName) {
 }
 
 function isFactoryTarget(recipeName) {
+    // Special case: rocket-part and rocket-launch are linked in a weird way.
+    if (recipeName === "rocket-part") {
+        if (isFactoryTarget("rocket-launch")) {
+            return true
+        }
+    }
     for (var i = 0; i < build_targets.length; i++) {
         var target = build_targets[i]
         var item = solver.items[target.itemName]
