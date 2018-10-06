@@ -560,7 +560,7 @@ function getFactories(data) {
             RationalFromFloat(d.crafting_speed),
             d.module_slots,
             RationalFromFloat(d.energy_usage),
-            fuel
+            null
         ))
     }
     for (var name in data["mining-drill"]) {
