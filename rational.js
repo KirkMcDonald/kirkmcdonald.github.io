@@ -5,9 +5,7 @@ function Rational(p, q, gcd) {
         p = bigInt.zero.minus(p)
         q = bigInt.zero.minus(q)
     }
-    if (!gcd) {
-        gcd = bigInt.gcd(p.abs(), q)
-    }
+    var gcd = bigInt.gcd(p.abs(), q)
     if (gcd.greater(bigInt.one)) {
         p = p.divide(gcd)
         q = q.divide(gcd)
@@ -129,15 +127,13 @@ Rational.prototype = {
     mul: function(other) {
         return new Rational(
             this.p.times(other.p),
-            this.q.times(other.q),
-            bigInt.gcd(this.p, other.q).times(bigInt.gcd(this.q, other.p))
+            this.q.times(other.q)
         )
     },
     div: function(other) {
         return new Rational(
             this.p.times(other.q),
-            this.q.times(other.p),
-            bigInt.gcd(this.p, other.p).times(bigInt.gcd(this.q, other.q))
+            this.q.times(other.p)
         )
     },
     divmod: function(other) {
