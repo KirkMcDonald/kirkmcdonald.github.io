@@ -1,6 +1,6 @@
 "use strict"
 
-function Rational(p, q, gcd) {
+function Rational(p, q) {
     if (q.lesser(bigInt.zero)) {
         p = bigInt.zero.minus(p)
         q = bigInt.zero.minus(q)
