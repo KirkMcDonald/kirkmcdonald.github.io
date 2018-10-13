@@ -186,6 +186,9 @@ function loadData(modName, settings) {
 
 function init() {
     var settings = loadSettings(window.location.hash)
+    if (OVERRIDE !== null) {
+        addOverrideOptions(OVERRIDE)
+    }
     renderDataSetOptions(settings)
     if ("tab" in settings) {
         currentTab = settings.tab + "_tab"

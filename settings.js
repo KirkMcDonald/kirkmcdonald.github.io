@@ -14,6 +14,13 @@ var MODIFICATIONS = {
 
 var DEFAULT_MODIFICATION = "0-16-37"
 
+function addOverrideOptions(version) {
+    var tag = "local-" + version.replace(/\./g, "-")
+    MODIFICATIONS[tag] = new Modification("Local game data " + version, "local-" + version + ".json")
+    MODIFICATIONS[tag + "x"] = new Modification("Local game data " + version + " - Expensive", "local-" + version + "-expensive.json")
+    DEFAULT_MODIFICATION = tag
+}
+
 function renderDataSetOptions(settings) {
     var modSelector = document.getElementById("data_set")
     for (var modName in MODIFICATIONS) {
