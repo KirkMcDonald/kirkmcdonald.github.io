@@ -22,7 +22,7 @@ missing_icon = "__core__/graphics/too-far.png"
 
 def get_icon(data, path):
     path = unique_paths.get(path, path)
-    m = re.search("__(\w+)__/(.*)", path)
+    m = re.search("__([-\w]+)__/(.*)", path)
     mod_name = m.group(1)
     icon_path = m.group(2)
     mod = data["module_info"][mod_name]
