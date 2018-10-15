@@ -1,6 +1,6 @@
 "use strict"
 
-var PRIORITY = ["uranium-ore", "steam", "crude-oil", "coal", "water"]
+var PRIORITY = ["uranium-ore", "steam", "coal", "crude-oil", "water"]
 
 function MatrixSolver(spec, recipes) {
     var products = {}
