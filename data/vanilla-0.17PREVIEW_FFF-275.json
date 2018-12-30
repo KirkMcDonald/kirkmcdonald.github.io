@@ -6064,11 +6064,11 @@
             "icon_row": 11,
             "ingredients": [
                 {
-                    "amount": 10,
+                    "amount": 2,
                     "name": "steel-plate"
                 },
                 {
-                    "amount": 5,
+                    "amount": 20,
                     "name": "copper-plate"
                 },
                 {
