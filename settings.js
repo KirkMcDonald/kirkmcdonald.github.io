@@ -9,7 +9,8 @@ function Modification(name, filename) {
 var MODIFICATIONS = {
     "0-16-37": new Modification("Vanilla 0.16.37", "vanilla-0.16.37.json"),
     "0-16-37x": new Modification("Vanilla 0.16.37 - Expensive", "vanilla-0.16.37-expensive.json"),
-    "bobs-0-16-37": new Modification("(EXPERIMENTAL) Bob's Mods + base 0.16.37", "bobs-0.16.37.json")
+    "bobs-0-16-37": new Modification("(EXPERIMENTAL) Bob's Mods + base 0.16.37", "bobs-0.16.37.json"),
+    "0-17-PVW-FFF275": new Modification("Vanilla 0.17 PREVIEW by FFF 275", "vanilla-0.17PREVIEW_FFF-275.json")
 }
 
 var DEFAULT_MODIFICATION = "0-16-37"
