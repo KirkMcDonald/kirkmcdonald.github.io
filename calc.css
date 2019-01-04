@@ -67,6 +67,16 @@ img.icon {
     width: 32px;
     vertical-align: middle;
 }
+/* "recent changes" box */
+.changecell {
+    vertical-align: top;
+}
+.changebox {
+    margin-left: 3em;
+    padding: 1em;
+    border: 2px solid var(--bright);
+    font-family: monospace;
+}
 /* tooltips */
 div.tooltip {
     opacity: 1;
@@ -117,6 +127,7 @@ div.tooltip img.ingredient {
 }
 ul.targets {
     list-style-type: none;
+    margin-top: 0;
 }
 ul.targets li {
     margin: 0.25em;

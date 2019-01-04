@@ -38,7 +38,8 @@ function reset() {
     newTargetList.id = "targets"
     newTargetList.classList.add("targets")
     newTargetList.appendChild(plus)
-    document.body.replaceChild(newTargetList, targetList)
+    var targetParent = document.getElementById("targetparent")
+    targetParent.replaceChild(newTargetList, targetList)
 
     var oldSteps = document.getElementById("steps")
     var newSteps = document.createElement("table")

@@ -65,7 +65,21 @@ See the License for the specific language governing permissions and
 limitations under the License.-->
 
 <body onload="init()">
+    <table>
+    <tr>
+    <td id="targetparent">
     <ul id="targets" class="targets"><li><button class="targetButton ui" title="Add new item." onclick="plusHandler()">+</a></li></ul>
+    </td>
+
+    <td class="changecell">
+    <div class="changebox">
+    Recent changes:<br>
+    2019-01-03 - Updated to 0.16.51.<br>
+    2019-01-03 - Added dataset for <a href="https://mods.factorio.com/mod/017-science">0.17 science mod</a>
+    </div>
+    </td>
+    </tr>
+    </table>
 
     <div class="tabs">
         <button class="tab_button" id="totals_button" onclick="clickTab('totals_tab')">Factory</button>
