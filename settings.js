@@ -7,12 +7,12 @@ function Modification(name, filename) {
 }
 
 var MODIFICATIONS = {
-    "0-16-37": new Modification("Vanilla 0.16.37", "vanilla-0.16.37.json"),
-    "0-16-37x": new Modification("Vanilla 0.16.37 - Expensive", "vanilla-0.16.37-expensive.json"),
-    "bobs-0-16-37": new Modification("(EXPERIMENTAL) Bob's Mods + base 0.16.37", "bobs-0.16.37.json")
+    "0-16-51": new Modification("Vanilla 0.16.51", "vanilla-0.16.51.json"),
+    "0-16-51x": new Modification("Vanilla 0.16.51 - Expensive", "vanilla-0.16.51-expensive.json"),
+    "bobs-0-16-51": new Modification("(EXPERIMENTAL) Bob's Mods + base 0.16.51", "bobs-0.16.51.json")
 }
 
-var DEFAULT_MODIFICATION = "0-16-37"
+var DEFAULT_MODIFICATION = "0-16-51"
 
 function addOverrideOptions(version) {
     var tag = "local-" + version.replace(/\./g, "-")
@@ -21,14 +21,32 @@ function addOverrideOptions(version) {
     DEFAULT_MODIFICATION = tag
 }
 
+
+// Ideally we'd write this as a generalized function, but for now we can hard-
+// code these version upgrades.
+var modUpdates = {
+    "0-16-37": "0-16-51",
+    "0-16-37x": "0-16-51x",
+    "bobs-0-16-37": "bobs-0-16-51",
+}
+
+function normalizeDataSetName(modName) {
+    var newName = modUpdates[modName]
+    if (newName) {
+        return newName
+    }
+    return modName
+}
+
 function renderDataSetOptions(settings) {
     var modSelector = document.getElementById("data_set")
+    var configuredMod = normalizeDataSetName(settings.data)
     for (var modName in MODIFICATIONS) {
         var mod = MODIFICATIONS[modName]
         var option = document.createElement("option")
         option.textContent = mod.name
         option.value = modName
-        if (settings.data && settings.data == modName || !settings.data && modName == DEFAULT_MODIFICATION) {
+        if (configuredMod && configuredMod === modName || !configuredMod && modName === DEFAULT_MODIFICATION) {
             option.selected = true
         }
         modSelector.appendChild(option)
