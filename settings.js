@@ -1,16 +1,17 @@
 "use strict"
 
 // data set
-function Modification(name, filename) {
+function Modification(name, filename, legacy) {
     this.name = name
     this.filename = filename
+    this.legacy = legacy
 }
 
 var MODIFICATIONS = {
-    "0-16-51": new Modification("Vanilla 0.16.51", "vanilla-0.16.51.json"),
-    "0-16-51x": new Modification("Vanilla 0.16.51 - Expensive", "vanilla-0.16.51-expensive.json"),
-    "017science": new Modification("0.16.51 w/ 0.17 science mod", "017science-0.16.51.json"),
-    "bobs-0-16-51": new Modification("(EXPERIMENTAL) Bob's Mods + base 0.16.51", "bobs-0.16.51.json")
+    "0-16-51": new Modification("Vanilla 0.16.51", "vanilla-0.16.51.json", true),
+    "0-16-51x": new Modification("Vanilla 0.16.51 - Expensive", "vanilla-0.16.51-expensive.json", true),
+    "017science": new Modification("0.16.51 w/ 0.17 science mod", "017science-0.16.51.json", true),
+    "bobs-0-16-51": new Modification("(EXPERIMENTAL) Bob's Mods + base 0.16.51", "bobs-0.16.51.json", true)
 }
 
 var DEFAULT_MODIFICATION = "0-16-51"

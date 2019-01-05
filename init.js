@@ -21,6 +21,9 @@ var fuel
 // Array of item groups, in turn divided into subgroups. For display purposes.
 var itemGroups
 
+// Boolean with whether to use old (0.16) calculations.
+var useLegacyCalculations
+
 var initDone = false
 
 // Set the page back to a state immediately following initial setup, but before
@@ -58,6 +61,7 @@ function loadDataRunner(modName, callback) {
     if (!mod) {
         mod = MODIFICATIONS[DEFAULT_MODIFICATION]
     }
+    useLegacyCalculations = mod.legacy
     var filename = "data/" + mod.filename
     xobj.overrideMimeType("application/json")
     xobj.open("GET", filename, true)

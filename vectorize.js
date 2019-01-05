@@ -176,23 +176,33 @@ MatrixSolver.prototype = {
                 if (prod.equal(one)) {
                     continue
                 }
-                for (var j = 0; j < recipe.products.length; j++) {
-                    var ing = recipe.products[j]
-                    var k = this.itemIndexes[ing.item.name]
-                    A.setIndex(i, k, zero)
-                }
-                var ings = recipe.getIngredients(spec)
-                for (var j = 0; j < ings.length; j++) {
-                    var ing = ings[j]
-                    var k = this.itemIndexes[ing.item.name]
-                    if (k !== undefined) {
-                        A.setIndex(i, k, zero.sub(ing.amount))
+                if (useLegacyCalculations) {
+                    for (var j = 0; j < recipe.products.length; j++) {
+                        var ing = recipe.products[j]
+                        var k = this.itemIndexes[ing.item.name]
+                        A.setIndex(i, k, zero)
                     }
-                }
-                for (var j = 0; j < recipe.products.length; j++) {
-                    var ing = recipe.products[j]
-                    var k = this.itemIndexes[ing.item.name]
-                    A.addIndex(i, k, ing.amount.mul(prod))
+                    var ings = recipe.getIngredients(spec)
+                    for (var j = 0; j < ings.length; j++) {
+                        var ing = ings[j]
+                        var k = this.itemIndexes[ing.item.name]
+                        if (k !== undefined) {
+                            A.setIndex(i, k, zero.sub(ing.amount))
+                        }
+                    }
+                    for (var j = 0; j < recipe.products.length; j++) {
+                        var ing = recipe.products[j]
+                        var k = this.itemIndexes[ing.item.name]
+                        A.addIndex(i, k, ing.amount.mul(prod))
+                    }
+                } else {
+                    for (var j = 0; j < this.items.length; j++) {
+                        var n = A.index(i, j)
+                        if (!zero.less(n)) {
+                            continue
+                        }
+                        A.setIndex(i, j, n.mul(prod))
+                    }
                 }
             }
         }
