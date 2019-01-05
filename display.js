@@ -189,7 +189,8 @@ function ItemRow(row, item, canIgnore) {
         this.beltCountNode = document.createElement("tt")
         beltCountCell.appendChild(this.beltCountNode)
         row.appendChild(beltCountCell)
-    } else if (item.phase == "fluid") {
+    // Wire off pipe icon in 0.17 for now.
+    } else if (item.phase == "fluid" && useLegacyCalculations) {
         var pipeCell = document.createElement("td")
         pipeCell.colSpan = 2
         pipeCell.classList.add("pad-right")
@@ -230,17 +231,21 @@ ItemRow.prototype = {
         this.beltCountNode.textContent = alignCount(beltCount)
     },
     setPipe: function(itemRate) {
-        if (itemRate.equal(zero)) {
-            this.pipeNode.textContent = " \u00d7 0"
-            return
+        // 0.17 changes these fluid calculations, but the new model is not yet
+        // fully known. Wire it off in 0.17 for now.
+        if (useLegacyCalculations) {
+            if (itemRate.equal(zero)) {
+                this.pipeNode.textContent = " \u00d7 0"
+                return
+            }
+            var pipe = pipeValues(itemRate)
+            var pipeString = ""
+            if (one.less(pipe.pipes)) {
+                pipeString += " \u00d7 " + pipe.pipes.toDecimal(0)
+            }
+            pipeString += " \u2264 " + pipe.length.toDecimal(0)
+            this.pipeNode.textContent = pipeString
         }
-        var pipe = pipeValues(itemRate)
-        var pipeString = ""
-        if (one.less(pipe.pipes)) {
-            pipeString += " \u00d7 " + pipe.pipes.toDecimal(0)
-        }
-        pipeString += " \u2264 " + pipe.length.toDecimal(0)
-        this.pipeNode.textContent = pipeString
     },
     setRate: function(itemRate, waste) {
         this.rateNode.textContent = alignRate(itemRate)
