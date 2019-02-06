@@ -10,7 +10,7 @@ The calculator consists entirely of static files (HTML, JS, CSS), and may be run
 $ python3 -m http.server 8000
 ```
 
-An experimental standalone version of the calculator named `factoriocalc`, which will automatically obtain the game data from your locally installed mods, is also available from the [factorio-tools](https://github.com/KirkMcDonald/factorio-tools) repository. A Windows build is available from (the project's releases page)[https://github.com/KirkMcDonald/factorio-tools/releases].
+An experimental standalone version of the calculator named `factoriocalc`, which will automatically obtain the game data from your locally installed mods, is also available from the [factorio-tools](https://github.com/KirkMcDonald/factorio-tools) repository. A Windows build is available from [the project's releases page](https://github.com/KirkMcDonald/factorio-tools/releases).
 
 ## Dumping new datasets
 
