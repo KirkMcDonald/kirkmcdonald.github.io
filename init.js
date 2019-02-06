@@ -28,6 +28,9 @@ var sortedModules
 // Map from short module name to Module object.
 var shortModules
 
+// Array of Belt objects, sorted by speed.
+var belts
+
 // Array of Fuel objects, sorted by value.
 var fuel
 
@@ -114,6 +117,7 @@ function loadData(modName, settings) {
         var items = graph[0]
         var recipes = graph[1]
 
+        belts = getBelts(data)
         fuel = getFuel(data, items)["chemical"]
 
         itemGroups = getItemGroups(items, data)

@@ -350,18 +350,6 @@ function setKovarex(enabled) {
 }
 
 // belt
-function Belt(name, speed) {
-    this.name = name
-    this.speed = RationalFromFloats(speed, 60)
-}
-
-// XXX: Should derive this from the game data. Mods may add new belt types.
-var BELTS = [
-    new Belt("transport-belt", 800),
-    new Belt("fast-transport-belt", 1600),
-    new Belt("express-transport-belt", 2400)
-]
-
 var DEFAULT_BELT = "transport-belt"
 
 var preferredBelt = DEFAULT_BELT
@@ -378,8 +366,8 @@ function renderBelt(settings) {
     var node = document.createElement("span")
     node.id = "belt"
     var dropdown = new Dropdown(node, "belt_dropdown", changeBelt)
-    for (var i = 0; i < BELTS.length; i++) {
-        var belt = BELTS[i]
+    for (var i = 0; i < belts.length; i++) {
+        var belt = belts[i]
         var image = getImage(new BeltIcon(solver.items[belt.name], belt.speed), false, dropdown.dropdown)
         dropdown.add(image, belt.name, belt.name === preferredBelt)
     }
@@ -387,8 +375,8 @@ function renderBelt(settings) {
 }
 
 function setPreferredBelt(name) {
-    for (var i = 0; i < BELTS.length; i++) {
-        var belt = BELTS[i]
+    for (var i = 0; i < belts.length; i++) {
+        var belt = belts[i]
         if (belt.name === name) {
             preferredBelt = name
             preferredBeltSpeed = belt.speed

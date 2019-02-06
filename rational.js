@@ -177,15 +177,15 @@ function RationalFromString(s) {
 }
 
 // Decimal approximations.
-var _one_third = new Rational(bigInt(3333), bigInt(10000))
-var _two_thirds = new Rational(bigInt(3333), bigInt(5000))
+var _one_third = new Rational(bigInt(33333), bigInt(100000))
+var _two_thirds = new Rational(bigInt(33333), bigInt(50000))
 
 function RationalFromFloat(x) {
     if (Number.isInteger(x)) {
         return RationalFromFloats(x, 1)
     }
     // Sufficient precision for our data?
-    var r = new Rational(bigInt(Math.round(x * 10000)), bigInt(10000))
+    var r = new Rational(bigInt(Math.round(x * 100000)), bigInt(100000))
     // Recognize 1/3 and 2/3 explicitly.
     var divmod = r.divmod(one)
     if (divmod.remainder.equal(_one_third)) {
