@@ -19,14 +19,22 @@ function Ingredient(amount, item) {
 }
 
 function makeIngredient(data, i, items) {
+    var name
+    if ("name" in i) {
+        name = i.name
+    } else {
+        name = i[0]
+    }
     var amount
     if ("amount" in i) {
         amount = i.amount
-    } else {
+    } else if ("amount_min" in i && "amount_max" in i) {
         amount = (i.amount_min + i.amount_max) / 2
+    } else {
+        amount = i[1]
     }
     amount *= i.probability || 1
-    return new Ingredient(RationalFromFloat(amount), getItem(data, items, i.name))
+    return new Ingredient(RationalFromFloat(amount), getItem(data, items, name))
 }
 
 function Recipe(name, col, row, category, time, ingredients, products) {
