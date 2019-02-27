@@ -79,7 +79,7 @@ function MinerDef(name, col, row, categories, power, speed, moduleSlots, energyU
 }
 MinerDef.prototype = Object.create(FactoryDef.prototype)
 MinerDef.prototype.less = function(other) {
-    if (!this.mining_power.equal(other.mining_power)) {
+    if (useLegacyCalculations && !this.mining_power.equal(other.mining_power)) {
         return this.mining_power.less(other.mining_power)
     }
     return this.mining_speed.less(other.mining_speed)
@@ -100,11 +100,13 @@ MinerDef.prototype.renderTooltip = function() {
     t.appendChild(b)
     t.appendChild(new Text(alignPower(this.energyUsage, 0)))
     t.appendChild(document.createElement("br"))
-    b = document.createElement("b")
-    b.textContent = "Mining power: "
-    t.appendChild(b)
-    t.appendChild(new Text(this.mining_power.toDecimal()))
-    t.appendChild(document.createElement("br"))
+    if (useLegacyCalculations) {
+        b = document.createElement("b")
+        b.textContent = "Mining power: "
+        t.appendChild(b)
+        t.appendChild(new Text(this.mining_power.toDecimal()))
+        t.appendChild(document.createElement("br"))
+    }
     b = document.createElement("b")
     b.textContent = "Mining speed: "
     t.appendChild(b)
@@ -260,7 +262,13 @@ function Miner(factory, spec, recipe) {
 Miner.prototype = Object.create(Factory.prototype)
 Miner.prototype.recipeRate = function(spec, recipe) {
     var miner = this.factory
-    return miner.mining_power.sub(recipe.hardness).mul(miner.mining_speed).div(recipe.mining_time).mul(this.speedEffect(spec))
+    var rate
+    if (useLegacyCalculations) {
+        rate = miner.mining_power.sub(recipe.hardness)
+    } else {
+        rate = one
+    }
+    return rate.mul(miner.mining_speed).div(recipe.mining_time).mul(this.speedEffect(spec))
 }
 Miner.prototype.prodEffect = function(spec) {
     var prod = Factory.prototype.prodEffect.call(this, spec)
@@ -378,7 +386,7 @@ FactorySpec.prototype = {
         var factoryDef
         for (var i = 0; i < factories.length; i++) {
             factoryDef = factories[i]
-            if (factoryDef.less(this.minimum) || factoryDef.max_ing < recipe.ingredients.length) {
+            if (factoryDef.less(this.minimum) || useLegacyCalculations && factoryDef.max_ing < recipe.ingredients.length) {
                 continue
             }
             break
@@ -585,12 +593,18 @@ function getFactories(data) {
         if (d.energy_source && d.energy_source.type === "burner") {
             fuel = d.energy_source.fuel_category
         }
+        var power
+        if (d.mining_power) {
+            power = RationalFromFloat(d.mining_power)
+        } else {
+            power = null
+        }
         factories.push(new MinerDef(
             d.name,
             d.icon_col,
             d.icon_row,
             ["mining-basic-solid"],
-            RationalFromFloat(d.mining_power),
+            power,
             RationalFromFloat(d.mining_speed),
             d.module_slots,
             RationalFromFloat(d.energy_usage),

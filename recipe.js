@@ -264,12 +264,18 @@ function getRecipeGraph(data) {
         for (var i = 0; i < props.results.length; i++) {
             products.push(makeIngredient(data, props.results[i], items))
         }
+        var hardness
+        if (props.hardness) {
+            hardness = RationalFromFloat(props.hardness)
+        } else {
+            hardness = null
+        }
         recipes[name] = new MiningRecipe(
             name,
             entity.icon_col,
             entity.icon_row,
             "mining-" + category,
-            RationalFromFloat(props.hardness),
+            hardness,
             RationalFromFloat(props.mining_time),
             ingredients,
             products
