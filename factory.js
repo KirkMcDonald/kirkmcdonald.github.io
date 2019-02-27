@@ -522,6 +522,13 @@ function getFactories(data) {
     reactor.renderTooltip = renderTooltipBase
     factories.push(reactor)
     var boilerDef = data["boiler"]["boiler"]
+    // XXX: Should derive this from game data.
+    var boiler_energy
+    if (useLegacyCalculations) {
+        boiler_energy = RationalFromFloat(3600000)
+    } else {
+        boiler_energy = RationalFromFloat(1800000)
+    }
     var boiler = new FactoryDef(
         "boiler",
         boilerDef.icon_col,
@@ -530,8 +537,7 @@ function getFactories(data) {
         1,
         one,
         0,
-        // XXX: Should derive this from game data.
-        RationalFromFloat(3600000),
+        boiler_energy,
         "chemical"
     )
     boiler.renderTooltip = renderTooltipBase
