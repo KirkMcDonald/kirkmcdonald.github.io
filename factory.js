@@ -278,8 +278,8 @@ Miner.prototype.prodEffect = function(spec) {
 var rocketLaunchDuration = RationalFromFloats(2475, 60)
 
 function launchRate(spec) {
-    var partFactory = spec.spec["rocket-part"]
-    var partRecipe = partFactory.recipe
+    var partRecipe = solver.recipes["rocket-part"]
+    var partFactory = spec.getFactory(partRecipe)
     var partItem = solver.items["rocket-part"]
     var gives = partRecipe.gives(partItem, spec)
     // The base rate at which the silo can make rocket parts.
