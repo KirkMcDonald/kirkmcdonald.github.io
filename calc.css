@@ -204,6 +204,11 @@ input.pipe {
 input.pipeLength {
     width: 5em;
 }
+svg.popout {
+    stroke: var(--accent);
+    width: 16;
+    height: 16;
+}
 /* tabs */
 div.tabs {
     overflow: hidden;

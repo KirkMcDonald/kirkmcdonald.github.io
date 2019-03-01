@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 "use strict"
 
-function formatSettings() {
+function formatSettings(targets) {
     var settings = ""
     if (currentTab != DEFAULT_TAB) {
         settings += "tab=" + currentTab.slice(0, currentTab.indexOf("_")) + "&"
@@ -81,18 +81,26 @@ function formatSettings() {
 
     settings += "items="
     var targetStrings = []
-    for (var i = 0; i < build_targets.length; i++) {
-        var target = build_targets[i]
-        var targetString = ""
-        if (target.changedFactory) {
-            targetString = sprintf("%s:f:%s", target.itemName, target.factories.value)
-            if (target.recipeIndex != 0) {
-                targetString += ";" + target.recipeIndex
+    if (!targets) {
+        for (var i = 0; i < build_targets.length; i++) {
+            var target = build_targets[i]
+            var targetString = ""
+            if (target.changedFactory) {
+                targetString = sprintf("%s:f:%s", target.itemName, target.factories.value)
+                if (target.recipeIndex != 0) {
+                    targetString += ";" + target.recipeIndex
+                }
+            } else {
+                targetString = sprintf("%s:r:%s", target.itemName, target.rateValue.mul(displayRateFactor).toString())
             }
-        } else {
-            targetString = sprintf("%s:r:%s", target.itemName, target.rateValue.mul(displayRateFactor).toString())
+            targetStrings.push(targetString)
         }
-        targetStrings.push(targetString)
+    } else {
+        for (var itemName in targets) {
+            var rate = targets[itemName]
+            var targetString = sprintf("%s:r:%s", itemName, rate.mul(displayRateFactor).toString())
+            targetStrings.push(targetString)
+        }
     }
     settings += targetStrings.join(",")
     var ignore = []

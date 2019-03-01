@@ -203,6 +203,10 @@ function loadData(modName, settings) {
         }
         initDone = true
         itemUpdate()
+
+        // Prune factory spec after first solution is calculated.
+        pruneSpec(globalTotals)
+        window.location.hash = "#" + formatSettings()
     })
 }
 

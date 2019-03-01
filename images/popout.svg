@@ -1,0 +1,13 @@
+<svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+    <style type="text/css" media="screen">
+        <![CDATA[
+            path {
+                stroke: black;
+            }
+        ]]>
+    </style>
+    <path id="popout" fill="none" stroke-width="2px" d="
+        M 13,5 L 1,5 L 1,23 L 19,23 L 19,10
+        M 10,14 L 23,1
+        M 17,1 L 23,1 L 23,7" />
+</svg>

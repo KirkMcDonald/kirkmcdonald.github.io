@@ -79,6 +79,27 @@ function alignPower(x, prec) {
 
 var sortOrder = "topo"
 
+function pruneSpec(totals) {
+    var drop = []
+    for (var name in spec.spec) {
+        if (!(name in totals.totals)) {
+            drop.push(name)
+        }
+    }
+    for (var i = 0; i < drop.length; i++) {
+        delete spec.spec[drop[i]]
+    }
+    drop = []
+    for (var name in spec.ignore) {
+        if (!(name in totals.totals)) {
+            drop.push(name)
+        }
+    }
+    for (var i = 0; i < drop.length; i++) {
+        delete spec.ignore[drop[i]]
+    }
+}
+
 var globalTotals
 
 // The main top-level calculation function. Called whenever the solution
@@ -271,6 +292,25 @@ ItemRow.prototype = {
     },
 }
 
+function makePopOutCell() {
+    var popOutCell = document.createElement("td")
+    popOutCell.classList.add("pad")
+    var popOutLink = document.createElement("a")
+    popOutLink.target = "_blank"
+    popOutLink.title = "Open this item in separate window."
+    popOutCell.appendChild(popOutLink)
+    var popOutSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+    popOutSVG.classList.add("popout")
+    popOutSVG.setAttribute("viewBox", "0 0 24 24")
+    popOutSVG.setAttribute("width", "16")
+    popOutSVG.setAttribute("height", "16")
+    popOutLink.appendChild(popOutSVG)
+    var popOutUse = document.createElementNS("http://www.w3.org/2000/svg", "use")
+    popOutUse.setAttribute("href", "images/popout.svg#popout")
+    popOutSVG.appendChild(popOutUse)
+    return popOutCell
+}
+
 function RecipeRow(recipeName, rate, itemRate, waste) {
     this.name = recipeName
     this.recipe = solver.recipes[recipeName]
@@ -292,6 +332,10 @@ function RecipeRow(recipeName, rate, itemRate, waste) {
     this.itemRow.image.addEventListener("click", new IgnoreHandler(this))
 
     this.factoryRow = new FactoryRow(this.node, this.recipe, this.rate)
+
+    var popOutCell = makePopOutCell()
+    this.node.appendChild(popOutCell)
+    this.popOutLink = popOutCell.firstChild
 
     // Set values.
     if (canIgnore) {
@@ -349,6 +393,10 @@ RecipeRow.prototype = {
         this.rate = recipeRate
         this.itemRow.setRate(itemRate, waste)
         this.factoryRow.displayFactory(recipeRate)
+        var rate = {}
+        rate[this.item.name] = itemRate
+        var link = "#" + formatSettings(rate)
+        this.popOutLink.href = link
     },
     setRates: function(totals, items) {
         var recipeRate = totals.get(this.name)
@@ -675,6 +723,15 @@ function GroupRow(group, itemRates, totals) {
             }
         }
         this.rows.push(row)
+        // TODO: Making this work properly with GroupRow reqires a little more
+        //       thought. Dummy it out for now.
+        /*if (i === 0) {
+            var popOutCell = makePopOutCell()
+            row.appendChild(popOutCell)
+            this.popOutLink = popOutCell.firstChild
+        } else {*/
+            row.appendChild(document.createElement("td"))
+        /*}*/
     }
     this.rows[0].classList.add("group-top-row")
     row.classList.add("group-bottom-row")
@@ -693,9 +750,11 @@ GroupRow.prototype = {
     },
     setRates: function(totals, itemRates) {
         this.itemRates = []
+        var rates = {}
         for (var i = 0; i < this.itemNames.length; i++) {
             var itemName = this.itemNames[i]
             var rate = itemRates[itemName]
+            rates[itemName] = rate
             this.itemRates.push(rate)
             var waste = totals.getWaste(itemName)
             rate = rate.sub(waste)
@@ -803,7 +862,8 @@ function RecipeTable(node) {
         Header("modules", 1),
         Header("beacons", 1),
         Header(""),
-        Header("power", 2)
+        Header("power", 2),
+        Header("")
     ]
     var header = document.createElement("tr")
     header.classList.add("factory-header")
