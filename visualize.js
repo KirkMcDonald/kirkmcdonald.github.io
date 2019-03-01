@@ -254,7 +254,7 @@ GraphNode.prototype = {
 function renderGraph(totals, ignore) {
     var graph = makeGraph(totals, ignore)
     var g = graph.g
-    var svg = d3.select("svg")
+    var svg = d3.select("svg#graph")
     var inner = svg.select("g")
     inner.remove()
     inner = svg.append("g")
