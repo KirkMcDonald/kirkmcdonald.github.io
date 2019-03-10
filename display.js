@@ -329,7 +329,9 @@ function RecipeRow(recipeName, rate, itemRate, waste) {
 
     this.item = this.recipe.products[0].item
     this.itemRow = new ItemRow(this.node, this.item, canIgnore)
-    this.itemRow.image.addEventListener("click", new IgnoreHandler(this))
+    if (canIgnore) {
+        this.itemRow.image.addEventListener("click", new IgnoreHandler(this))
+    }
 
     this.factoryRow = new FactoryRow(this.node, this.recipe, this.rate)
 
