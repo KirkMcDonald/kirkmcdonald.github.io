@@ -242,23 +242,24 @@ div.tab {
 }
 /* visualizer */
 g.node rect {
-    stroke: var(--foreground);
-    fill: var(--medium);
     stroke-width: 1px;
+}
+g.overlay rect {
     cursor: pointer;
 }
-g.node div {
-    text-align: center;
-    cursor: pointer;
+g.node .colon {
+    stroke: none;
+    fill: var(--foreground);
 }
-g.nodeHighlight rect {
+rect.nodeHighlight {
     stroke: var(--accent);
 }
 g.edgePath path {
     stroke: var(--light);
 }
-g.edgePathHighlight path {
+path.edgePathHighlight {
     stroke: var(--accent);
+    stroke-opacity: 0.7;
 }
 g.edgePathFuel path {
     stroke-dasharray: 10,5;
@@ -271,6 +272,11 @@ g.edgeLabel div {
 g.edgeLabelHighlight div {
     background-color: var(--medium);
     border-color: var(--accent);
+}
+text {
+    stroke: none;
+    fill: var(--foreground);
+    font: 12px sans-serif;
 }
 div.graph {
     min-width: max-content;

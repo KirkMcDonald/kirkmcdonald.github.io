@@ -424,32 +424,26 @@ function PipeLengthHandler(config) {
 // graph hover events
 
 function GraphMouseOverHandler(node) {
-    this.handleEvent = function(event) {
-        node.highlight()
-    }
+    node.highlight()
 }
 
 function GraphMouseLeaveHandler(node) {
-    this.handleEvent = function(event) {
-        if (node !== clickedNode) {
-            node.unhighlight()
-        }
+    if (node !== clickedNode) {
+        node.unhighlight()
     }
 }
 
 var clickedNode = null
 
 function GraphClickHandler(node) {
-    this.handleEvent = function(event) {
-        if (node === clickedNode) {
-            node.unhighlight()
-            clickedNode = null
-        } else if (clickedNode) {
-            clickedNode.unhighlight()
-            clickedNode = node
-        } else {
-            clickedNode = node
-        }
+    if (node === clickedNode) {
+        node.unhighlight()
+        clickedNode = null
+    } else if (clickedNode) {
+        clickedNode.unhighlight()
+        clickedNode = node
+    } else {
+        clickedNode = node
     }
 }
 

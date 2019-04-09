@@ -14,8 +14,12 @@
   ga('send', 'pageview');
 
 </script>
-    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="third_party/dagre-d3.min.js"></script>
+    <!--<script src="third_party/dagre-d3.min.js"></script>-->
+    <script src="third_party/d3.min.js"></script>
+    <script type="module">
+        import * as d3sankey from "./d3-sankey/index.js"
+        window.d3sankey = d3sankey
+    </script>
     <script src="third_party/BigInteger.min.js"></script>
     <script src="third_party/pako.min.js"></script>
     <script src="third_party/sprintf.js"></script>
@@ -104,7 +108,7 @@ limitations under the License.-->
     </div>
 
     <div id="graph_tab" class="tab graph">
-        <svg id="graph"><g /></svg>
+        <svg id="graph"></svg>
     </div>
 
     <div id="settings_tab" class="tab">
