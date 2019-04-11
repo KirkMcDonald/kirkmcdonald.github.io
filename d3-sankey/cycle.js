@@ -116,7 +116,6 @@ export function minFAS(graph) {
         } else if (i < j) {
             link.direction = "forward"
         } else {
-            console.log(link)
             link.direction = "backward"
         }
     }
