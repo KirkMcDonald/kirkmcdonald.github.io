@@ -257,7 +257,7 @@ rect.nodeHighlight {
 g.edgePath path {
     stroke: var(--light);
 }
-path.edgePathHighlight {
+g.edgePathHighlight path.highlighter {
     stroke: var(--accent);
     stroke-opacity: 0.7;
 }
