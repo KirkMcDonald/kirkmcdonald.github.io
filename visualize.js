@@ -124,6 +124,10 @@ function makeGraph(totals, ignore) {
                     if (ing.item.phase === "fluid") {
                         value /= 10
                     }
+                    let beltCount = null
+                    if (ing.item.phase === "solid") {
+                        beltCount = subRate.div(preferredBeltSpeed)
+                    }
                     let extra = subRecipe.products.length > 1
                     links.push({
                         source: nodeMap.get(subRecipe.name),
@@ -132,6 +136,7 @@ function makeGraph(totals, ignore) {
                         item: ing.item,
                         rate: subRate,
                         fuel: fuel,
+                        beltCount: beltCount,
                         extra: extra,
                     })
                 }
@@ -293,6 +298,73 @@ function getColorMaps(nodes, links) {
     return [itemColors, recipeColors]
 }
 
+function selfPath(d) {
+    let x0 = d.source.x1
+    let y0 = d.y0
+    let x1 = d.source.x1
+    let y1 = d.source.y1 + d.width/2 + 10
+    let r1 = (y1 - y0) / 2
+    let x2 = d.target.x0
+    let y2 = d.target.y1 + d.width/2 + 10
+    let x3 = d.target.x0
+    let y3 = d.y1
+    let r2 = (y3 - y2) / 2
+    return new CirclePath(1, 0, [
+        {x: x0, y: y0},
+        {x: x1, y: y1},
+        {x: x2, y: y2},
+        {x: x3, y: y3},
+    ])
+}
+
+function backwardPath(d) {
+    // start point
+    let x0 = d.source.x1
+    let y0 = d.y0
+    // end point
+    let x3 = d.target.x0
+    let y3 = d.y1
+    let y2a = d.source.y0 - d.width/2 - 10
+    let y2b = d.source.y1 + d.width/2 + 10
+    let y3a = d.target.y0 - d.width/2 - 10
+    let y3b = d.target.y1 + d.width/2 + 10
+    let points = [{x: x0, y: y0}]
+    let starty
+    let endy
+    if (y2b < y3a) {
+        // draw start arc down, end arc up
+        starty = y2b
+        endy = y3a
+    } else if (y2a > y3b) {
+        // draw start arc up, end arc down
+        starty = y2a
+        endy = y3b
+    } else {
+        // draw both arcs down
+        starty = y2b
+        endy = y3b
+    }
+    let curve = makeCurve(-1, 0, x0, starty, x3, endy)
+    for (let {x, y} of curve.points) {
+        points.push({x, y})
+    }
+    points.push({x: x3, y: y3})
+    return new CirclePath(1, 0, points)
+}
+
+function linkPath(d) {
+    if (d.direction === "self") {
+        return selfPath(d)
+    } else if (d.direction === "backward") {
+        return backwardPath(d)
+    }
+    let x0 = d.source.x1
+    let y0 = d.y0
+    let x1 = d.target.x0
+    let y1 = d.y1
+    return makeCurve(1, 0, x0, y0, x1, y1, d.width)
+}
+
 function linkTitle(d) {
     let itemName = ""
     if (d.source.name !== d.item.name) {
@@ -354,6 +426,20 @@ function renderGraph(totals, ignore) {
     for (let link of links) {
         let h = new GraphEdge(link)
         linkHighlighters.set(link, h)
+        link.curve = linkPath(link)
+        let belts = []
+        if (link.beltCount !== null) {
+            let dy = link.width / link.beltCount.toFloat()
+            // Only render belts if there are at least three pixels per belt.
+            if (dy > 3) {
+                for (let i = one; i.less(link.beltCount); i = i.add(one)) {
+                    let offset = i.toFloat() * dy - link.width/2
+                    let beltCurve = link.curve.offset(offset)
+                    belts.push({item: link.item, curve: beltCurve})
+                }
+            }
+        }
+        link.belts = belts
     }
     for (let node of nodes) {
         let edges = []
@@ -438,10 +524,21 @@ function renderGraph(totals, ignore) {
     link.append("path")
         .attr("fill", "none")
         .attr("stroke-opacity", 0.3)
-        .attr("d", d3sankey.sankeyLinkHorizontal())
+        .attr("d", d => d.curve.path())
         .attr("stroke", d => colorList[itemColors.get(d.item) % 10])
         .attr("stroke-width", d => Math.max(1, d.width))
         .each(function(d) { d.element = this })
+    link.append("g")
+        .classed("belts", true)
+        .selectAll("path")
+        .data(d => d.belts)
+        .join("path")
+            .classed("belt", true)
+            .attr("fill", "none")
+            .attr("stroke-opacity", 0.3)
+            .attr("d", d => d.curve.path())
+            .attr("stroke", d => colorList[itemColors.get(d.item) % 10])
+            .attr("stroke-width", 1)
     link.append("title")
         .text(linkTitle)
     let extraLinkLabel = link.filter(d => d.extra)
