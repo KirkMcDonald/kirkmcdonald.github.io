@@ -52,26 +52,24 @@ var image_id = zero
 
 function makeGraph(totals, ignore) {
     var outputRecipe = new OutputRecipe()
-    var nodes = [{
-        name: "output",
-        ingredients: outputRecipe.ingredients,
-        recipe: outputRecipe,
-        factory: null,
-        count: zero,
-        rate: null,
-    }]
+    var nodes = [new GraphNode(
+        "output",
+        outputRecipe,
+        null,
+        zero,
+        null,
+    )]
     var nodeMap = new Map()
     nodeMap.set("output", nodes[0])
     if (Object.keys(totals.waste).length > 0) {
         var surplusRecipe = new SurplusRecipe(totals)
-        nodes.push({
-            name: "surplus",
-            ingredients: surplusRecipe.ingredients,
-            recipe: surplusRecipe,
-            factory: null,
-            count: zero,
-            rate: null,
-        })
+        nodes.push(new GraphNode(
+            "surplus",
+            surplusRecipe,
+            null,
+            zero,
+            null,
+        ))
         nodeMap.set("surplus", nodes[1])
     }
     for (var recipeName in totals.totals) {
@@ -79,14 +77,13 @@ function makeGraph(totals, ignore) {
         var recipe = solver.recipes[recipeName]
         var factory = spec.getFactory(recipe)
         var factoryCount = spec.getCount(recipe, rate)
-        var node = {
-            name: recipeName,
-            ingredients: recipe.ingredients,
-            recipe: recipe,
-            factory: factory ? factory.factory : null,
-            count: factoryCount,
-            rate: rate,
-        }
+        var node = new GraphNode(
+            recipeName,
+            recipe,
+            factory,
+            factoryCount,
+            rate,
+        )
         nodes.push(node)
         nodeMap.set(recipeName, node)
     }
@@ -129,16 +126,16 @@ function makeGraph(totals, ignore) {
                         beltCount = subRate.div(preferredBeltSpeed)
                     }
                     let extra = subRecipe.products.length > 1
-                    links.push({
-                        source: nodeMap.get(subRecipe.name),
-                        target: node,
-                        value: value,
-                        item: ing.item,
-                        rate: subRate,
-                        fuel: fuel,
-                        beltCount: beltCount,
-                        extra: extra,
-                    })
+                    links.push(new GraphEdge(
+                        nodeMap.get(subRecipe.name),
+                        node,
+                        value,
+                        ing.item,
+                        subRate,
+                        fuel,
+                        beltCount,
+                        extra,
+                    ))
                 }
             }
         }
@@ -146,50 +143,64 @@ function makeGraph(totals, ignore) {
     return {nodes, links}
 }
 
-function GraphEdge(edge) {//, label) {
-    this.edge = edge
-    //this.label = label
-    this.nodes = new Set()
-}
-GraphEdge.prototype = {
-    constructor: GraphEdge,
-    hasNodes: function() {
-        return this.nodes.size > 0
-    },
-    highlight: function(node) {
-        if (!this.hasNodes()) {
-            this.edge.element.classList.add("edgePathHighlight")
+class GraphEdge {
+    constructor(source, target, value, item, rate, fuel, beltCount, extra) {
+        this.source = source
+        this.target = target
+        this.value = value
+        this.item = item
+        this.rate = rate
+        this.fuel = fuel
+        this.beltCount = beltCount
+        this.extra = extra
+        //this.edge = edge
+        //this.label = label
+        this.nodeHighlighters = new Set()
+    }
+    hasHighlighters() {
+        return this.nodeHighlighters.size > 0
+    }
+    highlight(node) {
+        if (!this.hasHighlighters()) {
+            this.element.classList.add("edgePathHighlight")
             //this.label.classList.add("edgeLabelHighlight")
         }
-        this.nodes.add(node)
-    },
-    unhighlight: function(node) {
-        this.nodes.delete(node)
-        if (!this.hasNodes()) {
-            this.edge.element.classList.remove("edgePathHighlight")
+        this.nodeHighlighters.add(node)
+    }
+    unhighlight(node) {
+        this.nodeHighlighters.delete(node)
+        if (!this.hasHighlighters()) {
+            this.element.classList.remove("edgePathHighlight")
             //this.label.classList.remove("edgeLabelHighlight")
         }
-    },
+    }
 }
 
-function GraphNode(node, edges) {
-    this.node = node
-    this.edges = edges
-}
-GraphNode.prototype = {
-    constructor: GraphNode,
-    highlight: function() {
-        this.node.element.classList.add("nodeHighlight")
-        for (let edge of this.edges) {
+class GraphNode {
+    constructor(name, recipe, factory, count, rate) {
+        this.name = name
+        this.ingredients = recipe.ingredients
+        this.recipe = recipe
+        this.factory = factory ? factory.factory : null
+        this.count = count
+        this.rate = rate
+        //this.edgeHighlighters = []
+    }
+    links() {
+        return this.sourceLinks.concat(this.targetLinks)
+    }
+    highlight() {
+        this.element.classList.add("nodeHighlight")
+        for (let edge of this.links()) {
             edge.highlight(this)
         }
-    },
-    unhighlight: function() {
-        this.node.element.classList.remove("nodeHighlight")
-        for (let edge of this.edges) {
+    }
+    unhighlight() {
+        this.element.classList.remove("nodeHighlight")
+        for (let edge of this.links()) {
             edge.unhighlight(this)
         }
-    },
+    }
 }
 
 function nodeText(d) {
@@ -422,10 +433,7 @@ function renderGraph(totals, ignore) {
         }
     }
 
-    let linkHighlighters = new Map()
     for (let link of links) {
-        let h = new GraphEdge(link)
-        linkHighlighters.set(link, h)
         link.curve = linkPath(link)
         let belts = []
         if (link.beltCount !== null) {
@@ -440,13 +448,6 @@ function renderGraph(totals, ignore) {
             }
         }
         link.belts = belts
-    }
-    for (let node of nodes) {
-        let edges = []
-        for (let link of node.sourceLinks.concat(node.targetLinks)) {
-            edges.push(linkHighlighters.get(link))
-        }
-        node.highlighter = new GraphNode(node, edges)
     }
 
     var svg = d3.select("svg#graph")
@@ -596,9 +597,9 @@ function renderGraph(totals, ignore) {
             .attr("y", d => Math.min(d.rect.y, d.rect.y + d.rect.height/2 - 16))
             .attr("width", d => d.rect.width)
             .attr("height", d => Math.max(d.rect.height, 32))
-            .on("mouseover", d => GraphMouseOverHandler(d.node.highlighter))
-            .on("mouseout", d => GraphMouseLeaveHandler(d.node.highlighter))
-            .on("click", d => GraphClickHandler(d.node.highlighter))
+            .on("mouseover", d => GraphMouseOverHandler(d.node))
+            .on("mouseout", d => GraphMouseLeaveHandler(d.node))
+            .on("click", d => GraphClickHandler(d.node))
             .append("title")
                 .text(d => formatName(d.node.name))
 }
