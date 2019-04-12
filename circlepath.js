@@ -165,10 +165,10 @@ function doubleArcPath(tx, ty, x1, y1, x2, y2) {
 
 // Vector transpose functions in SVG coord space (i.e. inverted y axis).
 function R(x, y) {
-    return -y, x
+    return [-y, x]
 }
 function L(x, y) {
-    return y, -x
+    return [y, -x]
 }
 
 function doubleArcAdjustPath(tx, ty, x1, y1, x2, y2, width) {
@@ -277,7 +277,8 @@ function makeCurve(tx, ty, x1, y1, x2, y2, width) {
         return linePath(tx, ty, x1, y1, x2, y2)
     }
     let slope = fy/fx
-    //if (-0.75 <= slope && slope <= 0.75) {
+    if (-0.75 <= slope && slope <= 0.75) {
         return doubleArcPath(tx, ty, x1, y1, x2, y2)
-    //}
+    }
+    return doubleArcAdjustPath(tx, ty, x1, y1, x2, y2, width)
 }
