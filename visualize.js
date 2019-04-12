@@ -153,8 +153,7 @@ class GraphEdge {
         this.fuel = fuel
         this.beltCount = beltCount
         this.extra = extra
-        //this.edge = edge
-        //this.label = label
+        this.elements = []
         this.nodeHighlighters = new Set()
     }
     hasHighlighters() {
@@ -162,16 +161,18 @@ class GraphEdge {
     }
     highlight(node) {
         if (!this.hasHighlighters()) {
-            this.element.classList.add("edgePathHighlight")
-            //this.label.classList.add("edgeLabelHighlight")
+            for (let element of this.elements) {
+                element.classList.add("edgePathHighlight")
+            }
         }
         this.nodeHighlighters.add(node)
     }
     unhighlight(node) {
         this.nodeHighlighters.delete(node)
         if (!this.hasHighlighters()) {
-            this.element.classList.remove("edgePathHighlight")
-            //this.label.classList.remove("edgeLabelHighlight")
+            for (let element of this.elements) {
+                element.classList.remove("edgePathHighlight")
+            }
         }
     }
 }
@@ -189,6 +190,26 @@ class GraphNode {
     links() {
         return this.sourceLinks.concat(this.targetLinks)
     }
+    text() {
+        if (this.rate === null) {
+            return this.name
+        } else if (this.count.isZero()) {
+            return sprintf(" \u00d7 %s/%s", displayRate(this.rate), rateName)
+        } else {
+            return sprintf(" \u00d7 %s", displayCount(this.count))
+        }
+    }
+    labelWidth(text, margin) {
+        text.text(this.text())
+        let textWidth = text.node().getBBox().width
+        let nodeWidth = textWidth + margin*2
+        if (this.factory !== null) {
+            nodeWidth += iconSize * 2 + colonWidth + 3
+        } else if (this.rate !== null) {
+            nodeWidth += iconSize + 3
+        }
+        return nodeWidth
+    }
     highlight() {
         this.element.classList.add("nodeHighlight")
         for (let edge of this.links()) {
@@ -203,14 +224,60 @@ class GraphNode {
     }
 }
 
-function nodeText(d) {
-    if (d.rate === null) {
-        return d.name
-    } else if (d.count.isZero()) {
-        return sprintf(" \u00d7 %s/%s", displayRate(d.rate), rateName)
-    } else {
-        return sprintf(" \u00d7 %s", displayCount(d.count))
-    }
+function renderNode(selection, margin, ignore, sheetWidth, sheetHeight, recipeColors) {
+    selection.append("rect")
+        .attr("x", d => d.x0)
+        .attr("y", d => d.y0)
+        .attr("height", d => d.y1 - d.y0)
+        .attr("width", d => d.x1 - d.x0)
+        .attr("fill", d => d3.color(colorList[recipeColors.get(d.recipe) % 10]).darker())
+        .attr("stroke", d => colorList[recipeColors.get(d.recipe) % 10])
+        .each(function(d) { d.element = this })
+    selection.filter(d => d.rate === null)
+        .append("text")
+            .attr("x", d => (d.x0 + d.x1) / 2)
+            .attr("y", d => (d.y0 + d.y1) / 2)
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "middle")
+            .text(d => d.text())
+    let labeledNode = selection.filter(d => d.rate !== null)
+    labeledNode.append("svg")
+        .attr("viewBox", d => imageViewBox(d.recipe))
+        .attr("x", d => d.x0 + margin + 0.5)
+        .attr("y", d => (d.y0 + d.y1) / 2 - iconSize/2 + 0.5)
+        .attr("width", iconSize)
+        .attr("height", iconSize)
+        .append("image")
+            .classed("ignore", d => ignore[d.recipe.name])
+            .attr("xlink:href", "images/sprite-sheet-" + sheet_hash + ".png")
+            .attr("width", sheetWidth)
+            .attr("height", sheetHeight)
+    labeledNode.append("text")
+        .attr("x", d => d.x0 + iconSize + (d.factory === null ? 0 : colonWidth + iconSize) + margin + 3)
+        .attr("y", d => (d.y0 + d.y1) / 2)
+        .attr("dy", "0.35em")
+        .text(d => d.text())
+    let factoryNode = selection.filter(d => d.factory !== null)
+    factoryNode.append("circle")
+        .classed("colon", true)
+        .attr("cx", d => d.x0 + iconSize + colonWidth/2 + margin)
+        .attr("cy", d => (d.y0 + d.y1) / 2 - 4)
+        .attr("r", 1)
+    factoryNode.append("circle")
+        .classed("colon", true)
+        .attr("cx", d => d.x0 + iconSize + colonWidth/2 + margin)
+        .attr("cy", d => (d.y0 + d.y1) / 2 + 4)
+        .attr("r", 1)
+    factoryNode.append("svg")
+        .attr("viewBox", d => imageViewBox(d.factory))
+        .attr("x", d => d.x0 + iconSize + colonWidth + margin + 0.5)
+        .attr("y", d => (d.y0 + d.y1) / 2 - iconSize/2 + 0.5)
+        .attr("width", iconSize)
+        .attr("height", iconSize)
+        .append("image")
+            .attr("xlink:href", "images/sprite-sheet-" + sheet_hash + ".png")
+            .attr("width", sheetWidth)
+            .attr("height", sheetHeight)
 }
 
 const iconSize = 32
@@ -222,9 +289,9 @@ const colonWidth = 12
 var color = d3.scaleOrdinal(colorList)
 
 function imageViewBox(obj) {
-    var x1 = obj.icon_col * PX_WIDTH
-    var y1 = obj.icon_row * PX_HEIGHT
-    return `${x1} ${y1} ${PX_WIDTH} ${PX_HEIGHT}`
+    var x1 = obj.icon_col * PX_WIDTH + 0.5
+    var y1 = obj.icon_row * PX_HEIGHT + 0.5
+    return `${x1} ${y1} ${PX_WIDTH-1} ${PX_HEIGHT-1}`
 }
 
 function itemNeighbors(item, fuelLinks) {
@@ -394,19 +461,17 @@ function renderGraph(totals, ignore) {
     let sheetWidth = spriteImage.width
     let sheetHeight = spriteImage.height
     let data = makeGraph(totals, ignore)
+    if (visualizer === "box") {
+        renderBoxGraph(data, ignore, sheetWidth, sheetHeight)
+        return
+    }
 
     let maxNodeWidth = 0
     let testSVG = d3.select("body").append("svg")
+        .classed("sankey", true)
     let text = testSVG.append("text")
     for (let node of data.nodes) {
-        text.text(nodeText(node))
-        let textWidth = text.node().getBBox().width
-        let nodeWidth = textWidth + 4
-        if (node.factory !== null) {
-            nodeWidth += iconSize * 2 + colonWidth
-        } else if (node.rate !== null) {
-            nodeWidth += iconSize
-        }
+        let nodeWidth = node.labelWidth(text, 2)
         if (nodeWidth > maxNodeWidth) {
             maxNodeWidth = nodeWidth
         }
@@ -450,7 +515,8 @@ function renderGraph(totals, ignore) {
         link.belts = belts
     }
 
-    var svg = d3.select("svg#graph")
+    let svg = d3.select("svg#graph")
+        .classed("sankey", true)
         .attr("viewBox", `-25,-25,${width+50},${height+50}`)
         .style("width", width+50)
         .style("height", height+50)
@@ -463,59 +529,7 @@ function renderGraph(totals, ignore) {
         .join("g")
             .classed("node", true)
 
-    rects.append("rect")
-        .attr("x", d => d.x0)
-        .attr("y", d => d.y0)
-        .attr("height", d => d.y1 - d.y0)
-        .attr("width", d => d.x1 - d.x0)
-        .attr("fill", d => d3.color(colorList[recipeColors.get(d.recipe) % 10]).darker())
-        .attr("stroke", d => colorList[recipeColors.get(d.recipe) % 10])
-        .each(function(d) { d.element = this })
-    rects.filter(d => d.rate === null)
-        .append("text")
-            .attr("x", d => (d.x0 + d.x1) / 2)
-            .attr("y", d => (d.y0 + d.y1) / 2)
-            .attr("dy", "0.35em")
-            .attr("text-anchor", "middle")
-            .text(nodeText)
-    let labeledNode = rects.filter(d => d.rate !== null)
-    labeledNode.append("svg")
-        .attr("viewBox", d => imageViewBox(d.recipe))
-        .attr("x", d => d.x0 + 2)
-        .attr("y", d => (d.y0 + d.y1) / 2 - iconSize/2)
-        .attr("width", iconSize)
-        .attr("height", iconSize)
-        .append("image")
-            .classed("ignore", d => ignore[d.recipe.name])
-            .attr("xlink:href", "images/sprite-sheet-" + sheet_hash + ".png")
-            .attr("width", sheetWidth)
-            .attr("height", sheetHeight)
-    labeledNode.append("text")
-        .attr("x", d => d.x0 + iconSize + (d.factory === null ? 0 : colonWidth + iconSize) + 2)
-        .attr("y", d => (d.y0 + d.y1) / 2)
-        .attr("dy", "0.35em")
-        .text(nodeText)
-    let factoryNode = rects.filter(d => d.factory !== null)
-    factoryNode.append("circle")
-        .classed("colon", true)
-        .attr("cx", d => d.x0 + iconSize + colonWidth/2 + 2)
-        .attr("cy", d => (d.y0 + d.y1) / 2 - 4)
-        .attr("r", 1)
-    factoryNode.append("circle")
-        .classed("colon", true)
-        .attr("cx", d => d.x0 + iconSize + colonWidth/2 + 2)
-        .attr("cy", d => (d.y0 + d.y1) / 2 + 4)
-        .attr("r", 1)
-    factoryNode.append("svg")
-        .attr("viewBox", d => imageViewBox(d.factory))
-        .attr("x", d => d.x0 + iconSize + colonWidth + 2)
-        .attr("y", d => (d.y0 + d.y1) / 2 - iconSize/2)
-        .attr("width", iconSize)
-        .attr("height", iconSize)
-        .append("image")
-            .attr("xlink:href", "images/sprite-sheet-" + sheet_hash + ".png")
-            .attr("width", sheetWidth)
-            .attr("height", sheetHeight)
+    renderNode(rects, 2, ignore, sheetWidth, sheetHeight, recipeColors)
 
     let link = svg.append("g")
         .classed("links", true)
@@ -523,7 +537,7 @@ function renderGraph(totals, ignore) {
         .data(links)
         .join("g")
             .classed("link", true)
-            .each(function(d) { d.element = this })
+            .each(function(d) { d.elements.push(this) })
     link.append("path")
         .classed("highlighter", d => d.width < 3)
         .attr("fill", "none")
@@ -560,8 +574,8 @@ function renderGraph(totals, ignore) {
     let extraLinkLabel = link.filter(d => d.extra)
     extraLinkLabel.append("svg")
         .attr("viewBox", d => imageViewBox(d.item))
-        .attr("x", d => d.source.x1 + 2)
-        .attr("y", d => d.y0 - PX_HEIGHT/4)
+        .attr("x", d => d.source.x1 + 2.5)
+        .attr("y", d => d.y0 - PX_HEIGHT/4 + 0.5)
         .attr("width", iconSize/2)
         .attr("height", iconSize/2)
         .append("image")

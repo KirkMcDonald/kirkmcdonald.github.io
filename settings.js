@@ -498,6 +498,20 @@ function renderDefaultBeacon(settings) {
     cell.replaceChild(node, oldDefMod)
 }
 
+// visualizer settings
+let DEFAULT_VISUALIZER = "sankey"
+
+let visualizer = DEFAULT_VISUALIZER
+
+function renderVisualizerType(settings) {
+    visualizer = DEFAULT_VISUALIZER
+    if ("vis" in settings) {
+        visualizer = settings.vis
+    }
+    let input = document.getElementById("vis_" + visualizer)
+    input.checked = true
+}
+
 // value format
 var DEFAULT_FORMAT = "decimal"
 
@@ -561,5 +575,6 @@ function renderSettings(settings) {
     renderMiningProd(settings)
     renderDefaultModule(settings)
     renderDefaultBeacon(settings)
+    renderVisualizerType(settings)
     renderValueFormat(settings)
 }

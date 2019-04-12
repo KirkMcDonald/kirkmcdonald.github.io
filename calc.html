@@ -14,8 +14,8 @@
   ga('send', 'pageview');
 
 </script>
-    <!--<script src="third_party/dagre-d3.min.js"></script>-->
     <script src="third_party/d3.min.js"></script>
+    <script src="third_party/dagre.min.js"></script>
     <script type="module">
         import * as d3sankey from "./d3-sankey/index.js"
         window.d3sankey = d3sankey
@@ -26,6 +26,7 @@
     <script src="third_party/popper.min.js"></script>
     <script src="override.js"></script>
     <script src="circlepath.js"></script>
+    <script src="boxline.js"></script>
     <script src="tooltip.js"></script>
     <script src="sort.js"></script>
     <script src="rational.js"></script>
@@ -186,6 +187,16 @@ limitations under the License.-->
         <tr>
         <td class="setting-label">Default beacon:</td>
         <td><span id="default_beacon"></span> &times; <input id="default_beacon_count" class="beacon" type="number" value="0" onchange="changeDefaultBeaconCount(event)"></td>
+        </tr>
+
+        <tr>
+        <td class="setting-label top">Visualization type:</td>
+        <td>
+            <input type="radio" name="visualization" id="vis_sankey" value="sankey" checked onchange="changeVisualizerType(event)">
+            <label for="vis_sankey">Sankey diagram</label><br />
+            <input type="radio" name="visualization" id="vis_box" value="box" onchange="changeVisualizerType(event)">
+            <label for="vis_box">Boxes and lines</label>
+        </td>
         </tr>
 
         <tr>

@@ -72,6 +72,9 @@ function formatSettings(targets) {
     if (!spec.defaultBeaconCount.isZero()) {
         settings += "dbc=" + spec.defaultBeaconCount.toDecimal(0) + "&"
     }
+    if (visualizer !== DEFAULT_VISUALIZER) {
+        settings += "vis=" + visualizer + "&"
+    }
     if (displayFormat != DEFAULT_FORMAT) {
         settings += "vf=" + displayFormat[0] + "&"
     }

@@ -273,6 +273,12 @@ function changeDefaultBeaconCount(event) {
     itemUpdate()
 }
 
+// Triggered when the visualizer type is changed.
+function changeVisualizerType(event) {
+    visualizer = event.target.value
+    display()
+}
+
 // Triggered when the recipe sort order is changed.
 function changeSortOrder(event) {
     sortOrder = event.target.value

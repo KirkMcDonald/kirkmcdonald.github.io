@@ -254,28 +254,23 @@ g.node .colon {
 rect.nodeHighlight {
     stroke: var(--accent);
 }
-g.edgePath path {
-    stroke: var(--light);
-}
-g.edgePathHighlight path.highlighter {
+g.edgePathHighlight .highlighter {
     stroke: var(--accent);
+}
+svg.sankey g.edgePathHighlight .highlighter {
     stroke-opacity: 0.7;
+}
+g.edgePathHighlight rect.highlighter {
+    fill-opacity: 1;
 }
 g.edgePathFuel path {
     stroke-dasharray: 10,5;
 }
-g.edgeLabel div {
-    border: 1px solid transparent;
-    border-radius: 0.4em;
-    padding: 5px;
-}
-g.edgeLabelHighlight div {
-    background-color: var(--medium);
-    border-color: var(--accent);
-}
 text {
     stroke: none;
     fill: var(--foreground);
+}
+svg.sankey text {
     font: 12px sans-serif;
 }
 div.graph {
