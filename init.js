@@ -40,6 +40,9 @@ var itemGroups
 // Boolean with whether to use old (0.16) calculations.
 var useLegacyCalculations
 
+// Size of the sprite sheet, as [x, y] array.
+var spriteSheetSize
+
 var initDone = false
 
 // Set the page back to a state immediately following initial setup, but before
@@ -77,6 +80,7 @@ function loadDataRunner(modName, callback) {
     if (!mod) {
         mod = MODIFICATIONS[DEFAULT_MODIFICATION]
     }
+    spriteSheetSize = mod.sheetSize
     useLegacyCalculations = mod.legacy
     var filename = "data/" + mod.filename
     xobj.overrideMimeType("application/json")

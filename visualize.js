@@ -456,10 +456,7 @@ function linkTitle(d) {
 }
 
 function renderGraph(totals, ignore) {
-    let spriteImage = new Image()
-    spriteImage.src = "images/sprite-sheet-" + sheet_hash + ".png"
-    let sheetWidth = spriteImage.width
-    let sheetHeight = spriteImage.height
+    let [sheetWidth, sheetHeight] = spriteSheetSize
     let data = makeGraph(totals, ignore)
     if (visualizer === "box") {
         renderBoxGraph(data, ignore, sheetWidth, sheetHeight)
