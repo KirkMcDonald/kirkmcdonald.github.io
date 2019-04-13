@@ -35,6 +35,11 @@ class CirclePath {
             if (-1 < r1 && r1 < 1) {
                 let r = null
                 let sweep = null
+                // Still update n vector.
+                let [normdx, normdy] = norm([dx, dy])
+                let dot = nx*normdx + ny*normdy
+                nx = 2*dot*normdx - nx
+                ny = 2*dot*normdy - ny
                 points.push({x, y, nx, ny, r, sweep})
                 prevX = x
                 prevY = y
@@ -89,6 +94,28 @@ class CirclePath {
             points.push({x: x + -ny*offset, y: y + nx*offset})
         }
         return new CirclePath(tx, ty, points)
+    }
+
+    transpose() {
+        let points = []
+        for (let {x, y, nx, ny, r, sweep} of this.points) {
+            if (sweep === 0) {
+                sweep = 1
+            } else if (sweep === 1) {
+                sweep = 0
+            }
+            points.push({
+                x: y,
+                y: x,
+                nx: ny,
+                ny: nx,
+                r: r,
+                sweep: sweep,
+            })
+        }
+        let obj = Object.create(CirclePath.prototype)
+        obj.points = points
+        return obj
     }
 }
 
