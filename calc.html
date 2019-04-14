@@ -199,6 +199,16 @@ limitations under the License.-->
         </tr>
 
         <tr>
+        <td class="setting-label top">Visualization direction:</td>
+        <td>
+            <input type="radio" name="vis-direction" id="visdir_right" value="right" checked onchange="changeVisualizerDirection(event)">
+            <label for="visdir_right">Horizontal</label><br />
+            <input type="radio" name="vis-direction" id="visdir_down" value="down" onchange="changeVisualizerDirection(event)">
+            <label for="visdir_down">Vertical</label>
+        </td>
+        </tr>
+
+        <tr>
         <td class="setting-label top">Recipe sort order:</td>
         <td><input type="radio" name="sort_order" id="topo_order" value="topo" checked onchange="changeSortOrder(event)">
         <label for="topo_order">Topological order</label><br />

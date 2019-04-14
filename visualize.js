@@ -224,7 +224,14 @@ class GraphNode {
     }
 }
 
-function renderNode(selection, margin, ignore, sheetWidth, sheetHeight, recipeColors) {
+function renderNode(selection, margin, justification, ignore, sheetWidth, sheetHeight, recipeColors) {
+    selection.each(d => {
+        if (justification === "left") {
+            d.labelX = d.x0
+        } else {
+            d.labelX = (d.x0 + d.x1)/2 - d.width/2
+        }
+    })
     selection.append("rect")
         .attr("x", d => d.x0)
         .attr("y", d => d.y0)
@@ -243,7 +250,7 @@ function renderNode(selection, margin, ignore, sheetWidth, sheetHeight, recipeCo
     let labeledNode = selection.filter(d => d.rate !== null)
     labeledNode.append("svg")
         .attr("viewBox", d => imageViewBox(d.recipe))
-        .attr("x", d => d.x0 + margin + 0.5)
+        .attr("x", d => d.labelX + margin + 0.5)
         .attr("y", d => (d.y0 + d.y1) / 2 - iconSize/2 + 0.5)
         .attr("width", iconSize)
         .attr("height", iconSize)
@@ -253,24 +260,24 @@ function renderNode(selection, margin, ignore, sheetWidth, sheetHeight, recipeCo
             .attr("width", sheetWidth)
             .attr("height", sheetHeight)
     labeledNode.append("text")
-        .attr("x", d => d.x0 + iconSize + (d.factory === null ? 0 : colonWidth + iconSize) + margin + 3)
+        .attr("x", d => d.labelX + iconSize + (d.factory === null ? 0 : colonWidth + iconSize) + margin + 3)
         .attr("y", d => (d.y0 + d.y1) / 2)
         .attr("dy", "0.35em")
         .text(d => d.text())
     let factoryNode = selection.filter(d => d.factory !== null)
     factoryNode.append("circle")
         .classed("colon", true)
-        .attr("cx", d => d.x0 + iconSize + colonWidth/2 + margin)
+        .attr("cx", d => d.labelX + iconSize + colonWidth/2 + margin)
         .attr("cy", d => (d.y0 + d.y1) / 2 - 4)
         .attr("r", 1)
     factoryNode.append("circle")
         .classed("colon", true)
-        .attr("cx", d => d.x0 + iconSize + colonWidth/2 + margin)
+        .attr("cx", d => d.labelX + iconSize + colonWidth/2 + margin)
         .attr("cy", d => (d.y0 + d.y1) / 2 + 4)
         .attr("r", 1)
     factoryNode.append("svg")
         .attr("viewBox", d => imageViewBox(d.factory))
-        .attr("x", d => d.x0 + iconSize + colonWidth + margin + 0.5)
+        .attr("x", d => d.labelX + iconSize + colonWidth + margin + 0.5)
         .attr("y", d => (d.y0 + d.y1) / 2 - iconSize/2 + 0.5)
         .attr("width", iconSize)
         .attr("height", iconSize)
@@ -456,10 +463,11 @@ function linkTitle(d) {
 }
 
 function renderGraph(totals, ignore) {
+    let direction = visDirection
     let [sheetWidth, sheetHeight] = spriteSheetSize
     let data = makeGraph(totals, ignore)
     if (visualizer === "box") {
-        renderBoxGraph(data, ignore, sheetWidth, sheetHeight)
+        renderBoxGraph(data, direction, ignore, sheetWidth, sheetHeight)
         return
     }
 
@@ -472,31 +480,33 @@ function renderGraph(totals, ignore) {
         if (nodeWidth > maxNodeWidth) {
             maxNodeWidth = nodeWidth
         }
+        node.width = nodeWidth
     }
     text.remove()
     testSVG.remove()
 
+    let nw, np
+    if (direction === "down") {
+        nw = 36
+        np = maxNodeWidth
+    } else if (direction === "right") {
+        nw = maxNodeWidth
+        np = nodePadding
+    }
     let sankey = d3sankey.sankey()
-        .nodeWidth(maxNodeWidth)
-        .nodePadding(nodePadding)
+        .nodeWidth(nw)
+        .nodePadding(np)
         .nodeAlign(d3sankey.sankeyRight)
         .maxNodeHeight(maxNodeHeight)
         .linkLength(columnWidth)
     let {nodes, links} = sankey(data)
     let [itemColors, recipeColors] = getColorMaps(nodes, links)
-    let width = 0
-    let height = 0
-    for (let node of nodes) {
-        if (node.x1 > width) {
-            width = node.x1
-        }
-        if (node.y1 > height) {
-            height = node.y1
-        }
-    }
 
     for (let link of links) {
         link.curve = linkPath(link)
+        if (direction === "down") {
+            link.curve = link.curve.transpose()
+        }
         let belts = []
         if (link.beltCount !== null) {
             let dy = link.width / link.beltCount.toFloat()
@@ -512,10 +522,30 @@ function renderGraph(totals, ignore) {
         link.belts = belts
     }
 
+    let width = 0
+    let height = 0
+    for (let node of nodes) {
+        if (direction === "down") {
+            [node.x0, node.y0] = [node.y0, node.x0];
+            [node.x1, node.y1] = [node.y1, node.x1];
+        }
+        if (node.x1 > width) {
+            width = node.x1
+        }
+        if (node.y1 > height) {
+            height = node.y1
+        }
+    }
+
+    let margin = 25
+    if (direction === "down") {
+        margin += maxNodeWidth / 2
+    }
+
     let svg = d3.select("svg#graph")
         .classed("sankey", true)
-        .attr("viewBox", `-25,-25,${width+50},${height+50}`)
-        .style("width", width+50)
+        .attr("viewBox", `${-margin},-25,${width+margin*2},${height+50}`)
+        .style("width", width+margin*2)
         .style("height", height+50)
     svg.selectAll("g").remove()
 
@@ -526,7 +556,11 @@ function renderGraph(totals, ignore) {
         .join("g")
             .classed("node", true)
 
-    renderNode(rects, 2, ignore, sheetWidth, sheetHeight, recipeColors)
+    let nodeJust = "left"
+    if (direction === "down") {
+        nodeJust = "center"
+    }
+    renderNode(rects, 2, nodeJust, ignore, sheetWidth, sheetHeight, recipeColors)
 
     let link = svg.append("g")
         .classed("links", true)
@@ -569,22 +603,37 @@ function renderGraph(totals, ignore) {
     link.append("title")
         .text(linkTitle)
     let extraLinkLabel = link.filter(d => d.extra)
-    extraLinkLabel.append("svg")
+    let linkIcon = extraLinkLabel.append("svg")
         .attr("viewBox", d => imageViewBox(d.item))
-        .attr("x", d => d.source.x1 + 2.5)
-        .attr("y", d => d.y0 - PX_HEIGHT/4 + 0.5)
+        .attr("x", d => d.source.x1 + 2.25)
+        .attr("y", d => d.y0 - iconSize/4 + 0.25)
         .attr("width", iconSize/2)
         .attr("height", iconSize/2)
-        .append("image")
+    linkIcon.append("image")
             .attr("xlink:href", "images/sprite-sheet-" + sheet_hash + ".png")
             .attr("width", sheetWidth)
             .attr("height", sheetHeight)
-    link.append("text")
+    if (direction === "down") {
+        linkIcon
+            .attr("x", d => d.y0 - iconSize/4 + 0.25)
+            .attr("y", d => d.source.y1 + 2.25)
+    }
+    let linkLabel = link.append("text")
         .attr("x", d => d.source.x1 + 2 + (d.extra ? 16 : 0))
         .attr("y", d => d.y0)
         .attr("dy", "0.35em")
         .attr("text-anchor", "start")
         .text(d => (d.extra ? "\u00d7 " : "") + `${displayRate(d.rate)}/${rateName}`)
+    if (direction === "down") {
+        linkLabel
+            .attr("x", null)
+            .attr("y", null)
+            .attr("transform", d => {
+                let x = d.y0
+                let y = d.source.y1 + 2 + (d.extra ? 16 : 0)
+                return `translate(${x},${y}) rotate(90)`
+            })
+    }
 
     let rectElements = svg.selectAll("g.node rect").nodes()
     let overlayData = []
@@ -604,9 +653,9 @@ function renderGraph(totals, ignore) {
         .join("rect")
             .attr("stroke", "none")
             .attr("fill", "transparent")
-            .attr("x", d => d.rect.x)
+            .attr("x", d => Math.min(d.rect.x, d.rect.x + d.rect.width/2 - d.node.width/2))
             .attr("y", d => Math.min(d.rect.y, d.rect.y + d.rect.height/2 - 16))
-            .attr("width", d => d.rect.width)
+            .attr("width", d => Math.max(d.rect.width, d.node.width))
             .attr("height", d => Math.max(d.rect.height, 32))
             .on("mouseover", d => GraphMouseOverHandler(d.node))
             .on("mouseout", d => GraphMouseLeaveHandler(d.node))

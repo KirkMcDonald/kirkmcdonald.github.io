@@ -279,6 +279,12 @@ function changeVisualizerType(event) {
     display()
 }
 
+// Triggered when the visualizer direction is changed.
+function changeVisualizerDirection(event) {
+    visDirection = event.target.value
+    display()
+}
+
 // Triggered when the recipe sort order is changed.
 function changeSortOrder(event) {
     sortOrder = event.target.value

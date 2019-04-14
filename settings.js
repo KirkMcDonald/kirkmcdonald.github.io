@@ -513,6 +513,19 @@ function renderVisualizerType(settings) {
     input.checked = true
 }
 
+let DEFAULT_DIRECTION = "right"
+
+let visDirection = DEFAULT_DIRECTION
+
+function renderVisualizerDirection(settings) {
+    visDirection = DEFAULT_DIRECTION
+    if ("vd" in settings) {
+        visDirection = settings.vd
+    }
+    let input = document.getElementById("visdir_" + visDirection)
+    input.checked = true
+}
+
 // value format
 var DEFAULT_FORMAT = "decimal"
 

@@ -75,6 +75,9 @@ function formatSettings(targets) {
     if (visualizer !== DEFAULT_VISUALIZER) {
         settings += "vis=" + visualizer + "&"
     }
+    if (visDirection !== DEFAULT_DIRECTION) {
+        settings += "vd=" + visDirection + "&"
+    }
     if (displayFormat != DEFAULT_FORMAT) {
         settings += "vf=" + displayFormat[0] + "&"
     }
