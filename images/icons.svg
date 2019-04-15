@@ -1,0 +1,92 @@
+<svg viewBox="0 0 128 96" width="128" height="96" xmlns="http://www.w3.org/2000/svg">
+    <style type="text/css" media="screen">
+        <![CDATA[
+            svg {
+                color: black;
+            }
+            #gear {
+                transform: translate(24px, 0px);
+            }
+            #sankey {
+                transform: translate(0px, 32px);
+            }
+            #boxline {
+                transform: translate(64px, 32px);
+            }
+        ]]>
+    </style>
+    <path id="popout" fill="none" stroke="currentColor" stroke-width="2px" d="
+        M 13,5 L 1,5 L 1,23 L 19,23 L 19,10
+        M 10,14 L 23,1
+        M 17,1 L 23,1 L 23,7" />
+
+    <g id="gear" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="16" cy="16" r="5" />
+        <path stroke-width="2px" stroke-linejoin="round" d="
+            M 30.82542265701641,18.28185079284875
+            L 27.656104837759138,18.852230707914078
+            A 12 12 0 0 1 26.25894244807536 22.225279097926254
+            L 28.09666906401224,24.869644725453735
+            L 24.86964472545374,28.09666906401224
+            L 22.225279097926258,26.25894244807536
+            A 12 12 0 0 1 18.852230707914078 27.656104837759138
+            L 18.28185079284875,30.82542265701641
+            L 13.71814920715125,30.82542265701641
+            L 13.147769292085924,27.656104837759138
+            A 12 12 0 0 1 9.774720902073746 26.25894244807536
+            L 7.130355274546268,28.09666906401224
+            L 3.903330935987764,24.86964472545374
+            L 5.741057551924644,22.22527909792626
+            A 12 12 0 0 1 4.343895162240862 18.852230707914075
+            L 1.1745773429835893,18.281850792848758
+            L 1.1745773429835893,13.718149207151253
+            L 4.343895162240862,13.147769292085922
+            A 12 12 0 0 1 5.741057551924639 9.774720902073746
+            L 3.9033309359877624,7.130355274546265
+            L 7.130355274546266,3.9033309359877606
+            L 9.774720902073742,5.741057551924641
+            A 12 12 0 0 1 13.147769292085918 4.343895162240864
+            L 13.718149207151242,1.1745773429835893
+            L 18.28185079284875,1.1745773429835893
+            L 18.852230707914078,4.343895162240862
+            A 12 12 0 0 1 22.225279097926254 5.741057551924637
+            L 24.869644725453732,3.903330935987757
+            L 28.09666906401224,7.130355274546265
+            L 26.258942448075352,9.774720902073733
+            A 12 12 0 0 1 27.656104837759138 13.147769292085918
+            L 30.82542265701641,13.718149207151255
+            z
+        " />
+    </g>
+
+    <g id="sankey">
+        <g stroke="currentColor" stroke-width="1" fill="currentColor" fill-opacity="0.5">
+            <rect x="5" y="9" width="8" height="35" />
+            <rect x="28" y="5" width="8" height="20" />
+            <rect x="51" y="9" width="8" height="35" />
+        </g>
+        <g stroke="currentColor" stroke-opacity="0.3" fill="none">
+            <path stroke-width="20" d="M 13,19 C 20.5,19 20.5,15 28,15" />
+            <path stroke-width="20" d="M 36,15 C 43.5,15 43.5,19 51,19" />
+            <path stroke-width="15" d="M 13,36.5 L 51,36.5" />
+        </g>
+        <g stroke="none" fill="currentColor" text-anchor="middle">
+            <text x="32" y="54" dy="0.35em" style='font-size: 12px; font-family: "Courier New", monospace;'>SANKEY</text>
+        </g>
+    </g>
+
+    <g id="boxline">
+        <g stroke="currentColor" stroke-width="1" fill="none">
+            <path d="M 17.93103448275862,15 L 29.06896551724138,34" />
+            <path d="M 46.06896551724138,15 L 34.93103448275862,34" />
+        </g>
+        <g stroke="currentColor" stroke-width="1" fill="currentColor" fill-opacity="0.5">
+            <rect x="5" y="5" width="20" height="10" />
+            <rect x="39" y="5" width="20" height="10" />
+            <rect x="22" y="34" width="20" height="10" />
+        </g>
+        <g stroke="none" fill="currentColor" text-anchor="middle">
+            <text x="32" y="54" dy="0.35em" style='font-size: 12px; font-family: "Courier New", monospace;'>BOX&amp;LINE</text>
+        </g>
+    </g>
+</svg>

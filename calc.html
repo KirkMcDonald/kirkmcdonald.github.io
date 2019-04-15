@@ -109,7 +109,47 @@ limitations under the License.-->
     </div>
 
     <div id="graph_tab" class="tab graph">
-        <svg id="graph"></svg>
+        <div id="graph-wrapper">
+            <div class="graph-button">
+                <span class="graph-button-span" onclick="toggleVisualizerSettings()">
+                    <svg class="gear" viewBox="0 0 32 32" width="32" height="32">
+                        <use href="images/icons.svg#gear" />
+                    </svg>
+                </span>
+            </div>
+            <div class="graph-settings">
+                <div class="setting-label top">Type:</div>
+                <div>
+                    <input
+                        type="radio"
+                        name="visualization"
+                        id="vis_sankey"
+                        value="sankey"
+                        checked 
+                        onchange="changeVisualizerType(event)">
+                    <label for="vis_sankey">Sankey diagram</label><br />
+                    <input
+                        type="radio"
+                        name="visualization"
+                        id="vis_box"
+                        value="box"
+                        onchange="changeVisualizerType(event)">
+                    <label for="vis_box">Boxes and lines</label>
+                </div>
+
+                <div class="setting-label top">Direction:</div>
+                <div>
+                    <input type="radio" name="vis-direction" id="visdir_right" value="right" checked onchange="changeVisualizerDirection(event)">
+                    <label for="visdir_right">Horizontal</label><br />
+                    <input type="radio" name="vis-direction" id="visdir_down" value="down" onchange="changeVisualizerDirection(event)">
+                    <label for="visdir_down">Vertical</label>
+                </div>
+
+            </div>
+            <div class="graph-content">
+                <svg id="graph"></svg>
+            </div>
+        </div>
     </div>
 
     <div id="settings_tab" class="tab">
@@ -186,26 +226,6 @@ limitations under the License.-->
         <tr>
         <td class="setting-label">Default beacon:</td>
         <td><span id="default_beacon"></span> &times; <input id="default_beacon_count" class="beacon" type="number" value="0" onchange="changeDefaultBeaconCount(event)"></td>
-        </tr>
-
-        <tr>
-        <td class="setting-label top">Visualization type:</td>
-        <td>
-            <input type="radio" name="visualization" id="vis_sankey" value="sankey" checked onchange="changeVisualizerType(event)">
-            <label for="vis_sankey">Sankey diagram</label><br />
-            <input type="radio" name="visualization" id="vis_box" value="box" onchange="changeVisualizerType(event)">
-            <label for="vis_box">Boxes and lines</label>
-        </td>
-        </tr>
-
-        <tr>
-        <td class="setting-label top">Visualization direction:</td>
-        <td>
-            <input type="radio" name="vis-direction" id="visdir_right" value="right" checked onchange="changeVisualizerDirection(event)">
-            <label for="visdir_right">Horizontal</label><br />
-            <input type="radio" name="vis-direction" id="visdir_down" value="down" onchange="changeVisualizerDirection(event)">
-            <label for="visdir_down">Vertical</label>
-        </td>
         </tr>
 
         <tr>

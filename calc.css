@@ -143,7 +143,7 @@ label.selected {
     color: var(--bright);
 }
 /* settings */
-td.setting-label {
+.setting-label {
     text-align: right;
 }
 .top {
@@ -205,7 +205,7 @@ input.pipeLength {
     width: 5em;
 }
 svg.popout {
-    stroke: var(--accent);
+    color: var(--accent);
     width: 16;
     height: 16;
 }
@@ -239,6 +239,48 @@ div.tab {
     display: none;
     padding: 1em;
     background-color: var(--main);
+}
+/* visualizer settings */
+#graph-wrapper {
+    display: grid;
+    grid-template-columns: minmax(auto, max-content) minmax(auto, max-content);
+    gap: 1em 0.5em;
+}
+#graph-wrapper .graph-button {
+    grid-row: 1 / 2;
+    color: var(--accent);
+}
+#graph-wrapper .graph-button-span:hover {
+    color: var(--bright);
+}
+#graph-wrapper .graph-button .gear {
+    vertical-align: middle;
+}
+#graph-wrapper .graph-button-span::after {
+    content: "\300B";
+    font-size: 20px;
+    vertical-align: middle;
+}
+#graph-wrapper.open .graph-button-span::after {
+    content: "\300A";
+}
+#graph-wrapper .graph-settings {
+    display: none;
+    padding: 0.5em;
+    border: 2px solid var(--accent);
+    border-radius: 5px;
+}
+#graph-wrapper.open .graph-settings {
+    display: block;
+    grid-row: 1 / 3;
+    grid-column: 1 / 2;
+    display: grid;
+    grid-template-columns: minmax(auto, max-content) minmax(auto, max-content);
+    grid-template-rows: minmax(auto, max-content) minmax(auto, max-content);
+    gap: 1em 0.5em;
+}
+#graph-wrapper .graph-content {
+    grid-row: 2 / 3;
 }
 /* visualizer */
 g.node rect {

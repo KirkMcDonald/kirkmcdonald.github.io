@@ -306,7 +306,7 @@ function makePopOutCell() {
     popOutSVG.setAttribute("height", "16")
     popOutLink.appendChild(popOutSVG)
     var popOutUse = document.createElementNS("http://www.w3.org/2000/svg", "use")
-    popOutUse.setAttribute("href", "images/popout.svg#popout")
+    popOutUse.setAttribute("href", "images/icons.svg#popout")
     popOutSVG.appendChild(popOutUse)
     return popOutCell
 }

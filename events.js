@@ -273,6 +273,16 @@ function changeDefaultBeaconCount(event) {
     itemUpdate()
 }
 
+// Triggered when the visualizer setting box is toggled.
+function toggleVisualizerSettings() {
+    let classes = document.getElementById("graph-wrapper").classList
+    if (classes.contains("open")) {
+        classes.remove("open")
+    } else {
+        classes.add("open")
+    }
+}
+
 // Triggered when the visualizer type is changed.
 function changeVisualizerType(event) {
     visualizer = event.target.value
