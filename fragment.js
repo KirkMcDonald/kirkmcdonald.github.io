@@ -78,6 +78,12 @@ function formatSettings(targets) {
     if (visDirection !== DEFAULT_DIRECTION) {
         settings += "vd=" + visDirection + "&"
     }
+    if (maxNodeHeight !== DEFAULT_NODE_BREADTH) {
+        settings += "nh=" + maxNodeHeight + "&"
+    }
+    if (linkLength !== DEFAULT_LINK_LENGTH) {
+        settings += "ll=" + linkLength + "&"
+    }
     if (displayFormat != DEFAULT_FORMAT) {
         settings += "vf=" + displayFormat[0] + "&"
     }

@@ -295,6 +295,18 @@ function changeVisualizerDirection(event) {
     display()
 }
 
+// Triggered when the max node breadth is changed.
+function changeNodeBreadth(event) {
+    maxNodeHeight = Number(event.target.value)
+    display()
+}
+
+// Triggered when the link length is changed.
+function changeLinkLength(event) {
+    linkLength = Number(event.target.value)
+    display()
+}
+
 // Triggered when the recipe sort order is changed.
 function changeSortOrder(event) {
     sortOrder = event.target.value

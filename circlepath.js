@@ -32,7 +32,7 @@ class CirclePath {
             let t = nx*dx + ny*dy
             let r1 = -ny*dx + nx*dy
             // If deflection is less than one pixel, draw a straight line.
-            if (-1 < r1 && r1 < 1) {
+            if (-0.5 < r1 && r1 < 0.5) {
                 let r = null
                 let sweep = null
                 // Still update n vector.

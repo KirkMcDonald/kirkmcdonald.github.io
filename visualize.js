@@ -289,8 +289,6 @@ function renderNode(selection, margin, justification, ignore, sheetWidth, sheetH
 
 const iconSize = 32
 const nodePadding = 32
-const columnWidth = 200
-const maxNodeHeight = 175
 const colonWidth = 12
 
 var color = d3.scaleOrdinal(colorList)
@@ -498,7 +496,7 @@ function renderGraph(totals, ignore) {
         .nodePadding(np)
         .nodeAlign(d3sankey.sankeyRight)
         .maxNodeHeight(maxNodeHeight)
-        .linkLength(columnWidth)
+        .linkLength(linkLength)
     let {nodes, links} = sankey(data)
     let [itemColors, recipeColors] = getColorMaps(nodes, links)
 

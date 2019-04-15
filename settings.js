@@ -526,6 +526,32 @@ function renderVisualizerDirection(settings) {
     input.checked = true
 }
 
+const DEFAULT_NODE_BREADTH = 175
+
+let maxNodeHeight = DEFAULT_NODE_BREADTH
+
+function renderNodeBreadth(settings) {
+    maxNodeHeight = DEFAULT_NODE_BREADTH
+    if ("nh" in settings) {
+        maxNodeHeight = Number(settings.nh)
+    }
+    let input = document.getElementById("vis-node-breadth")
+    input.value = maxNodeHeight
+}
+
+const DEFAULT_LINK_LENGTH = 200
+
+let linkLength = DEFAULT_LINK_LENGTH
+
+function renderLinkLength(settings) {
+    linkLength = DEFAULT_LINK_LENGTH
+    if ("ll" in settings) {
+        linkLength = Number(settings.ll)
+    }
+    let input = document.getElementById("vis-link-length")
+    input.value = linkLength
+}
+
 // value format
 var DEFAULT_FORMAT = "decimal"
 
@@ -590,5 +616,8 @@ function renderSettings(settings) {
     renderDefaultModule(settings)
     renderDefaultBeacon(settings)
     renderVisualizerType(settings)
+    renderVisualizerDirection(settings)
+    renderNodeBreadth(settings)
+    renderLinkLength(settings)
     renderValueFormat(settings)
 }
