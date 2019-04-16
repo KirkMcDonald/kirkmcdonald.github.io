@@ -10,6 +10,7 @@
     display: inline-block;
     vertical-align: middle;
     cursor: pointer;
+    -moz-user-select: none;
 }
 .dropdownWrapper.open .dropdown {
     border-color: var(--accent);
