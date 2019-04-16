@@ -49,6 +49,7 @@ button.ui {
     background: linear-gradient(to bottom, var(--light), var(--medium));
     border: 2px outset var(--light);
     border-radius: 0.4em;
+    cursor: pointer;
 }
 button.ui:active {
     border-style: inset;
@@ -175,9 +176,13 @@ tr.display-row img.recipe-icon {
 tr.display-row td.pad-right {
     padding-right: 1em;
 }
-tr.display-row .dropdown, tr.display-row .dropdown + img.spacer {
+tr.display-row .dropdown, tr.display-row .dropdown + .spacer {
     margin-left: 5px;
     margin-right: 5px;
+}
+tr.display-row .dropdown + .spacer {
+    padding-left: 2px;
+    padding-right: 2px;
 }
 tr.display-row td, tr.factory-header th {
     padding-top: 8px;
@@ -200,6 +205,10 @@ td.waste-hide, th.waste-hide {
 }
 span.displaylink {
     font-size: x-small;
+}
+tr.display-row button.copy {
+    padding: 0px;
+    height: 32px;
 }
 /* items tab */
 input.pipe {
@@ -334,77 +343,17 @@ div.graph {
     color: var(--bright);
 }
 /* dropdowns */
-.dropdown {
-    border: 2px solid var(--light);
-    border-radius: 5px;
-    background-color: var(--dark);
-    width: 36px;
-    height: 36px;
-    overflow: hidden;
-    display: inline-block;
-    vertical-align: middle;
-}
-.dropdown:hover {
-    border-color: var(--accent);
-    padding: 0.4em;
-    position: absolute;
-    z-index: 10;
-    transition: height 0.1s;
-    height: auto;
-    width: auto;
-}
-.dropdown + img.spacer {
-    display: none;
-}
-.dropdown:hover + img.spacer {
-    height: 40px;
-    width: 40px;
-    display: inline-block;
-    vertical-align: middle;
-}
-.dropdown br, .dropdown hr {
-    display: none;
-}
-.dropdown:hover br {
-    display: inline;
-}
-.dropdown:hover hr {
-    display: block;
-    border-color: var(--accent);
-    border-style: solid;
-}
-.dropdown input[type=radio] {
-    position: absolute;
-    top: -50;
-    left: -50;
-    opacity: 0;
-}
-.dropdown .search {
+.dropdownWrapper .dropdown .search {
     display: none;
     width: 100%;
     padding-left: 0.4em;
     margin-bottom: 0.4em;
 }
-.dropdown:hover .search {
+.dropdownWrapper.open .dropdown .search {
     display: block;
 }
-.dropdown label {
-    display: none;
-    margin: 2px;
-    opacity: 0.6;
-}
-.dropdown:hover label {
-    display: inline-block;
-}
-.dropdown label:hover {
-    opacity: 0.8;
-}
-.dropdown input:checked + label {
-    opacity: 1 !important;
-    display: inline-block;
-}
-.itemDropdown:hover {
-    height: 300px;
+.dropdownWrapper.open div.itemDropdown {
+    height: 400px;
     width: 380px;
     overflow-y: scroll;
     transition: height 0.3s;

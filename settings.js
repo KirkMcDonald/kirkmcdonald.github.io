@@ -205,12 +205,15 @@ function renderMinimumAssembler(settings) {
     var cell = oldNode.parentNode
     var node = document.createElement("span")
     node.id = "minimum_assembler"
-    var dropdown = new Dropdown(node, "assembler_dropdown", changeMin)
-    for (var i = 0; i < assemblers.length; i++) {
-        var assembler = assemblers[i]
-        var image = getImage(assembler, false, dropdown.dropdown)
-        dropdown.add(image, String(i + 1), String(i + 1) === min)
-    }
+    let dropdown = makeDropdown(d3.select(node))
+    let inputs = dropdown.selectAll("div").data(assemblers).join("div")
+    let labels = addInputs(
+        inputs,
+        "assembler_dropdown",
+        (d, i) => String(i + 1) === min,
+        (d, i) => changeMin(String(i + 1)),
+    )
+    labels.append(d => getImage(d, false, dropdown.node()))
     cell.replaceChild(node, oldNode)
 }
 
@@ -236,13 +239,16 @@ function renderFurnace(settings) {
     var cell = oldNode.parentNode
     var node = document.createElement("span")
     node.id = "furnace"
-    var dropdown = new Dropdown(node, "furnace_dropdown", changeFurnace)
-    var furnaces = spec.factories["smelting"]
-    for (var i = 0; i < furnaces.length; i++) {
-        var f = furnaces[i]
-        var image = getImage(f, false, dropdown.dropdown)
-        dropdown.add(image, f.name, f.name === furnaceName)
-    }
+    let furnaces = spec.factories["smelting"]
+    let dropdown = makeDropdown(d3.select(node))
+    let inputs = dropdown.selectAll("div").data(furnaces).join("div")
+    let labels = addInputs(
+        inputs,
+        "furnace_dropdown",
+        d => d.name === furnaceName,
+        changeFurnace,
+    )
+    labels.append(d => getImage(d, false, dropdown.node()))
     cell.replaceChild(node, oldNode)
 }
 
@@ -261,13 +267,19 @@ function renderFuel(settings) {
     var cell = oldNode.parentNode
     var node = document.createElement("span")
     node.id = "fuel"
-    var dropdown = new Dropdown(node, "fuel_dropdown", changeFuel)
-    for (var i = 0; i < fuel.length; i++) {
-        var f = fuel[i]
-        var image = getImage(f, false, dropdown.dropdown)
-        image.title += " (" + f.valueString() + ")"
-        dropdown.add(image, f.name, f.name === fuelName)
-    }
+    let dropdown = makeDropdown(d3.select(node))
+    let inputs = dropdown.selectAll("div").data(fuel).join("div")
+    let labels = addInputs(
+        inputs,
+        "fuel_dropdown",
+        d => d.name === fuelName,
+        changeFuel,
+    )
+    labels.append(d => {
+        let im = getImage(d, false, dropdown.node())
+        im.title += " (" + d.valueString() + ")"
+        return im
+    })
     cell.replaceChild(node, oldNode)
 }
 
@@ -313,12 +325,15 @@ function renderOil(settings) {
     var cell = oldNode.parentNode
     var node = document.createElement("span")
     node.id = "oil"
-    var dropdown = new Dropdown(node, "oil_dropdown", changeOil)
-    for (var i = 0; i < OIL_OPTIONS.length; i++) {
-        var o = OIL_OPTIONS[i]
-        var image = getImage(solver.recipes[o.name], false, dropdown.dropdown)
-        dropdown.add(image, o.priority, o.priority === oil)
-    }
+    let dropdown = makeDropdown(d3.select(node))
+    let inputs = dropdown.selectAll("div").data(OIL_OPTIONS).join("div")
+    let labels = addInputs(
+        inputs,
+        "oil_dropdown",
+        d => d.priority === oil,
+        changeOil,
+    )
+    labels.append(d => getImage(solver.recipes[d.name], false, dropdown.node()))
     cell.replaceChild(node, oldNode)
 }
 
@@ -368,12 +383,15 @@ function renderBelt(settings) {
     var cell = oldNode.parentNode
     var node = document.createElement("span")
     node.id = "belt"
-    var dropdown = new Dropdown(node, "belt_dropdown", changeBelt)
-    for (var i = 0; i < belts.length; i++) {
-        var belt = belts[i]
-        var image = getImage(new BeltIcon(solver.items[belt.name], belt.speed), false, dropdown.dropdown)
-        dropdown.add(image, belt.name, belt.name === preferredBelt)
-    }
+    let dropdown = makeDropdown(d3.select(node))
+    let inputs = dropdown.selectAll("div").data(belts).join("div")
+    let labels = addInputs(
+        inputs,
+        "belt_dropdown",
+        d => d.name === preferredBelt,
+        changeBelt,
+    )
+    labels.append(d => getImage(new BeltIcon(solver.items[d.name], d.speed), false, dropdown.node()))
     cell.replaceChild(node, oldNode)
 }
 
@@ -437,23 +455,12 @@ function renderDefaultModule(settings) {
     var cell = oldDefMod.parentNode
     var node = document.createElement("span")
     node.id = "default_module"
-    var dropdown = new Dropdown(node, "default_module_dropdown", changeDefaultModule)
-
-    var noModImage = getExtraImage("slot_icon_module")
-    noModImage.title = NO_MODULE
-    dropdown.add(noModImage, NO_MODULE, defaultModule === null)
-    var category = ""
-
-    for (var i = 0; i < sortedModules.length; i++) {
-        var name = sortedModules[i]
-        var module = modules[name]
-        if (module.category !== category) {
-            category = module.category
-            dropdown.addBreak()
-        }
-        var im = getImage(module, false, dropdown.dropdown)
-        dropdown.add(im, module.shortName(), defaultModule === module)
-    }
+    moduleDropdown(
+        d3.select(node),
+        "default_module_dropdown",
+        d => d === defaultModule,
+        changeDefaultModule,
+    )
     cell.replaceChild(node, oldDefMod)
 }
 
@@ -476,26 +483,13 @@ function renderDefaultBeacon(settings) {
     var cell = oldDefMod.parentNode
     var node = document.createElement("span")
     node.id = "default_beacon"
-    var dropdown = new Dropdown(node, "default_beacon_dropdown", changeDefaultBeacon)
-
-    var noModImage = getExtraImage("slot_icon_module")
-    noModImage.title = NO_MODULE
-    dropdown.add(noModImage, NO_MODULE, defaultBeacon === null)
-    var category = ""
-
-    for (var i = 0; i < sortedModules.length; i++) {
-        var name = sortedModules[i]
-        var module = modules[name]
-        if (!module.canBeacon()) {
-            continue
-        }
-        if (module.category !== category) {
-            category = module.category
-            dropdown.addBreak()
-        }
-        var im = getImage(module, false, dropdown.dropdown)
-        dropdown.add(im, module.shortName(), defaultBeacon === module)
-    }
+    moduleDropdown(
+        d3.select(node),
+        "default_beacon_dropdown",
+        d => d === defaultBeacon,
+        changeDefaultBeacon,
+        d => d === null || d.canBeacon(),
+    )
     cell.replaceChild(node, oldDefMod)
 }
 

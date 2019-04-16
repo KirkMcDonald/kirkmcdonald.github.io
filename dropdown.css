@@ -1,0 +1,81 @@
+/* dropdowns */
+.dropdownWrapper {
+    display: inline-block;
+}
+.dropdownWrapper .dropdown {
+    border: 2px solid var(--light);
+    border-radius: 5px;
+    background-color: var(--dark);
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.dropdownWrapper.open .dropdown {
+    border-color: var(--accent);
+    padding: 0.4em;
+    position: absolute;
+    z-index: 10;
+    transition: height 0.1s;
+    height: auto;
+    width: auto;
+    cursor: default;
+}
+.dropdownWrapper .clicker {
+    display: none;
+}
+.dropdownWrapper.open .clicker {
+    display: block;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    top: 0px;
+    left: 0px;
+    cursor: default;
+}
+.dropdownWrapper .dropdown:hover {
+    border-color: var(--accent);
+}
+.dropdownWrapper .spacer {
+    display: none;
+}
+.dropdownWrapper.open .spacer {
+    border: 2px solid transparent;
+    margin: 2px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.dropdownWrapper .dropdown br, .dropdownWrapper .dropdown hr {
+    display: none;
+}
+.dropdownWrapper.open .dropdown br {
+    display: inline;
+}
+.dropdownWrapper.open .dropdown hr {
+    display: block;
+    border-color: var(--accent);
+    border-style: solid;
+}
+.dropdownWrapper .dropdown input[type="radio"] {
+    display: none;
+}
+.dropdownWrapper .dropdown input[type="radio"] + label {
+    border-radius: 5px;
+    display: none;
+    margin: 2px;
+}
+.dropdownWrapper.open .dropdown input[type="radio"] + label {
+    display: inline-block;
+}
+.dropdownWrapper .dropdown input[type="radio"] + label:hover {
+    background-color: var(--light);
+}
+.dropdownWrapper .dropdown input[type="radio"]:checked + label {
+    display: inline-block;
+    pointer-events: none;
+}
+.dropdownWrapper.open .dropdown input[type="radio"]:checked + label {
+    background-color: var(--light);
+    pointer-events: auto;
+}

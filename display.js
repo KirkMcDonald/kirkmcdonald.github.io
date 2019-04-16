@@ -435,7 +435,7 @@ function FactoryRow(row, recipe) {
     this.node.appendChild(this.modulesCell)
 
     this.copyButton = document.createElement("button")
-    this.copyButton.classList.add("ui")
+    this.copyButton.classList.add("ui", "copy")
     this.copyButton.textContent = "\u2192"
     this.copyButton.title = "copy to rest of modules"
     this.copyButton.addEventListener("click", new ModuleCopyHandler(this))
@@ -446,30 +446,14 @@ function FactoryRow(row, recipe) {
 
     var beaconCell = document.createElement("td")
     beaconCell.classList.add("pad", "module", "factory")
-    var beaconHandler = new BeaconHandler(recipeName)
-    var beaconDropdown = new Dropdown(
-        beaconCell,
+    let {inputs} = moduleDropdown(
+        d3.select(beaconCell),
         "mod-" + recipeName + "-beacon",
-        beaconHandler
+        d => d === null,
+        BeaconHandler(recipeName),
+        d => d === null || d.canBeacon(),
     )
-    var noModImage = getExtraImage("slot_icon_module")
-    noModImage.title = NO_MODULE
-    this.beacon = {}
-    this.beacon[NO_MODULE] = beaconDropdown.add(noModImage, NO_MODULE, true)
-    var category = ""
-    for (var j = 0; j < sortedModules.length; j++) {
-        var name = sortedModules[j]
-        var module = modules[name]
-        // No productivity modules in beacons.
-        if (!module.canBeacon()) {
-            continue
-        }
-        if (module.category != category) {
-            category = module.category
-            beaconDropdown.addBreak()
-        }
-        this.beacon[name] = beaconDropdown.add(getImage(module), name, false)
-    }
+    this.beacon = inputs
     var beaconX = document.createElement("span")
     beaconX.appendChild(new Text(" \u00D7 "))
     beaconCell.appendChild(beaconX)
@@ -558,41 +542,23 @@ FactoryRow.prototype = {
             }
         } else if (moduleDelta > 0) {
             for (var i = 0; i < moduleDelta; i++) {
+                let self = this
                 var index = this.dropdowns.length
-                var dropdown = new Dropdown(
-                    this.modulesCell,
-                    "mod-" + this.recipe.name + "-" + index,
-                    new ModuleHandler(this, index)
-                )
-                this.dropdowns.push(dropdown)
-                var inputs = {}
-                this.modules.push(inputs)
-
                 var installedModule = this.factory.modules[index]
-
-                var noModImage = getExtraImage("slot_icon_module")
-                noModImage.title = NO_MODULE
-                var input = dropdown.add(noModImage, NO_MODULE, !installedModule)
-                inputs[NO_MODULE] = input
-                var category = ""
-
-                for (var j = 0; j < sortedModules.length; j++) {
-                    var name = sortedModules[j]
-                    var module = modules[name]
-                    if (!module.canUse(this.recipe)) {
-                        continue
-                    }
-                    if (module.category != category) {
-                        category = module.category
-                        dropdown.addBreak()
-                    }
-                    inputs[name] = dropdown.add(getImage(module), name, module === installedModule)
-                }
+                let {dropdown, inputs} = moduleDropdown(
+                    d3.select(this.modulesCell),
+                    "mod-" + this.recipe.name + "-" + index,
+                    d => d === installedModule,
+                    ModuleHandler(this, index),
+                    d => d === null || d.canUse(self.recipe),
+                )
+                this.dropdowns.push(dropdown.parentNode)
+                this.modules.push(inputs)
             }
         }
         if (moduleDelta != 0) {
             if (this.dropdowns.length > 1) {
-                this.modulesCell.insertBefore(this.copyButton, this.dropdowns[1].dropdown)
+                this.modulesCell.insertBefore(this.copyButton, this.dropdowns[1])
             } else {
                 this.modulesCell.appendChild(this.copyButton)
             }

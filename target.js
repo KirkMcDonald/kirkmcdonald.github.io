@@ -72,57 +72,37 @@ function BuildTarget(index, itemName) {
     remover.title = "Remove this item."
     this.element.appendChild(remover)
 
-    var dropdown = new Dropdown(
-        this.element,
-        "target-" + targetCount,
-        new ItemHandler(this),
-        "itemDropdown"
+    let dropdown = makeDropdown(
+        d3.select(this.element),
+        d => d.select(".search").node().focus(),
+        d => resetSearch(d.node()),
     )
-
-    // add search box to dropdown
-    var search = document.createElement("input")
-    search.classList.add("search")
-    search.placeholder = "Search"
-    search.addEventListener("keyup", searchTargets)
-    dropdown.dropdown.prepend(search)
-    dropdown.dropdown.addEventListener("mouseenter", function(ev) {
-        ev.target.getElementsByClassName("search")[0].focus()
-    })
-    dropdown.dropdown.addEventListener("mouseleave", resetSearch)
+    dropdown.classed("itemDropdown", true)
+    dropdown.append("input")
+        .classed("search", true)
+        .attr("placeholder", "Search")
+        .on("keyup", searchTargets)
+    let group = dropdown.selectAll("div")
+        .data(itemGroups)
+        .join("div")
+    group.filter((d, i) => i > 0)
+        .append("hr")
+    let items = group.selectAll("div")
+        .data(d => d)
+        .join("div")
+            .selectAll("span")
+            .data(d => d)
+            .join("span")
+    let labels = addInputs(
+        items,
+        "target-" + targetCount,
+        d => d.name === this.itemName,
+        ItemHandler(this),
+    )
+    labels.append(d => getImage(d, false, dropdown.node()))
 
     // Use a single global target count, as a given target's index can change.
     targetCount++
-
-    var anyGroup = false
-    for (var i = 0; i < itemGroups.length; i++) {
-        var group = itemGroups[i]
-        if (anyGroup) {
-            dropdown.addRule()
-        }
-        anyGroup = false
-        for (var j = 0; j < group.length; j++) {
-            var subgroup = group[j]
-            var any = false
-            for (var k = 0; k < subgroup.length; k++) {
-                var currentItem = subgroup[k]
-                var currentItemName = currentItem.name
-                var image = getImage(currentItem, false, dropdown.dropdown)
-                if (!image) {
-                    continue
-                }
-                any = true
-                dropdown.add(
-                    image,
-                    currentItemName,
-                    currentItemName == this.itemName
-                )
-            }
-            if (any) {
-                dropdown.addBreak()
-                anyGroup = true
-            }
-        }
-    }
 
     this.factoryLabel = document.createElement("label")
     this.factoryLabel.classList.add(SELECTED_INPUT)
@@ -167,21 +147,17 @@ BuildTarget.prototype = {
         if (item.recipes.length <= 1) {
             return
         }
-        var dropdown = new Dropdown(
-            this.recipeSelector,
+        let self = this
+        let dropdown = makeDropdown(d3.select(this.recipeSelector))
+        let inputs = dropdown.selectAll("div").data(item.recipes).join("div")
+        let labels = addInputs(
+            inputs,
             "target-recipe-" + recipeSelectorCount,
-            new RecipeSelectorHandler(this)
+            (d, i) => self.recipeIndex === i,
+            (d, i) => RecipeSelectorHandler(self, i),
         )
+        labels.append(d => getImage(d, false, dropdown.node()))
         recipeSelectorCount++
-        for (var i = 0; i < item.recipes.length; i++) {
-            var recipe = item.recipes[i]
-            var image = getImage(recipe, false, dropdown.dropdown)
-            dropdown.add(
-                image,
-                i,
-                this.recipeIndex == i
-            )
-        }
         this.recipeSelector.appendChild(new Text(" \u00d7 "))
     },
     // Returns the rate at which this item is being requested. Also updates

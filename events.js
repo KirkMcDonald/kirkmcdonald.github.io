@@ -21,98 +21,75 @@ function plusHandler() {
     itemUpdate()
 }
 
-// Triggered when mouse enters the dropdown box
-function resetSearch(ev) {
-    ev.target.getElementsByClassName("search")[0].value = ""
+// Triggered when the item dropdown box opens.
+function resetSearch(dropdown) {
+    dropdown.getElementsByClassName("search")[0].value = ""
 
     // unhide all child nodes
-    var elems = ev.target.querySelectorAll("label, br, hr")
-    for (var i = 0; i < elems.length; i++) {
-        elems[i].style.display = ""
+    let elems = dropdown.querySelectorAll("label, hr")
+    for (let elem of elems) {
+        elem.style.display = ""
     }
 }
 
 // Triggered when user is searching target
-function searchTargets(ev) {
-    var search = ev.target
-    var search_text = search.value.toLowerCase().replace(/[^a-z0-9]+/g, "")
+function searchTargets() {
+    let ev = d3.event
+    let search = this
+    let search_text = search.value.toLowerCase().replace(/[^a-z0-9]+/g, "")
+    let dropdown = d3.select(search.parentNode)
 
     if (!search_text) {
-        resetSearch({target: search.parentNode})
+        resetSearch(search.parentNode)
         return
     }
 
     // handle enter key press (select target if only one is visible)
     if (ev.keyCode === 13) {
-        var visibleLabels = [];
-        var labels = search.parentNode.getElementsByTagName("label")
-        for (var i = 0; i < labels.length; i++) {
-            var label = labels[i]
-            if (label.style.display != "none") {
-                visibleLabels.push(label)
-            }
-        }
+        let labels = dropdown.selectAll("label")
+            .filter(function() {
+                return this.style.display !== "none"
+            })
         // don't do anything if more than one icon is visible
-        if (visibleLabels.length === 1) {
-            var item = visibleLabels[0].title
-            var selector = "input[value=" + item + "]"
-            var input = search.parentNode.querySelector(selector)
+        if (labels.size() === 1) {
+            let input = document.getElementById(labels.attr("for"))
             input.checked = true
             input.dispatchEvent(new Event("change"))
         }
         return
     }
 
-    var elems = search.parentNode.querySelectorAll("hr, br, label")
-    var currentHrHasContent, currentBrHasContent;
-    var lastHrWithContent;
     // hide non-matching labels & icons
-    for (var i = 0; i < elems.length; i++) {
-        var elem = elems[i]
-        if (elem.tagName === "HR") {
+    let currentHrHasContent = false
+    let lastHrWithContent = null
+    dropdown.selectAll("hr, label").each(function(item) {
+        if (this.tagName === "HR") {
             if (currentHrHasContent) {
-                elem.style.display = ""
-                lastHrWithContent = elem
-            }
-            else {
-                elem.style.display = "none"
+                this.style.display = ""
+                lastHrWithContent = this
+            } else {
+                this.style.display = "none"
             }
             currentHrHasContent = false
-            currentBrHasContent = false
-        }
-        else if (elem.tagName === "BR") {
-            if (currentBrHasContent) {
-                elem.style.display = ""
-            }
-            else {
-                elem.style.display = "none"
-            }
-            currentBrHasContent = false
-        }
-        else {
-            var input = document.getElementById(elem.htmlFor)
-            var title = input.value.replace(/-/g, "")
-            // if title contains the search phrase
-            if (title.indexOf(search_text) != -1) {
-                elem.style.display = ""
+        } else {
+            let title = item.name.replace(/-/g, "")
+            if (title.indexOf(search_text) === -1) {
+                this.style.display = "none"
+            } else {
+                this.style.display = ""
                 currentHrHasContent = true
-                currentBrHasContent = true
-            }
-            else {
-                elem.style.display = "none"
             }
         }
-    }
-    // hide trailing horizonal rule
-    if (lastHrWithContent) {
+    })
+    if (!currentHrHasContent && lastHrWithContent !== null) {
         lastHrWithContent.style.display = "none"
     }
 }
 
 // Triggered when a build target's item is changed.
 function ItemHandler(target) {
-    this.handleEvent = function(event) {
-        target.itemName = event.target.value
+    return function(item) {
+        target.itemName = item.name
         target.recipeIndex = 0
         target.displayRecipes()
         itemUpdate()
@@ -120,11 +97,9 @@ function ItemHandler(target) {
 }
 
 // Triggered when a build target's recipe selector is changed.
-function RecipeSelectorHandler(target) {
-    this.handleEvent = function(event) {
-        target.recipeIndex = event.target.value
-        itemUpdate()
-    }
+function RecipeSelectorHandler(target, i) {
+    target.recipeIndex = i
+    itemUpdate()
 }
 
 // The "x" button to remove a target.
@@ -190,28 +165,28 @@ function changeFPrec(event) {
 }
 
 // Triggered when the "minimum assembling machine" setting is changed.
-function changeMin(event) {
-    setMinimumAssembler(event.target.value)
+function changeMin(min) {
+    setMinimumAssembler(min)
     itemUpdate()
 }
 
 // Triggered when the furnace is changed.
-function changeFurnace(event) {
-    spec.setFurnace(event.target.value)
+function changeFurnace(furnace) {
+    spec.setFurnace(furnace.name)
     solver.findSubgraphs(spec)
     itemUpdate()
 }
 
 // Triggered when the preferred fuel is changed.
-function changeFuel(event) {
-    setPreferredFuel(event.target.value)
+function changeFuel(fuel) {
+    setPreferredFuel(fuel.name)
     solver.findSubgraphs(spec)
     itemUpdate()
 }
 
 // Triggered when the preferred oil recipe is changed.
-function changeOil(event) {
-    setOilRecipe(event.target.value)
+function changeOil(oil) {
+    setOilRecipe(oil.priority)
     itemUpdate()
 }
 
@@ -222,8 +197,8 @@ function changeKovarex(event) {
 }
 
 // Triggered when the preferred belt is changed.
-function changeBelt(event) {
-    setPreferredBelt(event.target.value)
+function changeBelt(belt) {
+    setPreferredBelt(belt.name)
     display()
 }
 
@@ -240,26 +215,14 @@ function changeMprod() {
 }
 
 // Triggered when the default module is changed.
-function changeDefaultModule(event) {
-    var module
-    if (event.target.value === NO_MODULE) {
-        module = null
-    } else {
-        module = shortModules[event.target.value]
-    }
+function changeDefaultModule(module) {
     spec.setDefaultModule(module)
     recipeTable.updateDisplayedModules()
     itemUpdate()
 }
 
 // Triggered when the default beacon module is changed.
-function changeDefaultBeacon(event) {
-    var module
-    if (event.target.value === NO_MODULE) {
-        module = null
-    } else {
-        module = shortModules[event.target.value]
-    }
+function changeDefaultBeacon(module) {
     spec.setDefaultBeacon(module, spec.defaultBeaconCount)
     recipeTable.updateDisplayedModules()
     itemUpdate()
@@ -342,14 +305,7 @@ function IgnoreHandler(row) {
 
 // Triggered when a factory module is changed.
 function ModuleHandler(row, index) {
-    this.handleEvent = function(event) {
-        var moduleName = event.target.value
-        var module
-        if (moduleName === NO_MODULE) {
-            module = null
-        } else {
-            module = modules[moduleName]
-        }
+    return function(module) {
         if (spec.setModule(row.recipe, index, module) || isFactoryTarget(row.recipe.name)) {
             itemUpdate()
         } else {
@@ -384,14 +340,7 @@ function getFactory(recipeName) {
 
 // Triggered when a beacon module is changed.
 function BeaconHandler(recipeName) {
-    this.handleEvent = function(event) {
-        var moduleName = event.target.value
-        var module
-        if (moduleName === NO_MODULE) {
-            module = null
-        } else {
-            module = modules[moduleName]
-        }
+    return function(module) {
         var factory = getFactory(recipeName)
         factory.beaconModule = module
         if (isFactoryTarget(recipeName) && !factory.beaconCount.isZero()) {

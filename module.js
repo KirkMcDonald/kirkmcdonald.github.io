@@ -113,6 +113,46 @@ Module.prototype = {
     }
 }
 
+function moduleDropdown(selection, name, selected, callback, filter) {
+    let rows = [[null]].concat(moduleRows)
+
+    let dropdown = makeDropdown(selection)
+    let options = dropdown.selectAll("div")
+        .data(rows)
+        .join("div")
+            .selectAll("span")
+            .data(d => d)
+            .join("span")
+    if (filter) {
+        options = options.filter(filter)
+    }
+    let labels = addInputs(
+        options,
+        name,
+        selected,
+        callback,
+    )
+    labels.append(d => {
+        if (d === null) {
+            let noModImage = getExtraImage("slot_icon_module")
+            noModImage.title = NO_MODULE
+            return noModImage
+        } else {
+            return getImage(d, false, dropdown.node())
+        }
+    })
+    let inputs = {}
+    options.each(function(d) {
+        let element = d3.select(this).select('input[type="radio"]').node()
+        if (d === null) {
+            inputs[NO_MODULE] = element
+        } else {
+            inputs[d.name] = element
+        }
+    })
+    return {dropdown: dropdown.node(), inputs: inputs}
+}
+
 function getModules(data) {
     var modules = {}
     for (var i = 0; i < data.modules.length; i++) {

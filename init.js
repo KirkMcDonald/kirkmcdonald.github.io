@@ -27,6 +27,8 @@ var modules
 var sortedModules
 // Map from short module name to Module object.
 var shortModules
+// Array of arrays of modules, separated by category and sorted.
+var moduleRows
 
 // Array of Belt objects, sorted by speed.
 var belts
@@ -104,6 +106,16 @@ function loadData(modName, settings) {
         var graph = getRecipeGraph(data)
         modules = getModules(data)
         sortedModules = sorted(modules, function(m) { return modules[m].order })
+        moduleRows = []
+        let category = null
+        for (let moduleName of sortedModules) {
+            let module = modules[moduleName]
+            if (module.category !== category) {
+                category = module.category
+                moduleRows.push([])
+            }
+            moduleRows[moduleRows.length - 1].push(module)
+        }
         shortModules = {}
         for (var moduleName in modules) {
             var module = modules[moduleName]

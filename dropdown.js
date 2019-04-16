@@ -1,4 +1,4 @@
-/*Copyright 2015-2019 Kirk McDonald
+/*Copyright 2019 Kirk McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,71 +13,82 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 "use strict"
 
-/* Creates a new dropdown widget.
+let dropdownLocal = d3.local()
 
-Args:
-    node: The parent node of the dropdown.
-    name: A unique ID for this dropdown.
-    handler: An event handler to invoke when the dropdown value is changed.
-    style (optional): CSS class to apply to the dropdown window, in lieu of
-                      the built-in automatic length style.
-*/
-function Dropdown(node, name, handler, style) {
-    this.name = name
-    this.length = 0
-    this.handler = handler
-    this.dropdown = document.createElement("div")
-    this.dropdown.classList.add("dropdown")
-    this.style = style
-    if (style) {
-        this.dropdown.classList.add(style)
+function toggleDropdown() {
+    let {dropdownNode, onOpen, onClose} = dropdownLocal.get(this)
+    let dropdown = d3.select(dropdownNode)
+    let classes = dropdownNode.classList
+    if (classes.contains("open")) {
+        classes.remove("open")
+        if (onClose) {
+            onClose(dropdown)
+        }
+    } else {
+        let selected = dropdown.select("input:checked + label")
+        dropdown.select(".spacer")
+            .style("width", selected.style("width"))
+            .style("height", selected.style("height"))
+        classes.add("open")
+        if (onOpen) {
+            onOpen(dropdown)
+        }
     }
-    node.appendChild(this.dropdown)
-    this.spacer = blankImage()
-    this.spacer.classList.add("spacer")
-    node.appendChild(this.spacer)
-    this.parentNode = node
 }
-Dropdown.prototype = {
-    constructor: Dropdown,
-    /* Adds an entry to the dropdown.
 
-    Args:
-        labelContent: A node to use as the visible part of the entry. Should
-                      probably be a 32x32 image.
-        value: The string to use as this entry's value when selected.
-        checked: Whether this entry should be selected by default.
+// Appends a dropdown to the selection, and returns a selection over the div
+// for the content of the dropdown.
+function makeDropdown(selector, onOpen, onClose) {
+    let dropdown = selector.append("div")
+        .classed("dropdownWrapper", true)
+        .each(function() {
+            let dropdownNode = this
+            dropdownLocal.set(this, {dropdownNode, onOpen, onClose})
+        })
+    dropdown.append("div")
+        .classed("clicker", true)
+        .on("click", toggleDropdown)
+    let dropdownInner = dropdown.append("div")
+        .classed("dropdown", true)
+        .on("click", toggleDropdown)
+    dropdown.append("div")
+        .classed("spacer", true)
+    return dropdownInner
+}
 
-    Returns:
-        The <input> element for this entry. Its 'checked' attribute may be
-        changed to select this entry.
-    */
-    add: function(labelContent, value, checked) {
-        var input = document.createElement("input")
-        var id = this.name + "-" + this.length
-        this.length++
-        input.id = id
-        input.name = this.name
-        input.type = "radio"
-        input.value = value
-        input.checked = checked
-        input.addEventListener("change", this.handler)
-        this.dropdown.appendChild(input)
-        var label = document.createElement("label")
-        label.htmlFor = id
-        label.appendChild(labelContent)
-        //label.title = value
-        this.dropdown.appendChild(label)
-        return input
-    },
-    addBreak: function() {
-        this.dropdown.appendChild(document.createElement("br"))
-    },
-    addRule: function() {
-        this.dropdown.appendChild(document.createElement("hr"))
-    },
-    remove: function() {
-        this.parentNode.removeChild(this.dropdown)
-        this.parentNode.removeChild(this.spacer)
-    }
+let inputId = 0
+let labelFor = 0
+
+// Appends a dropdown input to the selection.
+//
+// Args:
+//   name: Should be unique to the dropdown.
+//   checked: Should be true when a given input is the selected one.
+//   callback: Called when the selected item is changed.
+//
+// Returns:
+//   Selection with the input's label.
+function addInputs(selector, name, checked, callback) {
+    selector.append("input")
+        .on("change", function(d, i, nodes) {
+            toggleDropdown.call(this)
+            callback.call(this, d, i, nodes)
+        })
+        .attr("id", () => "input-" + inputId++)
+        .attr("name", name)
+        .attr("type", "radio")
+        .property("checked", checked)
+    let label = selector.append("label")
+        .attr("for", () => "input-" + labelFor++)
+    return label
+}
+
+// Wrapper around makeDropdown/addInputs to create an input for each item in
+// data.
+function dropdownInputs(selector, data, name, checked, callback) {
+    let dd = makeDropdown(selector)
+        .selectAll("div")
+        .data(data)
+        .join("div")
+    return addInputs(dd, name, checked, callback)
 }
