@@ -17,6 +17,38 @@
     /* slightly brighter than main foreground color */
     --bright: #f1fff2;
 }
+
+@media print {
+    /* Change to light theme */
+    body {
+        --dark:#f0f0f0 !important;
+        --dark-overlay:#ffffff !important;
+        --medium:#ffffff !important;
+        --main:#ffffff !important;
+        --light:#dddddd !important;
+        --foreground:#000000 !important;
+        --accent:#222222 !important;
+        --bright:#111111 !important;
+    }
+
+    /* Hide irrevelant info */
+    .changebox, .tabs, .displaylink, .csv_box, .module.factory button, .targetButton, .popout, .ui.copy, label img[title*="no module"] {
+        display: none;
+    }
+
+    /* Show item icons */
+    #totals, .target {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /*
+    .icon[alt]:before {
+        content: " (" attr(alt) ")";
+    }
+    */
+}
+
 /* top-level/shared elements */
 body {
     font-family: sans-serif;
