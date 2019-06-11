@@ -6,7 +6,7 @@
                 "input_flow_limit": "300kW",
                 "output_flow_limit": "300kW",
                 "type": "electric",
-                "usage_priority": "terciary"
+                "usage_priority": "tertiary"
             },
             "icon_col": 0,
             "icon_row": 0,
