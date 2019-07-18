@@ -462,6 +462,7 @@ function FactoryRow(row, recipe) {
     this.beaconCount.addEventListener("change", new BeaconCountHandler(recipeName))
     this.beaconCount.type = "number"
     this.beaconCount.value = 0
+    this.beaconCount.min = 0
     this.beaconCount.classList.add("beacon")
     this.beaconCount.title = "The number of broadcasted modules which will affect this factory."
     beaconCell.appendChild(this.beaconCount)
