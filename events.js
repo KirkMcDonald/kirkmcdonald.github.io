@@ -231,9 +231,11 @@ function changeDefaultBeacon(module) {
 // Triggered when the default beacon count is changed.
 function changeDefaultBeaconCount(event) {
     var count = RationalFromString(event.target.value)
-    spec.setDefaultBeacon(spec.defaultBeacon, count)
-    recipeTable.updateDisplayedModules()
-    itemUpdate()
+    if (count >= 0) {
+        spec.setDefaultBeacon(spec.defaultBeacon, count)
+        recipeTable.updateDisplayedModules()
+        itemUpdate()
+    }
 }
 
 // Triggered when the visualizer setting box is toggled.
