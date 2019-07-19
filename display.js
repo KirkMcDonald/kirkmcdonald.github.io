@@ -423,6 +423,27 @@ function FactoryRow(row, recipe) {
     this.factoryCell.classList.add("pad", "factory", "right-align", "leftmost")
     this.node.appendChild(this.factoryCell)
 
+    this.factoryIcon = null
+    this.factory = spec.getFactory(this.recipe)
+    if (recipe.category && spec.factories[recipe.category].length > 1){
+        var factoryIcon = document.createElement("span")
+        factoryIcon.id = "fdd-" + recipeName + "-node"
+        let factorydd = makeDropdown(d3.select(factoryIcon))
+        let finputs = factorydd.selectAll("div").data(spec.factories[recipe.category]).join("div")
+        let labels = addInputs(
+            finputs,
+            "fdd-" + recipeName,
+            d => d.name === this.factory.name,
+            crafterChanged(recipeName),
+        )
+        labels.append(d => getImage(d, false, factorydd.node()))
+        this.factoryIcon = factoryIcon
+    }else if (recipe.category){ // No alternative. Factory icon will not changed.
+        var image = getImage(this.factory.factory)
+        image.classList.add("display")
+        this.factoryIcon = image
+    }
+
     var countCell = document.createElement("td")
     countCell.classList.add("factory", "right-align")
     var tt = document.createElement("tt")
@@ -520,9 +541,6 @@ FactoryRow.prototype = {
             this.setHasNoModules()
             return
         }
-        this.factory = spec.getFactory(this.recipe)
-        var image = getImage(this.factory.factory)
-        image.classList.add("display")
         while (this.factoryCell.hasChildNodes()) {
             this.factoryCell.removeChild(this.factoryCell.lastChild)
         }
@@ -530,7 +548,7 @@ FactoryRow.prototype = {
             this.factoryCell.appendChild(getImage(this.recipe))
             this.factoryCell.appendChild(new Text(" : "))
         }
-        this.factoryCell.appendChild(image)
+        this.factoryCell.appendChild(this.factoryIcon)
         this.factoryCell.appendChild(new Text(" \u00d7"))
         this.countNode.textContent = alignCount(this.count)
 

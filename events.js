@@ -303,6 +303,14 @@ function IgnoreHandler(row) {
     }
 }
 
+function crafterChanged(recipeName) {
+    return function (factoryDef) {
+        var factory = spec.spec[recipeName]
+        factory.setFactory(factoryDef, spec)
+        itemUpdate()
+    }
+}
+
 // Triggered when a factory module is changed.
 function ModuleHandler(row, index) {
     return function(module) {
