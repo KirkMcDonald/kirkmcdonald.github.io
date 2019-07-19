@@ -42,13 +42,21 @@ Item.prototype = {
             return totals
         }
         var recipe = this.recipes[0]
+        var recipeFuel = recipe.fuelIngredient(spec)
         var gives = recipe.gives(this, spec)
         rate = rate.div(gives)
+        
+        if (recipeFuel.length && recipeFuel[0].item.name == this.name) {
+            //burner mining drill mining coal and uses it as fuel.
+            totals.add(recipe.name, rate.div(one.sub(recipeFuel[0].amount)))
+            return totals
+        }
+        
         totals.add(recipe.name, rate)
         if (ignore[recipe.name]) {
             return totals
         }
-        var ingredients = recipe.ingredients.concat(recipe.fuelIngredient(spec))
+        var ingredients = recipe.ingredients.concat(recipeFuel)
         for (var i=0; i < ingredients.length; i++) {
             var ing = ingredients[i]
             var subTotals = ing.item.produce(rate.mul(ing.amount), ignore, spec)
