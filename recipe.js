@@ -189,6 +189,81 @@ MiningRecipe.prototype.allModules = function() {
     return true
 }
 
+function deleteRecipe(recipe, items, recipes) {
+    var i
+    delete recipes[recipe.name]
+    for (i = 0; i < recipe.ingredients.length; i++) {
+        recipe.ingredients[i].item.delUse(recipe)
+    }
+    for (i = 0; i < recipe.products.length; i++) {
+        recipe.products[i].item.delRecipe(recipe)
+    }
+}
+
+function deleteUnpackingRecipes(items, recipes) {
+    /* properties of unpacking recipe:
+     * 1) Given item (empty container or unpacked item) should have 2+ recipies.
+     *    One of them to produce item. Second to unpack.
+     * 2)   packing recipie have "ingredients" > "products" (sums)
+     * 3) unpacking recipie have "ingredients" < "products" (sums)
+     * 4) unpacking.ingredients and packing.products should have at least 1 same item.
+     * 5) Identical items in *4* should have same amount.
+     */
+
+    var isUnpacking = function(r1ingredients, r2products) {
+        for (var i = 0; i < r1ingredients.length; i++) {
+            for (var j = 0; j < r2products.length; j++) {
+                if (r1ingredients[i].item == r2products[j].item &&
+                    r1ingredients[i].amount.equal(r2products[j].amount)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    var compareItemsSums = function(items1, items2) {
+        var f = function(prev, curr) {
+            return prev.add(curr.amount)
+        }
+        return items1.reduce(f, zero).less(items2.reduce(f, zero))
+    }
+
+    var toDelete = {}
+    var i, j
+    for (var itemName in items) {
+        var item = items[itemName]
+        if (item.recipes.length < 2) {
+            continue
+        }
+        for (i = 0; i < item.recipes.length; i++) {
+            var ingredients = item.recipes[i].ingredients
+            if (!compareItemsSums(ingredients, item.recipes[i].products)) {
+                continue
+            }
+            for (j = 0; j < item.uses.length; j++) {
+                var products = item.uses[j].products
+                if (!compareItemsSums(products, item.uses[j].ingredients)) {
+                    continue
+                }
+                if (isUnpacking(ingredients, products)) {
+                    if (!(item.recipes[i].name in toDelete)) {
+                        toDelete[item.recipes[i].name] = item.recipes[i]
+                    }
+                }
+            }
+        }
+    }
+
+    if (Object.keys(toDelete).length) {
+        console.groupCollapsed("Deleted unpacking recipes")
+        for (var recipeName in toDelete){
+            deleteRecipe(toDelete[recipeName], items, recipes)
+            console.info(recipeName)
+        }
+        console.groupEnd()
+    }
+}
+
 function ignoreRecipe(d) {
     return d.subgroup == "empty-barrel"
 }
@@ -296,5 +371,6 @@ function getRecipeGraph(data) {
             recipes[r.name] = r
         }
     }
+    deleteUnpackingRecipes(items, recipes)
     return [items, recipes]
 }
