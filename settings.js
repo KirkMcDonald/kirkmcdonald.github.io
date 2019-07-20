@@ -190,7 +190,7 @@ function renderPrecisions(settings) {
 function renderDefaultFactory(settings) {
     // Backward compatibility with old settings.
     if ("furnace" in settings) {
-        furnaceName = settings.furnace
+        var furnaceName = settings.furnace
         spec.defaultFactory["smelting"] = spec.findFactoryDef(furnaceName, "smelting")
     }
     var am3 = spec.findFactoryDef("assembling-machine-3", "crafting")
