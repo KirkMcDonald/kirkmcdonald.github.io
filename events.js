@@ -164,17 +164,12 @@ function changeFPrec(event) {
     display()
 }
 
-// Triggered when the "minimum assembling machine" setting is changed.
-function changeMin(min) {
-    setMinimumAssembler(min)
-    itemUpdate()
-}
-
-// Triggered when the furnace is changed.
-function changeFurnace(furnace) {
-    spec.setFurnace(furnace.name)
-    solver.findSubgraphs(spec)
-    itemUpdate()
+function changeDefaultFactory(category) {
+    return function(factoryDef) {
+        spec.setDefaultFactory(category, factoryDef)
+        recipeTable.updateDisplayedFactory()
+        itemUpdate()
+    }
 }
 
 // Triggered when the preferred fuel is changed.

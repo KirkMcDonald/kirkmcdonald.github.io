@@ -170,6 +170,18 @@ function loadData(modName, settings) {
         } else {
             addTarget()
         }
+
+        if ("fabs" in settings) {
+            var fabSettings = settings.fabs.split(",")
+            for (var i=0; i < fabSettings.length; i++) {
+                var sets = fabSettings[i].split(":")
+                var recipeName = sets[0]
+                var factoryName = sets[1]
+                var recipeCat = spec.spec[recipeName].recipe.category
+                spec.setFactory(spec.spec[recipeName].recipe, spec.findFactoryDef(factoryName, recipeCat))
+            }
+        }
+
         if ("modules" in settings && settings.modules != "") {
             var moduleSettings = settings.modules.split(",")
             for (var i=0; i < moduleSettings.length; i++) {

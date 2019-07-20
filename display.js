@@ -375,6 +375,9 @@ RecipeRow.prototype = {
     updateDisplayedModules: function() {
         this.factoryRow.updateDisplayedModules()
     },
+    updateDisplayedFactory: function() {
+        this.factoryRow.updateDisplayedFactory()
+    },
     totalPower: function() {
         if (this.factoryRow.power && this.factoryRow.power.fuel === "electric") {
             return this.factoryRow.power.power
@@ -424,6 +427,7 @@ function FactoryRow(row, recipe) {
     this.node.appendChild(this.factoryCell)
 
     this.factoryIcon = null
+    this.factoryIconInputs = null
     this.factory = spec.getFactory(this.recipe)
     if (recipe.category && spec.factories[recipe.category].length > 1){
         var factoryIcon = document.createElement("span")
@@ -437,7 +441,16 @@ function FactoryRow(row, recipe) {
             crafterChanged(recipeName),
         )
         labels.append(d => getImage(d, false, factorydd.node()))
+        // It is possible to add fancy tooltips for dropdowns.
+        // But it requires some additional logic whten dd is open or changed.
+        //addTooltip(factorydd.node(), this.factory.factory)
         this.factoryIcon = factoryIcon
+        let inputs = {}
+        finputs.each(function(d) {
+            let element = d3.select(this).select('input[type="radio"]').node()
+            inputs[d.name] = element
+        })
+        this.factoryIconInputs = inputs
     }else if (recipe.category){ // No alternative. Factory icon will not changed.
         var image = getImage(this.factory.factory)
         image.classList.add("display")
@@ -610,6 +623,11 @@ FactoryRow.prototype = {
             name = NO_MODULE
         }
         this.modules[index][name].checked = true
+    },
+    updateDisplayedFactory: function() {
+        if (this.factoryIconInputs) {
+            this.factoryIconInputs[this.factory.name].checked = true
+        }
     },
     setDisplayedBeacon: function(module, count) {
         var name
@@ -808,6 +826,11 @@ GroupRow.prototype = {
             this.factoryRows[i].updateDisplayedModules()
         }
     },
+    updateDisplayedFactory: function() {
+        for (var i = 0; i < this.factoryRows.length; i++) {
+            this.factoryRows[i].updateDisplayedFactory()
+        }
+    },
     remove: function() {
         for (var i = 0; i < this.rows.length; i++) {
             var row = this.rows[i]
@@ -901,6 +924,12 @@ RecipeTable.prototype = {
         for (var i = 0; i < this.rowArray.length; i++) {
             var row = this.rowArray[i]
             row.updateDisplayedModules()
+        }
+    },
+    updateDisplayedFactory: function() {
+        for (var i = 0; i < this.rowArray.length; i++) {
+            var row = this.rowArray[i]
+            row.updateDisplayedFactory()
         }
     },
     displaySolution: function(totals) {

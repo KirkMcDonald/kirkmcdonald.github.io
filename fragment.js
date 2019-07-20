@@ -37,12 +37,6 @@ function formatSettings(targets) {
     if (countPrecision != DEFAULT_COUNT_PRECISION) {
         settings += "cp=" + countPrecision + "&"
     }
-    if (minimumAssembler != DEFAULT_MINIMUM) {
-        settings += "min=" + minimumAssembler + "&"
-    }
-    if (spec.furnace.name != DEFAULT_FURNACE) {
-        settings += "furnace=" + spec.furnace.name + "&"
-    }
     if (preferredFuel.name != DEFAULT_FUEL) {
         settings += "fuel=" + preferredFuel.name + "&"
     }
@@ -91,6 +85,20 @@ function formatSettings(targets) {
         settings += "t=off&"
     }
 
+    //default factory
+    var dfltFab = []
+    for (var category in spec.defaultFactory) {
+        var factoryDef = spec.defaultFactory[category]
+        var catFab = spec.factories[category]
+        var index = (category in assembly_machine_categories) ? 0 : catFab.length - 1
+        if (factoryDef.name != catFab[index].name) {
+            dfltFab.push(category + ":" + factoryDef.name)
+        }
+    }
+    if (dfltFab.length > 0) {
+        settings += "defFab=" + dfltFab.join(",") + "&"
+    }
+
     settings += "items="
     var targetStrings = []
     if (!targets) {
@@ -124,6 +132,8 @@ function formatSettings(targets) {
     if (ignore.length > 0) {
         settings += "&ignore=" + ignore.join(",")
     }
+
+    var fabs = []
     var specs = []
     for (var recipeName in spec.spec) {
         if (!(recipeName in globalTotals.totals)) {
@@ -164,6 +174,13 @@ function formatSettings(targets) {
             }
             specs.push(recipeSpec)
         }
+        var category = factory.recipe.category
+        if (category in spec.defaultFactory && factory.name != spec.defaultFactory[category].name) {
+            fabs.push(recipeName + ":" + factory.name)
+        }
+    }
+    if (fabs.length > 0) {
+        settings += "&fabs=" + fabs.join(",")
     }
     if (specs.length > 0) {
         settings += "&modules=" + specs.join(",")
