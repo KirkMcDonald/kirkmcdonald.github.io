@@ -231,9 +231,11 @@ function changeDefaultBeacon(module) {
 // Triggered when the default beacon count is changed.
 function changeDefaultBeaconCount(event) {
     var count = RationalFromString(event.target.value)
-    spec.setDefaultBeacon(spec.defaultBeacon, count)
-    recipeTable.updateDisplayedModules()
-    itemUpdate()
+    if (!count.less(zero)) {
+        spec.setDefaultBeacon(spec.defaultBeacon, count)
+        recipeTable.updateDisplayedModules()
+        itemUpdate()
+    }
 }
 
 // Triggered when the visualizer setting box is toggled.
@@ -355,12 +357,14 @@ function BeaconHandler(recipeName) {
 function BeaconCountHandler(recipeName) {
     this.handleEvent = function(event) {
         var moduleCount = RationalFromString(event.target.value)
-        var factory = getFactory(recipeName)
-        factory.beaconCount = moduleCount
-        if (isFactoryTarget(recipeName) && factory.beaconModule) {
-            itemUpdate()
-        } else {
-            display()
+        if (!moduleCount.less(zero)) {
+            var factory = getFactory(recipeName)
+            factory.beaconCount = moduleCount
+            if (isFactoryTarget(recipeName) && factory.beaconModule) {
+                itemUpdate()
+            } else {
+                display()
+            }
         }
     }
 }
