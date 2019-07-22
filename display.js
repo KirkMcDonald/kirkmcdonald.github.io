@@ -432,8 +432,11 @@ function FactoryRow(row, recipe) {
     if (recipe.category && spec.factories[recipe.category].length > 1){
         var factoryIcon = document.createElement("span")
         factoryIcon.id = "fdd-" + recipeName + "-node"
+        factoryIcon.classList.add("left-align")
         let factorydd = makeDropdown(d3.select(factoryIcon))
-        let finputs = factorydd.selectAll("div").data(spec.factories[recipe.category]).join("div")
+        let finputs = factorydd.selectAll("div")
+                .data(spec.factoriesSquareList[recipe.category]).join("div")
+                .selectAll("span").data(d => d).join("span")
         let labels = addInputs(
             finputs,
             "fdd-" + recipeName,

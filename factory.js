@@ -339,6 +339,7 @@ function FactorySpec(factories) {
         }
     }
     this.defaultFactory = {}
+    this.factoriesSquareList = {}
     for (var category in this.factories) {
         var catFab = this.factories[category]
         catFab.sort(compareFactories)
@@ -347,6 +348,7 @@ function FactorySpec(factories) {
             var index = (category in assembly_machine_categories) ? 0 : catFab.length - 1
             var fabDef = catFab[index]
             this.defaultFactory[category] = fabDef
+            this.factoriesSquareList[category] = makeSquareList(catFab)
         }
     }
     this.miningProd = zero

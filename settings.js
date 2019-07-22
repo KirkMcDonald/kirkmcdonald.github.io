@@ -237,11 +237,14 @@ function renderDefaultFactory(settings) {
     var cell = oldNode.parentNode
     var node = document.createElement("span")
     node.id = "default_factory"
+    node.classList.add("left-align")
 
     for (var category in spec.defaultFactory) {
         let fabNode = document.createElement("span")
         let dropdown = makeDropdown(d3.select(fabNode))
-        let inputs = dropdown.selectAll("div").data(spec.factories[category]).join("div")
+        let inputs = dropdown.selectAll("div")
+                .data(spec.factoriesSquareList[category]).join("div")
+                .selectAll("span").data(d => d).join("span")
         let labels = addInputs(
             inputs,
             "def_factory_" + category,
