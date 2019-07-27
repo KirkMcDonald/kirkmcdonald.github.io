@@ -7917,7 +7917,7 @@
             "type": "recipe"
         },
         "rocket-fuel": {
-            "category": "crafting",
+            "category": "crafting-with-fluid",
             "enabled": false,
             "energy_required": 30,
             "icon_col": 8,
