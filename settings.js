@@ -24,8 +24,8 @@ function Modification(name, filename, legacy, sheetSize) {
 var MODIFICATIONS = {
     "0-16-51": new Modification("Vanilla 0.16.51", "vanilla-0.16.51.json", true, [480, 512]),
     "0-16-51x": new Modification("Vanilla 0.16.51 - Expensive", "vanilla-0.16.51-expensive.json", true, [480, 512]),
-    "0-17-1": new Modification("Vanilla 0.17.1", "vanilla-0.17.1.json", false, [480, 512]),
-    "0-17-1x": new Modification("Vanilla 0.17.1 - Expensive", "vanilla-0.17.1-expensive.json", false, [480, 512]),
+    "0-17-60": new Modification("Vanilla 0.17.60", "vanilla-0.17.60.json", false, [480, 512]),
+    "0-17-60x": new Modification("Vanilla 0.17.60 - Expensive", "vanilla-0.17.60-expensive.json", false, [480, 512]),
     "017science": new Modification("0.16.51 w/ 0.17 science mod", "017science-0.16.51.json", true, [480, 512]),
     "bobs-0-16-51": new Modification("(EXPERIMENTAL) Bob's Mods + base 0.16.51", "bobs-0.16.51.json", true, [800, 832])
 }
@@ -46,6 +46,8 @@ var modUpdates = {
     "0-16-37": "0-16-51",
     "0-16-37x": "0-16-51x",
     "bobs-0-16-37": "bobs-0-16-51",
+    "0-17-1": "0-17-60",
+    "0-17-1x": "0-17-60x",
 }
 
 function normalizeDataSetName(modName) {
