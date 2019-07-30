@@ -45,6 +45,8 @@ function addOverrideOptions(version) {
 var modUpdates = {
     "0-16-37": "0-16-51",
     "0-16-37x": "0-16-51x",
+    "0-17-1": "0-17-60",
+    "0-17-1x": "0-17-60x",
     "bobs-0-16-37": "bobs-0-16-51",
 }
 
