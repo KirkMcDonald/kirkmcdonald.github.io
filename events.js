@@ -164,6 +164,11 @@ function changeFPrec(event) {
     display()
 }
 
+function changeBPrec(event) {
+    beltPrecision = Number(event.target.value)
+    display()
+}
+
 // Triggered when the "minimum assembling machine" setting is changed.
 function changeMin(min) {
     setMinimumAssembler(min)

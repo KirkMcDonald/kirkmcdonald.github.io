@@ -35,6 +35,14 @@ function displayCount(x) {
     }
 }
 
+function displayBelt(x) {
+    if (displayFormat == "rational") {
+        return x.toMixed()
+    } else {
+        return x.toUpDecimal(beltPrecision)
+    }
+}
+
 function align(s, prec) {
     if (displayFormat == "rational") {
         return s
@@ -60,6 +68,10 @@ function alignRate(x) {
 
 function alignCount(x) {
     return align(displayCount(x), countPrecision)
+}
+
+function alignBelt(x) {
+    return align(displayBelt(x), beltPrecision)
 }
 
 var powerSuffixes = ["\u00A0W", "kW", "MW", "GW", "TW", "PW"]
@@ -262,7 +274,7 @@ ItemRow.prototype = {
         this.beltCell.appendChild(beltImage)
         this.beltCell.appendChild(new Text(" \u00d7"))
         var beltCount = itemRate.div(preferredBeltSpeed)
-        this.beltCountNode.textContent = alignCount(beltCount)
+        this.beltCountNode.textContent = alignBelt(beltCount)
     },
     setPipe: function(itemRate) {
         // 0.17 changes these fluid calculations, but the new model is not yet
