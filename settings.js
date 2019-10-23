@@ -30,7 +30,7 @@ var MODIFICATIONS = {
     "bobs-0-16-51": new Modification("(EXPERIMENTAL) Bob's Mods + base 0.16.51", "bobs-0.16.51.json", true, [800, 832])
 }
 
-var DEFAULT_MODIFICATION = "0-16-51"
+var DEFAULT_MODIFICATION = "0-17-60"
 
 function addOverrideOptions(version) {
     var tag = "local-" + version.replace(/\./g, "-")
