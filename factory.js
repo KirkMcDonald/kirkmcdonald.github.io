@@ -227,13 +227,8 @@ Factory.prototype = {
         }
         // Default drain value.
         var drain = power.div(RationalFromFloat(30))
-        var divmod = count.divmod(one)
-        power = power.mul(count)
-        if (!divmod.remainder.isZero()) {
-            var idle = one.sub(divmod.remainder)
-            power = power.add(idle.mul(drain))
-        }
-        power = power.mul(this.powerEffect(spec))
+        power = power.mul(count).mul(this.powerEffect(spec))
+        power = power.add(drain.mul(count.ceil()))
         return {"fuel": "electric", "power": power}
     },
     recipeRate: function(spec, recipe) {
