@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 "use strict"
 
-function FactoryDef(name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel) {
+function FactoryDef(name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, drain, fuel) {
     this.name = name
     this.icon_col = col
     this.icon_row = row
@@ -22,6 +22,7 @@ function FactoryDef(name, col, row, categories, max_ingredients, speed, moduleSl
     this.speed = speed
     this.moduleSlots = moduleSlots
     this.energyUsage = energyUsage
+    this.drain = drain
     this.fuel = fuel
 }
 FactoryDef.prototype = {
@@ -73,7 +74,9 @@ FactoryDef.prototype = {
 }
 
 function MinerDef(name, col, row, categories, power, speed, moduleSlots, energyUsage, fuel) {
-    FactoryDef.call(this, name, col, row, categories, 0, 0, moduleSlots, energyUsage, fuel)
+    // Default drain for miners is 0
+    // TODO: derive drain from game-data if defined
+    FactoryDef.call(this, name, col, row, categories, 0, 0, moduleSlots, energyUsage, zero, fuel)
     this.mining_power = power
     this.mining_speed = speed
 }
@@ -120,7 +123,7 @@ MinerDef.prototype.renderTooltip = function() {
 }
 
 function RocketLaunchDef(name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel) {
-    FactoryDef.call(this, name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel)
+    FactoryDef.call(this, name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, zero, fuel)
 }
 RocketLaunchDef.prototype = Object.create(FactoryDef.prototype)
 RocketLaunchDef.prototype.makeFactory = function(spec, recipe) {
@@ -128,7 +131,7 @@ RocketLaunchDef.prototype.makeFactory = function(spec, recipe) {
 }
 
 function RocketSiloDef(name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel) {
-    FactoryDef.call(this, name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel)
+    FactoryDef.call(this, name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, zero, fuel)
 }
 RocketSiloDef.prototype = Object.create(FactoryDef.prototype)
 RocketSiloDef.prototype.makeFactory = function(spec, recipe) {
@@ -225,10 +228,8 @@ Factory.prototype = {
         if (this.factory.fuel) {
             return {"fuel": this.factory.fuel, "power": power.mul(count)}
         }
-        // Default drain value.
-        var drain = power.div(RationalFromFloat(30))
         power = power.mul(count).mul(this.powerEffect(spec))
-        power = power.add(drain.mul(count.ceil()))
+        power = power.add(this.factory.drain.mul(count.ceil()))
         return {"fuel": "electric", "power": power}
     },
     recipeRate: function(spec, recipe) {
@@ -504,6 +505,7 @@ function getFactories(data) {
         one,
         0,
         zero,
+        zero,
         null
     )
     pump.renderTooltip = renderTooltipBase
@@ -517,6 +519,7 @@ function getFactories(data) {
         1,
         one,
         0,
+        zero,
         zero,
         null
     )
@@ -539,6 +542,7 @@ function getFactories(data) {
         one,
         0,
         boiler_energy,
+        zero,
         "chemical"
     )
     boiler.renderTooltip = renderTooltipBase
@@ -553,6 +557,7 @@ function getFactories(data) {
         one,
         0,
         zero,
+        zero,
         null
     )
     launch.renderTooltip = renderTooltipBase
@@ -564,6 +569,7 @@ function getFactories(data) {
             if (d.energy_source && d.energy_source.type === "burner") {
                 fuel = d.energy_source.fuel_category
             }
+            var energyUsage = RationalFromFloat(d.energy_usage)
             factories.push(new FactoryDef(
                 d.name,
                 d.icon_col,
@@ -572,7 +578,10 @@ function getFactories(data) {
                 d.ingredient_count,
                 RationalFromFloat(d.crafting_speed),
                 d.module_slots,
-                RationalFromFloat(d.energy_usage),
+                energyUsage,
+                // Default drain is 1/30 of energy_usage
+                // TODO: derive from game-data if defined
+                energyUsage.div(RationalFromFloat(30)),
                 fuel
             ))
         }
