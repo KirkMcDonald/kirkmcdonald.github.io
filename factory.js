@@ -60,6 +60,13 @@ FactoryDef.prototype = {
         t.appendChild(b)
         t.appendChild(new Text(alignPower(this.energyUsage, 0)))
         t.appendChild(document.createElement("br"))
+        if (!this.fuel) {
+            b = document.createElement("b")
+            b.textContent = "Drain: "
+            t.appendChild(b)
+            t.appendChild(new Text(alignPower(this.drain, 0)))
+            t.appendChild(document.createElement("br"))
+        }
         b = document.createElement("b")
         b.textContent = "Crafting speed: "
         t.appendChild(b)
