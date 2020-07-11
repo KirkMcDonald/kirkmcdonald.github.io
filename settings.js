@@ -21,16 +21,19 @@ function Modification(name, filename, legacy, sheetSize) {
     this.sheetSize = sheetSize
 }
 
+// what is significance of the boolean? Used same value for 0.18 as 0.17
 var MODIFICATIONS = {
-    "0-16-51": new Modification("Vanilla 0.16.51", "vanilla-0.16.51.json", true, [480, 512]),
-    "0-16-51x": new Modification("Vanilla 0.16.51 - Expensive", "vanilla-0.16.51-expensive.json", true, [480, 512]),
+    "0-18-1": new Modification("Vanilla 0.18.1", "vanilla-0.17.60.json", false, [480, 512]),
+    "0-18-1x": new Modification("Vanilla 0.18.1 - Expensive", "vanilla-0.17.60-expensive.json", false, [480, 512]),
     "0-17-60": new Modification("Vanilla 0.17.60", "vanilla-0.17.60.json", false, [480, 512]),
     "0-17-60x": new Modification("Vanilla 0.17.60 - Expensive", "vanilla-0.17.60-expensive.json", false, [480, 512]),
+    "0-16-51": new Modification("Vanilla 0.16.51", "vanilla-0.16.51.json", true, [480, 512]),
+    "0-16-51x": new Modification("Vanilla 0.16.51 - Expensive", "vanilla-0.16.51-expensive.json", true, [480, 512]),
     "017science": new Modification("0.16.51 w/ 0.17 science mod", "017science-0.16.51.json", true, [480, 512]),
     "bobs-0-16-51": new Modification("(EXPERIMENTAL) Bob's Mods + base 0.16.51", "bobs-0.16.51.json", true, [800, 832])
 }
 
-var DEFAULT_MODIFICATION = "0-16-51"
+var DEFAULT_MODIFICATION = "0-17-60"
 
 function addOverrideOptions(version) {
     var tag = "local-" + version.replace(/\./g, "-")
