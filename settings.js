@@ -22,8 +22,8 @@ function Modification(name, filename, legacy, sheetSize) {
 }
 
 var MODIFICATIONS = {
-	"1-0-0": new Modification("Vanilla 1.0.0", "vanilla-1.0.0.json", false, [480, 512]),
-	"1-0-0x": new Modification("Vanilla 1.0.0 - Expensive", "vanilla-1.0.0-expensive.json", false, [480, 512]),
+    "1-0-0": new Modification("Vanilla 1.0.0", "vanilla-1.0.0.json", false, [480, 512]),
+    "1-0-0x": new Modification("Vanilla 1.0.0 - Expensive", "vanilla-1.0.0-expensive.json", false, [480, 512]),
 }
 
 var DEFAULT_MODIFICATION = "1-0-0"
@@ -46,10 +46,10 @@ function normalizeDataSetName(modName) {
     if (newName) {
         modName = newName
     }
-	if (modName in MODIFICATIONS) {
-		return modName
-	}
-	return DEFAULT_MODIFICATION
+    if (modName in MODIFICATIONS) {
+        return modName
+    }
+    return DEFAULT_MODIFICATION
 }
 
 function renderDataSetOptions(settings) {

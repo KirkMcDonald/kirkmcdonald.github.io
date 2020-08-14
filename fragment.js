@@ -22,7 +22,7 @@ function formatSettings(targets) {
         settings += "debug=on&"
     }
     var mod = currentMod()
-	settings += "data=" + mod + "&"
+    settings += "data=" + mod + "&"
     if (colorScheme.name != DEFAULT_COLOR_SCHEME) {
         settings += "c=" + colorScheme.name + "&"
     }
