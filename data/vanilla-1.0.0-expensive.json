@@ -21,7 +21,7 @@
             "crafting_categories": [ "crafting", "basic-crafting", "advanced-crafting" ],
             "crafting_speed": 0.5,
             "energy_usage": 75000,
-            "icon_col": 9,
+            "icon_col": 8,
             "icon_row": 0,
             "localized_name": {
                 "en": "Assembling machine 1"
@@ -34,7 +34,7 @@
             "crafting_categories": [ "basic-crafting", "crafting", "advanced-crafting", "crafting-with-fluid" ],
             "crafting_speed": 0.75,
             "energy_usage": 150000,
-            "icon_col": 10,
+            "icon_col": 9,
             "icon_row": 0,
             "localized_name": {
                 "en": "Assembling machine 2"
@@ -47,7 +47,7 @@
             "crafting_categories": [ "basic-crafting", "crafting", "advanced-crafting", "crafting-with-fluid" ],
             "crafting_speed": 1.25,
             "energy_usage": 375000,
-            "icon_col": 11,
+            "icon_col": 10,
             "icon_row": 0,
             "localized_name": {
                 "en": "Assembling machine 3"
@@ -60,7 +60,7 @@
             "crafting_categories": [ "centrifuging" ],
             "crafting_speed": 1,
             "energy_usage": 350000,
-            "icon_col": 14,
+            "icon_col": 13,
             "icon_row": 1,
             "localized_name": {
                 "en": "Centrifuge"
@@ -73,33 +73,20 @@
             "crafting_categories": [ "chemistry" ],
             "crafting_speed": 1,
             "energy_usage": 210000,
-            "icon_col": 0,
-            "icon_row": 2,
+            "icon_col": 14,
+            "icon_row": 1,
             "localized_name": {
                 "en": "Chemical plant"
             },
             "module_slots": 3,
             "name": "chemical-plant"
         },
-        "escape-pod-assembler": {
-            "crafting_categories": [ "crafting", "basic-crafting", "advanced-crafting" ],
-            "crafting_speed": 1.25,
-            "energy_usage": 90000,
-            "icon_col": 8,
-            "icon_row": 0,
-            "ingredient_count": 2,
-            "localized_name": {
-                "en": "Repaired assembler"
-            },
-            "module_slots": 0,
-            "name": "escape-pod-assembler"
-        },
         "oil-refinery": {
             "allowed_effects": [ "consumption", "speed", "productivity", "pollution" ],
             "crafting_categories": [ "oil-processing" ],
             "crafting_speed": 1,
             "energy_usage": 420000,
-            "icon_col": 3,
+            "icon_col": 8,
             "icon_row": 9,
             "localized_name": {
                 "en": "Oil refinery"
@@ -128,7 +115,7 @@
                 } ],
                 "type": "burner"
             },
-            "icon_col": 8,
+            "icon_col": 7,
             "icon_row": 1,
             "localized_name": {
                 "en": "Boiler"
@@ -142,9 +129,194 @@
                     "direction": 4,
                     "position": [ 0, 0.5 ]
                 } ],
+                "heat_glow": {
+                    "east": {
+                        "filename": "__base__/graphics/entity/heat-exchanger/heatex-E-glow.png",
+                        "height": 62,
+                        "priority": "extra-high",
+                        "shift": [ -0.6875, -0.375 ],
+                        "width": 60
+                    },
+                    "north": {
+                        "filename": "__base__/graphics/entity/heat-exchanger/heatex-N-glow.png",
+                        "height": 70,
+                        "priority": "extra-high",
+                        "shift": [ 0.0, 0.25 ],
+                        "tint": {
+                            "b": 0.75,
+                            "g": 0.85,
+                            "r": 1.0
+                        },
+                        "width": 38
+                    },
+                    "south": {
+                        "filename": "__base__/graphics/entity/heat-exchanger/heatex-S-glow.png",
+                        "height": 40,
+                        "priority": "extra-high",
+                        "shift": [ 0.0, -1.125 ],
+                        "tint": {
+                            "b": 0.75,
+                            "g": 0.85,
+                            "r": 1.0
+                        },
+                        "width": 38
+                    },
+                    "west": {
+                        "filename": "__base__/graphics/entity/heat-exchanger/heatex-W-glow.png",
+                        "height": 64,
+                        "priority": "extra-high",
+                        "shift": [ 0.625, -0.375 ],
+                        "width": 60
+                    }
+                },
+                "heat_picture": {
+                    "east": {
+                        "filename": "__base__/graphics/entity/heat-exchanger/heatex-E-heated.png",
+                        "height": 40,
+                        "hr_version": {
+                            "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-E-heated.png",
+                            "height": 80,
+                            "priority": "extra-high",
+                            "scale": 0.5,
+                            "shift": [ -0.65625, -0.40625 ],
+                            "width": 80
+                        },
+                        "priority": "extra-high",
+                        "shift": [ -0.65625, -0.40625 ],
+                        "width": 40
+                    },
+                    "north": {
+                        "filename": "__base__/graphics/entity/heat-exchanger/heatex-N-heated.png",
+                        "height": 48,
+                        "hr_version": {
+                            "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-N-heated.png",
+                            "height": 96,
+                            "priority": "extra-high",
+                            "scale": 0.5,
+                            "shift": [ -0.015625, 0.265625 ],
+                            "width": 44
+                        },
+                        "priority": "extra-high",
+                        "shift": [ -0.03125, 0.25 ],
+                        "width": 24
+                    },
+                    "south": {
+                        "filename": "__base__/graphics/entity/heat-exchanger/heatex-S-heated.png",
+                        "height": 20,
+                        "hr_version": {
+                            "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-S-heated.png",
+                            "height": 40,
+                            "priority": "extra-high",
+                            "scale": 0.5,
+                            "shift": [ -0.03125, -0.9375 ],
+                            "width": 28
+                        },
+                        "priority": "extra-high",
+                        "shift": [ -0.03125, -0.9375 ],
+                        "width": 16
+                    },
+                    "west": {
+                        "filename": "__base__/graphics/entity/heat-exchanger/heatex-W-heated.png",
+                        "height": 40,
+                        "hr_version": {
+                            "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-W-heated.png",
+                            "height": 76,
+                            "priority": "extra-high",
+                            "scale": 0.5,
+                            "shift": [ 0.71875, -0.40625 ],
+                            "width": 64
+                        },
+                        "priority": "extra-high",
+                        "shift": [ 0.71875, -0.40625 ],
+                        "width": 32
+                    }
+                },
+                "heat_pipe_covers": {
+                    "east": {
+                        "filename": "__base__/graphics/entity/heat-exchanger/heatex-endings-heated.png",
+                        "frame_count": 1,
+                        "height": 32,
+                        "hr_version": {
+                            "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-endings-heated.png",
+                            "frame_count": 1,
+                            "height": 64,
+                            "priority": "high",
+                            "scale": 0.5,
+                            "width": 64,
+                            "x": 64,
+                            "y": 0
+                        },
+                        "priority": "high",
+                        "scale": 1,
+                        "width": 32,
+                        "x": 32,
+                        "y": 0
+                    },
+                    "north": {
+                        "filename": "__base__/graphics/entity/heat-exchanger/heatex-endings-heated.png",
+                        "frame_count": 1,
+                        "height": 32,
+                        "hr_version": {
+                            "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-endings-heated.png",
+                            "frame_count": 1,
+                            "height": 64,
+                            "priority": "high",
+                            "scale": 0.5,
+                            "width": 64,
+                            "x": 0,
+                            "y": 0
+                        },
+                        "priority": "high",
+                        "scale": 1,
+                        "width": 32,
+                        "x": 0,
+                        "y": 0
+                    },
+                    "south": {
+                        "filename": "__base__/graphics/entity/heat-exchanger/heatex-endings-heated.png",
+                        "frame_count": 1,
+                        "height": 32,
+                        "hr_version": {
+                            "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-endings-heated.png",
+                            "frame_count": 1,
+                            "height": 64,
+                            "priority": "high",
+                            "scale": 0.5,
+                            "width": 64,
+                            "x": 128,
+                            "y": 0
+                        },
+                        "priority": "high",
+                        "scale": 1,
+                        "width": 32,
+                        "x": 64,
+                        "y": 0
+                    },
+                    "west": {
+                        "filename": "__base__/graphics/entity/heat-exchanger/heatex-endings-heated.png",
+                        "frame_count": 1,
+                        "height": 32,
+                        "hr_version": {
+                            "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-endings-heated.png",
+                            "frame_count": 1,
+                            "height": 64,
+                            "priority": "high",
+                            "scale": 0.5,
+                            "width": 64,
+                            "x": 192,
+                            "y": 0
+                        },
+                        "priority": "high",
+                        "scale": 1,
+                        "width": 32,
+                        "x": 96,
+                        "y": 0
+                    }
+                },
                 "max_temperature": 1000,
                 "max_transfer": "2GW",
                 "min_working_temperature": 500,
+                "minimum_glow_temperature": 350,
                 "pipe_covers": {
                     "east": {
                         "filename": "__base__/graphics/entity/heat-exchanger/heatex-endings.png",
@@ -154,17 +326,17 @@
                             "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-endings.png",
                             "frame_count": 1,
                             "height": 64,
-                            "line_length": 4,
                             "priority": "high",
                             "scale": 0.5,
                             "width": 64,
-                            "x": 64
+                            "x": 64,
+                            "y": 0
                         },
-                        "line_length": 4,
                         "priority": "high",
                         "scale": 1,
                         "width": 32,
-                        "x": 32
+                        "x": 32,
+                        "y": 0
                     },
                     "north": {
                         "filename": "__base__/graphics/entity/heat-exchanger/heatex-endings.png",
@@ -174,17 +346,17 @@
                             "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-endings.png",
                             "frame_count": 1,
                             "height": 64,
-                            "line_length": 4,
                             "priority": "high",
                             "scale": 0.5,
                             "width": 64,
-                            "x": 0
+                            "x": 0,
+                            "y": 0
                         },
-                        "line_length": 4,
                         "priority": "high",
                         "scale": 1,
                         "width": 32,
-                        "x": 0
+                        "x": 0,
+                        "y": 0
                     },
                     "south": {
                         "filename": "__base__/graphics/entity/heat-exchanger/heatex-endings.png",
@@ -194,17 +366,17 @@
                             "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-endings.png",
                             "frame_count": 1,
                             "height": 64,
-                            "line_length": 4,
                             "priority": "high",
                             "scale": 0.5,
                             "width": 64,
-                            "x": 128
+                            "x": 128,
+                            "y": 0
                         },
-                        "line_length": 4,
                         "priority": "high",
                         "scale": 1,
                         "width": 32,
-                        "x": 64
+                        "x": 64,
+                        "y": 0
                     },
                     "west": {
                         "filename": "__base__/graphics/entity/heat-exchanger/heatex-endings.png",
@@ -214,23 +386,23 @@
                             "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-endings.png",
                             "frame_count": 1,
                             "height": 64,
-                            "line_length": 4,
                             "priority": "high",
                             "scale": 0.5,
                             "width": 64,
-                            "x": 192
+                            "x": 192,
+                            "y": 0
                         },
-                        "line_length": 4,
                         "priority": "high",
                         "scale": 1,
                         "width": 32,
-                        "x": 96
+                        "x": 96,
+                        "y": 0
                     }
                 },
                 "specific_heat": "1MJ",
                 "type": "heat"
             },
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 6,
             "localized_name": {
                 "en": "Heat exchanger"
@@ -238,7 +410,7 @@
             "name": "heat-exchanger"
         }
     },
-    "fluids": [ "crude-oil", "heavy-oil", "light-oil", "lubricant", "petroleum-gas", "steam", "sulfuric-acid", "water" ],
+    "fluids": [ "crude-oil", "fluid-unknown", "heavy-oil", "light-oil", "lubricant", "petroleum-gas", "steam", "sulfuric-acid", "water" ],
     "fuel": [ "coal", "nuclear-fuel", "rocket-fuel", "solid-fuel", "wood" ],
     "furnace": {
         "electric-furnace": {
@@ -251,7 +423,7 @@
                 "usage_priority": "secondary-input"
             },
             "energy_usage": 180000,
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 4,
             "localized_name": {
                 "en": "Electric furnace"
@@ -277,8 +449,8 @@
                 "type": "burner"
             },
             "energy_usage": 90000,
-            "icon_col": 12,
-            "icon_row": 13,
+            "icon_col": 1,
+            "icon_row": 14,
             "localized_name": {
                 "en": "Steel furnace"
             },
@@ -304,7 +476,7 @@
                 "type": "burner"
             },
             "energy_usage": 90000,
-            "icon_col": 2,
+            "icon_col": 5,
             "icon_row": 14,
             "localized_name": {
                 "en": "Stone furnace"
@@ -317,7 +489,7 @@
         "steam-engine": {
             "effectivity": 1,
             "fluid_usage_per_tick": 0.5,
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 13,
             "localized_name": {
                 "en": "Steam engine"
@@ -327,7 +499,7 @@
         "steam-turbine": {
             "effectivity": 1,
             "fluid_usage_per_tick": 1,
-            "icon_col": 9,
+            "icon_col": 13,
             "icon_row": 13,
             "localized_name": {
                 "en": "Steam turbine"
@@ -342,9 +514,39 @@
                 "ammo": "b",
                 "armor": "d",
                 "capsule": "c",
-                "defensive-structure": "f",
+                "defensive-structure": "g",
                 "equipment": "e",
-                "gun": "a"
+                "gun": "a",
+                "military-equipment": "f"
+            }
+        },
+        "effects": {
+            "order": "y",
+            "subgroups": {
+                "belt-explosions": "ab",
+                "campaign-explosions": "bf",
+                "capsule-explosions": "cc",
+                "circuit-network-explosions": "ah",
+                "decorative-explosions": "dc",
+                "defensive-structure-explosions": "cb",
+                "energy-explosions": "ba",
+                "energy-pipe-distribution-explosions": "ad",
+                "explosions": "de",
+                "extraction-machine-explosions": "bb",
+                "ground-explosions": "db",
+                "gun-explosions": "ca",
+                "hit-effects": "e",
+                "inserter-explosions": "ac",
+                "logistic-network-explosions": "ag",
+                "module-explosions": "be",
+                "particles": "e",
+                "production-machine-explosions": "bd",
+                "rock-explosions": "da",
+                "smelting-machine-explosions": "bc",
+                "storage-explosions": "aa",
+                "train-transport-explosions": "ae",
+                "transport-explosions": "af",
+                "tree-explosions": "cd"
             }
         },
         "enemies": {
@@ -356,11 +558,26 @@
         "environment": {
             "order": "a",
             "subgroups": {
+                "belt-remnants": "db",
+                "circuit-network-remnants": "dh",
                 "cliffs": "a",
                 "corpses": "c",
                 "creatures": "a",
+                "defensive-structure-remnants": "dl",
+                "energy-pipe-distribution-remnants": "dd",
+                "energy-remnants": "di",
+                "extraction-machine-remnants": "di",
+                "generic-remnants": "dl",
                 "grass": "b",
-                "remnants": "d",
+                "inserter-remnants": "dc",
+                "logistic-network-remnants": "dg",
+                "production-machine-remnants": "dk",
+                "remnants": "dz",
+                "scorchmarks": "dm",
+                "smelting-machine-remnants": "dj",
+                "storage-remnants": "da",
+                "train-transport-remnants": "de",
+                "transport-remnants": "df",
                 "trees": "aa",
                 "wrecks": "e"
             }
@@ -387,13 +604,14 @@
             "order": "aaa",
             "subgroups": {
                 "belt": "b",
-                "circuit-network": "g",
+                "circuit-network": "h",
                 "energy-pipe-distribution": "d",
                 "inserter": "c",
-                "logistic-network": "f",
+                "logistic-network": "g",
                 "storage": "a",
-                "terrain": "h",
-                "transport": "e"
+                "terrain": "i",
+                "train-transport": "e",
+                "transport": "f"
             }
         },
         "other": {
@@ -405,6 +623,7 @@
         "production": {
             "order": "b",
             "subgroups": {
+                "crash-site": "x",
                 "energy": "b",
                 "extraction-machine": "c",
                 "module": "f",
@@ -485,9 +704,9 @@
                 "en": "Artillery targeting remote"
             },
             "name": "artillery-targeting-remote",
-            "order": "zz",
+            "order": "b[turret]-d[artillery-turret]-b[remote]",
             "stack_size": 1,
-            "subgroup": "capsule",
+            "subgroup": "defensive-structure",
             "type": "capsule"
         },
         "artillery-turret": {
@@ -498,7 +717,7 @@
                 "en": "Artillery turret"
             },
             "name": "artillery-turret",
-            "order": "b[turret]-d[artillery-turret]",
+            "order": "b[turret]-d[artillery-turret]-a[turret]",
             "stack_size": 10,
             "subgroup": "defensive-structure",
             "type": "item"
@@ -513,12 +732,12 @@
             "name": "artillery-wagon",
             "order": "a[train-system]-i[artillery-wagon]",
             "stack_size": 5,
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "item-with-entity-data"
         },
         "artillery-wagon-cannon": {
             "group": "combat",
-            "icon_col": 9,
+            "icon_col": 12,
             "icon_row": 14,
             "localized_name": {
                 "en": "Artillery cannon"
@@ -531,7 +750,7 @@
         },
         "assembling-machine-1": {
             "group": "production",
-            "icon_col": 9,
+            "icon_col": 8,
             "icon_row": 0,
             "localized_name": {
                 "en": "Assembling machine 1"
@@ -544,7 +763,7 @@
         },
         "assembling-machine-2": {
             "group": "production",
-            "icon_col": 10,
+            "icon_col": 9,
             "icon_row": 0,
             "localized_name": {
                 "en": "Assembling machine 2"
@@ -557,7 +776,7 @@
         },
         "assembling-machine-3": {
             "group": "production",
-            "icon_col": 11,
+            "icon_col": 10,
             "icon_row": 0,
             "localized_name": {
                 "en": "Assembling machine 3"
@@ -570,7 +789,7 @@
         },
         "atomic-bomb": {
             "group": "combat",
-            "icon_col": 12,
+            "icon_col": 11,
             "icon_row": 0,
             "localized_name": {
                 "en": "Atomic bomb"
@@ -583,7 +802,7 @@
         },
         "automation-science-pack": {
             "group": "intermediate-products",
-            "icon_col": 13,
+            "icon_col": 12,
             "icon_row": 0,
             "localized_name": {
                 "en": "Automation science pack"
@@ -596,8 +815,8 @@
         },
         "battery": {
             "group": "intermediate-products",
-            "icon_col": 0,
-            "icon_row": 1,
+            "icon_col": 14,
+            "icon_row": 0,
             "localized_name": {
                 "en": "Battery"
             },
@@ -609,33 +828,33 @@
         },
         "battery-equipment": {
             "group": "combat",
-            "icon_col": 1,
+            "icon_col": 0,
             "icon_row": 1,
             "localized_name": {
                 "en": "Personal battery"
             },
             "name": "battery-equipment",
-            "order": "c[battery]-a[battery-equipment]",
+            "order": "b[battery]-a[battery-equipment]",
             "stack_size": 20,
             "subgroup": "equipment",
             "type": "item"
         },
         "battery-mk2-equipment": {
             "group": "combat",
-            "icon_col": 2,
+            "icon_col": 1,
             "icon_row": 1,
             "localized_name": {
                 "en": "Personal battery MK2"
             },
             "name": "battery-mk2-equipment",
-            "order": "c[battery]-b[battery-equipment-mk2]",
+            "order": "b[battery]-b[battery-equipment-mk2]",
             "stack_size": 20,
             "subgroup": "equipment",
             "type": "item"
         },
         "beacon": {
             "group": "production",
-            "icon_col": 3,
+            "icon_col": 2,
             "icon_row": 1,
             "localized_name": {
                 "en": "Beacon"
@@ -648,20 +867,20 @@
         },
         "belt-immunity-equipment": {
             "group": "combat",
-            "icon_col": 4,
+            "icon_col": 3,
             "icon_row": 1,
             "localized_name": {
                 "en": "Belt immunity equipment"
             },
             "name": "belt-immunity-equipment",
-            "order": "e[belt-immunity]-a[belt-immunity]",
+            "order": "c[belt-immunity]-a[belt-immunity]",
             "stack_size": 20,
             "subgroup": "equipment",
             "type": "item"
         },
         "big-electric-pole": {
             "group": "logistics",
-            "icon_col": 5,
+            "icon_col": 4,
             "icon_row": 1,
             "localized_name": {
                 "en": "Big electric pole"
@@ -674,7 +893,7 @@
         },
         "blueprint": {
             "group": "production",
-            "icon_col": 6,
+            "icon_col": 5,
             "icon_row": 1,
             "localized_name": {
                 "en": "Blueprint"
@@ -687,7 +906,7 @@
         },
         "blueprint-book": {
             "group": "production",
-            "icon_col": 7,
+            "icon_col": 6,
             "icon_row": 1,
             "localized_name": {
                 "en": "Blueprint book"
@@ -700,7 +919,7 @@
         },
         "boiler": {
             "group": "production",
-            "icon_col": 8,
+            "icon_col": 7,
             "icon_row": 1,
             "localized_name": {
                 "en": "Boiler"
@@ -711,9 +930,22 @@
             "subgroup": "energy",
             "type": "item"
         },
+        "burner-generator": {
+            "group": "other",
+            "icon_col": 12,
+            "icon_row": 13,
+            "localized_name": {
+                "en": "Burner generator"
+            },
+            "name": "burner-generator",
+            "order": "t[item]-o[burner-generator]",
+            "stack_size": 10,
+            "subgroup": "other",
+            "type": "item"
+        },
         "burner-inserter": {
             "group": "logistics",
-            "icon_col": 9,
+            "icon_col": 8,
             "icon_row": 1,
             "localized_name": {
                 "en": "Burner inserter"
@@ -726,7 +958,7 @@
         },
         "burner-mining-drill": {
             "group": "production",
-            "icon_col": 10,
+            "icon_col": 9,
             "icon_row": 1,
             "localized_name": {
                 "en": "Burner mining drill"
@@ -739,7 +971,7 @@
         },
         "cannon-shell": {
             "group": "combat",
-            "icon_col": 11,
+            "icon_col": 10,
             "icon_row": 1,
             "localized_name": {
                 "en": "Cannon shell"
@@ -752,7 +984,7 @@
         },
         "car": {
             "group": "logistics",
-            "icon_col": 12,
+            "icon_col": 11,
             "icon_row": 1,
             "localized_name": {
                 "en": "Car"
@@ -765,7 +997,7 @@
         },
         "cargo-wagon": {
             "group": "logistics",
-            "icon_col": 13,
+            "icon_col": 12,
             "icon_row": 1,
             "localized_name": {
                 "en": "Cargo wagon"
@@ -773,12 +1005,12 @@
             "name": "cargo-wagon",
             "order": "a[train-system]-g[cargo-wagon]",
             "stack_size": 5,
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "item-with-entity-data"
         },
         "centrifuge": {
             "group": "production",
-            "icon_col": 14,
+            "icon_col": 13,
             "icon_row": 1,
             "localized_name": {
                 "en": "Centrifuge"
@@ -791,8 +1023,8 @@
         },
         "chemical-plant": {
             "group": "production",
-            "icon_col": 0,
-            "icon_row": 2,
+            "icon_col": 14,
+            "icon_row": 1,
             "localized_name": {
                 "en": "Chemical plant"
             },
@@ -804,7 +1036,7 @@
         },
         "chemical-science-pack": {
             "group": "intermediate-products",
-            "icon_col": 1,
+            "icon_col": 0,
             "icon_row": 2,
             "localized_name": {
                 "en": "Chemical science pack"
@@ -817,7 +1049,7 @@
         },
         "cliff-explosives": {
             "group": "logistics",
-            "icon_col": 2,
+            "icon_col": 1,
             "icon_row": 2,
             "localized_name": {
                 "en": "Cliff explosives"
@@ -830,7 +1062,7 @@
         },
         "cluster-grenade": {
             "group": "combat",
-            "icon_col": 4,
+            "icon_col": 3,
             "icon_row": 2,
             "localized_name": {
                 "en": "Cluster grenade"
@@ -845,7 +1077,7 @@
             "fuel_category": "chemical",
             "fuel_value": 4000000,
             "group": "intermediate-products",
-            "icon_col": 6,
+            "icon_col": 4,
             "icon_row": 2,
             "localized_name": {
                 "en": "Coal"
@@ -858,7 +1090,7 @@
         },
         "coin": {
             "group": "intermediate-products",
-            "icon_col": 8,
+            "icon_col": 6,
             "icon_row": 2,
             "localized_name": {
                 "en": "Coin"
@@ -871,7 +1103,7 @@
         },
         "combat-shotgun": {
             "group": "combat",
-            "icon_col": 9,
+            "icon_col": 7,
             "icon_row": 2,
             "localized_name": {
                 "en": "Combat shotgun"
@@ -882,22 +1114,9 @@
             "subgroup": "gun",
             "type": "gun"
         },
-        "compilatron-chest": {
-            "group": "logistics",
-            "icon_col": 10,
-            "icon_row": 2,
-            "localized_name": {
-                "en": "Compilatron chest"
-            },
-            "name": "compilatron-chest",
-            "order": "a[items]-d[compilatron-chest]",
-            "stack_size": 50,
-            "subgroup": "storage",
-            "type": "item"
-        },
         "computer": {
             "group": "combat",
-            "icon_col": 11,
+            "icon_col": 8,
             "icon_row": 2,
             "localized_name": {
                 "en": "Computer"
@@ -910,7 +1129,7 @@
         },
         "concrete": {
             "group": "logistics",
-            "icon_col": 12,
+            "icon_col": 9,
             "icon_row": 2,
             "localized_name": {
                 "en": "Concrete"
@@ -923,7 +1142,7 @@
         },
         "constant-combinator": {
             "group": "logistics",
-            "icon_col": 13,
+            "icon_col": 10,
             "icon_row": 2,
             "localized_name": {
                 "en": "Constant combinator"
@@ -936,7 +1155,7 @@
         },
         "construction-robot": {
             "group": "logistics",
-            "icon_col": 14,
+            "icon_col": 11,
             "icon_row": 2,
             "localized_name": {
                 "en": "Construction robot"
@@ -949,8 +1168,8 @@
         },
         "copper-cable": {
             "group": "intermediate-products",
-            "icon_col": 0,
-            "icon_row": 3,
+            "icon_col": 12,
+            "icon_row": 2,
             "localized_name": {
                 "en": "Copper cable"
             },
@@ -962,8 +1181,8 @@
         },
         "copper-ore": {
             "group": "intermediate-products",
-            "icon_col": 2,
-            "icon_row": 3,
+            "icon_col": 13,
+            "icon_row": 2,
             "localized_name": {
                 "en": "Copper ore"
             },
@@ -975,8 +1194,8 @@
         },
         "copper-plate": {
             "group": "intermediate-products",
-            "icon_col": 3,
-            "icon_row": 3,
+            "icon_col": 14,
+            "icon_row": 2,
             "localized_name": {
                 "en": "Copper plate"
             },
@@ -986,9 +1205,139 @@
             "subgroup": "raw-material",
             "type": "item"
         },
+        "crash-site-assembling-machine-1-broken": {
+            "group": "production",
+            "icon_col": 0,
+            "icon_row": 3,
+            "localized_name": {
+                "en": "Damaged assembling machine"
+            },
+            "name": "crash-site-assembling-machine-1-broken",
+            "order": "x[crash-site-assembling-machine-1-broken]",
+            "stack_size": 1,
+            "subgroup": "crash-site",
+            "type": "item"
+        },
+        "crash-site-assembling-machine-1-repaired": {
+            "group": "production",
+            "icon_col": 1,
+            "icon_row": 3,
+            "localized_name": {
+                "en": "Repaired assembling machine"
+            },
+            "name": "crash-site-assembling-machine-1-repaired",
+            "order": "x[crash-site-assembling-machine-1-repaired]",
+            "stack_size": 1,
+            "subgroup": "crash-site",
+            "type": "item"
+        },
+        "crash-site-assembling-machine-2-broken": {
+            "group": "production",
+            "icon_col": 2,
+            "icon_row": 3,
+            "localized_name": {
+                "en": "Damaged assembling machine"
+            },
+            "name": "crash-site-assembling-machine-2-broken",
+            "order": "x[crash-site-assembling-machine-2-broken]",
+            "stack_size": 1,
+            "subgroup": "crash-site",
+            "type": "item"
+        },
+        "crash-site-assembling-machine-2-repaired": {
+            "group": "production",
+            "icon_col": 3,
+            "icon_row": 3,
+            "localized_name": {
+                "en": "Repaired assembling machine"
+            },
+            "name": "crash-site-assembling-machine-2-repaired",
+            "order": "x[crash-site-assembling-machine-2-repaired]",
+            "stack_size": 1,
+            "subgroup": "crash-site",
+            "type": "item"
+        },
+        "crash-site-chest-1": {
+            "group": "production",
+            "icon_col": 4,
+            "icon_row": 3,
+            "localized_name": {
+                "en": "Chest capsule"
+            },
+            "name": "crash-site-chest-1",
+            "order": "x[crash-site-chest]",
+            "stack_size": 1,
+            "subgroup": "crash-site",
+            "type": "item"
+        },
+        "crash-site-chest-2": {
+            "group": "production",
+            "icon_col": 4,
+            "icon_row": 3,
+            "localized_name": {
+                "en": "Chest capsule"
+            },
+            "name": "crash-site-chest-2",
+            "order": "x[crash-site-chest]",
+            "stack_size": 1,
+            "subgroup": "crash-site",
+            "type": "item"
+        },
+        "crash-site-electric-pole": {
+            "group": "production",
+            "icon_col": 5,
+            "icon_row": 3,
+            "localized_name": {
+                "en": "Electricity generator electric connection"
+            },
+            "name": "crash-site-electric-pole",
+            "order": "x[crash-site-electric-pole]",
+            "stack_size": 1,
+            "subgroup": "crash-site",
+            "type": "item"
+        },
+        "crash-site-generator": {
+            "group": "production",
+            "icon_col": 6,
+            "icon_row": 3,
+            "localized_name": {
+                "en": "Electricity generator"
+            },
+            "name": "crash-site-generator",
+            "order": "x[crash-site-generator]",
+            "stack_size": 1,
+            "subgroup": "crash-site",
+            "type": "item"
+        },
+        "crash-site-lab-broken": {
+            "group": "production",
+            "icon_col": 7,
+            "icon_row": 3,
+            "localized_name": {
+                "en": "Damaged lab"
+            },
+            "name": "crash-site-lab-broken",
+            "order": "x[crash-site-lab-broken]",
+            "stack_size": 1,
+            "subgroup": "crash-site",
+            "type": "item"
+        },
+        "crash-site-lab-repaired": {
+            "group": "production",
+            "icon_col": 8,
+            "icon_row": 3,
+            "localized_name": {
+                "en": "Repaired lab"
+            },
+            "name": "crash-site-lab-repaired",
+            "order": "x[crash-site-lab-repaired]",
+            "stack_size": 1,
+            "subgroup": "crash-site",
+            "type": "item"
+        },
         "crude-oil": {
             "group": "other",
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 3,
             "localized_name": {
                 "en": "Crude oil"
@@ -1000,7 +1349,7 @@
         },
         "decider-combinator": {
             "group": "logistics",
-            "icon_col": 6,
+            "icon_col": 11,
             "icon_row": 3,
             "localized_name": {
                 "en": "Decider combinator"
@@ -1013,7 +1362,7 @@
         },
         "deconstruction-planner": {
             "group": "production",
-            "icon_col": 7,
+            "icon_col": 12,
             "icon_row": 3,
             "localized_name": {
                 "en": "Deconstruction planner"
@@ -1026,7 +1375,7 @@
         },
         "defender-capsule": {
             "group": "combat",
-            "icon_col": 8,
+            "icon_col": 13,
             "icon_row": 3,
             "localized_name": {
                 "en": "Defender capsule"
@@ -1039,7 +1388,7 @@
         },
         "destroyer-capsule": {
             "group": "combat",
-            "icon_col": 9,
+            "icon_col": 14,
             "icon_row": 3,
             "localized_name": {
                 "en": "Destroyer capsule"
@@ -1052,34 +1401,34 @@
         },
         "discharge-defense-equipment": {
             "group": "combat",
-            "icon_col": 11,
-            "icon_row": 3,
+            "icon_col": 0,
+            "icon_row": 4,
             "localized_name": {
                 "en": "Discharge defense"
             },
             "name": "discharge-defense-equipment",
-            "order": "d[active-defense]-b[discharge-defense-equipment]",
+            "order": "b[active-defense]-b[discharge-defense-equipment]-a[equipment]",
             "stack_size": 20,
-            "subgroup": "equipment",
+            "subgroup": "military-equipment",
             "type": "item"
         },
         "discharge-defense-remote": {
             "group": "combat",
-            "icon_col": 12,
-            "icon_row": 3,
+            "icon_col": 1,
+            "icon_row": 4,
             "localized_name": {
                 "en": "Discharge defense remote"
             },
             "name": "discharge-defense-remote",
-            "order": "z",
+            "order": "b[active-defense]-b[discharge-defense-equipment]-b[remote]",
             "stack_size": 1,
-            "subgroup": "capsule",
+            "subgroup": "military-equipment",
             "type": "capsule"
         },
         "distractor-capsule": {
             "group": "combat",
-            "icon_col": 13,
-            "icon_row": 3,
+            "icon_col": 2,
+            "icon_row": 4,
             "localized_name": {
                 "en": "Distractor capsule"
             },
@@ -1091,7 +1440,7 @@
         },
         "dummy-steel-axe": {
             "group": "production",
-            "icon_col": 10,
+            "icon_col": 14,
             "icon_row": 13,
             "name": "dummy-steel-axe",
             "order": "a[mining]-b[steel-axe]",
@@ -1107,8 +1456,8 @@
                 }
             },
             "group": "production",
-            "icon_col": 14,
-            "icon_row": 3,
+            "icon_col": 3,
+            "icon_row": 4,
             "localized_name": {
                 "en": "Efficiency module"
             },
@@ -1126,7 +1475,7 @@
                 }
             },
             "group": "production",
-            "icon_col": 0,
+            "icon_col": 4,
             "icon_row": 4,
             "localized_name": {
                 "en": "Efficiency module 2"
@@ -1145,7 +1494,7 @@
                 }
             },
             "group": "production",
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 4,
             "localized_name": {
                 "en": "Efficiency module 3"
@@ -1157,21 +1506,21 @@
             "type": "module"
         },
         "electric-energy-interface": {
-            "group": "production",
+            "group": "other",
             "icon_col": 0,
             "icon_row": 0,
             "localized_name": {
                 "en": "Electric energy interface"
             },
             "name": "electric-energy-interface",
-            "order": "e[electric-energy-interface]-b[electric-energy-interface]",
+            "order": "a[electric-energy-interface]-b[electric-energy-interface]",
             "stack_size": 50,
-            "subgroup": "energy",
+            "subgroup": "other",
             "type": "item"
         },
         "electric-engine-unit": {
             "group": "intermediate-products",
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 4,
             "localized_name": {
                 "en": "Electric engine unit"
@@ -1184,7 +1533,7 @@
         },
         "electric-furnace": {
             "group": "production",
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 4,
             "localized_name": {
                 "en": "Electric furnace"
@@ -1197,7 +1546,7 @@
         },
         "electric-mining-drill": {
             "group": "production",
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 4,
             "localized_name": {
                 "en": "Electric mining drill"
@@ -1210,7 +1559,7 @@
         },
         "electronic-circuit": {
             "group": "intermediate-products",
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 4,
             "localized_name": {
                 "en": "Electronic circuit"
@@ -1223,7 +1572,7 @@
         },
         "empty-barrel": {
             "group": "intermediate-products",
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 4,
             "localized_name": {
                 "en": "Empty barrel"
@@ -1236,33 +1585,33 @@
         },
         "energy-shield-equipment": {
             "group": "combat",
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 4,
             "localized_name": {
                 "en": "Energy shield"
             },
             "name": "energy-shield-equipment",
-            "order": "b[shield]-a[energy-shield-equipment]",
+            "order": "a[shield]-a[energy-shield-equipment]",
             "stack_size": 20,
-            "subgroup": "equipment",
+            "subgroup": "military-equipment",
             "type": "item"
         },
         "energy-shield-mk2-equipment": {
             "group": "combat",
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 4,
             "localized_name": {
                 "en": "Energy shield MK2"
             },
             "name": "energy-shield-mk2-equipment",
-            "order": "b[shield]-b[energy-shield-equipment-mk2]",
+            "order": "a[shield]-b[energy-shield-equipment-mk2]",
             "stack_size": 20,
-            "subgroup": "equipment",
+            "subgroup": "military-equipment",
             "type": "item"
         },
         "engine-unit": {
             "group": "intermediate-products",
-            "icon_col": 9,
+            "icon_col": 13,
             "icon_row": 4,
             "localized_name": {
                 "en": "Engine unit"
@@ -1273,62 +1622,23 @@
             "subgroup": "intermediate-product",
             "type": "item"
         },
-        "escape-pod-assembler": {
-            "group": "production",
-            "icon_col": 8,
-            "icon_row": 0,
-            "localized_name": {
-                "en": "Repaired assembler"
-            },
-            "name": "escape-pod-assembler",
-            "order": "a[assembling-machine-0]",
-            "stack_size": 50,
-            "subgroup": "production-machine",
-            "type": "item"
-        },
-        "escape-pod-lab": {
-            "group": "production",
-            "icon_col": 8,
-            "icon_row": 7,
-            "localized_name": {
-                "en": "Repaired lab"
-            },
-            "name": "escape-pod-lab",
-            "order": "g[lab]",
-            "stack_size": 10,
-            "subgroup": "production-machine",
-            "type": "item"
-        },
-        "escape-pod-power": {
-            "group": "other",
-            "icon_col": 12,
-            "icon_row": 15,
-            "localized_name": {
-                "en": "Damaged reactor"
-            },
-            "name": "escape-pod-power",
-            "order": "zzz[infinite-power]",
-            "stack_size": 50,
-            "subgroup": "other",
-            "type": "item"
-        },
         "exoskeleton-equipment": {
             "group": "combat",
-            "icon_col": 10,
+            "icon_col": 14,
             "icon_row": 4,
             "localized_name": {
                 "en": "Exoskeleton"
             },
             "name": "exoskeleton-equipment",
-            "order": "e[exoskeleton]-a[exoskeleton-equipment]",
+            "order": "d[exoskeleton]-a[exoskeleton-equipment]",
             "stack_size": 20,
             "subgroup": "equipment",
             "type": "item"
         },
         "explosive-cannon-shell": {
             "group": "combat",
-            "icon_col": 11,
-            "icon_row": 4,
+            "icon_col": 0,
+            "icon_row": 5,
             "localized_name": {
                 "en": "Explosive cannon shell"
             },
@@ -1340,8 +1650,8 @@
         },
         "explosive-rocket": {
             "group": "combat",
-            "icon_col": 12,
-            "icon_row": 4,
+            "icon_col": 1,
+            "icon_row": 5,
             "localized_name": {
                 "en": "Explosive rocket"
             },
@@ -1353,8 +1663,8 @@
         },
         "explosive-uranium-cannon-shell": {
             "group": "combat",
-            "icon_col": 13,
-            "icon_row": 4,
+            "icon_col": 2,
+            "icon_row": 5,
             "localized_name": {
                 "en": "Explosive uranium cannon shell"
             },
@@ -1366,8 +1676,8 @@
         },
         "explosives": {
             "group": "intermediate-products",
-            "icon_col": 14,
-            "icon_row": 4,
+            "icon_col": 3,
+            "icon_row": 5,
             "localized_name": {
                 "en": "Explosives"
             },
@@ -1379,7 +1689,7 @@
         },
         "express-loader": {
             "group": "logistics",
-            "icon_col": 0,
+            "icon_col": 4,
             "icon_row": 5,
             "localized_name": {
                 "en": "Express loader"
@@ -1392,7 +1702,7 @@
         },
         "express-splitter": {
             "group": "logistics",
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 5,
             "localized_name": {
                 "en": "Express splitter"
@@ -1405,7 +1715,7 @@
         },
         "express-transport-belt": {
             "group": "logistics",
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 5,
             "localized_name": {
                 "en": "Express transport belt"
@@ -1418,7 +1728,7 @@
         },
         "express-underground-belt": {
             "group": "logistics",
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 5,
             "localized_name": {
                 "en": "Express underground belt"
@@ -1431,7 +1741,7 @@
         },
         "fast-inserter": {
             "group": "logistics",
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 5,
             "localized_name": {
                 "en": "Fast inserter"
@@ -1444,7 +1754,7 @@
         },
         "fast-loader": {
             "group": "logistics",
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 5,
             "localized_name": {
                 "en": "Fast loader"
@@ -1457,7 +1767,7 @@
         },
         "fast-splitter": {
             "group": "logistics",
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 5,
             "localized_name": {
                 "en": "Fast splitter"
@@ -1470,7 +1780,7 @@
         },
         "fast-transport-belt": {
             "group": "logistics",
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 5,
             "localized_name": {
                 "en": "Fast transport belt"
@@ -1483,7 +1793,7 @@
         },
         "fast-underground-belt": {
             "group": "logistics",
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 5,
             "localized_name": {
                 "en": "Fast underground belt"
@@ -1496,7 +1806,7 @@
         },
         "filter-inserter": {
             "group": "logistics",
-            "icon_col": 9,
+            "icon_col": 13,
             "icon_row": 5,
             "localized_name": {
                 "en": "Filter inserter"
@@ -1509,7 +1819,7 @@
         },
         "firearm-magazine": {
             "group": "combat",
-            "icon_col": 10,
+            "icon_col": 14,
             "icon_row": 5,
             "localized_name": {
                 "en": "Firearm magazine"
@@ -1522,8 +1832,8 @@
         },
         "flamethrower": {
             "group": "combat",
-            "icon_col": 12,
-            "icon_row": 5,
+            "icon_col": 1,
+            "icon_row": 6,
             "localized_name": {
                 "en": "Flamethrower"
             },
@@ -1535,8 +1845,8 @@
         },
         "flamethrower-ammo": {
             "group": "combat",
-            "icon_col": 13,
-            "icon_row": 5,
+            "icon_col": 2,
+            "icon_row": 6,
             "localized_name": {
                 "en": "Flamethrower ammo"
             },
@@ -1548,8 +1858,8 @@
         },
         "flamethrower-turret": {
             "group": "combat",
-            "icon_col": 14,
-            "icon_row": 5,
+            "icon_col": 3,
+            "icon_row": 6,
             "localized_name": {
                 "en": "Flamethrower turret"
             },
@@ -1559,9 +1869,20 @@
             "subgroup": "defensive-structure",
             "type": "item"
         },
+        "fluid-unknown": {
+            "group": "other",
+            "icon_col": 1,
+            "icon_row": 15,
+            "localized_name": {
+                "en": "Unknown fluid"
+            },
+            "name": "fluid-unknown",
+            "subgroup": "other",
+            "type": "fluid"
+        },
         "fluid-wagon": {
             "group": "logistics",
-            "icon_col": 0,
+            "icon_col": 4,
             "icon_row": 6,
             "localized_name": {
                 "en": "Fluid wagon"
@@ -1569,12 +1890,12 @@
             "name": "fluid-wagon",
             "order": "a[train-system]-h[fluid-wagon]",
             "stack_size": 5,
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "item-with-entity-data"
         },
         "flying-robot-frame": {
             "group": "intermediate-products",
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 6,
             "localized_name": {
                 "en": "Flying robot frame"
@@ -1587,7 +1908,7 @@
         },
         "fusion-reactor-equipment": {
             "group": "combat",
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 6,
             "localized_name": {
                 "en": "Portable fusion reactor"
@@ -1600,7 +1921,7 @@
         },
         "gate": {
             "group": "combat",
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 6,
             "localized_name": {
                 "en": "Gate"
@@ -1613,7 +1934,7 @@
         },
         "green-wire": {
             "group": "logistics",
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 6,
             "localized_name": {
                 "en": "Green wire"
@@ -1626,7 +1947,7 @@
         },
         "grenade": {
             "group": "combat",
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 6,
             "localized_name": {
                 "en": "Grenade"
@@ -1639,7 +1960,7 @@
         },
         "gun-turret": {
             "group": "combat",
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 6,
             "localized_name": {
                 "en": "Gun turret"
@@ -1652,7 +1973,7 @@
         },
         "hazard-concrete": {
             "group": "logistics",
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 6,
             "localized_name": {
                 "en": "Hazard concrete"
@@ -1665,47 +1986,47 @@
         },
         "heat-exchanger": {
             "group": "production",
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 6,
             "localized_name": {
                 "en": "Heat exchanger"
             },
             "name": "heat-exchanger",
-            "order": "f[nuclear-energy]-b[heat-exchanger]",
+            "order": "f[nuclear-energy]-c[heat-exchanger]",
             "stack_size": 50,
             "subgroup": "energy",
             "type": "item"
         },
         "heat-interface": {
-            "group": "production",
-            "icon_col": 9,
+            "group": "other",
+            "icon_col": 13,
             "icon_row": 6,
             "localized_name": {
                 "en": "Heat interface"
             },
             "name": "heat-interface",
-            "order": "f[heat-interface]",
+            "order": "b[heat-interface]",
             "stack_size": 20,
-            "subgroup": "energy",
+            "subgroup": "other",
             "type": "item"
         },
         "heat-pipe": {
             "group": "production",
-            "icon_col": 10,
+            "icon_col": 14,
             "icon_row": 6,
             "localized_name": {
                 "en": "Heat pipe"
             },
             "name": "heat-pipe",
-            "order": "f[nuclear-energy]-c[heat-pipe]",
+            "order": "f[nuclear-energy]-b[heat-pipe]",
             "stack_size": 50,
             "subgroup": "energy",
             "type": "item"
         },
         "heavy-armor": {
             "group": "combat",
-            "icon_col": 11,
-            "icon_row": 6,
+            "icon_col": 0,
+            "icon_row": 7,
             "localized_name": {
                 "en": "Heavy armor"
             },
@@ -1717,8 +2038,8 @@
         },
         "heavy-oil": {
             "group": "other",
-            "icon_col": 12,
-            "icon_row": 6,
+            "icon_col": 1,
+            "icon_row": 7,
             "localized_name": {
                 "en": "Heavy oil"
             },
@@ -1729,33 +2050,33 @@
         },
         "infinity-chest": {
             "group": "other",
-            "icon_col": 14,
-            "icon_row": 6,
+            "icon_col": 3,
+            "icon_row": 7,
             "localized_name": {
                 "en": "Infinity chest"
             },
             "name": "infinity-chest",
-            "order": "t[item]-o[infinity-chest]",
+            "order": "c[item]-o[infinity-chest]",
             "stack_size": 10,
             "subgroup": "other",
             "type": "item"
         },
         "infinity-pipe": {
             "group": "other",
-            "icon_col": 10,
-            "icon_row": 9,
+            "icon_col": 0,
+            "icon_row": 10,
             "localized_name": {
                 "en": "Infinity pipe"
             },
             "name": "infinity-pipe",
-            "order": "t[item]-o[infinity-pipe]",
+            "order": "d[item]-o[infinity-pipe]",
             "stack_size": 10,
             "subgroup": "other",
             "type": "item"
         },
         "inserter": {
             "group": "logistics",
-            "icon_col": 0,
+            "icon_col": 4,
             "icon_row": 7,
             "localized_name": {
                 "en": "Inserter"
@@ -1768,7 +2089,7 @@
         },
         "iron-chest": {
             "group": "logistics",
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 7,
             "localized_name": {
                 "en": "Iron chest"
@@ -1781,7 +2102,7 @@
         },
         "iron-gear-wheel": {
             "group": "intermediate-products",
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 7,
             "localized_name": {
                 "en": "Iron gear wheel"
@@ -1794,7 +2115,7 @@
         },
         "iron-ore": {
             "group": "intermediate-products",
-            "icon_col": 4,
+            "icon_col": 7,
             "icon_row": 7,
             "localized_name": {
                 "en": "Iron ore"
@@ -1807,7 +2128,7 @@
         },
         "iron-plate": {
             "group": "intermediate-products",
-            "icon_col": 5,
+            "icon_col": 8,
             "icon_row": 7,
             "localized_name": {
                 "en": "Iron plate"
@@ -1820,7 +2141,7 @@
         },
         "iron-stick": {
             "group": "intermediate-products",
-            "icon_col": 6,
+            "icon_col": 9,
             "icon_row": 7,
             "localized_name": {
                 "en": "Iron stick"
@@ -1831,9 +2152,21 @@
             "subgroup": "intermediate-product",
             "type": "item"
         },
+        "item-unknown": {
+            "group": "other",
+            "icon_col": 1,
+            "icon_row": 15,
+            "localized_name": {
+                "en": "Unknown item"
+            },
+            "name": "item-unknown",
+            "stack_size": 1,
+            "subgroup": "other",
+            "type": "item"
+        },
         "lab": {
             "group": "production",
-            "icon_col": 8,
+            "icon_col": 11,
             "icon_row": 7,
             "localized_name": {
                 "en": "Lab"
@@ -1846,7 +2179,7 @@
         },
         "land-mine": {
             "group": "combat",
-            "icon_col": 9,
+            "icon_col": 12,
             "icon_row": 7,
             "localized_name": {
                 "en": "Land mine"
@@ -1859,7 +2192,7 @@
         },
         "landfill": {
             "group": "logistics",
-            "icon_col": 10,
+            "icon_col": 13,
             "icon_row": 7,
             "localized_name": {
                 "en": "Landfill"
@@ -1872,7 +2205,7 @@
         },
         "laser-turret": {
             "group": "combat",
-            "icon_col": 11,
+            "icon_col": 14,
             "icon_row": 7,
             "localized_name": {
                 "en": "Laser turret"
@@ -1885,8 +2218,8 @@
         },
         "light-armor": {
             "group": "combat",
-            "icon_col": 12,
-            "icon_row": 7,
+            "icon_col": 0,
+            "icon_row": 8,
             "localized_name": {
                 "en": "Light armor"
             },
@@ -1898,8 +2231,8 @@
         },
         "light-oil": {
             "group": "other",
-            "icon_col": 13,
-            "icon_row": 7,
+            "icon_col": 1,
+            "icon_row": 8,
             "localized_name": {
                 "en": "Light oil"
             },
@@ -1910,7 +2243,7 @@
         },
         "loader": {
             "group": "logistics",
-            "icon_col": 0,
+            "icon_col": 3,
             "icon_row": 8,
             "localized_name": {
                 "en": "Loader"
@@ -1923,20 +2256,20 @@
         },
         "locomotive": {
             "group": "logistics",
-            "icon_col": 10,
-            "icon_row": 3,
+            "icon_col": 4,
+            "icon_row": 8,
             "localized_name": {
                 "en": "Locomotive"
             },
             "name": "locomotive",
-            "order": "a[train-system]-f[diesel-locomotive]",
+            "order": "a[train-system]-f[locomotive]",
             "stack_size": 5,
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "item-with-entity-data"
         },
         "logistic-chest-active-provider": {
             "group": "logistics",
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 8,
             "localized_name": {
                 "en": "Active provider chest"
@@ -1949,7 +2282,7 @@
         },
         "logistic-chest-buffer": {
             "group": "logistics",
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 8,
             "localized_name": {
                 "en": "Buffer chest"
@@ -1962,7 +2295,7 @@
         },
         "logistic-chest-passive-provider": {
             "group": "logistics",
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 8,
             "localized_name": {
                 "en": "Passive provider chest"
@@ -1975,7 +2308,7 @@
         },
         "logistic-chest-requester": {
             "group": "logistics",
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 8,
             "localized_name": {
                 "en": "Requester chest"
@@ -1988,7 +2321,7 @@
         },
         "logistic-chest-storage": {
             "group": "logistics",
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 8,
             "localized_name": {
                 "en": "Storage chest"
@@ -2001,7 +2334,7 @@
         },
         "logistic-robot": {
             "group": "logistics",
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 8,
             "localized_name": {
                 "en": "Logistic robot"
@@ -2014,7 +2347,7 @@
         },
         "logistic-science-pack": {
             "group": "intermediate-products",
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 8,
             "localized_name": {
                 "en": "Logistic science pack"
@@ -2027,7 +2360,7 @@
         },
         "long-handed-inserter": {
             "group": "logistics",
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 8,
             "localized_name": {
                 "en": "Long handed inserter"
@@ -2040,20 +2373,20 @@
         },
         "low-density-structure": {
             "group": "intermediate-products",
-            "icon_col": 0,
-            "icon_row": 12,
+            "icon_col": 13,
+            "icon_row": 8,
             "localized_name": {
                 "en": "Low density structure"
             },
             "name": "low-density-structure",
-            "order": "o[rocket-structure]",
+            "order": "o[low-density-structure]",
             "stack_size": 10,
             "subgroup": "intermediate-product",
             "type": "item"
         },
         "lubricant": {
             "group": "other",
-            "icon_col": 9,
+            "icon_col": 14,
             "icon_row": 8,
             "localized_name": {
                 "en": "Lubricant"
@@ -2065,8 +2398,8 @@
         },
         "medium-electric-pole": {
             "group": "logistics",
-            "icon_col": 10,
-            "icon_row": 8,
+            "icon_col": 0,
+            "icon_row": 9,
             "localized_name": {
                 "en": "Medium electric pole"
             },
@@ -2078,8 +2411,8 @@
         },
         "military-science-pack": {
             "group": "intermediate-products",
-            "icon_col": 11,
-            "icon_row": 8,
+            "icon_col": 1,
+            "icon_row": 9,
             "localized_name": {
                 "en": "Military science pack"
             },
@@ -2091,8 +2424,8 @@
         },
         "modular-armor": {
             "group": "combat",
-            "icon_col": 12,
-            "icon_row": 8,
+            "icon_col": 2,
+            "icon_row": 9,
             "localized_name": {
                 "en": "Modular armor"
             },
@@ -2104,8 +2437,8 @@
         },
         "night-vision-equipment": {
             "group": "combat",
-            "icon_col": 13,
-            "icon_row": 8,
+            "icon_col": 3,
+            "icon_row": 9,
             "localized_name": {
                 "en": "Nightvision"
             },
@@ -2119,8 +2452,8 @@
             "fuel_category": "chemical",
             "fuel_value": 1210000000.0,
             "group": "intermediate-products",
-            "icon_col": 14,
-            "icon_row": 8,
+            "icon_col": 4,
+            "icon_row": 9,
             "localized_name": {
                 "en": "Nuclear fuel"
             },
@@ -2132,7 +2465,7 @@
         },
         "nuclear-reactor": {
             "group": "production",
-            "icon_col": 1,
+            "icon_col": 6,
             "icon_row": 9,
             "localized_name": {
                 "en": "Nuclear reactor"
@@ -2145,7 +2478,7 @@
         },
         "offshore-pump": {
             "group": "production",
-            "icon_col": 2,
+            "icon_col": 7,
             "icon_row": 9,
             "localized_name": {
                 "en": "Offshore pump"
@@ -2158,7 +2491,7 @@
         },
         "oil-refinery": {
             "group": "production",
-            "icon_col": 3,
+            "icon_col": 8,
             "icon_row": 9,
             "localized_name": {
                 "en": "Oil refinery"
@@ -2171,20 +2504,20 @@
         },
         "personal-laser-defense-equipment": {
             "group": "combat",
-            "icon_col": 4,
+            "icon_col": 9,
             "icon_row": 9,
             "localized_name": {
                 "en": "Personal laser defense"
             },
             "name": "personal-laser-defense-equipment",
-            "order": "d[active-defense]-a[personal-laser-defense-equipment]",
+            "order": "b[active-defense]-a[personal-laser-defense-equipment]",
             "stack_size": 20,
-            "subgroup": "equipment",
+            "subgroup": "military-equipment",
             "type": "item"
         },
         "personal-roboport-equipment": {
             "group": "combat",
-            "icon_col": 5,
+            "icon_col": 10,
             "icon_row": 9,
             "localized_name": {
                 "en": "Personal roboport"
@@ -2197,7 +2530,7 @@
         },
         "personal-roboport-mk2-equipment": {
             "group": "combat",
-            "icon_col": 6,
+            "icon_col": 11,
             "icon_row": 9,
             "localized_name": {
                 "en": "Personal roboport MK2"
@@ -2210,7 +2543,7 @@
         },
         "petroleum-gas": {
             "group": "other",
-            "icon_col": 7,
+            "icon_col": 12,
             "icon_row": 9,
             "localized_name": {
                 "en": "Petroleum gas"
@@ -2222,7 +2555,7 @@
         },
         "piercing-rounds-magazine": {
             "group": "combat",
-            "icon_col": 8,
+            "icon_col": 13,
             "icon_row": 9,
             "localized_name": {
                 "en": "Piercing rounds magazine"
@@ -2235,7 +2568,7 @@
         },
         "piercing-shotgun-shell": {
             "group": "combat",
-            "icon_col": 9,
+            "icon_col": 14,
             "icon_row": 9,
             "localized_name": {
                 "en": "Piercing shotgun shells"
@@ -2248,8 +2581,8 @@
         },
         "pipe": {
             "group": "logistics",
-            "icon_col": 10,
-            "icon_row": 9,
+            "icon_col": 0,
+            "icon_row": 10,
             "localized_name": {
                 "en": "Pipe"
             },
@@ -2261,8 +2594,8 @@
         },
         "pipe-to-ground": {
             "group": "logistics",
-            "icon_col": 11,
-            "icon_row": 9,
+            "icon_col": 1,
+            "icon_row": 10,
             "localized_name": {
                 "en": "Pipe to ground"
             },
@@ -2274,8 +2607,8 @@
         },
         "pistol": {
             "group": "combat",
-            "icon_col": 12,
-            "icon_row": 9,
+            "icon_col": 2,
+            "icon_row": 10,
             "localized_name": {
                 "en": "Pistol"
             },
@@ -2287,8 +2620,8 @@
         },
         "plastic-bar": {
             "group": "intermediate-products",
-            "icon_col": 13,
-            "icon_row": 9,
+            "icon_col": 3,
+            "icon_row": 10,
             "localized_name": {
                 "en": "Plastic bar"
             },
@@ -2300,8 +2633,8 @@
         },
         "player-port": {
             "group": "combat",
-            "icon_col": 14,
-            "icon_row": 9,
+            "icon_col": 4,
+            "icon_row": 10,
             "localized_name": {
                 "en": "Player port"
             },
@@ -2313,7 +2646,7 @@
         },
         "poison-capsule": {
             "group": "combat",
-            "icon_col": 0,
+            "icon_col": 5,
             "icon_row": 10,
             "localized_name": {
                 "en": "Poison capsule"
@@ -2324,22 +2657,9 @@
             "subgroup": "capsule",
             "type": "capsule"
         },
-        "pollution": {
-            "group": "intermediate-products",
-            "icon_col": 1,
-            "icon_row": 10,
-            "localized_name": {
-                "en": "Pollution"
-            },
-            "name": "pollution",
-            "order": "a[fluid]-b[pollution]",
-            "stack_size": 500,
-            "subgroup": "intermediate-product",
-            "type": "item"
-        },
         "power-armor": {
             "group": "combat",
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 10,
             "localized_name": {
                 "en": "Power armor"
@@ -2352,7 +2672,7 @@
         },
         "power-armor-mk2": {
             "group": "combat",
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 10,
             "localized_name": {
                 "en": "Power armor MK2"
@@ -2365,7 +2685,7 @@
         },
         "power-switch": {
             "group": "logistics",
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 10,
             "localized_name": {
                 "en": "Power switch"
@@ -2378,7 +2698,7 @@
         },
         "processing-unit": {
             "group": "intermediate-products",
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 10,
             "localized_name": {
                 "en": "Processing unit"
@@ -2391,7 +2711,7 @@
         },
         "production-science-pack": {
             "group": "intermediate-products",
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 10,
             "localized_name": {
                 "en": "Production science pack"
@@ -2419,7 +2739,7 @@
                 }
             },
             "group": "production",
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 10,
             "limitation": [ "sulfuric-acid", "basic-oil-processing", "advanced-oil-processing", "coal-liquefaction", "heavy-oil-cracking", "light-oil-cracking", "solid-fuel-from-light-oil", "solid-fuel-from-heavy-oil", "solid-fuel-from-petroleum-gas", "lubricant", "iron-plate", "copper-plate", "steel-plate", "stone-brick", "sulfur", "plastic-bar", "empty-barrel", "uranium-processing", "copper-cable", "iron-stick", "iron-gear-wheel", "electronic-circuit", "advanced-circuit", "processing-unit", "engine-unit", "electric-engine-unit", "uranium-fuel-cell", "explosives", "battery", "flying-robot-frame", "low-density-structure", "rocket-fuel", "rocket-control-unit", "rocket-part", "automation-science-pack", "logistic-science-pack", "chemical-science-pack", "military-science-pack", "production-science-pack", "utility-science-pack", "kovarex-enrichment-process" ],
             "localized_name": {
@@ -2448,7 +2768,7 @@
                 }
             },
             "group": "production",
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 10,
             "limitation": [ "sulfuric-acid", "basic-oil-processing", "advanced-oil-processing", "coal-liquefaction", "heavy-oil-cracking", "light-oil-cracking", "solid-fuel-from-light-oil", "solid-fuel-from-heavy-oil", "solid-fuel-from-petroleum-gas", "lubricant", "iron-plate", "copper-plate", "steel-plate", "stone-brick", "sulfur", "plastic-bar", "empty-barrel", "uranium-processing", "copper-cable", "iron-stick", "iron-gear-wheel", "electronic-circuit", "advanced-circuit", "processing-unit", "engine-unit", "electric-engine-unit", "uranium-fuel-cell", "explosives", "battery", "flying-robot-frame", "low-density-structure", "rocket-fuel", "rocket-control-unit", "rocket-part", "automation-science-pack", "logistic-science-pack", "chemical-science-pack", "military-science-pack", "production-science-pack", "utility-science-pack", "kovarex-enrichment-process" ],
             "localized_name": {
@@ -2477,7 +2797,7 @@
                 }
             },
             "group": "production",
-            "icon_col": 9,
+            "icon_col": 13,
             "icon_row": 10,
             "limitation": [ "sulfuric-acid", "basic-oil-processing", "advanced-oil-processing", "coal-liquefaction", "heavy-oil-cracking", "light-oil-cracking", "solid-fuel-from-light-oil", "solid-fuel-from-heavy-oil", "solid-fuel-from-petroleum-gas", "lubricant", "iron-plate", "copper-plate", "steel-plate", "stone-brick", "sulfur", "plastic-bar", "empty-barrel", "uranium-processing", "copper-cable", "iron-stick", "iron-gear-wheel", "electronic-circuit", "advanced-circuit", "processing-unit", "engine-unit", "electric-engine-unit", "uranium-fuel-cell", "explosives", "battery", "flying-robot-frame", "low-density-structure", "rocket-fuel", "rocket-control-unit", "rocket-part", "automation-science-pack", "logistic-science-pack", "chemical-science-pack", "military-science-pack", "production-science-pack", "utility-science-pack", "kovarex-enrichment-process" ],
             "localized_name": {
@@ -2491,7 +2811,7 @@
         },
         "programmable-speaker": {
             "group": "logistics",
-            "icon_col": 10,
+            "icon_col": 14,
             "icon_row": 10,
             "localized_name": {
                 "en": "Programmable speaker"
@@ -2504,8 +2824,8 @@
         },
         "pump": {
             "group": "logistics",
-            "icon_col": 11,
-            "icon_row": 10,
+            "icon_col": 0,
+            "icon_row": 11,
             "localized_name": {
                 "en": "Pump"
             },
@@ -2517,8 +2837,8 @@
         },
         "pumpjack": {
             "group": "production",
-            "icon_col": 12,
-            "icon_row": 10,
+            "icon_col": 1,
+            "icon_row": 11,
             "localized_name": {
                 "en": "Pumpjack"
             },
@@ -2530,8 +2850,8 @@
         },
         "radar": {
             "group": "combat",
-            "icon_col": 13,
-            "icon_row": 10,
+            "icon_col": 2,
+            "icon_row": 11,
             "localized_name": {
                 "en": "Radar"
             },
@@ -2543,20 +2863,20 @@
         },
         "rail": {
             "group": "logistics",
-            "icon_col": 14,
-            "icon_row": 10,
+            "icon_col": 3,
+            "icon_row": 11,
             "localized_name": {
                 "en": "<dummy name>"
             },
             "name": "rail",
             "order": "a[train-system]-a[rail]",
             "stack_size": 100,
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "rail-planner"
         },
         "rail-chain-signal": {
             "group": "logistics",
-            "icon_col": 0,
+            "icon_col": 4,
             "icon_row": 11,
             "localized_name": {
                 "en": "Rail chain signal"
@@ -2564,12 +2884,12 @@
             "name": "rail-chain-signal",
             "order": "a[train-system]-e[rail-signal-chain]",
             "stack_size": 50,
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "item"
         },
         "rail-signal": {
             "group": "logistics",
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 11,
             "localized_name": {
                 "en": "Rail signal"
@@ -2577,12 +2897,12 @@
             "name": "rail-signal",
             "order": "a[train-system]-d[rail-signal]",
             "stack_size": 50,
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "item"
         },
         "railgun": {
             "group": "combat",
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 11,
             "localized_name": {
                 "en": "Railgun"
@@ -2595,7 +2915,7 @@
         },
         "railgun-dart": {
             "group": "combat",
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 11,
             "localized_name": {
                 "en": "Railgun darts"
@@ -2608,8 +2928,8 @@
         },
         "raw-fish": {
             "group": "intermediate-products",
-            "icon_col": 11,
-            "icon_row": 5,
+            "icon_col": 0,
+            "icon_row": 6,
             "localized_name": {
                 "en": "Raw fish"
             },
@@ -2621,7 +2941,7 @@
         },
         "red-wire": {
             "group": "logistics",
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 11,
             "localized_name": {
                 "en": "Red wire"
@@ -2634,7 +2954,7 @@
         },
         "refined-concrete": {
             "group": "logistics",
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 11,
             "localized_name": {
                 "en": "Refined concrete"
@@ -2647,7 +2967,7 @@
         },
         "refined-hazard-concrete": {
             "group": "logistics",
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 11,
             "localized_name": {
                 "en": "Refined hazard concrete"
@@ -2660,7 +2980,7 @@
         },
         "repair-pack": {
             "group": "production",
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 11,
             "localized_name": {
                 "en": "Repair pack"
@@ -2673,7 +2993,7 @@
         },
         "roboport": {
             "group": "logistics",
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 11,
             "localized_name": {
                 "en": "Roboport"
@@ -2686,7 +3006,7 @@
         },
         "rocket": {
             "group": "combat",
-            "icon_col": 9,
+            "icon_col": 13,
             "icon_row": 11,
             "localized_name": {
                 "en": "Rocket"
@@ -2699,7 +3019,7 @@
         },
         "rocket-control-unit": {
             "group": "intermediate-products",
-            "icon_col": 10,
+            "icon_col": 14,
             "icon_row": 11,
             "localized_name": {
                 "en": "Rocket control unit"
@@ -2714,8 +3034,8 @@
             "fuel_category": "chemical",
             "fuel_value": 100000000,
             "group": "intermediate-products",
-            "icon_col": 11,
-            "icon_row": 11,
+            "icon_col": 0,
+            "icon_row": 12,
             "localized_name": {
                 "en": "Rocket fuel"
             },
@@ -2727,8 +3047,8 @@
         },
         "rocket-launcher": {
             "group": "combat",
-            "icon_col": 12,
-            "icon_row": 11,
+            "icon_col": 1,
+            "icon_row": 12,
             "localized_name": {
                 "en": "Rocket launcher"
             },
@@ -2740,8 +3060,8 @@
         },
         "rocket-part": {
             "group": "intermediate-products",
-            "icon_col": 13,
-            "icon_row": 11,
+            "icon_col": 2,
+            "icon_row": 12,
             "localized_name": {
                 "en": "Rocket part"
             },
@@ -2753,8 +3073,8 @@
         },
         "rocket-silo": {
             "group": "combat",
-            "icon_col": 14,
-            "icon_row": 11,
+            "icon_col": 3,
+            "icon_row": 12,
             "localized_name": {
                 "en": "Rocket silo"
             },
@@ -2766,7 +3086,7 @@
         },
         "satellite": {
             "group": "intermediate-products",
-            "icon_col": 1,
+            "icon_col": 4,
             "icon_row": 12,
             "localized_name": {
                 "en": "Satellite"
@@ -2779,7 +3099,7 @@
         },
         "shotgun": {
             "group": "combat",
-            "icon_col": 2,
+            "icon_col": 5,
             "icon_row": 12,
             "localized_name": {
                 "en": "Shotgun"
@@ -2792,7 +3112,7 @@
         },
         "shotgun-shell": {
             "group": "combat",
-            "icon_col": 3,
+            "icon_col": 6,
             "icon_row": 12,
             "localized_name": {
                 "en": "Shotgun shells"
@@ -2805,8 +3125,8 @@
         },
         "simple-entity-with-force": {
             "group": "other",
-            "icon_col": 11,
-            "icon_row": 13,
+            "icon_col": 0,
+            "icon_row": 14,
             "localized_name": {
                 "en": "Simple entity with force"
             },
@@ -2818,7 +3138,7 @@
         },
         "simple-entity-with-owner": {
             "group": "other",
-            "icon_col": 11,
+            "icon_col": 14,
             "icon_row": 15,
             "localized_name": {
                 "en": "Simple entity with owner"
@@ -2831,7 +3151,7 @@
         },
         "slowdown-capsule": {
             "group": "combat",
-            "icon_col": 5,
+            "icon_col": 8,
             "icon_row": 12,
             "localized_name": {
                 "en": "Slowdown capsule"
@@ -2844,7 +3164,7 @@
         },
         "small-electric-pole": {
             "group": "logistics",
-            "icon_col": 6,
+            "icon_col": 9,
             "icon_row": 12,
             "localized_name": {
                 "en": "Small electric pole"
@@ -2857,7 +3177,7 @@
         },
         "small-lamp": {
             "group": "logistics",
-            "icon_col": 7,
+            "icon_col": 10,
             "icon_row": 12,
             "localized_name": {
                 "en": "Lamp"
@@ -2870,20 +3190,20 @@
         },
         "small-plane": {
             "group": "logistics",
-            "icon_col": 8,
+            "icon_col": 11,
             "icon_row": 12,
             "localized_name": {
                 "en": "Small plane"
             },
             "name": "small-plane",
-            "order": "b[personal-transport]-c[small-plane]",
+            "order": "b[personal-transport]-x[small-plane]",
             "stack_size": 1,
             "subgroup": "transport",
             "type": "item"
         },
         "solar-panel": {
             "group": "production",
-            "icon_col": 9,
+            "icon_col": 12,
             "icon_row": 12,
             "localized_name": {
                 "en": "Solar panel"
@@ -2896,7 +3216,7 @@
         },
         "solar-panel-equipment": {
             "group": "combat",
-            "icon_col": 10,
+            "icon_col": 13,
             "icon_row": 12,
             "localized_name": {
                 "en": "Portable solar panel"
@@ -2911,7 +3231,7 @@
             "fuel_category": "chemical",
             "fuel_value": 12000000,
             "group": "intermediate-products",
-            "icon_col": 11,
+            "icon_col": 14,
             "icon_row": 12,
             "localized_name": {
                 "en": "Solid fuel"
@@ -2924,7 +3244,7 @@
         },
         "space-science-pack": {
             "group": "intermediate-products",
-            "icon_col": 0,
+            "icon_col": 3,
             "icon_row": 13,
             "localized_name": {
                 "en": "Space science pack"
@@ -2946,7 +3266,7 @@
                 }
             },
             "group": "production",
-            "icon_col": 1,
+            "icon_col": 4,
             "icon_row": 13,
             "localized_name": {
                 "en": "Speed module"
@@ -2968,7 +3288,7 @@
                 }
             },
             "group": "production",
-            "icon_col": 2,
+            "icon_col": 5,
             "icon_row": 13,
             "localized_name": {
                 "en": "Speed module 2"
@@ -2990,7 +3310,7 @@
                 }
             },
             "group": "production",
-            "icon_col": 3,
+            "icon_col": 6,
             "icon_row": 13,
             "localized_name": {
                 "en": "Speed module 3"
@@ -3001,9 +3321,74 @@
             "subgroup": "module",
             "type": "module"
         },
+        "spidertron": {
+            "group": "logistics",
+            "icon_col": 7,
+            "icon_row": 13,
+            "localized_name": {
+                "en": "Spidertron"
+            },
+            "name": "spidertron",
+            "order": "b[personal-transport]-c[spidertron]-a[spider]",
+            "stack_size": 1,
+            "subgroup": "transport",
+            "type": "item-with-entity-data"
+        },
+        "spidertron-rocket-launcher-1": {
+            "group": "combat",
+            "icon_col": 1,
+            "icon_row": 12,
+            "localized_name": {
+                "en": "<dummy name>"
+            },
+            "name": "spidertron-rocket-launcher-1",
+            "order": "z[spider]-a[rocket-launcher]",
+            "stack_size": 1,
+            "subgroup": "gun",
+            "type": "gun"
+        },
+        "spidertron-rocket-launcher-2": {
+            "group": "combat",
+            "icon_col": 1,
+            "icon_row": 12,
+            "localized_name": {
+                "en": "<dummy name>"
+            },
+            "name": "spidertron-rocket-launcher-2",
+            "order": "z[spider]-a[rocket-launcher]",
+            "stack_size": 1,
+            "subgroup": "gun",
+            "type": "gun"
+        },
+        "spidertron-rocket-launcher-3": {
+            "group": "combat",
+            "icon_col": 1,
+            "icon_row": 12,
+            "localized_name": {
+                "en": "<dummy name>"
+            },
+            "name": "spidertron-rocket-launcher-3",
+            "order": "z[spider]-a[rocket-launcher]",
+            "stack_size": 1,
+            "subgroup": "gun",
+            "type": "gun"
+        },
+        "spidertron-rocket-launcher-4": {
+            "group": "combat",
+            "icon_col": 1,
+            "icon_row": 12,
+            "localized_name": {
+                "en": "<dummy name>"
+            },
+            "name": "spidertron-rocket-launcher-4",
+            "order": "z[spider]-a[rocket-launcher]",
+            "stack_size": 1,
+            "subgroup": "gun",
+            "type": "gun"
+        },
         "splitter": {
             "group": "logistics",
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 13,
             "localized_name": {
                 "en": "Splitter"
@@ -3016,7 +3401,7 @@
         },
         "stack-filter-inserter": {
             "group": "logistics",
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 13,
             "localized_name": {
                 "en": "Stack filter inserter"
@@ -3029,7 +3414,7 @@
         },
         "stack-inserter": {
             "group": "logistics",
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 13,
             "localized_name": {
                 "en": "Stack inserter"
@@ -3042,7 +3427,7 @@
         },
         "steam": {
             "group": "other",
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 13,
             "localized_name": {
                 "en": "Steam"
@@ -3054,7 +3439,7 @@
         },
         "steam-engine": {
             "group": "production",
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 13,
             "localized_name": {
                 "en": "Steam engine"
@@ -3067,21 +3452,21 @@
         },
         "steam-turbine": {
             "group": "production",
-            "icon_col": 9,
+            "icon_col": 13,
             "icon_row": 13,
             "localized_name": {
                 "en": "Steam turbine"
             },
             "name": "steam-turbine",
-            "order": "b[steam-power]-c[steam-turbine]",
+            "order": "f[nuclear-energy]-d[steam-turbine]",
             "stack_size": 10,
             "subgroup": "energy",
             "type": "item"
         },
         "steel-chest": {
             "group": "logistics",
-            "icon_col": 11,
-            "icon_row": 13,
+            "icon_col": 0,
+            "icon_row": 14,
             "localized_name": {
                 "en": "Steel chest"
             },
@@ -3093,8 +3478,8 @@
         },
         "steel-furnace": {
             "group": "production",
-            "icon_col": 12,
-            "icon_row": 13,
+            "icon_col": 1,
+            "icon_row": 14,
             "localized_name": {
                 "en": "Steel furnace"
             },
@@ -3106,8 +3491,8 @@
         },
         "steel-plate": {
             "group": "intermediate-products",
-            "icon_col": 13,
-            "icon_row": 13,
+            "icon_col": 2,
+            "icon_row": 14,
             "localized_name": {
                 "en": "Steel plate"
             },
@@ -3119,8 +3504,8 @@
         },
         "stone": {
             "group": "intermediate-products",
-            "icon_col": 14,
-            "icon_row": 13,
+            "icon_col": 3,
+            "icon_row": 14,
             "localized_name": {
                 "en": "Stone"
             },
@@ -3132,7 +3517,7 @@
         },
         "stone-brick": {
             "group": "logistics",
-            "icon_col": 1,
+            "icon_col": 4,
             "icon_row": 14,
             "localized_name": {
                 "en": "Stone brick"
@@ -3145,7 +3530,7 @@
         },
         "stone-furnace": {
             "group": "production",
-            "icon_col": 2,
+            "icon_col": 5,
             "icon_row": 14,
             "localized_name": {
                 "en": "Stone furnace"
@@ -3158,7 +3543,7 @@
         },
         "stone-wall": {
             "group": "combat",
-            "icon_col": 8,
+            "icon_col": 11,
             "icon_row": 15,
             "localized_name": {
                 "en": "Wall"
@@ -3171,7 +3556,7 @@
         },
         "storage-tank": {
             "group": "logistics",
-            "icon_col": 3,
+            "icon_col": 6,
             "icon_row": 14,
             "localized_name": {
                 "en": "Storage tank"
@@ -3184,7 +3569,7 @@
         },
         "submachine-gun": {
             "group": "combat",
-            "icon_col": 4,
+            "icon_col": 7,
             "icon_row": 14,
             "localized_name": {
                 "en": "Submachine gun"
@@ -3197,7 +3582,7 @@
         },
         "substation": {
             "group": "logistics",
-            "icon_col": 5,
+            "icon_col": 8,
             "icon_row": 14,
             "localized_name": {
                 "en": "Substation"
@@ -3210,7 +3595,7 @@
         },
         "sulfur": {
             "group": "intermediate-products",
-            "icon_col": 6,
+            "icon_col": 9,
             "icon_row": 14,
             "localized_name": {
                 "en": "Sulfur"
@@ -3223,7 +3608,7 @@
         },
         "sulfuric-acid": {
             "group": "other",
-            "icon_col": 7,
+            "icon_col": 10,
             "icon_row": 14,
             "localized_name": {
                 "en": "Sulfuric acid"
@@ -3235,7 +3620,7 @@
         },
         "tank": {
             "group": "logistics",
-            "icon_col": 8,
+            "icon_col": 11,
             "icon_row": 14,
             "localized_name": {
                 "en": "Tank"
@@ -3248,7 +3633,7 @@
         },
         "tank-cannon": {
             "group": "combat",
-            "icon_col": 9,
+            "icon_col": 12,
             "icon_row": 14,
             "localized_name": {
                 "en": "Tank cannon"
@@ -3261,8 +3646,8 @@
         },
         "tank-flamethrower": {
             "group": "combat",
-            "icon_col": 12,
-            "icon_row": 5,
+            "icon_col": 1,
+            "icon_row": 6,
             "localized_name": {
                 "en": "Vehicle flamethrower"
             },
@@ -3274,7 +3659,7 @@
         },
         "tank-machine-gun": {
             "group": "combat",
-            "icon_col": 4,
+            "icon_col": 7,
             "icon_row": 14,
             "localized_name": {
                 "en": "Vehicle machine gun"
@@ -3287,7 +3672,7 @@
         },
         "train-stop": {
             "group": "logistics",
-            "icon_col": 10,
+            "icon_col": 13,
             "icon_row": 14,
             "localized_name": {
                 "en": "Train stop"
@@ -3295,12 +3680,12 @@
             "name": "train-stop",
             "order": "a[train-system]-c[train-stop]",
             "stack_size": 10,
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "item"
         },
         "transport-belt": {
             "group": "logistics",
-            "icon_col": 11,
+            "icon_col": 14,
             "icon_row": 14,
             "localized_name": {
                 "en": "Transport belt"
@@ -3313,8 +3698,8 @@
         },
         "underground-belt": {
             "group": "logistics",
-            "icon_col": 12,
-            "icon_row": 14,
+            "icon_col": 0,
+            "icon_row": 15,
             "localized_name": {
                 "en": "Underground belt"
             },
@@ -3326,8 +3711,8 @@
         },
         "uranium-235": {
             "group": "intermediate-products",
-            "icon_col": 13,
-            "icon_row": 14,
+            "icon_col": 2,
+            "icon_row": 15,
             "localized_name": {
                 "en": "Uranium-235"
             },
@@ -3339,8 +3724,8 @@
         },
         "uranium-238": {
             "group": "intermediate-products",
-            "icon_col": 14,
-            "icon_row": 14,
+            "icon_col": 3,
+            "icon_row": 15,
             "localized_name": {
                 "en": "Uranium-238"
             },
@@ -3352,7 +3737,7 @@
         },
         "uranium-cannon-shell": {
             "group": "combat",
-            "icon_col": 0,
+            "icon_col": 4,
             "icon_row": 15,
             "localized_name": {
                 "en": "Uranium cannon shell"
@@ -3367,7 +3752,7 @@
             "fuel_category": "nuclear",
             "fuel_value": 8000000000,
             "group": "intermediate-products",
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 15,
             "localized_name": {
                 "en": "Uranium fuel cell"
@@ -3380,7 +3765,7 @@
         },
         "uranium-ore": {
             "group": "intermediate-products",
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 15,
             "localized_name": {
                 "en": "Uranium ore"
@@ -3393,7 +3778,7 @@
         },
         "uranium-rounds-magazine": {
             "group": "combat",
-            "icon_col": 5,
+            "icon_col": 8,
             "icon_row": 15,
             "localized_name": {
                 "en": "Uranium rounds magazine"
@@ -3406,10 +3791,10 @@
         },
         "used-up-uranium-fuel-cell": {
             "group": "intermediate-products",
-            "icon_col": 6,
+            "icon_col": 9,
             "icon_row": 15,
             "localized_name": {
-                "en": "Used up uranium fuel cell"
+                "en": "Used-up uranium fuel cell"
             },
             "name": "used-up-uranium-fuel-cell",
             "order": "r[used-up-uranium-fuel-cell]",
@@ -3419,7 +3804,7 @@
         },
         "utility-science-pack": {
             "group": "intermediate-products",
-            "icon_col": 7,
+            "icon_col": 10,
             "icon_row": 15,
             "localized_name": {
                 "en": "Utility science pack"
@@ -3432,7 +3817,7 @@
         },
         "vehicle-machine-gun": {
             "group": "combat",
-            "icon_col": 4,
+            "icon_col": 7,
             "icon_row": 14,
             "localized_name": {
                 "en": "Vehicle machine gun"
@@ -3445,7 +3830,7 @@
         },
         "water": {
             "group": "other",
-            "icon_col": 9,
+            "icon_col": 12,
             "icon_row": 15,
             "localized_name": {
                 "en": "Water"
@@ -3459,7 +3844,7 @@
             "fuel_category": "chemical",
             "fuel_value": 2000000,
             "group": "intermediate-products",
-            "icon_col": 10,
+            "icon_col": 13,
             "icon_row": 15,
             "localized_name": {
                 "en": "Wood"
@@ -3472,7 +3857,7 @@
         },
         "wooden-chest": {
             "group": "logistics",
-            "icon_col": 11,
+            "icon_col": 14,
             "icon_row": 15,
             "localized_name": {
                 "en": "Wooden chest"
@@ -3499,7 +3884,7 @@
                 "type": "burner"
             },
             "energy_usage": 150000,
-            "icon_col": 10,
+            "icon_col": 9,
             "icon_row": 1,
             "localized_name": {
                 "en": "Burner mining drill"
@@ -3516,7 +3901,7 @@
                 "usage_priority": "secondary-input"
             },
             "energy_usage": 90000,
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 4,
             "localized_name": {
                 "en": "Electric mining drill"
@@ -3533,8 +3918,8 @@
                 "usage_priority": "secondary-input"
             },
             "energy_usage": 90000,
-            "icon_col": 12,
-            "icon_row": 10,
+            "icon_col": 1,
+            "icon_row": 11,
             "localized_name": {
                 "en": "Pumpjack"
             },
@@ -3548,7 +3933,7 @@
     "offshore-pump": {
         "offshore-pump": {
             "fluid": "water",
-            "icon_col": 2,
+            "icon_col": 7,
             "icon_row": 9,
             "localized_name": {
                 "en": "Offshore pump"
@@ -3560,7 +3945,7 @@
     "reactor": {
         "nuclear-reactor": {
             "consumption": "40MW",
-            "icon_col": 1,
+            "icon_col": 6,
             "icon_row": 9,
             "localized_name": {
                 "en": "Nuclear reactor"
@@ -3627,8 +4012,9 @@
             "enabled": false,
             "energy_required": 5,
             "icon_col": 2,
+            "icon_mipmaps": 4,
             "icon_row": 0,
-            "icon_size": 32,
+            "icon_size": 64,
             "ingredients": [ {
                 "amount": 50,
                 "name": "water",
@@ -3729,12 +4115,12 @@
                 "en": "Artillery targeting remote"
             },
             "name": "artillery-targeting-remote",
-            "order": "zz",
+            "order": "b[turret]-d[artillery-turret]-b[remote]",
             "results": [ {
                 "amount": 1,
                 "name": "artillery-targeting-remote"
             } ],
-            "subgroup": "capsule",
+            "subgroup": "defensive-structure",
             "type": "recipe"
         },
         "artillery-turret": {
@@ -3760,7 +4146,7 @@
                 "en": "Artillery turret"
             },
             "name": "artillery-turret",
-            "order": "b[turret]-d[artillery-turret]",
+            "order": "b[turret]-d[artillery-turret]-a[turret]",
             "results": [ {
                 "amount": 1,
                 "name": "artillery-turret"
@@ -3799,14 +4185,14 @@
                 "amount": 1,
                 "name": "artillery-wagon"
             } ],
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "recipe"
         },
         "assembling-machine-1": {
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 9,
+            "icon_col": 8,
             "icon_row": 0,
             "ingredients": [ {
                 "amount": 3,
@@ -3834,7 +4220,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 10,
+            "icon_col": 9,
             "icon_row": 0,
             "ingredients": [ {
                 "amount": 5,
@@ -3865,7 +4251,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 11,
+            "icon_col": 10,
             "icon_row": 0,
             "ingredients": [ {
                 "amount": 4,
@@ -3890,7 +4276,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 50,
-            "icon_col": 12,
+            "icon_col": 11,
             "icon_row": 0,
             "ingredients": [ {
                 "amount": 10,
@@ -3917,7 +4303,7 @@
         "automation-science-pack": {
             "category": "crafting",
             "energy_required": 5,
-            "icon_col": 13,
+            "icon_col": 12,
             "icon_row": 0,
             "ingredients": [ {
                 "amount": 1,
@@ -3942,9 +4328,10 @@
             "category": "oil-processing",
             "enabled": false,
             "energy_required": 5,
-            "icon_col": 14,
+            "icon_col": 13,
+            "icon_mipmaps": 4,
             "icon_row": 0,
-            "icon_size": 32,
+            "icon_size": 64,
             "ingredients": [ {
                 "amount": 100,
                 "fluidbox_index": 2,
@@ -3970,28 +4357,34 @@
             "category": "chemistry",
             "crafting_machine_tint": {
                 "primary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.611,
-                    "r": 0.97
+                    "a": 1.0,
+                    "b": 0.338,
+                    "g": 0.482,
+                    "r": 0.965
+                },
+                "quaternary": {
+                    "a": 1.0,
+                    "b": 0.191,
+                    "g": 0.763,
+                    "r": 0.939
                 },
                 "secondary": {
-                    "a": 0.357,
-                    "b": 0.894,
-                    "g": 0.68,
-                    "r": 0.0
+                    "a": 1.0,
+                    "b": 0.222,
+                    "g": 0.56,
+                    "r": 0.831
                 },
                 "tertiary": {
-                    "a": 0.0,
-                    "b": 0.726,
-                    "g": 0.805,
-                    "r": 0.43
+                    "a": 1.0,
+                    "b": 0.443,
+                    "g": 0.818,
+                    "r": 0.728
                 }
             },
             "enabled": false,
             "energy_required": 5,
-            "icon_col": 0,
-            "icon_row": 1,
+            "icon_col": 14,
+            "icon_row": 0,
             "ingredients": [ {
                 "amount": 40,
                 "name": "sulfuric-acid",
@@ -4019,7 +4412,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 1,
+            "icon_col": 0,
             "icon_row": 1,
             "ingredients": [ {
                 "amount": 5,
@@ -4032,7 +4425,7 @@
                 "en": "Personal battery"
             },
             "name": "battery-equipment",
-            "order": "c[battery]-a[battery-equipment]",
+            "order": "b[battery]-a[battery-equipment]",
             "results": [ {
                 "amount": 1,
                 "name": "battery-equipment"
@@ -4044,7 +4437,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 2,
+            "icon_col": 1,
             "icon_row": 1,
             "ingredients": [ {
                 "amount": 10,
@@ -4060,7 +4453,7 @@
                 "en": "Personal battery MK2"
             },
             "name": "battery-mk2-equipment",
-            "order": "c[battery]-b[battery-equipment-mk2]",
+            "order": "b[battery]-b[battery-equipment-mk2]",
             "results": [ {
                 "amount": 1,
                 "name": "battery-mk2-equipment"
@@ -4072,7 +4465,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 15,
-            "icon_col": 3,
+            "icon_col": 2,
             "icon_row": 1,
             "ingredients": [ {
                 "amount": 20,
@@ -4103,7 +4496,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 4,
+            "icon_col": 3,
             "icon_row": 1,
             "ingredients": [ {
                 "amount": 5,
@@ -4116,7 +4509,7 @@
                 "en": "Belt immunity equipment"
             },
             "name": "belt-immunity-equipment",
-            "order": "e[belt-immunity]-a[belt-immunity]",
+            "order": "c[belt-immunity]-a[belt-immunity]",
             "results": [ {
                 "amount": 1,
                 "name": "belt-immunity-equipment"
@@ -4128,7 +4521,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 5,
+            "icon_col": 4,
             "icon_row": 1,
             "ingredients": [ {
                 "amount": 8,
@@ -4155,7 +4548,7 @@
         "boiler": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 8,
+            "icon_col": 7,
             "icon_row": 1,
             "ingredients": [ {
                 "amount": 1,
@@ -4179,7 +4572,7 @@
         "burner-inserter": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 9,
+            "icon_col": 8,
             "icon_row": 1,
             "ingredients": [ {
                 "amount": 1,
@@ -4203,7 +4596,7 @@
         "burner-mining-drill": {
             "category": "crafting",
             "energy_required": 4,
-            "icon_col": 10,
+            "icon_col": 9,
             "icon_row": 1,
             "ingredients": [ {
                 "amount": 6,
@@ -4231,7 +4624,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 11,
+            "icon_col": 10,
             "icon_row": 1,
             "ingredients": [ {
                 "amount": 4,
@@ -4259,7 +4652,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 2,
-            "icon_col": 12,
+            "icon_col": 11,
             "icon_row": 1,
             "ingredients": [ {
                 "amount": 8,
@@ -4287,7 +4680,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 1,
-            "icon_col": 13,
+            "icon_col": 12,
             "icon_row": 1,
             "ingredients": [ {
                 "amount": 10,
@@ -4308,14 +4701,14 @@
                 "amount": 1,
                 "name": "cargo-wagon"
             } ],
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "recipe"
         },
         "centrifuge": {
             "category": "crafting",
             "enabled": false,
             "energy_required": 4,
-            "icon_col": 14,
+            "icon_col": 13,
             "icon_row": 1,
             "ingredients": [ {
                 "amount": 100,
@@ -4347,8 +4740,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 5,
-            "icon_col": 0,
-            "icon_row": 2,
+            "icon_col": 14,
+            "icon_row": 1,
             "ingredients": [ {
                 "amount": 5,
                 "name": "steel-plate"
@@ -4378,7 +4771,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 24,
-            "icon_col": 1,
+            "icon_col": 0,
             "icon_row": 2,
             "ingredients": [ {
                 "amount": 2,
@@ -4406,7 +4799,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 2,
+            "icon_col": 1,
             "icon_row": 2,
             "ingredients": [ {
                 "amount": 10,
@@ -4434,7 +4827,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 4,
+            "icon_col": 3,
             "icon_row": 2,
             "ingredients": [ {
                 "amount": 7,
@@ -4463,9 +4856,10 @@
             "category": "oil-processing",
             "enabled": false,
             "energy_required": 5,
-            "icon_col": 7,
+            "icon_col": 5,
+            "icon_mipmaps": 4,
             "icon_row": 2,
-            "icon_size": 32,
+            "icon_size": 64,
             "ingredients": [ {
                 "amount": 10,
                 "name": "coal",
@@ -4504,7 +4898,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 9,
+            "icon_col": 7,
             "icon_row": 2,
             "ingredients": [ {
                 "amount": 15,
@@ -4535,7 +4929,7 @@
             "category": "crafting-with-fluid",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 12,
+            "icon_col": 9,
             "icon_row": 2,
             "ingredients": [ {
                 "amount": 5,
@@ -4564,7 +4958,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 13,
+            "icon_col": 10,
             "icon_row": 2,
             "ingredients": [ {
                 "amount": 5,
@@ -4589,7 +4983,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 14,
+            "icon_col": 11,
             "icon_row": 2,
             "ingredients": [ {
                 "amount": 1,
@@ -4613,8 +5007,8 @@
         "copper-cable": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 0,
-            "icon_row": 3,
+            "icon_col": 12,
+            "icon_row": 2,
             "ingredients": [ {
                 "amount": 1,
                 "name": "copper-plate"
@@ -4634,8 +5028,8 @@
         "copper-plate": {
             "category": "smelting",
             "energy_required": 3.2,
-            "icon_col": 3,
-            "icon_row": 3,
+            "icon_col": 14,
+            "icon_row": 2,
             "ingredients": [ {
                 "amount": 1,
                 "name": "copper-ore"
@@ -4656,7 +5050,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 6,
+            "icon_col": 11,
             "icon_row": 3,
             "ingredients": [ {
                 "amount": 5,
@@ -4681,7 +5075,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 8,
+            "icon_col": 13,
             "icon_row": 3,
             "ingredients": [ {
                 "amount": 3,
@@ -4709,7 +5103,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 15,
-            "icon_col": 9,
+            "icon_col": 14,
             "icon_row": 3,
             "ingredients": [ {
                 "amount": 4,
@@ -4734,8 +5128,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 11,
-            "icon_row": 3,
+            "icon_col": 0,
+            "icon_row": 4,
             "ingredients": [ {
                 "amount": 5,
                 "name": "processing-unit"
@@ -4750,20 +5144,20 @@
                 "en": "Discharge defense"
             },
             "name": "discharge-defense-equipment",
-            "order": "d[active-defense]-b[discharge-defense-equipment]",
+            "order": "b[active-defense]-b[discharge-defense-equipment]-a[equipment]",
             "results": [ {
                 "amount": 1,
                 "name": "discharge-defense-equipment"
             } ],
-            "subgroup": "equipment",
+            "subgroup": "military-equipment",
             "type": "recipe"
         },
         "discharge-defense-remote": {
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 12,
-            "icon_row": 3,
+            "icon_col": 1,
+            "icon_row": 4,
             "ingredients": [ {
                 "amount": 1,
                 "name": "electronic-circuit"
@@ -4772,20 +5166,20 @@
                 "en": "Discharge defense remote"
             },
             "name": "discharge-defense-remote",
-            "order": "z",
+            "order": "b[active-defense]-b[discharge-defense-equipment]-b[remote]",
             "results": [ {
                 "amount": 1,
                 "name": "discharge-defense-remote"
             } ],
-            "subgroup": "capsule",
+            "subgroup": "military-equipment",
             "type": "recipe"
         },
         "distractor-capsule": {
             "category": "crafting",
             "enabled": false,
             "energy_required": 15,
-            "icon_col": 13,
-            "icon_row": 3,
+            "icon_col": 2,
+            "icon_row": 4,
             "ingredients": [ {
                 "amount": 4,
                 "name": "defender-capsule"
@@ -4809,8 +5203,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 15,
-            "icon_col": 14,
-            "icon_row": 3,
+            "icon_col": 3,
+            "icon_row": 4,
             "ingredients": [ {
                 "amount": 5,
                 "name": "advanced-circuit"
@@ -4834,7 +5228,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 30,
-            "icon_col": 0,
+            "icon_col": 4,
             "icon_row": 4,
             "ingredients": [ {
                 "amount": 4,
@@ -4862,7 +5256,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 60,
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 4,
             "ingredients": [ {
                 "amount": 5,
@@ -4903,19 +5297,19 @@
                 "en": "Electric energy interface"
             },
             "name": "electric-energy-interface",
-            "order": "e[electric-energy-interface]-b[electric-energy-interface]",
+            "order": "a[electric-energy-interface]-b[electric-energy-interface]",
             "results": [ {
                 "amount": 1,
                 "name": "electric-energy-interface"
             } ],
-            "subgroup": "energy",
+            "subgroup": "other",
             "type": "recipe"
         },
         "electric-engine-unit": {
             "category": "crafting-with-fluid",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 4,
             "ingredients": [ {
                 "amount": 1,
@@ -4944,7 +5338,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 5,
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 4,
             "ingredients": [ {
                 "amount": 10,
@@ -4971,7 +5365,7 @@
         "electric-mining-drill": {
             "category": "crafting",
             "energy_required": 2,
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 4,
             "ingredients": [ {
                 "amount": 5,
@@ -4998,7 +5392,7 @@
         "electronic-circuit": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 4,
             "ingredients": [ {
                 "amount": 2,
@@ -5023,7 +5417,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 1,
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 4,
             "ingredients": [ {
                 "amount": 1,
@@ -5047,7 +5441,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 4,
             "ingredients": [ {
                 "amount": 5,
@@ -5060,19 +5454,19 @@
                 "en": "Energy shield"
             },
             "name": "energy-shield-equipment",
-            "order": "b[shield]-a[energy-shield-equipment]",
+            "order": "a[shield]-a[energy-shield-equipment]",
             "results": [ {
                 "amount": 1,
                 "name": "energy-shield-equipment"
             } ],
-            "subgroup": "equipment",
+            "subgroup": "military-equipment",
             "type": "recipe"
         },
         "energy-shield-mk2-equipment": {
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 4,
             "ingredients": [ {
                 "amount": 10,
@@ -5088,19 +5482,19 @@
                 "en": "Energy shield MK2"
             },
             "name": "energy-shield-mk2-equipment",
-            "order": "b[shield]-b[energy-shield-equipment-mk2]",
+            "order": "a[shield]-b[energy-shield-equipment-mk2]",
             "results": [ {
                 "amount": 1,
                 "name": "energy-shield-mk2-equipment"
             } ],
-            "subgroup": "equipment",
+            "subgroup": "military-equipment",
             "type": "recipe"
         },
         "engine-unit": {
             "category": "advanced-crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 9,
+            "icon_col": 13,
             "icon_row": 4,
             "ingredients": [ {
                 "amount": 1,
@@ -5128,7 +5522,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 10,
+            "icon_col": 14,
             "icon_row": 4,
             "ingredients": [ {
                 "amount": 10,
@@ -5144,7 +5538,7 @@
                 "en": "Exoskeleton"
             },
             "name": "exoskeleton-equipment",
-            "order": "e[exoskeleton]-a[exoskeleton-equipment]",
+            "order": "d[exoskeleton]-a[exoskeleton-equipment]",
             "results": [ {
                 "amount": 1,
                 "name": "exoskeleton-equipment"
@@ -5156,8 +5550,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 11,
-            "icon_row": 4,
+            "icon_col": 0,
+            "icon_row": 5,
             "ingredients": [ {
                 "amount": 4,
                 "name": "steel-plate"
@@ -5184,8 +5578,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 12,
-            "icon_row": 4,
+            "icon_col": 1,
+            "icon_row": 5,
             "ingredients": [ {
                 "amount": 1,
                 "name": "rocket"
@@ -5209,8 +5603,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 12,
-            "icon_col": 13,
-            "icon_row": 4,
+            "icon_col": 2,
+            "icon_row": 5,
             "ingredients": [ {
                 "amount": 1,
                 "name": "explosive-cannon-shell"
@@ -5234,28 +5628,34 @@
             "category": "chemistry",
             "crafting_machine_tint": {
                 "primary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.945,
-                    "r": 0.955
+                    "a": 1.0,
+                    "b": 0.259,
+                    "g": 0.381,
+                    "r": 0.968
+                },
+                "quaternary": {
+                    "a": 1.0,
+                    "b": 0.013,
+                    "g": 0.17,
+                    "r": 0.21
                 },
                 "secondary": {
-                    "a": 0.898,
-                    "b": 0.659,
-                    "g": 0.441,
-                    "r": 0.0
+                    "a": 1.0,
+                    "b": 0.534,
+                    "g": 0.664,
+                    "r": 0.892
                 },
                 "tertiary": {
-                    "a": 0.0,
-                    "b": 0.365,
-                    "g": 0.288,
-                    "r": 0.0
+                    "a": 1.0,
+                    "b": 0.513,
+                    "g": 0.978,
+                    "r": 1.0
                 }
             },
             "enabled": false,
             "energy_required": 5,
-            "icon_col": 14,
-            "icon_row": 4,
+            "icon_col": 3,
+            "icon_row": 5,
             "ingredients": [ {
                 "amount": 2,
                 "name": "sulfur",
@@ -5285,7 +5685,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 0,
+            "icon_col": 4,
             "icon_row": 5,
             "ingredients": [ {
                 "amount": 5,
@@ -5310,7 +5710,7 @@
             "category": "crafting-with-fluid",
             "enabled": false,
             "energy_required": 2,
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 5,
             "ingredients": [ {
                 "amount": 1,
@@ -5342,7 +5742,7 @@
             "category": "crafting-with-fluid",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 5,
             "ingredients": [ {
                 "amount": 20,
@@ -5371,7 +5771,7 @@
             "category": "crafting-with-fluid",
             "enabled": false,
             "energy_required": 2,
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 5,
             "ingredients": [ {
                 "amount": 80,
@@ -5400,7 +5800,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 5,
             "ingredients": [ {
                 "amount": 2,
@@ -5428,7 +5828,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 3,
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 5,
             "ingredients": [ {
                 "amount": 5,
@@ -5453,7 +5853,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 2,
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 5,
             "ingredients": [ {
                 "amount": 1,
@@ -5481,7 +5881,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 5,
             "ingredients": [ {
                 "amount": 5,
@@ -5506,7 +5906,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 2,
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 5,
             "ingredients": [ {
                 "amount": 40,
@@ -5531,7 +5931,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 9,
+            "icon_col": 13,
             "icon_row": 5,
             "ingredients": [ {
                 "amount": 1,
@@ -5555,7 +5955,7 @@
         "firearm-magazine": {
             "category": "crafting",
             "energy_required": 1,
-            "icon_col": 10,
+            "icon_col": 14,
             "icon_row": 5,
             "ingredients": [ {
                 "amount": 4,
@@ -5577,8 +5977,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 12,
-            "icon_row": 5,
+            "icon_col": 1,
+            "icon_row": 6,
             "ingredients": [ {
                 "amount": 5,
                 "name": "steel-plate"
@@ -5602,28 +6002,34 @@
             "category": "chemistry",
             "crafting_machine_tint": {
                 "primary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.533,
-                    "r": 0.845
+                    "a": 1.0,
+                    "b": 0.643,
+                    "g": 0.735,
+                    "r": 1.0
+                },
+                "quaternary": {
+                    "a": 1.0,
+                    "b": 0.283,
+                    "g": 0.283,
+                    "r": 0.283
                 },
                 "secondary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.0,
-                    "r": 0.655
+                    "a": 1.0,
+                    "b": 0.49,
+                    "g": 0.557,
+                    "r": 0.749
                 },
                 "tertiary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.329,
-                    "r": 0.685
+                    "a": 1.0,
+                    "b": 0.637,
+                    "g": 0.637,
+                    "r": 0.637
                 }
             },
             "enabled": false,
             "energy_required": 6,
-            "icon_col": 13,
-            "icon_row": 5,
+            "icon_col": 2,
+            "icon_row": 6,
             "ingredients": [ {
                 "amount": 5,
                 "name": "steel-plate",
@@ -5649,8 +6055,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 20,
-            "icon_col": 14,
-            "icon_row": 5,
+            "icon_col": 3,
+            "icon_row": 6,
             "ingredients": [ {
                 "amount": 30,
                 "name": "steel-plate"
@@ -5680,7 +6086,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 1.5,
-            "icon_col": 0,
+            "icon_col": 4,
             "icon_row": 6,
             "ingredients": [ {
                 "amount": 10,
@@ -5704,14 +6110,14 @@
                 "amount": 1,
                 "name": "fluid-wagon"
             } ],
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "recipe"
         },
         "flying-robot-frame": {
             "category": "crafting",
             "enabled": false,
             "energy_required": 20,
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 6,
             "ingredients": [ {
                 "amount": 1,
@@ -5742,7 +6148,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 6,
             "ingredients": [ {
                 "amount": 200,
@@ -5767,7 +6173,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 6,
             "ingredients": [ {
                 "amount": 1,
@@ -5795,7 +6201,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 6,
             "ingredients": [ {
                 "amount": 1,
@@ -5820,7 +6226,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 6,
             "ingredients": [ {
                 "amount": 5,
@@ -5845,7 +6251,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 6,
             "ingredients": [ {
                 "amount": 10,
@@ -5873,7 +6279,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.25,
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 6,
             "ingredients": [ {
                 "amount": 10,
@@ -5895,7 +6301,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 3,
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 6,
             "ingredients": [ {
                 "amount": 10,
@@ -5911,7 +6317,7 @@
                 "en": "Heat exchanger"
             },
             "name": "heat-exchanger",
-            "order": "f[nuclear-energy]-b[heat-exchanger]",
+            "order": "f[nuclear-energy]-c[heat-exchanger]",
             "results": [ {
                 "amount": 1,
                 "name": "heat-exchanger"
@@ -5923,7 +6329,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 1,
-            "icon_col": 10,
+            "icon_col": 14,
             "icon_row": 6,
             "ingredients": [ {
                 "amount": 10,
@@ -5936,7 +6342,7 @@
                 "en": "Heat pipe"
             },
             "name": "heat-pipe",
-            "order": "f[nuclear-energy]-c[heat-pipe]",
+            "order": "f[nuclear-energy]-b[heat-pipe]",
             "results": [ {
                 "amount": 1,
                 "name": "heat-pipe"
@@ -5948,8 +6354,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 11,
-            "icon_row": 6,
+            "icon_col": 0,
+            "icon_row": 7,
             "ingredients": [ {
                 "amount": 100,
                 "name": "copper-plate"
@@ -5973,29 +6379,36 @@
             "category": "chemistry",
             "crafting_machine_tint": {
                 "primary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.027,
-                    "r": 0.29
+                    "a": 1.0,
+                    "b": 0.261,
+                    "g": 0.642,
+                    "r": 1.0
+                },
+                "quaternary": {
+                    "a": 1.0,
+                    "b": 0.271,
+                    "g": 0.494,
+                    "r": 1.0
                 },
                 "secondary": {
-                    "a": 0.0,
-                    "b": 0.19,
-                    "g": 0.465,
-                    "r": 0.722
+                    "a": 1.0,
+                    "b": 0.376,
+                    "g": 0.722,
+                    "r": 1.0
                 },
                 "tertiary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.365,
-                    "r": 0.87
+                    "a": 1.0,
+                    "b": 0.576,
+                    "g": 0.659,
+                    "r": 0.854
                 }
             },
             "enabled": false,
             "energy_required": 2,
-            "icon_col": 13,
-            "icon_row": 6,
-            "icon_size": 32,
+            "icon_col": 2,
+            "icon_mipmaps": 4,
+            "icon_row": 7,
+            "icon_size": 64,
             "ingredients": [ {
                 "amount": 30,
                 "name": "water",
@@ -6022,7 +6435,7 @@
         "inserter": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 0,
+            "icon_col": 4,
             "icon_row": 7,
             "ingredients": [ {
                 "amount": 1,
@@ -6050,7 +6463,7 @@
             "category": "crafting",
             "enabled": true,
             "energy_required": 0.5,
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 7,
             "ingredients": [ {
                 "amount": 8,
@@ -6071,7 +6484,7 @@
         "iron-gear-wheel": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 7,
             "ingredients": [ {
                 "amount": 4,
@@ -6092,7 +6505,7 @@
         "iron-plate": {
             "category": "smelting",
             "energy_required": 3.2,
-            "icon_col": 5,
+            "icon_col": 8,
             "icon_row": 7,
             "ingredients": [ {
                 "amount": 1,
@@ -6113,7 +6526,7 @@
         "iron-stick": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 6,
+            "icon_col": 9,
             "icon_row": 7,
             "ingredients": [ {
                 "amount": 1,
@@ -6136,9 +6549,10 @@
             "category": "centrifuging",
             "enabled": false,
             "energy_required": 60,
-            "icon_col": 7,
+            "icon_col": 10,
+            "icon_mipmaps": 4,
             "icon_row": 7,
-            "icon_size": 32,
+            "icon_size": 64,
             "ingredients": [ {
                 "amount": 40,
                 "name": "uranium-235"
@@ -6165,7 +6579,7 @@
         "lab": {
             "category": "crafting",
             "energy_required": 2,
-            "icon_col": 8,
+            "icon_col": 11,
             "icon_row": 7,
             "ingredients": [ {
                 "amount": 10,
@@ -6193,7 +6607,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 5,
-            "icon_col": 9,
+            "icon_col": 12,
             "icon_row": 7,
             "ingredients": [ {
                 "amount": 1,
@@ -6218,7 +6632,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 10,
+            "icon_col": 13,
             "icon_row": 7,
             "ingredients": [ {
                 "amount": 20,
@@ -6240,7 +6654,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 20,
-            "icon_col": 11,
+            "icon_col": 14,
             "icon_row": 7,
             "ingredients": [ {
                 "amount": 20,
@@ -6268,8 +6682,8 @@
             "category": "crafting",
             "enabled": true,
             "energy_required": 3,
-            "icon_col": 12,
-            "icon_row": 7,
+            "icon_col": 0,
+            "icon_row": 8,
             "ingredients": [ {
                 "amount": 40,
                 "name": "iron-plate"
@@ -6290,29 +6704,36 @@
             "category": "chemistry",
             "crafting_machine_tint": {
                 "primary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.406,
-                    "r": 0.785
+                    "a": 1.0,
+                    "b": 0.78,
+                    "g": 0.596,
+                    "r": 0.764
+                },
+                "quaternary": {
+                    "a": 1.0,
+                    "b": 0.29,
+                    "g": 0.734,
+                    "r": 1.0
                 },
                 "secondary": {
-                    "a": 0.0,
-                    "b": 0.605,
-                    "g": 0.805,
-                    "r": 0.795
+                    "a": 1.0,
+                    "b": 0.844,
+                    "g": 0.551,
+                    "r": 0.762
                 },
                 "tertiary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.551,
-                    "r": 0.835
+                    "a": 1.0,
+                    "b": 0.596,
+                    "g": 0.773,
+                    "r": 0.895
                 }
             },
             "enabled": false,
             "energy_required": 2,
-            "icon_col": 14,
-            "icon_row": 7,
-            "icon_size": 32,
+            "icon_col": 2,
+            "icon_mipmaps": 4,
+            "icon_row": 8,
+            "icon_size": 64,
             "ingredients": [ {
                 "amount": 30,
                 "name": "water",
@@ -6340,7 +6761,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 1,
-            "icon_col": 0,
+            "icon_col": 3,
             "icon_row": 8,
             "ingredients": [ {
                 "amount": 5,
@@ -6374,8 +6795,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 4,
-            "icon_col": 10,
-            "icon_row": 3,
+            "icon_col": 4,
+            "icon_row": 8,
             "ingredients": [ {
                 "amount": 20,
                 "name": "engine-unit"
@@ -6390,19 +6811,19 @@
                 "en": "Locomotive"
             },
             "name": "locomotive",
-            "order": "a[train-system]-f[diesel-locomotive]",
+            "order": "a[train-system]-f[locomotive]",
             "results": [ {
                 "amount": 1,
                 "name": "locomotive"
             } ],
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "recipe"
         },
         "logistic-chest-active-provider": {
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 8,
             "ingredients": [ {
                 "amount": 1,
@@ -6430,7 +6851,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 8,
             "ingredients": [ {
                 "amount": 1,
@@ -6458,7 +6879,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 8,
             "ingredients": [ {
                 "amount": 1,
@@ -6486,7 +6907,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 8,
             "ingredients": [ {
                 "amount": 1,
@@ -6514,7 +6935,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 8,
             "ingredients": [ {
                 "amount": 1,
@@ -6542,7 +6963,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 8,
             "ingredients": [ {
                 "amount": 1,
@@ -6567,7 +6988,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 6,
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 8,
             "ingredients": [ {
                 "amount": 1,
@@ -6592,7 +7013,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 8,
             "ingredients": [ {
                 "amount": 1,
@@ -6620,8 +7041,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 20,
-            "icon_col": 0,
-            "icon_row": 12,
+            "icon_col": 13,
+            "icon_row": 8,
             "ingredients": [ {
                 "amount": 2,
                 "name": "steel-plate"
@@ -6636,7 +7057,7 @@
                 "en": "Low density structure"
             },
             "name": "low-density-structure",
-            "order": "o[rocket-structure]",
+            "order": "o[low-density-structure]",
             "results": [ {
                 "amount": 1,
                 "name": "low-density-structure"
@@ -6648,27 +7069,33 @@
             "category": "chemistry",
             "crafting_machine_tint": {
                 "primary": {
-                    "a": 0.0,
-                    "b": 0.01,
-                    "g": 0.26,
-                    "r": 0.0
+                    "a": 1.0,
+                    "b": 0.223,
+                    "g": 0.723,
+                    "r": 0.268
+                },
+                "quaternary": {
+                    "a": 1.0,
+                    "b": 0.127,
+                    "g": 0.395,
+                    "r": 1.0
                 },
                 "secondary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.64,
-                    "r": 0.071
+                    "a": 1.0,
+                    "b": 0.386,
+                    "g": 0.793,
+                    "r": 0.432
                 },
                 "tertiary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.52,
-                    "r": 0.026
+                    "a": 1.0,
+                    "b": 0.396,
+                    "g": 0.471,
+                    "r": 0.647
                 }
             },
             "enabled": false,
             "energy_required": 1,
-            "icon_col": 9,
+            "icon_col": 14,
             "icon_row": 8,
             "ingredients": [ {
                 "amount": 10,
@@ -6692,8 +7119,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 10,
-            "icon_row": 8,
+            "icon_col": 0,
+            "icon_row": 9,
             "ingredients": [ {
                 "amount": 4,
                 "name": "iron-stick"
@@ -6720,8 +7147,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 11,
-            "icon_row": 8,
+            "icon_col": 1,
+            "icon_row": 9,
             "ingredients": [ {
                 "amount": 1,
                 "name": "piercing-rounds-magazine"
@@ -6748,8 +7175,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 15,
-            "icon_col": 12,
-            "icon_row": 8,
+            "icon_col": 2,
+            "icon_row": 9,
             "ingredients": [ {
                 "amount": 30,
                 "name": "advanced-circuit"
@@ -6773,8 +7200,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 13,
-            "icon_row": 8,
+            "icon_col": 3,
+            "icon_row": 9,
             "ingredients": [ {
                 "amount": 5,
                 "name": "advanced-circuit"
@@ -6798,9 +7225,10 @@
             "category": "centrifuging",
             "enabled": false,
             "energy_required": 90,
-            "icon_col": 14,
-            "icon_row": 8,
-            "icon_size": 32,
+            "icon_col": 4,
+            "icon_mipmaps": 4,
+            "icon_row": 9,
+            "icon_size": 64,
             "ingredients": [ {
                 "amount": 1,
                 "name": "uranium-235"
@@ -6825,9 +7253,10 @@
             "category": "centrifuging",
             "enabled": false,
             "energy_required": 60,
-            "icon_col": 0,
+            "icon_col": 5,
+            "icon_mipmaps": 4,
             "icon_row": 9,
-            "icon_size": 32,
+            "icon_size": 64,
             "ingredients": [ {
                 "amount": 5,
                 "name": "used-up-uranium-fuel-cell"
@@ -6849,7 +7278,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 1,
+            "icon_col": 6,
             "icon_row": 9,
             "ingredients": [ {
                 "amount": 500,
@@ -6880,7 +7309,7 @@
         "offshore-pump": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 2,
+            "icon_col": 7,
             "icon_row": 9,
             "ingredients": [ {
                 "amount": 2,
@@ -6908,7 +7337,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 3,
+            "icon_col": 8,
             "icon_row": 9,
             "ingredients": [ {
                 "amount": 15,
@@ -6942,7 +7371,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 4,
+            "icon_col": 9,
             "icon_row": 9,
             "ingredients": [ {
                 "amount": 20,
@@ -6958,19 +7387,19 @@
                 "en": "Personal laser defense"
             },
             "name": "personal-laser-defense-equipment",
-            "order": "d[active-defense]-a[personal-laser-defense-equipment]",
+            "order": "b[active-defense]-a[personal-laser-defense-equipment]",
             "results": [ {
                 "amount": 1,
                 "name": "personal-laser-defense-equipment"
             } ],
-            "subgroup": "equipment",
+            "subgroup": "military-equipment",
             "type": "recipe"
         },
         "personal-roboport-equipment": {
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 5,
+            "icon_col": 10,
             "icon_row": 9,
             "ingredients": [ {
                 "amount": 10,
@@ -7001,7 +7430,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 20,
-            "icon_col": 6,
+            "icon_col": 11,
             "icon_row": 9,
             "ingredients": [ {
                 "amount": 5,
@@ -7029,7 +7458,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 3,
-            "icon_col": 8,
+            "icon_col": 13,
             "icon_row": 9,
             "ingredients": [ {
                 "amount": 1,
@@ -7057,7 +7486,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 9,
+            "icon_col": 14,
             "icon_row": 9,
             "ingredients": [ {
                 "amount": 2,
@@ -7084,8 +7513,8 @@
         "pipe": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 10,
-            "icon_row": 9,
+            "icon_col": 0,
+            "icon_row": 10,
             "ingredients": [ {
                 "amount": 2,
                 "name": "iron-plate"
@@ -7105,8 +7534,8 @@
         "pipe-to-ground": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 11,
-            "icon_row": 9,
+            "icon_col": 1,
+            "icon_row": 10,
             "ingredients": [ {
                 "amount": 10,
                 "name": "pipe"
@@ -7129,8 +7558,8 @@
         "pistol": {
             "category": "crafting",
             "energy_required": 5,
-            "icon_col": 12,
-            "icon_row": 9,
+            "icon_col": 2,
+            "icon_row": 10,
             "ingredients": [ {
                 "amount": 5,
                 "name": "copper-plate"
@@ -7154,28 +7583,34 @@
             "category": "chemistry",
             "crafting_machine_tint": {
                 "primary": {
-                    "a": 0.0,
-                    "b": 0.498,
-                    "g": 0.498,
-                    "r": 0.498
+                    "a": 1.0,
+                    "b": 1.0,
+                    "g": 1.0,
+                    "r": 1.0
+                },
+                "quaternary": {
+                    "a": 1.0,
+                    "b": 0.0,
+                    "g": 0.0,
+                    "r": 0.0
                 },
                 "secondary": {
-                    "a": 0.0,
-                    "b": 0.4,
-                    "g": 0.4,
-                    "r": 0.4
+                    "a": 1.0,
+                    "b": 0.771,
+                    "g": 0.771,
+                    "r": 0.771
                 },
                 "tertiary": {
-                    "a": 0.0,
-                    "b": 0.305,
-                    "g": 0.305,
-                    "r": 0.305
+                    "a": 1.0,
+                    "b": 0.762,
+                    "g": 0.665,
+                    "r": 0.768
                 }
             },
             "enabled": false,
             "energy_required": 1,
-            "icon_col": 13,
-            "icon_row": 9,
+            "icon_col": 3,
+            "icon_row": 10,
             "ingredients": [ {
                 "amount": 20,
                 "name": "petroleum-gas",
@@ -7202,8 +7637,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 14,
-            "icon_row": 9,
+            "icon_col": 4,
+            "icon_row": 10,
             "ingredients": [ {
                 "amount": 10,
                 "name": "electronic-circuit"
@@ -7230,7 +7665,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 0,
+            "icon_col": 5,
             "icon_row": 10,
             "ingredients": [ {
                 "amount": 3,
@@ -7258,7 +7693,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 20,
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 10,
             "ingredients": [ {
                 "amount": 40,
@@ -7287,7 +7722,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 25,
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 10,
             "ingredients": [ {
                 "amount": 25,
@@ -7322,7 +7757,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 2,
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 10,
             "ingredients": [ {
                 "amount": 5,
@@ -7350,7 +7785,7 @@
             "category": "crafting-with-fluid",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 10,
             "ingredients": [ {
                 "amount": 20,
@@ -7379,7 +7814,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 21,
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 10,
             "ingredients": [ {
                 "amount": 1,
@@ -7407,7 +7842,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 15,
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 10,
             "ingredients": [ {
                 "amount": 5,
@@ -7432,7 +7867,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 30,
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 10,
             "ingredients": [ {
                 "amount": 4,
@@ -7460,7 +7895,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 60,
-            "icon_col": 9,
+            "icon_col": 13,
             "icon_row": 10,
             "ingredients": [ {
                 "amount": 5,
@@ -7488,7 +7923,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 2,
-            "icon_col": 10,
+            "icon_col": 14,
             "icon_row": 10,
             "ingredients": [ {
                 "amount": 3,
@@ -7519,8 +7954,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 2,
-            "icon_col": 11,
-            "icon_row": 10,
+            "icon_col": 0,
+            "icon_row": 11,
             "ingredients": [ {
                 "amount": 1,
                 "name": "engine-unit"
@@ -7547,8 +7982,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 5,
-            "icon_col": 12,
-            "icon_row": 10,
+            "icon_col": 1,
+            "icon_row": 11,
             "ingredients": [ {
                 "amount": 5,
                 "name": "steel-plate"
@@ -7577,8 +8012,8 @@
         "radar": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 13,
-            "icon_row": 10,
+            "icon_col": 2,
+            "icon_row": 11,
             "ingredients": [ {
                 "amount": 5,
                 "name": "electronic-circuit"
@@ -7605,8 +8040,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 14,
-            "icon_row": 10,
+            "icon_col": 3,
+            "icon_row": 11,
             "ingredients": [ {
                 "amount": 1,
                 "name": "stone"
@@ -7626,14 +8061,14 @@
                 "amount": 2,
                 "name": "rail"
             } ],
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "recipe"
         },
         "rail-chain-signal": {
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 0,
+            "icon_col": 4,
             "icon_row": 11,
             "ingredients": [ {
                 "amount": 1,
@@ -7651,14 +8086,14 @@
                 "amount": 1,
                 "name": "rail-chain-signal"
             } ],
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "recipe"
         },
         "rail-signal": {
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 11,
             "ingredients": [ {
                 "amount": 1,
@@ -7676,14 +8111,14 @@
                 "amount": 1,
                 "name": "rail-signal"
             } ],
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "recipe"
         },
         "railgun": {
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 11,
             "ingredients": [ {
                 "amount": 15,
@@ -7714,7 +8149,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 11,
             "ingredients": [ {
                 "amount": 5,
@@ -7739,7 +8174,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 11,
             "ingredients": [ {
                 "amount": 1,
@@ -7764,7 +8199,7 @@
             "category": "crafting-with-fluid",
             "enabled": false,
             "energy_required": 15,
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 11,
             "ingredients": [ {
                 "amount": 20,
@@ -7796,7 +8231,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.25,
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 11,
             "ingredients": [ {
                 "amount": 10,
@@ -7817,7 +8252,7 @@
         "repair-pack": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 11,
             "ingredients": [ {
                 "amount": 2,
@@ -7842,7 +8277,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 5,
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 11,
             "ingredients": [ {
                 "amount": 45,
@@ -7870,7 +8305,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 9,
+            "icon_col": 13,
             "icon_row": 11,
             "ingredients": [ {
                 "amount": 1,
@@ -7898,7 +8333,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 30,
-            "icon_col": 10,
+            "icon_col": 14,
             "icon_row": 11,
             "ingredients": [ {
                 "amount": 1,
@@ -7923,8 +8358,8 @@
             "category": "crafting-with-fluid",
             "enabled": false,
             "energy_required": 30,
-            "icon_col": 11,
-            "icon_row": 11,
+            "icon_col": 0,
+            "icon_row": 12,
             "ingredients": [ {
                 "amount": 10,
                 "name": "solid-fuel"
@@ -7949,8 +8384,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 12,
-            "icon_row": 11,
+            "icon_col": 1,
+            "icon_row": 12,
             "ingredients": [ {
                 "amount": 5,
                 "name": "iron-plate"
@@ -7978,8 +8413,8 @@
             "enabled": false,
             "energy_required": 3,
             "hidden": true,
-            "icon_col": 13,
-            "icon_row": 11,
+            "icon_col": 2,
+            "icon_row": 12,
             "ingredients": [ {
                 "amount": 10,
                 "name": "rocket-control-unit"
@@ -8006,8 +8441,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 30,
-            "icon_col": 14,
-            "icon_row": 11,
+            "icon_col": 3,
+            "icon_row": 12,
             "ingredients": [ {
                 "amount": 1000,
                 "name": "steel-plate"
@@ -8041,7 +8476,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 5,
-            "icon_col": 1,
+            "icon_col": 4,
             "icon_row": 12,
             "ingredients": [ {
                 "amount": 100,
@@ -8079,7 +8514,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 2,
+            "icon_col": 5,
             "icon_row": 12,
             "ingredients": [ {
                 "amount": 15,
@@ -8110,7 +8545,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 3,
-            "icon_col": 3,
+            "icon_col": 6,
             "icon_row": 12,
             "ingredients": [ {
                 "amount": 2,
@@ -8135,7 +8570,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 5,
+            "icon_col": 8,
             "icon_row": 12,
             "ingredients": [ {
                 "amount": 2,
@@ -8162,7 +8597,7 @@
         "small-electric-pole": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 6,
+            "icon_col": 9,
             "icon_row": 12,
             "ingredients": [ {
                 "amount": 1,
@@ -8187,7 +8622,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 7,
+            "icon_col": 10,
             "icon_row": 12,
             "ingredients": [ {
                 "amount": 1,
@@ -8215,7 +8650,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 30,
-            "icon_col": 8,
+            "icon_col": 11,
             "icon_row": 12,
             "ingredients": [ {
                 "amount": 100,
@@ -8234,7 +8669,7 @@
                 "en": "Small plane"
             },
             "name": "small-plane",
-            "order": "b[personal-transport]-c[small-plane]",
+            "order": "b[personal-transport]-x[small-plane]",
             "results": [ {
                 "amount": 1,
                 "name": "small-plane"
@@ -8246,7 +8681,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 9,
+            "icon_col": 12,
             "icon_row": 12,
             "ingredients": [ {
                 "amount": 5,
@@ -8274,7 +8709,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 10,
+            "icon_col": 13,
             "icon_row": 12,
             "ingredients": [ {
                 "amount": 1,
@@ -8302,29 +8737,36 @@
             "category": "chemistry",
             "crafting_machine_tint": {
                 "primary": {
-                    "a": 0.0,
-                    "b": 0.095,
-                    "g": 0.095,
-                    "r": 0.16
+                    "a": 1.0,
+                    "b": 0.566,
+                    "g": 0.628,
+                    "r": 0.889
+                },
+                "quaternary": {
+                    "a": 1.0,
+                    "b": 0.127,
+                    "g": 0.395,
+                    "r": 1.0
                 },
                 "secondary": {
-                    "a": 0.0,
-                    "b": 0.19,
-                    "g": 0.215,
-                    "r": 0.47
+                    "a": 1.0,
+                    "b": 0.644,
+                    "g": 0.668,
+                    "r": 0.803
                 },
                 "tertiary": {
-                    "a": 0.0,
-                    "b": 0.135,
-                    "g": 0.144,
-                    "r": 0.435
+                    "a": 1.0,
+                    "b": 0.576,
+                    "g": 0.659,
+                    "r": 0.854
                 }
             },
             "enabled": false,
             "energy_required": 2,
-            "icon_col": 12,
-            "icon_row": 12,
-            "icon_size": 32,
+            "icon_col": 0,
+            "icon_mipmaps": 4,
+            "icon_row": 13,
+            "icon_size": 64,
             "ingredients": [ {
                 "amount": 20,
                 "name": "heavy-oil",
@@ -8347,29 +8789,36 @@
             "category": "chemistry",
             "crafting_machine_tint": {
                 "primary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.122,
-                    "r": 0.27
+                    "a": 1.0,
+                    "b": 0.482,
+                    "g": 0.633,
+                    "r": 0.71
+                },
+                "quaternary": {
+                    "a": 1.0,
+                    "b": 0.202,
+                    "g": 0.583,
+                    "r": 0.812
                 },
                 "secondary": {
-                    "a": 0.0,
-                    "b": 0.325,
-                    "g": 0.546,
-                    "r": 0.735
+                    "a": 1.0,
+                    "b": 0.527,
+                    "g": 0.672,
+                    "r": 0.745
                 },
                 "tertiary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.348,
-                    "r": 0.61
+                    "a": 1.0,
+                    "b": 0.596,
+                    "g": 0.773,
+                    "r": 0.894
                 }
             },
             "enabled": false,
             "energy_required": 2,
-            "icon_col": 13,
-            "icon_row": 12,
-            "icon_size": 32,
+            "icon_col": 1,
+            "icon_mipmaps": 4,
+            "icon_row": 13,
+            "icon_size": 64,
             "ingredients": [ {
                 "amount": 10,
                 "name": "light-oil",
@@ -8392,29 +8841,36 @@
             "category": "chemistry",
             "crafting_machine_tint": {
                 "primary": {
-                    "a": 0.0,
-                    "b": 0.51,
-                    "g": 0.075,
-                    "r": 0.331
+                    "a": 1.0,
+                    "b": 0.768,
+                    "g": 0.631,
+                    "r": 0.768
+                },
+                "quaternary": {
+                    "a": 1.0,
+                    "b": 0.564,
+                    "g": 0.364,
+                    "r": 0.564
                 },
                 "secondary": {
-                    "a": 0.361,
-                    "b": 0.615,
-                    "g": 0.54,
-                    "r": 0.589
+                    "a": 1.0,
+                    "b": 0.678,
+                    "g": 0.592,
+                    "r": 0.659
                 },
                 "tertiary": {
-                    "a": 0.0,
-                    "b": 0.695,
-                    "g": 0.145,
-                    "r": 0.469
+                    "a": 1.0,
+                    "b": 0.766,
+                    "g": 0.631,
+                    "r": 0.774
                 }
             },
             "enabled": false,
             "energy_required": 2,
-            "icon_col": 14,
-            "icon_row": 12,
-            "icon_size": 32,
+            "icon_col": 2,
+            "icon_mipmaps": 4,
+            "icon_row": 13,
+            "icon_size": 64,
             "ingredients": [ {
                 "amount": 20,
                 "name": "petroleum-gas",
@@ -8437,7 +8893,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 15,
-            "icon_col": 1,
+            "icon_col": 4,
             "icon_row": 13,
             "ingredients": [ {
                 "amount": 5,
@@ -8462,7 +8918,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 30,
-            "icon_col": 2,
+            "icon_col": 5,
             "icon_row": 13,
             "ingredients": [ {
                 "amount": 4,
@@ -8490,7 +8946,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 60,
-            "icon_col": 3,
+            "icon_col": 6,
             "icon_row": 13,
             "ingredients": [ {
                 "amount": 5,
@@ -8514,11 +8970,54 @@
             "subgroup": "module",
             "type": "recipe"
         },
+        "spidertron": {
+            "category": "crafting",
+            "enabled": false,
+            "energy_required": 10,
+            "icon_col": 7,
+            "icon_row": 13,
+            "ingredients": [ {
+                "amount": 4,
+                "name": "exoskeleton-equipment"
+            }, {
+                "amount": 2,
+                "name": "fusion-reactor-equipment"
+            }, {
+                "amount": 4,
+                "name": "rocket-launcher"
+            }, {
+                "amount": 16,
+                "name": "rocket-control-unit"
+            }, {
+                "amount": 150,
+                "name": "low-density-structure"
+            }, {
+                "amount": 2,
+                "name": "radar"
+            }, {
+                "amount": 2,
+                "name": "effectivity-module-3"
+            }, {
+                "amount": 1,
+                "name": "raw-fish"
+            } ],
+            "localized_name": {
+                "en": "Spidertron"
+            },
+            "name": "spidertron",
+            "order": "b[personal-transport]-c[spidertron]-a[spider]",
+            "results": [ {
+                "amount": 1,
+                "name": "spidertron"
+            } ],
+            "subgroup": "transport",
+            "type": "recipe"
+        },
         "splitter": {
             "category": "crafting",
             "enabled": false,
             "energy_required": 1,
-            "icon_col": 4,
+            "icon_col": 8,
             "icon_row": 13,
             "ingredients": [ {
                 "amount": 5,
@@ -8546,7 +9045,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 5,
+            "icon_col": 9,
             "icon_row": 13,
             "ingredients": [ {
                 "amount": 1,
@@ -8571,7 +9070,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 6,
+            "icon_col": 10,
             "icon_row": 13,
             "ingredients": [ {
                 "amount": 15,
@@ -8601,7 +9100,7 @@
         "steam-engine": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 8,
+            "icon_col": 12,
             "icon_row": 13,
             "ingredients": [ {
                 "amount": 10,
@@ -8629,7 +9128,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 3,
-            "icon_col": 9,
+            "icon_col": 13,
             "icon_row": 13,
             "ingredients": [ {
                 "amount": 50,
@@ -8645,7 +9144,7 @@
                 "en": "Steam turbine"
             },
             "name": "steam-turbine",
-            "order": "b[steam-power]-c[steam-turbine]",
+            "order": "f[nuclear-energy]-d[steam-turbine]",
             "results": [ {
                 "amount": 1,
                 "name": "steam-turbine"
@@ -8657,8 +9156,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 11,
-            "icon_row": 13,
+            "icon_col": 0,
+            "icon_row": 14,
             "ingredients": [ {
                 "amount": 8,
                 "name": "steel-plate"
@@ -8679,8 +9178,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 3,
-            "icon_col": 12,
-            "icon_row": 13,
+            "icon_col": 1,
+            "icon_row": 14,
             "ingredients": [ {
                 "amount": 6,
                 "name": "steel-plate"
@@ -8704,8 +9203,8 @@
             "category": "smelting",
             "enabled": false,
             "energy_required": 32,
-            "icon_col": 13,
-            "icon_row": 13,
+            "icon_col": 2,
+            "icon_row": 14,
             "ingredients": [ {
                 "amount": 10,
                 "name": "iron-plate"
@@ -8726,7 +9225,7 @@
             "category": "smelting",
             "enabled": true,
             "energy_required": 3.2,
-            "icon_col": 1,
+            "icon_col": 4,
             "icon_row": 14,
             "ingredients": [ {
                 "amount": 2,
@@ -8747,7 +9246,7 @@
         "stone-furnace": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 2,
+            "icon_col": 5,
             "icon_row": 14,
             "ingredients": [ {
                 "amount": 5,
@@ -8769,7 +9268,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 8,
+            "icon_col": 11,
             "icon_row": 15,
             "ingredients": [ {
                 "amount": 5,
@@ -8791,7 +9290,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 3,
-            "icon_col": 3,
+            "icon_col": 6,
             "icon_row": 14,
             "ingredients": [ {
                 "amount": 20,
@@ -8816,7 +9315,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 4,
+            "icon_col": 7,
             "icon_row": 14,
             "ingredients": [ {
                 "amount": 15,
@@ -8844,7 +9343,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 5,
+            "icon_col": 8,
             "icon_row": 14,
             "ingredients": [ {
                 "amount": 10,
@@ -8872,27 +9371,33 @@
             "category": "chemistry",
             "crafting_machine_tint": {
                 "primary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.659,
+                    "a": 1.0,
+                    "b": 0.089,
+                    "g": 0.995,
                     "r": 1.0
                 },
-                "secondary": {
-                    "a": 0.0,
-                    "b": 0.0,
+                "quaternary": {
+                    "a": 1.0,
+                    "b": 0.35,
                     "g": 1.0,
-                    "r": 0.812
+                    "r": 0.954
+                },
+                "secondary": {
+                    "a": 1.0,
+                    "b": 0.691,
+                    "g": 0.974,
+                    "r": 1.0
                 },
                 "tertiary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.806,
-                    "r": 0.96
+                    "a": 1.0,
+                    "b": 0.714,
+                    "g": 0.638,
+                    "r": 0.723
                 }
             },
             "enabled": false,
             "energy_required": 1,
-            "icon_col": 6,
+            "icon_col": 9,
             "icon_row": 14,
             "ingredients": [ {
                 "amount": 30,
@@ -8920,27 +9425,33 @@
             "category": "chemistry",
             "crafting_machine_tint": {
                 "primary": {
-                    "a": 0.0,
+                    "a": 1.0,
                     "b": 0.0,
-                    "g": 0.735,
-                    "r": 0.875
+                    "g": 0.958,
+                    "r": 1.0
+                },
+                "quaternary": {
+                    "a": 1.0,
+                    "b": 0.019,
+                    "g": 1.0,
+                    "r": 0.969
                 },
                 "secondary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.94,
-                    "r": 0.103
+                    "a": 1.0,
+                    "b": 0.172,
+                    "g": 0.852,
+                    "r": 1.0
                 },
                 "tertiary": {
-                    "a": 0.0,
-                    "b": 0.0,
-                    "g": 0.795,
-                    "r": 0.564
+                    "a": 1.0,
+                    "b": 0.597,
+                    "g": 0.869,
+                    "r": 0.876
                 }
             },
             "enabled": false,
             "energy_required": 1,
-            "icon_col": 7,
+            "icon_col": 10,
             "icon_row": 14,
             "ingredients": [ {
                 "amount": 5,
@@ -8972,7 +9483,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 8,
-            "icon_col": 8,
+            "icon_col": 11,
             "icon_row": 14,
             "ingredients": [ {
                 "amount": 64,
@@ -9003,7 +9514,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 0.5,
-            "icon_col": 10,
+            "icon_col": 13,
             "icon_row": 14,
             "ingredients": [ {
                 "amount": 5,
@@ -9027,13 +9538,13 @@
                 "amount": 1,
                 "name": "train-stop"
             } ],
-            "subgroup": "transport",
+            "subgroup": "train-transport",
             "type": "recipe"
         },
         "transport-belt": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 11,
+            "icon_col": 14,
             "icon_row": 14,
             "ingredients": [ {
                 "amount": 1,
@@ -9058,8 +9569,8 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 1,
-            "icon_col": 12,
-            "icon_row": 14,
+            "icon_col": 0,
+            "icon_row": 15,
             "ingredients": [ {
                 "amount": 10,
                 "name": "iron-plate"
@@ -9083,7 +9594,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 12,
-            "icon_col": 0,
+            "icon_col": 4,
             "icon_row": 15,
             "ingredients": [ {
                 "amount": 1,
@@ -9108,7 +9619,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 1,
+            "icon_col": 5,
             "icon_row": 15,
             "ingredients": [ {
                 "amount": 10,
@@ -9136,9 +9647,10 @@
             "category": "centrifuging",
             "enabled": false,
             "energy_required": 12,
-            "icon_col": 4,
+            "icon_col": 7,
+            "icon_mipmaps": 4,
             "icon_row": 15,
-            "icon_size": 32,
+            "icon_size": 64,
             "ingredients": [ {
                 "amount": 10,
                 "name": "uranium-ore"
@@ -9164,7 +9676,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 10,
-            "icon_col": 5,
+            "icon_col": 8,
             "icon_row": 15,
             "ingredients": [ {
                 "amount": 1,
@@ -9189,7 +9701,7 @@
             "category": "crafting",
             "enabled": false,
             "energy_required": 21,
-            "icon_col": 7,
+            "icon_col": 10,
             "icon_row": 15,
             "ingredients": [ {
                 "amount": 3,
@@ -9216,7 +9728,7 @@
         "wooden-chest": {
             "category": "crafting",
             "energy_required": 0.5,
-            "icon_col": 11,
+            "icon_col": 14,
             "icon_row": 15,
             "ingredients": [ {
                 "amount": 2,
@@ -9237,7 +9749,7 @@
     },
     "resource": {
         "coal": {
-            "icon_col": 5,
+            "icon_col": 4,
             "icon_row": 2,
             "localized_name": {
                 "en": "Coal"
@@ -9253,8 +9765,8 @@
             "name": "coal"
         },
         "copper-ore": {
-            "icon_col": 1,
-            "icon_row": 3,
+            "icon_col": 13,
+            "icon_row": 2,
             "localized_name": {
                 "en": "Copper ore"
             },
@@ -9270,7 +9782,7 @@
         },
         "crude-oil": {
             "category": "basic-fluid",
-            "icon_col": 4,
+            "icon_col": 10,
             "icon_row": 3,
             "localized_name": {
                 "en": "Crude oil"
@@ -9288,7 +9800,7 @@
             "name": "crude-oil"
         },
         "iron-ore": {
-            "icon_col": 3,
+            "icon_col": 7,
             "icon_row": 7,
             "localized_name": {
                 "en": "Iron ore"
@@ -9304,7 +9816,7 @@
             "name": "iron-ore"
         },
         "stone": {
-            "icon_col": 0,
+            "icon_col": 3,
             "icon_row": 14,
             "localized_name": {
                 "en": "Stone"
@@ -9320,7 +9832,7 @@
             "name": "stone"
         },
         "uranium-ore": {
-            "icon_col": 3,
+            "icon_col": 6,
             "icon_row": 15,
             "localized_name": {
                 "en": "Uranium ore"
@@ -9345,8 +9857,8 @@
             "crafting_categories": [ "rocket-building" ],
             "crafting_speed": 1,
             "energy_usage": 250000,
-            "icon_col": 14,
-            "icon_row": 11,
+            "icon_col": 3,
+            "icon_row": 12,
             "idle_energy_usage": "10KW",
             "lamp_energy_usage": "10KW",
             "localized_name": {
@@ -9359,7 +9871,7 @@
     },
     "solar-panel": {
         "solar-panel": {
-            "icon_col": 9,
+            "icon_col": 12,
             "icon_row": 12,
             "localized_name": {
                 "en": "Solar panel"
@@ -9371,21 +9883,23 @@
     "sprites": {
         "extra": {
             "clock": {
-                "icon_col": 3,
+                "icon_col": 2,
                 "icon_row": 2,
                 "name": "time"
             },
             "slot_icon_module": {
-                "icon_col": 4,
+                "icon_col": 7,
                 "icon_row": 12,
                 "name": "no module"
             }
         },
-        "hash": "c334b8fa3f8ea9ba04467f0f333c7856"
+        "hash": "886196189fb7e8d6251c449fe812f7ba",
+        "height": 512,
+        "width": 480
     },
     "transport-belt": {
         "express-transport-belt": {
-            "icon_col": 2,
+            "icon_col": 6,
             "icon_row": 5,
             "localized_name": {
                 "en": "Express transport belt"
@@ -9394,7 +9908,7 @@
             "speed": 0.09375
         },
         "fast-transport-belt": {
-            "icon_col": 7,
+            "icon_col": 11,
             "icon_row": 5,
             "localized_name": {
                 "en": "Fast transport belt"
@@ -9403,7 +9917,7 @@
             "speed": 0.0625
         },
         "transport-belt": {
-            "icon_col": 11,
+            "icon_col": 14,
             "icon_row": 14,
             "localized_name": {
                 "en": "Transport belt"
