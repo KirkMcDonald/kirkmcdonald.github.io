@@ -193,8 +193,11 @@ function renderMinimumAssembler(settings) {
         min = "3"
     }
     var assemblers = spec.factories["crafting"]
-    if ("min" in settings && Number(min) >= 1 && Number(min) <= assemblers.length) {
+    if ("min" in settings) {
         min = settings.min
+        if (Number(settings.min) > assemblers.length) {
+            min = assemblers.length
+        }
     }
     setMinimumAssembler(min)
     var oldNode = document.getElementById("minimum_assembler")
