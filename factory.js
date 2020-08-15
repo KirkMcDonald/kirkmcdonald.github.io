@@ -338,13 +338,19 @@ function FactorySpec(factories) {
             this.factories[category].push(factory)
         }
     }
+    this.defaultFactory = {}
+    this.factoriesSquareList = {}
     for (var category in this.factories) {
-        this.factories[category].sort(compareFactories)
+        var catFab = this.factories[category]
+        catFab.sort(compareFactories)
+        var count = catFab.length
+        if (count > 1) {
+            var index = (category in assembly_machine_categories) ? 0 : catFab.length - 1
+            var fabDef = catFab[index]
+            this.defaultFactory[category] = fabDef
+            this.factoriesSquareList[category] = makeSquareList(catFab)
+        }
     }
-    this.setMinimum("1")
-    var smelters = this.factories["smelting"]
-    this.furnace = smelters[smelters.length - 1]
-    DEFAULT_FURNACE = this.furnace.name
     this.miningProd = zero
     this.ignore = {}
 
@@ -355,67 +361,62 @@ function FactorySpec(factories) {
 }
 FactorySpec.prototype = {
     constructor: FactorySpec,
-    // min is a string like "1", "2", or "3".
-    setMinimum: function(min) {
-        var minIndex = Number(min) - 1
-        this.minimum = this.factories["crafting"][minIndex]
-    },
     useMinimum: function(recipe) {
         return recipe.category in assembly_machine_categories
     },
-    setFurnace: function(name) {
-        var smelters = this.factories["smelting"]
-        for (var i = 0; i < smelters.length; i++) {
-            if (smelters[i].name == name) {
-                this.furnace = smelters[i]
-                return
-            }
-        }
-    },
-    useFurnace: function(recipe) {
-        return recipe.category == "smelting"
-    },
     getFactoryDef: function(recipe) {
-        if (this.useFurnace(recipe)) {
-            return this.furnace
-        }
         var factories = this.factories[recipe.category]
         if (!factories) {
             return null
         }
-        if (!this.useMinimum(recipe)) {
-            return factories[factories.length - 1]
-        }
-        var factoryDef
-        for (var i = 0; i < factories.length; i++) {
-            factoryDef = factories[i]
-            if (factoryDef.less(this.minimum) || useLegacyCalculations && factoryDef.max_ing < recipe.ingredients.length) {
-                continue
+
+        if (useLegacyCalculations && this.useMinimum(recipe)) {
+            var factoryDef
+            for (var i = 0; i < factories.length; i++) {
+                factoryDef = factories[i]
+                if (factoryDef.less(this.defaultFactory[recipe.category]) || factoryDef.max_ing < recipe.ingredients.length) {
+                    continue
+                }
+                break
             }
-            break
+            return factoryDef
         }
-        return factoryDef
+
+        if (recipe.category in this.defaultFactory) {
+            return this.defaultFactory[recipe.category]
+        }
+        return this.factories[recipe.category][0]
     },
-    // TODO: This should be very cheap. Calling getFactoryDef on each call
-    // should not be necessary. Changing the minimum should proactively update
-    // all of the factories to which it applies.
+    findFactoryDef: function (factoryName, category) {
+        // it is possible to find factoryDef without given category.
+        var fCat = this.factories[category]
+        for (var j = 0; j < fCat.length; j++) {
+            var factoryDef = fCat[j]
+            if (factoryDef.name == factoryName) {
+                return factoryDef
+            }
+        }
+        return null
+    },
     getFactory: function(recipe) {
         if (!recipe.category) {
             return null
+        }
+        var factory = this.spec[recipe.name]
+        if (factory) {
+            return factory
         }
         var factoryDef = this.getFactoryDef(recipe)
         if (!factoryDef) {
             return null
         }
-        var factory = this.spec[recipe.name]
-        // If the minimum changes, update the factory the next time we get it.
-        if (factory) {
-            factory.setFactory(factoryDef, this)
-            return factory
-        }
         this.spec[recipe.name] = factoryDef.makeFactory(this, recipe)
         this.spec[recipe.name].beaconCount = this.defaultBeaconCount
         return this.spec[recipe.name]
+    },
+    setFactory: function(recipe, factoryDef) {
+        var factory = this.getFactory(recipe)
+        factory.setFactory(factoryDef, this)
     },
     moduleCount: function(recipe) {
         var factory = this.getFactory(recipe)
@@ -435,6 +436,29 @@ FactorySpec.prototype = {
             return false
         }
         return factory.setModule(index, module)
+    },
+    setDefaultFactory: function(category, factoryDef) {
+        var oldDefaultName = this.defaultFactory[category].name
+        for (var factory in this.spec){
+            var fab = this.spec[factory]
+
+            if (fab.recipe.category == category && fab.name == oldDefaultName){
+                if (useLegacyCalculations && this.useMinimum(fab.recipe)) {
+                    for (var i = 0; i < this.factories[category].length; i++) {
+                        var legacyFactoryDef = this.factories[category][i]
+                        if (legacyFactoryDef.less(factoryDef) || legacyFactoryDef.max_ing < fab.recipe.ingredients.length) {
+                            continue
+                        }
+                        break
+                    }
+                    this.spec[factory].setFactory(legacyFactoryDef, this)
+                    continue
+                } // <-- Legacy
+
+                this.spec[factory].setFactory(factoryDef, this)
+            }
+        }
+        this.defaultFactory[category] = factoryDef
     },
     getBeaconInfo: function(recipe) {
         var factory = this.getFactory(recipe)

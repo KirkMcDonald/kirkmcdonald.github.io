@@ -44,6 +44,9 @@ input:focus, select:focus {
 .right-align {
     text-align: right;
 }
+.left-align {
+    text-align: left;
+}
 button.ui {
     color: var(--accent);
     background: linear-gradient(to bottom, var(--light), var(--medium));

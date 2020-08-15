@@ -92,3 +92,12 @@ function dropdownInputs(selector, data, name, checked, callback) {
         .join("div")
     return addInputs(dd, name, checked, callback)
 }
+
+function makeSquareList(array) {
+    var sqArray = []
+    var width = Math.ceil(Math.sqrt(array.length))
+    for (var i = 0; i < array.length; i += width) {
+        sqArray.push(array.slice(i, i + width))
+    }
+    return sqArray
+}

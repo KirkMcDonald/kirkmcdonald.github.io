@@ -375,6 +375,9 @@ RecipeRow.prototype = {
     updateDisplayedModules: function() {
         this.factoryRow.updateDisplayedModules()
     },
+    updateDisplayedFactory: function() {
+        this.factoryRow.updateDisplayedFactory()
+    },
     totalPower: function() {
         if (this.factoryRow.power && this.factoryRow.power.fuel === "electric") {
             return this.factoryRow.power.power
@@ -422,6 +425,40 @@ function FactoryRow(row, recipe) {
     this.factoryCell = document.createElement("td")
     this.factoryCell.classList.add("pad", "factory", "right-align", "leftmost")
     this.node.appendChild(this.factoryCell)
+
+    this.factoryIcon = null
+    this.factoryIconInputs = null
+    this.factory = spec.getFactory(this.recipe)
+    if (recipe.category && spec.factories[recipe.category].length > 1){
+        var factoryIcon = document.createElement("span")
+        factoryIcon.id = "fdd-" + recipeName + "-node"
+        factoryIcon.classList.add("left-align")
+        let factorydd = makeDropdown(d3.select(factoryIcon))
+        let finputs = factorydd.selectAll("div")
+                .data(spec.factoriesSquareList[recipe.category]).join("div")
+                .selectAll("span").data(d => d).join("span")
+        let labels = addInputs(
+            finputs,
+            "fdd-" + recipeName,
+            d => d.name === this.factory.name,
+            crafterChanged(recipeName),
+        )
+        labels.append(d => getImage(d, false, factorydd.node()))
+        // It is possible to add fancy tooltips for dropdowns.
+        // But it requires some additional logic whten dd is open or changed.
+        //addTooltip(factorydd.node(), this.factory.factory)
+        this.factoryIcon = factoryIcon
+        let inputs = {}
+        finputs.each(function(d) {
+            let element = d3.select(this).select('input[type="radio"]').node()
+            inputs[d.name] = element
+        })
+        this.factoryIconInputs = inputs
+    }else if (recipe.category){ // No alternative. Factory icon will not changed.
+        var image = getImage(this.factory.factory)
+        image.classList.add("display")
+        this.factoryIcon = image
+    }
 
     var countCell = document.createElement("td")
     countCell.classList.add("factory", "right-align")
@@ -520,9 +557,6 @@ FactoryRow.prototype = {
             this.setHasNoModules()
             return
         }
-        this.factory = spec.getFactory(this.recipe)
-        var image = getImage(this.factory.factory)
-        image.classList.add("display")
         while (this.factoryCell.hasChildNodes()) {
             this.factoryCell.removeChild(this.factoryCell.lastChild)
         }
@@ -530,7 +564,7 @@ FactoryRow.prototype = {
             this.factoryCell.appendChild(getImage(this.recipe))
             this.factoryCell.appendChild(new Text(" : "))
         }
-        this.factoryCell.appendChild(image)
+        this.factoryCell.appendChild(this.factoryIcon)
         this.factoryCell.appendChild(new Text(" \u00d7"))
         this.countNode.textContent = alignCount(this.count)
 
@@ -592,6 +626,11 @@ FactoryRow.prototype = {
             name = NO_MODULE
         }
         this.modules[index][name].checked = true
+    },
+    updateDisplayedFactory: function() {
+        if (this.factoryIconInputs) {
+            this.factoryIconInputs[this.factory.name].checked = true
+        }
     },
     setDisplayedBeacon: function(module, count) {
         var name
@@ -790,6 +829,11 @@ GroupRow.prototype = {
             this.factoryRows[i].updateDisplayedModules()
         }
     },
+    updateDisplayedFactory: function() {
+        for (var i = 0; i < this.factoryRows.length; i++) {
+            this.factoryRows[i].updateDisplayedFactory()
+        }
+    },
     remove: function() {
         for (var i = 0; i < this.rows.length; i++) {
             var row = this.rows[i]
@@ -883,6 +927,12 @@ RecipeTable.prototype = {
         for (var i = 0; i < this.rowArray.length; i++) {
             var row = this.rowArray[i]
             row.updateDisplayedModules()
+        }
+    },
+    updateDisplayedFactory: function() {
+        for (var i = 0; i < this.rowArray.length; i++) {
+            var row = this.rowArray[i]
+            row.updateDisplayedFactory()
         }
     },
     displaySolution: function(totals) {

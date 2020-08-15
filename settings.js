@@ -181,70 +181,76 @@ function renderPrecisions(settings) {
     document.getElementById("fprec").value = countPrecision
 }
 
-// minimum assembler
-var DEFAULT_MINIMUM = "1"
+// default factory
 
-var minimumAssembler = DEFAULT_MINIMUM
-
-function renderMinimumAssembler(settings) {
-    var min = DEFAULT_MINIMUM
-    // Backward compatibility.
+function renderDefaultFactory(settings) {
+    // Backward compatibility with old settings.
+    if ("furnace" in settings) {
+        var furnaceName = settings.furnace
+        spec.defaultFactory["smelting"] = spec.findFactoryDef(furnaceName, "smelting")
+    }
+    var am3 = spec.findFactoryDef("assembling-machine-3", "crafting")
+    var am3Categories = {}
+    for (var i=0; i < am3.categories.length; i++) {
+        am3Categories[am3.categories[i]] = true
+    }
     if ("use_3" in settings && settings.use_3 == "true") {
-        min = "3"
+        for (let category in am3Categories) {
+            spec.defaultFactory[category] = am3
+        }
+    }
+    var checkFDef = function(fDef, cats) {
+        for (var i=0; i < cats.length; i++) {
+            if (fDef == cats[i]) {return true}
+        }
+        return false
     }
     var assemblers = spec.factories["crafting"]
-    if ("min" in settings && Number(min) >= 1 && Number(min) <= assemblers.length) {
-        min = settings.min
+    if ("min" in settings && Number(settings.min) >= 1 && Number(settings.min) <= assemblers.length) {
+        let minIndex = Number(settings.min) - 1
+        let assembler = spec.factories["crafting"][minIndex]
+        for (let category in am3Categories) {
+            if (checkFDef(assembler, spec.factories[category])) {
+                spec.defaultFactory[category] = assembler
+            } else {
+                spec.defaultFactory[category] = spec.factories[category][0]
+            }
+        }
     }
-    setMinimumAssembler(min)
-    var oldNode = document.getElementById("minimum_assembler")
+    // <--Backward compatibility.
+
+    if ("defFab" in settings) {
+        var sets = settings.defFab.split(",")
+        for (var i=0; i < sets.length; i++) {
+            var defFab = sets[i].split(":")
+            var category = defFab[0]
+            var fabName = defFab[1]
+            spec.defaultFactory[category] = spec.findFactoryDef(fabName, category)
+        }
+    }
+
+    var oldNode = document.getElementById("default_factory")
     var cell = oldNode.parentNode
     var node = document.createElement("span")
-    node.id = "minimum_assembler"
-    let dropdown = makeDropdown(d3.select(node))
-    let inputs = dropdown.selectAll("div").data(assemblers).join("div")
-    let labels = addInputs(
-        inputs,
-        "assembler_dropdown",
-        (d, i) => String(i + 1) === min,
-        (d, i) => changeMin(String(i + 1)),
-    )
-    labels.append(d => getImage(d, false, dropdown.node()))
-    cell.replaceChild(node, oldNode)
-}
+    node.id = "default_factory"
+    node.classList.add("left-align")
 
-function setMinimumAssembler(min) {
-    spec.setMinimum(min)
-    minimumAssembler = min
-}
-
-// furnace
-
-// Assigned during FactorySpec initialization.
-var DEFAULT_FURNACE
-
-function renderFurnace(settings) {
-    var furnaceName = DEFAULT_FURNACE
-    if ("furnace" in settings) {
-        furnaceName = settings.furnace
+    for (var category in spec.defaultFactory) {
+        let fabNode = document.createElement("span")
+        let dropdown = makeDropdown(d3.select(fabNode))
+        let inputs = dropdown.selectAll("div")
+                .data(spec.factoriesSquareList[category]).join("div")
+                .selectAll("span").data(d => d).join("span")
+        let labels = addInputs(
+            inputs,
+            "def_factory_" + category,
+            d => d.name === spec.defaultFactory[category].name,
+            changeDefaultFactory(category),
+        )
+        labels.append(d => getImage(d, false, dropdown.node()))
+        fabNode.title = category
+        node.appendChild(fabNode)
     }
-    if (furnaceName !== spec.furnace.name) {
-        spec.setFurnace(furnaceName)
-    }
-    var oldNode = document.getElementById("furnace")
-    var cell = oldNode.parentNode
-    var node = document.createElement("span")
-    node.id = "furnace"
-    let furnaces = spec.factories["smelting"]
-    let dropdown = makeDropdown(d3.select(node))
-    let inputs = dropdown.selectAll("div").data(furnaces).join("div")
-    let labels = addInputs(
-        inputs,
-        "furnace_dropdown",
-        d => d.name === furnaceName,
-        changeFurnace,
-    )
-    labels.append(d => getImage(d, false, dropdown.node()))
     cell.replaceChild(node, oldNode)
 }
 
@@ -595,8 +601,7 @@ function renderSettings(settings) {
     renderColorScheme(settings)
     renderRateOptions(settings)
     renderPrecisions(settings)
-    renderMinimumAssembler(settings)
-    renderFurnace(settings)
+    renderDefaultFactory(settings)
     renderFuel(settings)
     renderOil(settings)
     renderKovarex(settings)
