@@ -13,6 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 "use strict"
 
+var currentTooltip = null
+
 function Tooltip(reference, content, target) {
     if (!target) {
         target = reference
@@ -30,6 +32,9 @@ Tooltip.prototype = {
     show: function() {
         if (this.isOpen) {
             return
+        }
+        if (currentTooltip) {
+            currentTooltip.hide()
         }
         this.isOpen = true
         if (this.node) {
@@ -55,6 +60,7 @@ Tooltip.prototype = {
             }
         )
         this.node = node
+        currentTooltip = this
     },
     hide: function() {
         if (!this.isOpen) {
@@ -62,6 +68,7 @@ Tooltip.prototype = {
         }
         this.isOpen = false
         this.node.style.display = "none"
+        currentTooltip = null
     },
     create: function() {
         var node = document.createElement("div")
