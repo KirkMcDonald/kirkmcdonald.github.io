@@ -132,6 +132,7 @@ Rational.prototype = {
         )
     },
     sub: function(other) {
+        if (other.isZero()) return this
         return new Rational(
             this.p.times(other.q).subtract(this.q.times(other.p)),
             this.q.times(other.q)
