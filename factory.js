@@ -275,7 +275,8 @@ Miner.prototype.prodEffect = function(spec) {
     return prod.add(spec.miningProd)
 }
 
-var rocketLaunchDuration = RationalFromFloats(2475, 60)
+// Duration is recorded as 2420 ticks in official wiki https://wiki.factorio.com/Rocket_silo#Maximum_throughput
+var rocketLaunchDuration = RationalFromFloats(2420, 60)
 
 function launchRate(spec) {
     var partRecipe = solver.recipes["rocket-part"]
