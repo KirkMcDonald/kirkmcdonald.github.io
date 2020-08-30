@@ -18,26 +18,34 @@ var PX_HEIGHT = 32
 
 var sheet_hash
 
+var images_buffer = new Map()
+
 function Sprite(name, col, row) {
     this.name = name
     this.icon_col = col
     this.icon_row = row
-}
+}   
 
 function getImage(obj, suppressTooltip, tooltipTarget) {
-    var im = blankImage()
-    im.classList.add("icon")
-    var x = -obj.icon_col * PX_WIDTH
-    var y = -obj.icon_row * PX_HEIGHT
-    im.style.setProperty("background", "url(images/sprite-sheet-" + sheet_hash + ".png)")
-    im.style.setProperty("background-position", x + "px " + y + "px")
-    if (tooltipsEnabled && obj.renderTooltip && !suppressTooltip) {
-        addTooltip(im, obj, tooltipTarget)
+    if (images_buffer.has(obj.name)) {
+        return images_buffer.get(obj.name)
     } else {
-        im.title = obj.name
+        var im = blankImage()
+        im.classList.add("icon")
+        var x = -obj.icon_col * PX_WIDTH
+        var y = -obj.icon_row * PX_HEIGHT
+        im.style.setProperty("background", "url(images/sprite-sheet-" + sheet_hash + ".png)")
+        im.style.setProperty("background-position", x + "px " + y + "px")
+        if (tooltipsEnabled && obj.renderTooltip && !suppressTooltip) {
+            addTooltip(im, obj, tooltipTarget)
+        } else {
+            im.title = obj.name
+        }
+        im.alt = obj.name
+        images_buffer[obj.name] = im
+        return im
     }
-    im.alt = obj.name
-    return im
+    
 }
 
 function addTooltip(im, obj, target) {
