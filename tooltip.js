@@ -73,7 +73,7 @@ Tooltip.prototype = {
     create: function() {
         var node = document.createElement("div")
         node.classList.add("tooltip")
-        node.appendChild(this.content)
+        node.appendChild(this.content.renderTooltip())
         return node
     },
     addEventListeners: function() {

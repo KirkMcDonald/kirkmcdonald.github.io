@@ -41,8 +41,7 @@ function getImage(obj, suppressTooltip, tooltipTarget) {
 }
 
 function addTooltip(im, obj, target) {
-    var node = obj.renderTooltip()
-    return new Tooltip(im, node, target)
+    return new Tooltip(im, obj, target)
 }
 
 function blankImage() {
