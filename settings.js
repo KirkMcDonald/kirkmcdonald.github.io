@@ -168,6 +168,9 @@ var ratePrecision = DEFAULT_RATE_PRECISION
 var DEFAULT_COUNT_PRECISION = 1
 var countPrecision = DEFAULT_COUNT_PRECISION
 
+var DEFAULT_BELT_PRECISION = 1
+var beltPrecision = DEFAULT_BELT_PRECISION
+
 function renderPrecisions(settings) {
     ratePrecision = DEFAULT_RATE_PRECISION
     if ("rp" in settings) {
@@ -179,6 +182,11 @@ function renderPrecisions(settings) {
         countPrecision = Number(settings.cp)
     }
     document.getElementById("fprec").value = countPrecision
+	beltPrecision = DEFAULT_BELT_PRECISION
+    if ("bp" in settings) {
+        beltPrecision = Number(settings.bp)
+    }
+    document.getElementById("bprec").value = beltPrecision
 }
 
 // minimum assembler

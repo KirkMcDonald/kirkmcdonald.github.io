@@ -168,7 +168,7 @@ function displaySteps(items, order, totals) {
                 var beltRateCell = document.createElement("td")
                 beltRateCell.classList.add("right-align")
                 tt = document.createElement("tt")
-                tt.textContent = alignCount(belts)
+                tt.textContent = alignBelt(belts)
                 beltRateCell.append(tt)
                 row.appendChild(beltRateCell)
             }
