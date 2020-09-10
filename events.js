@@ -177,6 +177,13 @@ function changeFurnace(furnace) {
     itemUpdate()
 }
 
+// Triggered when the chemical plant is changed.
+function changeChemicalPlant(chemPlant) {
+    spec.setChemicalPlant(chemPlant.name)
+    solver.findSubgraphs(spec)
+    itemUpdate()
+}
+
 // Triggered when the preferred fuel is changed.
 function changeFuel(fuel) {
     setPreferredFuel(fuel.name)
