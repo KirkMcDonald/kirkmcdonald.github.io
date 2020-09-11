@@ -27,7 +27,7 @@ a {
     text-decoration: none;
     color: var(--accent);
 }
-a:active {
+a:active, a:hover {
     color: var(--bright);
 }
 input, select {
@@ -364,4 +364,10 @@ div.graph {
 }
 #debug_tab table td.ignore {
     color: var(--accent);
+}
+/* footer */
+#footer {
+    border-top: 3px solid var(--accent);
+    padding-top: 2px;
+    background-color: var(--medium);
 }
