@@ -519,6 +519,19 @@ function renderVisualizerDirection(settings) {
     input.checked = true
 }
 
+let DEFAULT_ALIGNMENT = "right"
+
+let visAlignment = DEFAULT_ALIGNMENT
+
+function renderVisualizerAlignment(settings) {
+    visAlignment = DEFAULT_ALIGNMENT
+    if ("va" in settings) {
+        visAlignment = settings.va
+    }
+    let input = document.getElementById("alignment_" + visAlignment)
+    input.checked = true
+}
+
 const DEFAULT_NODE_BREADTH = 175
 
 let maxNodeHeight = DEFAULT_NODE_BREADTH
@@ -610,6 +623,7 @@ function renderSettings(settings) {
     renderDefaultBeacon(settings)
     renderVisualizerType(settings)
     renderVisualizerDirection(settings)
+    renderVisualizerAlignment(settings)
     renderNodeBreadth(settings)
     renderLinkLength(settings)
     renderValueFormat(settings)
