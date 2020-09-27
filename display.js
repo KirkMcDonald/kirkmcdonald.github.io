@@ -398,7 +398,11 @@ class UsageRow {
             this.percentNode.textContent = ""
         } else {
             let percentage = portion.div(totalRate).mul(RationalFromFloat(100))
-            this.percentNode.textContent = percentage.toDecimal(0) + "%"
+            if (percentage.less(one)) {
+                this.percentNode.textContent = "<1%"
+            } else {
+                this.percentNode.textContent = percentage.toDecimal(0) + "%"
+            }
         }
     }
 }
