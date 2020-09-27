@@ -390,6 +390,20 @@ function CopyAllHandler(name) {
     }
 }
 
+// breakdown events
+
+function ToggleBreakdownHandler(itemRow, breakdown) {
+    this.handleEvent = function(event) {
+        if (itemRow.arrowCell.classList.contains("breakdown-open")) {
+            itemRow.arrowCell.classList.remove("breakdown-open")
+            breakdown.row.classList.remove("breakdown-open")
+        } else {
+            itemRow.arrowCell.classList.add("breakdown-open")
+            breakdown.row.classList.add("breakdown-open")
+        }
+    }
+}
+
 // items tab events
 
 function PipeCountHandler(config) {
