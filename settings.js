@@ -251,6 +251,44 @@ function renderFurnace(settings) {
     cell.replaceChild(node, oldNode)
 }
 
+// chemical plant
+
+// Assigned during FactorySpec initialization.
+var DEFAULT_CHEM_PLANT
+
+function renderChemicalPlant(settings) {
+    let chemPlantName = DEFAULT_CHEM_PLANT
+    if ("chemicalPlant" in settings) {
+        chemPlantName = settings.chemical_plant
+    }
+    if (chemPlantName !== spec.chemical_plant.name) {
+        spec.setChemicalPlant(chemPlantName)
+    }
+    let oldNode = document.getElementById("chemical_plant")
+
+    if (spec.factories["chemistry"].length < 2) {
+        //Nothing to choose, so kill the node
+        oldNode.parentElement.parentElement.hidden = "hidden"
+    } else {
+        oldNode.parentElement.parentElement.hidden = ""
+    }
+
+    let cell = oldNode.parentNode
+    let node = document.createElement("span")
+    node.id = "chemical_plant"
+    let chemPlants = spec.factories["chemistry"]
+    let dropdown = makeDropdown(d3.select(node))
+    let inputs = dropdown.selectAll("div").data(chemPlants).join("div")
+    let labels = addInputs(
+        inputs,
+        "chemical_plant_dropdown",
+        d => d.name === chemPlantName,
+        changeChemicalPlant,
+    )
+    labels.append(d => getImage(d, false, dropdown.node()))
+    cell.replaceChild(node, oldNode)
+}
+
 // fuel
 var DEFAULT_FUEL = "coal"
 
@@ -600,6 +638,7 @@ function renderSettings(settings) {
     renderPrecisions(settings)
     renderMinimumAssembler(settings)
     renderFurnace(settings)
+    renderChemicalPlant(settings)
     renderFuel(settings)
     renderOil(settings)
     renderKovarex(settings)

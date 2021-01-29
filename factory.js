@@ -345,6 +345,9 @@ function FactorySpec(factories) {
     var smelters = this.factories["smelting"]
     this.furnace = smelters[smelters.length - 1]
     DEFAULT_FURNACE = this.furnace.name
+    let chem_plants = this.factories["chemistry"]
+    this.chemical_plant = chem_plants[0]
+    DEFAULT_CHEM_PLANT = this.chemical_plant.name
     this.miningProd = zero
     this.ignore = {}
 
@@ -375,9 +378,24 @@ FactorySpec.prototype = {
     useFurnace: function(recipe) {
         return recipe.category == "smelting"
     },
+    setChemicalPlant: function(name) {
+        let chemPlants = this.factories["chemistry"]
+        for (var i = 0; i < chemPlants.length; i++) {
+            if (chemPlants[i].name == name) {
+                this.chemical_plant = chemPlants[i]
+                return
+            }
+        }
+    },
+    useChemicalPlant: function(recipe) {
+        return recipe.category == "chemistry"
+    },
     getFactoryDef: function(recipe) {
         if (this.useFurnace(recipe)) {
             return this.furnace
+        }
+        if (this.useChemicalPlant(recipe)) {
+            return this.chemical_plant
         }
         var factories = this.factories[recipe.category]
         if (!factories) {
