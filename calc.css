@@ -27,7 +27,7 @@ a {
     text-decoration: none;
     color: var(--accent);
 }
-a:active {
+a:active, a:hover {
     color: var(--bright);
 }
 input, select {
@@ -188,8 +188,8 @@ tr.display-row td, tr.factory-header th {
     padding-top: 8px;
     padding-bottom: 8px;
 }
-tr.recipe-row td, tr.group-bottom-row td, tr.factory-header th {
-    border-bottom: 1px solid var(--light);
+tr.recipe-row td, tr.group-top-row td, tr.power-row td {
+    border-top: 1px solid var(--light);
 }
 tr.group-row td.leftmost {
     border-left: 1px solid var(--light);
@@ -221,6 +221,40 @@ svg.popout {
     color: var(--accent);
     width: 16;
     height: 16;
+}
+/* breakdown */
+.breakdown-open .breakdown-arrow {
+    transform: rotate(90deg);
+}
+.breakdown-arrow {
+    color: var(--foreground);
+    cursor: pointer;
+    transition: transform 0.25s;
+}
+.breakdown-arrow:hover {
+    color: var(--accent);
+}
+.breakdown {
+    display: none;
+    height: 0;
+}
+.breakdown.breakdown-open {
+    display: table-row;
+    height: auto;
+    transition: height 0.25s;
+}
+.breakdown table {
+    border-collapse: collapse;
+    border-left: solid 0.5em var(--medium);
+    border-right: solid 0.5em var(--medium);
+    background: var(--medium);
+    border-radius: 0.25em;
+}
+.usage-arrow {
+    vertical-align: middle;
+}
+.breakdown-last-input td {
+    border-bottom: 1px solid var(--light);
 }
 /* tabs */
 div.tabs {
@@ -364,4 +398,10 @@ div.graph {
 }
 #debug_tab table td.ignore {
     color: var(--accent);
+}
+/* footer */
+#footer {
+    border-top: 3px solid var(--accent);
+    padding-top: 2px;
+    background-color: var(--medium);
 }

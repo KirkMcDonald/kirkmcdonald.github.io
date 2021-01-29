@@ -1,4 +1,4 @@
-<svg viewBox="0 0 128 96" width="128" height="96" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 128 116" width="128" height="116" xmlns="http://www.w3.org/2000/svg">
     <style type="text/css" media="screen">
         <![CDATA[
             svg {
@@ -12,6 +12,16 @@
             }
             #boxline {
                 transform: translate(64px, 32px);
+            }
+            #right {
+                transform: translate(0px, 100px);
+            }
+            #right:hover {
+                transform: translate(0px, 100px) rotate(90deg);
+                transition-duration: 0.5s;
+            }
+            #rightarrow {
+                transform: translate(16px, 100px);
             }
         ]]>
     </style>
@@ -88,5 +98,15 @@
         <g stroke="none" fill="currentColor" text-anchor="middle">
             <text x="32" y="54" dy="0.35em" style='font-size: 12px; font-family: "Courier New", monospace;'>BOX&amp;LINE</text>
         </g>
+    </g>
+
+    <g id="right" style="transform-origin: 8px 8px;">
+        <path stroke="currentColor" stroke-width="4" stroke-linecap="round"
+            fill="none" d="M 5,2 L 11,8 L 5,14" />
+    </g>
+
+    <g id="rightarrow">
+        <path stroke="currentColor" stroke-width="4" stroke-linecap="round"
+            fill="none" d="M 10,2 L 16,8 L 10,14 M 2,8 L 16,8" />
     </g>
 </svg>

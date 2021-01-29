@@ -1,4 +1,4 @@
-/*Copyright 2015-2019 Kirk McDonald
+/*Copyright 2015-2020 Kirk McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -193,8 +193,11 @@ function renderMinimumAssembler(settings) {
         min = "3"
     }
     var assemblers = spec.factories["crafting"]
-    if ("min" in settings && Number(min) >= 1 && Number(min) <= assemblers.length) {
+    if ("min" in settings) {
         min = settings.min
+        if (Number(settings.min) > assemblers.length) {
+            min = assemblers.length
+        }
     }
     setMinimumAssembler(min)
     var oldNode = document.getElementById("minimum_assembler")
