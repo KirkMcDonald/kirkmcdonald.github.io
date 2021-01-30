@@ -94,6 +94,9 @@ Rational.prototype = {
     isZero: function() {
         return this.p.isZero()
     },
+    isOne: function() {
+        return this.p.equals(1) && this.q.equals(1)
+    },
     isInteger: function() {
         return this.q.equals(bigInt.one)
     },
@@ -132,12 +135,17 @@ Rational.prototype = {
         )
     },
     sub: function(other) {
+        if (other.isZero()) return this
         return new Rational(
             this.p.times(other.q).subtract(this.q.times(other.p)),
             this.q.times(other.q)
         )
     },
     mul: function(other) {
+        if (this.isZero()) return zero
+        if (other.isZero()) return zero
+        if (this.isOne()) return other
+        if (other.isOne()) return this
         return new Rational(
             this.p.times(other.p),
             this.q.times(other.q)
