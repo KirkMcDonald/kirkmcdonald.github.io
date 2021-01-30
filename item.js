@@ -26,11 +26,24 @@ function Item(name, col, row, phase, group, subgroup, order) {
 }
 Item.prototype = {
     constructor: Item,
+    delFromArray: function(recipe, array) {
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] == recipe) {
+                return array.splice(i, 1)
+            }
+        }
+    },
     addRecipe: function(recipe) {
         this.recipes.push(recipe)
     },
+    delRecipe: function(recipe) {
+        this.delFromArray(recipe, this.recipes)
+    },
     addUse: function(recipe) {
         this.uses.push(recipe)
+    },
+    delUse: function(recipe) {
+        this.delFromArray(recipe, this.uses)
     },
     isWeird: function() {
         return this.recipes.length > 1 || this.recipes[0].solveGroup !== null
