@@ -158,6 +158,25 @@ limitations under the License.-->
                         <label for="visdir_down">Vertical</label>
                     </div>
 
+                    <div class="setting-label top">Alignment:</div>
+                    <div>
+                        <input
+                            type="radio"
+                            name="alignment-direction"
+                            id="alignment_right"
+                            value="right"
+                            checked
+                            onchange="changeVisualizerAlignment(event)">
+                        <label for="alignment_right">Right</label><br />
+                        <input
+                            type="radio"
+                            name="alignment-direction"
+                            id="alignment_left"
+                            value="left"
+                            onchange="changeVisualizerAlignment(event)">
+                        <label for="alignment_left">Left</label>
+                    </div>
+
                     <div class="setting-label middle">Maximum node breadth:</div>
                     <div>
                         <input

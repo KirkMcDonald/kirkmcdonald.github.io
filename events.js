@@ -258,6 +258,12 @@ function changeVisualizerDirection(event) {
     display()
 }
 
+// Triggered when the visualizer alignment is changed.
+function changeVisualizerAlignment(event) {
+    visAlignment = event.target.value
+    display()
+}
+
 // Triggered when the max node breadth is changed.
 function changeNodeBreadth(event) {
     maxNodeHeight = Number(event.target.value)

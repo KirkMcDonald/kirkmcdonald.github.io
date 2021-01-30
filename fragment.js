@@ -76,6 +76,9 @@ function formatSettings(targets) {
     if (visDirection !== DEFAULT_DIRECTION) {
         settings += "vd=" + visDirection + "&"
     }
+    if (visAlignment !== DEFAULT_ALIGNMENT) {
+        settings += "va=" + visAlignment + "&"
+    }
     if (maxNodeHeight !== DEFAULT_NODE_BREADTH) {
         settings += "nh=" + maxNodeHeight + "&"
     }
