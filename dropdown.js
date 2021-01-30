@@ -15,23 +15,36 @@ limitations under the License.*/
 
 let dropdownLocal = d3.local()
 
-function toggleDropdown() {
-    let {dropdownNode, onOpen, onClose} = dropdownLocal.get(this)
-    let dropdown = d3.select(dropdownNode)
+function openDropdown() {
+    let {dropdownNode, onOpen } = dropdownLocal.get(this)
     let classes = dropdownNode.classList
-    if (classes.contains("open")) {
-        classes.remove("open")
-        if (onClose) {
-            onClose(dropdown)
-        }
-    } else {
+
+    if (!classes.contains("open")) {
+        let dropdown = d3.select(dropdownNode)
         let selected = dropdown.select("input:checked + label")
+
         dropdown.select(".spacer")
-            .style("width", selected.style("width"))
-            .style("height", selected.style("height"))
+          .style("width", selected.style("width"))
+          .style("height", selected.style("height"))
         classes.add("open")
+
         if (onOpen) {
             onOpen(dropdown)
+        }
+    }
+}
+
+function closeDropdown() {
+    let {dropdownNode, onClose} = dropdownLocal.get(this)
+    let classes = dropdownNode.classList
+
+    if (classes.contains("open")) {
+        let dropdown = d3.select(dropdownNode)
+
+        classes.remove("open")
+
+        if (onClose) {
+            onClose(dropdown)
         }
     }
 }
@@ -45,14 +58,17 @@ function makeDropdown(selector, onOpen, onClose) {
             let dropdownNode = this
             dropdownLocal.set(this, {dropdownNode, onOpen, onClose})
         })
+
     dropdown.append("div")
         .classed("clicker", true)
-        .on("click", toggleDropdown)
+        .on("click", closeDropdown)
+
     let dropdownInner = dropdown.append("div")
         .classed("dropdown", true)
-        .on("click", toggleDropdown)
+        .on("click", openDropdown)
     dropdown.append("div")
         .classed("spacer", true)
+
     return dropdownInner
 }
 
@@ -71,7 +87,7 @@ let labelFor = 0
 function addInputs(selector, name, checked, callback) {
     selector.append("input")
         .on("change", function(d, i, nodes) {
-            toggleDropdown.call(this)
+            closeDropdown.call(this)
             callback.call(this, d, i, nodes)
         })
         .attr("id", () => "input-" + inputId++)
