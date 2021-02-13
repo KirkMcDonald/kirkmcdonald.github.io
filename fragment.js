@@ -190,5 +190,21 @@ function loadSettings(fragment) {
         var unzip = pako.inflateRaw(window.atob(settings.zip), {to: "string"})
         return loadSettings("#" + unzip)
     }
+
+    var userHasCustomisedSettingsInHash = false
+    for (var name in settings) {
+        if (LOCALSTORAGE_SAVED_SETTINGS.indexOf(name) != -1) {
+            userHasCustomisedSettingsInHash = true
+        }
+    }
+    if (!userHasCustomisedSettingsInHash) {
+        if (localStorageEnabled && localStorage.getItem("settings")) {
+            var loadedSettings = JSON.parse(localStorage.getItem("settings"))
+            for (var name in loadedSettings) {
+                settings[name] = loadedSettings[name]
+            }
+        }
+    }
+
     return settings
 }
