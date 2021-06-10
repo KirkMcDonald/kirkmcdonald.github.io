@@ -192,3 +192,14 @@ function loadSettings(fragment) {
     }
     return settings
 }
+
+function formatTitle() {
+    var title = "Factorio Calculator"
+
+    var targetName = getTargetItemName(0)
+    if (targetName) {
+        title = targetName + " - " + title
+    }
+
+    return title
+}

@@ -99,6 +99,11 @@ function pruneSpec(totals) {
         delete spec.ignore[drop[i]]
     }
 }
+function updateDocumentInformation() {
+    // Reflect current module to distinguish bookmarks for user info
+    window.location.hash = "#" + formatSettings()
+    window.top.document.title = formatTitle()
+}
 
 var globalTotals
 
@@ -1264,7 +1269,7 @@ function display() {
     }
     var totals = globalTotals
 
-    window.location.hash = "#" + formatSettings()
+    updateDocumentInformation()
 
     if (currentTab == "graph_tab") {
         renderGraph(totals, spec.ignore)

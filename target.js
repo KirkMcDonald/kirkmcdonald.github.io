@@ -16,10 +16,55 @@ limitations under the License.*/
 var DEFAULT_ITEM = "advanced-circuit"
 
 var build_targets = []
+var build_target_localized_names = {}
+
+function getLocalizedItemNameCount() {
+    if (build_target_localized_names){
+        return Object.keys(build_target_localized_names).length
+    }
+    else{
+        return 0
+    }
+}
+function buildLocalizedItemNameTable(items) {
+    if (getLocalizedItemNameCount() > 0)
+        return
+
+    if (!items)
+        return
+
+    for (const [itemName, item] of Object.entries(items)) {
+        var localized_name = itemName
+        if (item && item.localized_name) {
+            localized_name = item.localized_name
+        }
+        build_target_localized_names[itemName] = localized_name
+    }
+}
+
+function getTargetItemName(i) {
+    if (i > build_targets.length)
+        return null
+
+    var targetName = ""
+
+    var target = build_targets[i]
+    if (target) {
+        targetName = target.itemName
+        var localized_name = build_target_localized_names[targetName]
+        if (localized_name) {
+            targetName = localized_name
+        }
+    }
+
+    return targetName
+}
 
 function addTarget(itemName) {
     var target = new BuildTarget(build_targets.length, itemName)
+
     build_targets.push(target)
+
     var targetList = document.getElementById("targets")
     var plus = targetList.replaceChild(target.element, targetList.lastChild)
     targetList.appendChild(plus)
