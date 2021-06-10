@@ -19,15 +19,17 @@ var build_targets = []
 var build_target_localized_names = {}
 
 function addTarget(item) {
-    if (!item) {
-        return
+    var itemName = ""
+    if (item) {
+        item.name
     }
 
-    var itemName = item.name
     var target = new BuildTarget(build_targets.length, itemName)
-
     build_targets.push(target)
-    build_target_localized_names[itemName] = item.localized_name
+
+    if (item) {
+        build_target_localized_names[itemName] = item.localized_name
+    }
 
     var targetList = document.getElementById("targets")
     var plus = targetList.replaceChild(target.element, targetList.lastChild)
