@@ -149,7 +149,7 @@ function loadData(modName, settings) {
                 var targetString = targets[i]
                 var parts = targetString.split(":")
                 var name = parts[0]
-                var target = addTarget(name)
+                var target = addTarget(items[name])
                 var type = parts[1]
                 if (type == "f") {
                     var j = parts[2].indexOf(";")

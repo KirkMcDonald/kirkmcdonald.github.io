@@ -16,10 +16,19 @@ limitations under the License.*/
 var DEFAULT_ITEM = "advanced-circuit"
 
 var build_targets = []
+var build_target_localized_names = {}
 
-function addTarget(itemName) {
+function addTarget(item) {
+    if (!item) {
+        return
+    }
+
+    var itemName = item.name
     var target = new BuildTarget(build_targets.length, itemName)
+
     build_targets.push(target)
+    build_target_localized_names[itemName] = item.localized_name
+
     var targetList = document.getElementById("targets")
     var plus = targetList.replaceChild(target.element, targetList.lastChild)
     targetList.appendChild(plus)
@@ -34,7 +43,10 @@ function getTargetItemName(i) {
 
     var target = build_targets[i]
     if (target) {
-        targetName = target.itemName
+        var localized_name = build_target_localized_names[target.itemName]
+        if (localized_name) {
+            targetName = localized_name
+        }
     }
 
     return targetName

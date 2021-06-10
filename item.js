@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 "use strict"
 
-function Item(name, col, row, phase, group, subgroup, order) {
+function Item(name, col, row, phase, group, subgroup, order, localized_name) {
     this.name = name
     this.icon_col = col
     this.icon_row = row
@@ -23,6 +23,7 @@ function Item(name, col, row, phase, group, subgroup, order) {
     this.group = group
     this.subgroup = subgroup
     this.order = order
+    this.localized_name = localized_name
 }
 Item.prototype = {
     constructor: Item,
@@ -93,6 +94,7 @@ function getItem(data, items, name) {
             d.group,
             d.subgroup,
             d.order,
+            d.localized_name.en,
         )
         items[name] = item
         return item
@@ -111,6 +113,7 @@ function getItems(data) {
         "production",
         "energy",
         "f[nuclear-energy]-d[reactor-cycle]",
+         reactor.localized_name,
     )
     return items
 }
