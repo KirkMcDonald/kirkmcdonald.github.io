@@ -222,7 +222,10 @@ function loadData(modName, settings) {
 
         // Prune factory spec after first solution is calculated.
         pruneSpec(globalTotals)
+
+        // Reflect current module to distinguish bookmarks for user info
         window.location.hash = "#" + formatSettings()
+        window.top.document.title = formatTitle()
     })
 }
 

@@ -26,6 +26,20 @@ function addTarget(itemName) {
     return target
 }
 
+function getTargetItemName(i) {
+    if (i > build_targets.length)
+        return null
+
+    var targetName = ""
+
+    var target = build_targets[i]
+    if (target) {
+        targetName = target.itemName
+    }
+
+    return targetName
+}
+
 function isFactoryTarget(recipeName) {
     // Special case: rocket-part and rocket-launch are linked in a weird way.
     if (recipeName === "rocket-part") {
