@@ -371,6 +371,8 @@ var DEFAULT_BELT = "transport-belt"
 
 var preferredBelt = DEFAULT_BELT
 var preferredBeltSpeed = null
+var DEFAULT_ALLBELT = false
+var allBeltEnabled
 
 function renderBelt(settings) {
     var pref = DEFAULT_BELT
@@ -403,6 +405,21 @@ function setPreferredBelt(name) {
         }
     }
 }
+
+function renderAllBelt(settings) {
+    var ab = DEFAULT_ALLBELT
+    if ("ab" in settings) {
+        ab = settings.ab === "on"
+    }
+    setAllBelt(ab)
+    var input = document.getElementById("allbelt")
+    input.checked = ab
+}
+
+function setAllBelt(enabled) {
+    allBeltEnabled = enabled
+}
+
 
 // pipe
 var DEFAULT_PIPE = RationalFromFloat(17)
@@ -604,6 +621,7 @@ function renderSettings(settings) {
     renderOil(settings)
     renderKovarex(settings)
     renderBelt(settings)
+    renderAllBelt(settings)
     renderPipe(settings)
     renderMiningProd(settings)
     renderDefaultModule(settings)

@@ -191,38 +191,76 @@ BeltIcon.prototype = {
 
 class BeltCells {
     constructor(row) {
-        this.beltCell = document.createElement("td")
-        row.appendChild(this.beltCell)
-        let beltCountCell = document.createElement("td")
-        beltCountCell.classList.add("right-align", "pad-right")
-        this.beltCountNode = document.createElement("tt")
-        beltCountCell.appendChild(this.beltCountNode)
-        row.appendChild(beltCountCell)
+        this.beltCell = []
+        this.beltCountCell = []
+        this.beltCountNode = []
+
+        for(let i = 0; i < belts.length; i++) {
+            this.beltCell[i] = document.createElement("td")
+            row.appendChild(this.beltCell[i])
+            this.beltCountCell[i] = document.createElement("td")
+            this.beltCountCell[i].classList.add("right-align", "pad-right")
+            this.beltCountNode[i] = document.createElement("tt")
+            this.beltCountCell[i].appendChild(this.beltCountNode[i])
+            row.appendChild(this.beltCountCell[i])
+        }
     }
     setRate(rate) {
-        while (this.beltCell.hasChildNodes()) {
-            this.beltCell.removeChild(this.beltCell.lastChild)
+
+        while (this.beltCell[0].hasChildNodes()) {
+            this.beltCell[0].removeChild(this.beltCell[0].lastChild)
         }
         let beltImage = getImage(new BeltIcon())
-        this.beltCell.appendChild(beltImage)
-        this.beltCell.appendChild(new Text(" \u00d7"))
+        this.beltCell[0].appendChild(beltImage)
+        this.beltCell[0].appendChild(new Text(" \u00d7"))
         let beltCount = rate.div(preferredBeltSpeed)
-        this.beltCountNode.textContent = alignCount(beltCount)
+        this.beltCountNode[0].textContent = alignCount(beltCount)
+
+        var i = 1
+        for(let idx in belts) {
+            if(belts[idx].name === preferredBelt){
+                continue
+             } else {
+                while (this.beltCell[i].hasChildNodes()) {
+                    this.beltCell[i].removeChild(this.beltCell[i].lastChild)
+                }
+                let beltItem = solver.items[belts[idx].name]
+                let beltImage = getImage(new BeltIcon(beltItem, belts[idx].speed ))
+                this.beltCell[i].appendChild(beltImage)
+                this.beltCell[i].appendChild(new Text(" \u00d7"))
+                let beltCount = rate.div(belts[idx].speed)
+                this.beltCountNode[i].textContent = alignCount(beltCount)
+                if (allBeltEnabled) {
+                    this.beltCell[i].classList.remove("belt-hide")
+                    this.beltCountCell[i].classList.remove("belt-hide")
+                } else {
+                    this.beltCell[i].classList.add("belt-hide")
+                    this.beltCountCell[i].classList.add("belt-hide")
+                }
+                i++
+            }
+        }
     }
 }
 
 class PipeCells {
     constructor(row) {
-        let pipeCell = document.createElement("td")
-        pipeCell.colSpan = 2
-        pipeCell.classList.add("pad-right")
-        row.appendChild(pipeCell)
+        this.pipeCell = document.createElement("td")
+        this.pipeCell.classList.add("pad-right")
+        row.appendChild(this.pipeCell)
         let pipeItem = solver.items["pipe"]
-        pipeCell.appendChild(getImage(pipeItem, true))
+        this.pipeCell.appendChild(getImage(pipeItem, true))
         this.pipeNode = document.createElement("tt")
-        pipeCell.appendChild(this.pipeNode)
+        this.pipeCell.appendChild(this.pipeNode)
     }
     setRate(rate) {
+        // If all belts are show then there are 2 columns per belt shown
+        // so need to span all of them
+        if (allBeltEnabled) {
+            this.pipeCell.colSpan = belts.length * 2
+        } else {
+            this.pipeCell.colSpan = 2
+        }
         if (rate.equal(zero)) {
             this.pipeNode.textContent = " \u00d7 0"
             return
@@ -243,8 +281,15 @@ function addBeltCells(row, item) {
     } else if (item.phase == "fluid") {
         return new PipeCells(row)
     } else {
-        row.appendChild(document.createElement("td"))
-        row.appendChild(document.createElement("td"))
+        let nullCell = document.createElement("td")
+        // If all belts are shown then there are 2 columns per belt shown
+        // so need to span all of them
+        if (allBeltEnabled) {
+            nullCell.colSpan = belts.length * 2
+        } else {
+            nullCell.colSpan = 2
+        }
+        row.appendChild(nullCell)
         return null
     }
 }
@@ -1054,6 +1099,9 @@ function RecipeTable(node) {
         if (i == 1) {
             this.recipeHeader = th
         }
+        if (i == 2) {
+            this.beltHeader = th
+        }
         if (i == 3) {
             this.wasteHeader = th
             th.classList.add("waste")
@@ -1093,6 +1141,11 @@ RecipeTable.prototype = {
     setRecipeHeader: function() {
         this.recipeHeader.textContent = "items/" + rateName
         this.wasteHeader.textContent = "surplus/" + rateName
+        if (allBeltEnabled) {
+            this.beltHeader.colSpan =  belts.length * 2
+        } else {
+            this.beltHeader.colSpan =  2
+        }
     },
     updateDisplayedModules: function() {
         for (var i = 0; i < this.rowArray.length; i++) {
