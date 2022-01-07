@@ -555,7 +555,7 @@ RecipeRow.prototype = {
         this.factoryRow.updateDisplayedModules()
     },
     totalPower: function() {
-        if (this.factoryRow.power && this.factoryRow.power.fuel === "electric") {
+        if (this.factoryRow.power && this.factoryRow.power.fuel === "electric" && !this.node.classList.contains("ignore")) {
             return this.factoryRow.power.power
         }
         return zero
