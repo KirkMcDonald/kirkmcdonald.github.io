@@ -30,7 +30,7 @@ function formatSettings(targets) {
         settings += "rate=" + rateName + "&"
     }
     if (pageTitle != DEFAULT_TITLE) {
-        settings += "title=" + pageTitle + "&"
+        settings += "title=" + encodeURI(pageTitle) + "&"
     }
     if (ratePrecision != DEFAULT_RATE_PRECISION) {
         settings += "rp=" + ratePrecision + "&"
