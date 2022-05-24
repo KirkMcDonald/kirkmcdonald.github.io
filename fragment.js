@@ -29,6 +29,9 @@ function formatSettings(targets) {
     if (rateName != DEFAULT_RATE) {
         settings += "rate=" + rateName + "&"
     }
+    if (pageTitle != DEFAULT_TITLE) {
+        settings += "title=" + pageTitle + "&"
+    }
     if (ratePrecision != DEFAULT_RATE_PRECISION) {
         settings += "rp=" + ratePrecision + "&"
     }

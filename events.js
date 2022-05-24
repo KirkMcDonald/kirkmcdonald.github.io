@@ -134,6 +134,12 @@ function RateHandler(target) {
 
 // Obtains current data set from UI element, and resets the world with the new
 // data.
+function changePageTitle(event) {
+    pageTitle = event.target.value
+    document.title = pageTitle
+    display()
+}
+
 function changeMod() {
     var modName = currentMod()
 

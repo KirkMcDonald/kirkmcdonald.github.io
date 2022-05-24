@@ -35,6 +35,19 @@ function addOverrideOptions(version) {
     DEFAULT_MODIFICATION = tag
 }
 
+// page title
+var DEFAULT_TITLE = "Factorio Calculator"
+var pageTitle = DEFAULT_TITLE
+
+function renderPageTitle(settings) {
+    pageTitle = DEFAULT_TITLE
+    if ("title" in settings) {
+        pageTitle = decodeURI(settings.title)
+        document.title = pageTitle
+    }
+    document.getElementById("page_title").value = pageTitle
+}
+
 
 // Ideally we'd write this as a generalized function, but for now we can hard-
 // code these version upgrades.
@@ -595,6 +608,7 @@ function renderShowDebug(settings) {
 // all
 function renderSettings(settings) {
     renderTooltip(settings)
+    renderPageTitle(settings)
     renderColorScheme(settings)
     renderRateOptions(settings)
     renderPrecisions(settings)
