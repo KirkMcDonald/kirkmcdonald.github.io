@@ -1,5 +1,5 @@
 <svg viewBox="0 0 128 116" width="128" height="116" xmlns="http://www.w3.org/2000/svg">
-    <style type="text/css" media="screen">
+    <!--<style type="text/css" media="screen">
         <![CDATA[
             svg {
                 color: black;
@@ -24,7 +24,7 @@
                 transform: translate(16px, 100px);
             }
         ]]>
-    </style>
+    </style>-->
     <path id="popout" fill="none" stroke="currentColor" stroke-width="2px" d="
         M 13,5 L 1,5 L 1,23 L 19,23 L 19,10
         M 10,14 L 23,1
