@@ -286,6 +286,15 @@ limitations under the License.-->
         <td><input type="checkbox" id="tooltip" onchange="changeTooltip(event)" checked></td>
         </tr>
         </table>
+        <button id="settings_reset" class="ui" onclick="resetSettings()">
+            Reset to default
+        </button>
+        <button id="settings_load" class="ui" onclick="loadSettingsLocalStorage()">
+            Load settings
+        </button>
+        <button id="settings_save" class="ui" onclick="saveSettingsLocalStorage()">
+            Save settings
+        </button>
     </div>
 
     <div id="about_tab" class="tab">
