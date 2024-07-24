@@ -133,6 +133,8 @@ function loadData(modName, settings) {
         var items = graph[0]
         var recipes = graph[1]
 
+        buildLocalizedItemNameTable(items)
+
         belts = getBelts(data)
         fuel = getFuel(data, items)["chemical"]
 
@@ -222,7 +224,7 @@ function loadData(modName, settings) {
 
         // Prune factory spec after first solution is calculated.
         pruneSpec(globalTotals)
-        window.location.hash = "#" + formatSettings()
+        updateDocumentInformation()
     })
 }
 
