@@ -132,6 +132,48 @@ function RateHandler(target) {
 
 // settings events
 
+function resetSettings() {
+    var settings = loadSettings(window.location.hash)
+    for (var i = 0; i < LOCALSTORAGE_SAVED_SETTINGS.length; i++) {
+        delete settings[LOCALSTORAGE_SAVED_SETTINGS[i]]
+    }
+    if (currentMod() != DEFAULT_MODIFICATION) {
+        document.getElementById("data_set").value = DEFAULT_MODIFICATION
+        changeMod()
+    } else {
+        // changeMod >> loadData calls these, so don't duplicate calls
+        renderSettings(settings)
+        itemUpdate()
+    }
+}
+
+function loadSettingsLocalStorage() {
+    var settings = JSON.parse(localStorage.getItem("settings"))
+    if ("data" in settings && settings.data != currentMod()) {
+        document.getElementById("data_set").value = settings.data
+        changeMod()
+    } else if (currentMod() != DEFAULT_MODIFICATION) {
+        document.getElementById("data_set").value = DEFAULT_MODIFICATION
+        changeMod()
+    } else {
+        // changeMod >> loadData calls these, so don't duplicate calls
+        renderSettings(settings)
+        itemUpdate()
+    }
+}
+
+function saveSettingsLocalStorage() {
+    var settings = loadSettings(window.location.hash)
+    for (var name in settings) {
+        // delete setting if not in settingsToSave
+        if (LOCALSTORAGE_SAVED_SETTINGS.indexOf(name) == -1) {
+            delete settings[name]
+        }
+    }
+    localStorage.setItem("settings", JSON.stringify(settings))
+    document.getElementById("settings_load").style.display = ""
+}
+
 // Obtains current data set from UI element, and resets the world with the new
 // data.
 function changeMod() {
@@ -462,6 +504,12 @@ var tabMap = {
 
 // Triggered when a tab is clicked on.
 function clickTab(tabName) {
+    if (!tabName) {
+        tabName = DEFAULT_TAB
+    }
+    if (!tabName.endsWith("_tab")) {
+        tabName += "_tab"
+    }
     currentTab = tabName
     var tabs = document.getElementsByClassName("tab")
     for (var i=0; i < tabs.length; i++) {
