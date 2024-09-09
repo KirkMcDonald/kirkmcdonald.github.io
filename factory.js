@@ -275,7 +275,7 @@ Miner.prototype.prodEffect = function(spec) {
     return prod.add(spec.miningProd)
 }
 
-var rocketLaunchDuration = RationalFromFloats(2475, 60)
+var rocketLaunchDuration = RationalFromFloats(2434, 60)
 
 function launchRate(spec) {
     var partRecipe = solver.recipes["rocket-part"]
