@@ -1180,6 +1180,15 @@ RecipeTable.prototype = {
                 // Don't rearrange the DOM if we don't need to.
                 if (!sameRows) {
                     row.appendTo(this.node)
+                    // Some browsers don't trigger mouseleave here...
+                    var evtMouseLeave = new MouseEvent("mouseleave", { view: window, bubbles: true, cancelable: true })
+                    if (row.itemRow) {
+                        row.itemRow.image.dispatchEvent(evtMouseLeave);
+                    } else if (row.itemRows) {
+                        for (var j = 0; j < row.itemRows.length; j++) {
+                            row.itemRows[j].image.dispatchEvent(evtMouseLeave);
+                        }
+                    }
                 }
                 row.setRates(totals, items, fuelUsers)
             } else {
