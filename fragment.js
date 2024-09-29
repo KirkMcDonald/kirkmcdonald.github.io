@@ -53,6 +53,9 @@ function formatSettings(targets) {
     if (preferredBelt != DEFAULT_BELT) {
         settings += "belt=" + preferredBelt + "&"
     }
+    if (allBeltEnabled != DEFAULT_ALLBELT) {
+        settings += "ab=on&"
+    }
     if (!minPipeLength.equal(DEFAULT_PIPE)) {
         settings += "pipe=" + minPipeLength.toDecimal(0) + "&"
     }

@@ -203,6 +203,9 @@ tr.no-mods td.module * {
 td.waste-hide, th.waste-hide {
     display: none;
 }
+td.belt-hide {
+    display: none;
+}
 span.displaylink {
     font-size: x-small;
 }
