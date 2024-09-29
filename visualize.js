@@ -491,10 +491,18 @@ function renderGraph(totals, ignore) {
         nw = maxNodeWidth
         np = nodePadding
     }
+
+    let alignment
+    if (visAlignment === "right") {
+        alignment = d3sankey.sankeyRight
+    } else if (visAlignment === "left") {
+        alignment = d3sankey.sankeyLeft
+    }
+
     let sankey = d3sankey.sankey()
         .nodeWidth(nw)
         .nodePadding(np)
-        .nodeAlign(d3sankey.sankeyRight)
+        .nodeAlign(alignment)
         .maxNodeHeight(maxNodeHeight)
         .linkLength(linkLength)
     let {nodes, links} = sankey(data)
