@@ -22,11 +22,13 @@ function Modification(name, filename, legacy, sheetSize) {
 }
 
 var MODIFICATIONS = {
-    "1-1-19": new Modification("Vanilla 1.1.19", "vanilla-1.1.19.json", false, [480, 512]),
-    "1-1-19x": new Modification("Vanilla 1.1.19 - Expensive", "vanilla-1.1.19-expensive.json", false, [480, 512]),
+    //"1-1-19": new Modification("Vanilla 1.1.19", "vanilla-1.1.19.json", false, [480, 512]),
+    //"1-1-19x": new Modification("Vanilla 1.1.19 - Expensive", "vanilla-1.1.19-expensive.json", false, [480, 512]),
+    "1-1-110": new Modification("Vanilla 1.1.110", "vanilla-1.1.110.json", false, [480, 512]),
+    "1-1-110x": new Modification("Vanilla 1.1.110 - Expensive", "vanilla-1.1.110-expensive.json", false, [480, 512]),
 }
 
-var DEFAULT_MODIFICATION = "1-1-19"
+var DEFAULT_MODIFICATION = "1-1-110"
 
 function addOverrideOptions(version) {
     var tag = "local-" + version.replace(/\./g, "-")
@@ -39,6 +41,8 @@ function addOverrideOptions(version) {
 // Ideally we'd write this as a generalized function, but for now we can hard-
 // code these version upgrades.
 var modUpdates = {
+    "1-1-19": "1-1-110",
+    "1-1-19x": "1-1-110x",
 }
 
 function normalizeDataSetName(modName) {

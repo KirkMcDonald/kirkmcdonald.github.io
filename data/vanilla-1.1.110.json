@@ -308,10 +308,12 @@
                             "x": 32,
                             "y": 0
                         }, {
+                            "draw_as_light": true,
                             "filename": "__base__/graphics/entity/heat-exchanger/heatex-endings-heated.png",
                             "frame_count": 1,
                             "height": 32,
                             "hr_version": {
+                                "draw_as_light": true,
                                 "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-endings-heated.png",
                                 "frame_count": 1,
                                 "height": 64,
@@ -353,10 +355,12 @@
                             "x": 0,
                             "y": 0
                         }, {
+                            "draw_as_light": true,
                             "filename": "__base__/graphics/entity/heat-exchanger/heatex-endings-heated.png",
                             "frame_count": 1,
                             "height": 32,
                             "hr_version": {
+                                "draw_as_light": true,
                                 "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-endings-heated.png",
                                 "frame_count": 1,
                                 "height": 64,
@@ -398,10 +402,12 @@
                             "x": 64,
                             "y": 0
                         }, {
+                            "draw_as_light": true,
                             "filename": "__base__/graphics/entity/heat-exchanger/heatex-endings-heated.png",
                             "frame_count": 1,
                             "height": 32,
                             "hr_version": {
+                                "draw_as_light": true,
                                 "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-endings-heated.png",
                                 "frame_count": 1,
                                 "height": 64,
@@ -443,10 +449,12 @@
                             "x": 96,
                             "y": 0
                         }, {
+                            "draw_as_light": true,
                             "filename": "__base__/graphics/entity/heat-exchanger/heatex-endings-heated.png",
                             "frame_count": 1,
                             "height": 32,
                             "hr_version": {
+                                "draw_as_light": true,
                                 "filename": "__base__/graphics/entity/heat-exchanger/hr-heatex-endings-heated.png",
                                 "frame_count": 1,
                                 "height": 64,
@@ -3726,7 +3734,7 @@
             },
             "name": "tank-cannon",
             "order": "z[tank]-a[cannon]",
-            "stack_size": 5,
+            "stack_size": 1,
             "subgroup": "gun",
             "type": "gun"
         },
@@ -9849,8 +9857,7 @@
             "energy_usage": 250000,
             "icon_col": 8,
             "icon_row": 11,
-            "idle_energy_usage": "10KW",
-            "lamp_energy_usage": "10KW",
+            "lamp_energy_usage": "0KW",
             "localized_name": {
                 "en": "Rocket silo"
             },
@@ -9883,7 +9890,7 @@
                 "name": "no module"
             }
         },
-        "hash": "3d3a8d8b3ece0e13191a2ea142d21131",
+        "hash": "e52bb55c81cc32ee4d4000353822efb8",
         "height": 512,
         "width": 480
     },
