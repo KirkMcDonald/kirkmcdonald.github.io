@@ -1,4 +1,4 @@
-/*Copyright 2015-2019 Kirk McDonald
+/*Copyright 2019-2021 Kirk McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -11,106 +11,81 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-"use strict"
+import { Icon } from "./icon.js"
+import { DisabledRecipe } from "./recipe.js"
+import { Totals } from "./totals.js"
 
-function Item(name, col, row, phase, group, subgroup, order) {
-    this.name = name
-    this.icon_col = col
-    this.icon_row = row
-    this.recipes = []
-    this.uses = []
-    this.phase = phase
-    this.group = group
-    this.subgroup = subgroup
-    this.order = order
-}
-Item.prototype = {
-    constructor: Item,
-    addRecipe: function(recipe) {
+export class Item {
+    constructor(key, name, col, row, phase, group, subgroup, order) {
+        this.key = key
+        this.name = name
+        // XXX: Satisfactory cruft
+        this.tier = 0
+        this.phase = phase
+        this.recipes = []
+        this.uses = []
+
+        this.icon_col = col
+        this.icon_row = row
+        this.icon = new Icon(this)
+
+        this.group = group
+        this.subgroup = subgroup
+        this.order = order
+
+        this.disableRecipe = new DisabledRecipe(this)
+    }
+    allRecipes() {
+        return this.recipes.concat([this.disableRecipe])
+    }
+    addRecipe(recipe) {
         this.recipes.push(recipe)
-    },
-    addUse: function(recipe) {
+    }
+    addUse(recipe) {
         this.uses.push(recipe)
-    },
-    isWeird: function() {
-        return this.recipes.length > 1 || this.recipes[0].solveGroup !== null
-    },
-    produce: function(rate, ignore, spec) {
-        var totals = new Totals(rate, this)
-        if (this.isWeird()) {
-            totals.addUnfinished(this.name, rate)
-            return totals
-        }
-        var recipe = this.recipes[0]
-        var gives = recipe.gives(this, spec)
-        rate = rate.div(gives)
-        totals.add(recipe.name, rate)
-        if (ignore[recipe.name]) {
-            return totals
-        }
-        var ingredients = recipe.ingredients.concat(recipe.fuelIngredient(spec))
-        for (var i=0; i < ingredients.length; i++) {
-            var ing = ingredients[i]
-            var subTotals = ing.item.produce(rate.mul(ing.amount), ignore, spec)
-            totals.combine(subTotals)
-        }
-        return totals
-    },
-    renderTooltip: function(extra) {
-        if (this.recipes.length === 1 && this.recipes[0].name === this.name) {
-            return this.recipes[0].renderTooltip(extra)
-        }
-        var t = document.createElement("div")
-        t.classList.add("frame")
-        var title = document.createElement("h3")
-        var im = getImage(this, true)
-        title.appendChild(im)
-        title.appendChild(new Text(formatName(this.name)))
-        t.appendChild(title)
-        if (extra) {
-            t.appendChild(extra)
-        }
-        return t
+    }
+    renderTooltip() {
+        let self = this
+        let t = d3.create("div")
+            .classed("frame", true)
+        let header = t.append("h3")
+        header.append(() => self.icon.make(32, true))
+        header.append(() => new Text(self.name))
+        return t.node()
     }
 }
 
-function getItem(data, items, name) {
-    if (name in items) {
-        return items[name]
-    } else {
-        var d = data.items[name]
-        var phase
-        if (d.type == "fluid") {
-            phase = "fluid"
-        } else {
-            phase = "solid"
+export function getItems(data) {
+    let items = new Map()
+    //for (let d of data.items) {
+    for (let key in data.items) {
+        let d = data.items[key]
+        if (!d.localized_name) {
+            continue
         }
-        var item = new Item(
-            name,
+        let phase = (d.type === "fluid") ? "fluid" : "solid"
+        items.set(d.name, new Item(
+            d.name,
+            d.localized_name.en,
             d.icon_col,
             d.icon_row,
             phase,
             d.group,
             d.subgroup,
             d.order,
-        )
-        items[name] = item
-        return item
+        ))
     }
-}
-
-function getItems(data) {
-    var items = {}
-    var cycleName = "nuclear-reactor-cycle"
-    var reactor = data.items["nuclear-reactor"]
-    items[cycleName] = new Item(
-        cycleName,
+    let cycleKey = "nuclear-reactor-cycle"
+    let reactor = data.items["nuclear-reactor"]
+    items.set(cycleKey, new Item(
+        cycleKey,
+        "Nuclear reactor cycle",
         reactor.icon_col,
         reactor.icon_row,
         "abstract",
         "production",
         "energy",
         "f[nuclear-energy]-d[reactor-cycle]",
-    )
+    ))
     return items
 }

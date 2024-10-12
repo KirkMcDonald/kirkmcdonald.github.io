@@ -1,4 +1,4 @@
-/*Copyright 2015-2019 Kirk McDonald
+/*Copyright 2019-2021 Kirk McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -11,1270 +11,531 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-"use strict"
+import { makeDropdown, addInputs } from "./dropdown.js"
+import { toggleIgnoreHandler } from "./events.js"
+import { spec } from "./factory.js"
+import { formatSettings } from "./fragment.js"
+import { getRecipeGroups, topoSort } from "./groups.js"
+import { sprites } from "./icon.js"
+import { moduleRows } from "./module.js"
+import { Rational, zero, one } from "./rational.js"
 
-function formatName(name) {
-    name = name.replace(new RegExp("-", 'g'), " ")
-    return name[0].toUpperCase() + name.slice(1)
-}
-
-function displayRate(x) {
-    x = x.mul(displayRateFactor)
-    if (displayFormat == "rational") {
-        return x.toMixed()
-    } else {
-        return x.toDecimal(ratePrecision)
+class Header {
+    constructor(text, colspan, surplus) {
+        this.text = text
+        this.colspan = colspan
+        this.surplus = surplus
     }
 }
 
-function displayCount(x) {
-    if (displayFormat == "rational") {
-        return x.toMixed()
-    } else {
-        return x.toUpDecimal(countPrecision)
+function setlen(a, len, callback) {
+    if (a.length > len) {
+        a.length = len
+    }
+    while (a.length < len) {
+        a.push(callback())
     }
 }
 
-function align(s, prec) {
-    if (displayFormat == "rational") {
-        return s
-    }
-    var idx = s.indexOf(".")
-    if (idx == -1) {
-        idx = s.length
-    }
-    var toAdd = prec - s.length + idx
-    if (prec > 0) {
-        toAdd += 1
-    }
-    while (toAdd > 0) {
-        s += "\u00A0"
-        toAdd--
-    }
-    return s
-}
-
-function alignRate(x) {
-    return align(displayRate(x), ratePrecision)
-}
-
-function alignCount(x) {
-    return align(displayCount(x), countPrecision)
-}
-
-var powerSuffixes = ["\u00A0W", "kW", "MW", "GW", "TW", "PW"]
-
-function alignPower(x, prec) {
-    if (prec === undefined) {
-        prec = countPrecision
-    }
-    var thousand = RationalFromFloat(1000)
-    var i = 0
-    while (thousand.less(x) && i < powerSuffixes.length - 1) {
-        x = x.div(thousand)
-        i++
-    }
-    return align(displayCount(x), prec) + " " + powerSuffixes[i]
-}
-
-var sortOrder = "topo"
-
-function pruneSpec(totals) {
-    var drop = []
-    for (var name in spec.spec) {
-        if (!(name in totals.totals)) {
-            drop.push(name)
-        }
-    }
-    for (var i = 0; i < drop.length; i++) {
-        delete spec.spec[drop[i]]
-    }
-    drop = []
-    for (var name in spec.ignore) {
-        if (!(name in totals.totals)) {
-            drop.push(name)
-        }
-    }
-    for (var i = 0; i < drop.length; i++) {
-        delete spec.ignore[drop[i]]
-    }
-}
-
-var globalTotals
-
-// The main top-level calculation function. Called whenever the solution
-// requires recalculation.
-//
-// This function obtains the set of item-rates to solve for from build_targets,
-// the set of modules from spec, and obtains a solution from solver. The
-// factory counts are then obtained from the solution using the spec.
-function itemUpdate() {
-    var rates = {}
-    for (var i = 0; i < build_targets.length; i++) {
-        var target = build_targets[i]
-        var rate = target.getRate()
-        rates[target.itemName] = rate
-    }
-    globalTotals = solver.solve(rates, spec.ignore, spec)
-    display()
-}
-
-function Header(name, colSpan) {
-    if (!colSpan) {
-        colSpan = 1
-    }
-    return {"name": name, "colSpan": colSpan}
-}
-
-var NO_MODULE = "no module"
-
-function pipeValues(rate) {
-    var pipes = rate.div(maxPipeThroughput).ceil()
-    var perPipeRate = rate.div(pipes)
-    var length = pipeLength(perPipeRate).floor()
-    return {pipes: pipes, length: length}
-}
-
-function ItemIcon(item, canIgnore) {
-    this.item = item
-    this.name = item.name
-    this.extra = null
-    if (canIgnore) {
-        this.extra = document.createElement("span")
-        this.span = document.createElement("span")
-        this.extra.appendChild(this.span)
-        this.extra.appendChild(document.createElement("br"))
-    }
-    this.icon_col = item.icon_col
-    this.icon_row = item.icon_row
-}
-ItemIcon.prototype = {
-    constructor: ItemIcon,
-    setText: function(text) {
-        this.span.textContent = text
-    },
-    renderTooltip: function() {
-        return this.item.renderTooltip(this.extra)
-    }
-}
-
-function BeltIcon(beltItem, beltSpeed) {
-    if (!beltItem) {
-        beltItem = solver.items[preferredBelt]
-    }
-    if (!beltSpeed) {
-        beltSpeed = preferredBeltSpeed
-    }
-    this.item = beltItem
-    this.speed = beltSpeed
-    this.name = this.item.name
-    this.icon_col = this.item.icon_col
-    this.icon_row = this.item.icon_row
-}
-BeltIcon.prototype = {
-    constructor: BeltIcon,
-    renderTooltip: function() {
-        var t = document.createElement("div")
-        t.classList.add("frame")
-        var title = document.createElement("h3")
-        var im = getImage(this, true)
-        title.appendChild(im)
-        title.appendChild(new Text(formatName(this.name)))
-        t.appendChild(title)
-        var b = document.createElement("b")
-        b.textContent = "Max throughput: "
-        t.appendChild(b)
-        t.appendChild(new Text(displayRate(this.speed) + " items/" + rateName))
-        return t
-    }
-}
-
-class BeltCells {
-    constructor(row) {
-        this.beltCell = document.createElement("td")
-        row.appendChild(this.beltCell)
-        let beltCountCell = document.createElement("td")
-        beltCountCell.classList.add("right-align", "pad-right")
-        this.beltCountNode = document.createElement("tt")
-        beltCountCell.appendChild(this.beltCountNode)
-        row.appendChild(beltCountCell)
-    }
-    setRate(rate) {
-        while (this.beltCell.hasChildNodes()) {
-            this.beltCell.removeChild(this.beltCell.lastChild)
-        }
-        let beltImage = getImage(new BeltIcon())
-        this.beltCell.appendChild(beltImage)
-        this.beltCell.appendChild(new Text(" \u00d7"))
-        let beltCount = rate.div(preferredBeltSpeed)
-        this.beltCountNode.textContent = alignCount(beltCount)
-    }
-}
-
-class PipeCells {
-    constructor(row) {
-        let pipeCell = document.createElement("td")
-        pipeCell.colSpan = 2
-        pipeCell.classList.add("pad-right")
-        row.appendChild(pipeCell)
-        let pipeItem = solver.items["pipe"]
-        pipeCell.appendChild(getImage(pipeItem, true))
-        this.pipeNode = document.createElement("tt")
-        pipeCell.appendChild(this.pipeNode)
-    }
-    setRate(rate) {
-        if (rate.equal(zero)) {
-            this.pipeNode.textContent = " \u00d7 0"
-            return
-        }
-        let pipe = pipeValues(rate)
-        let pipeString = ""
-        if (one.less(pipe.pipes)) {
-            pipeString += " \u00d7 " + pipe.pipes.toDecimal(0)
-        }
-        pipeString += " \u2264 " + pipe.length.toDecimal(0)
-        this.pipeNode.textContent = pipeString
-    }
-}
-
-function addBeltCells(row, item) {
-    if (item.phase == "solid") {
-        return new BeltCells(row)
-    } else if (item.phase == "fluid") {
-        return new PipeCells(row)
-    } else {
-        row.appendChild(document.createElement("td"))
-        row.appendChild(document.createElement("td"))
-        return null
-    }
-}
-
-function ItemRow(row, item, canIgnore) {
-    this.item = item
-
-    this.arrowCell = document.createElement("td")
-    var arrowSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-    arrowSVG.classList.add("breakdown-arrow")
-    arrowSVG.setAttribute("viewBox", "0 0 16 16")
-    arrowSVG.setAttribute("width", "16")
-    arrowSVG.setAttribute("height", "16")
-    this.arrowCell.appendChild(arrowSVG)
-    var arrowUse = document.createElementNS("http://www.w3.org/2000/svg", "use")
-    arrowUse.setAttribute("href", "images/icons.svg#right")
-    arrowSVG.appendChild(arrowUse)
-    row.appendChild(this.arrowCell)
-
-    var nameCell = document.createElement("td")
-    nameCell.className = "right-align"
-    this.itemIcon = new ItemIcon(item, canIgnore)
-    var im = getImage(this.itemIcon)
-    im.classList.add("display")
-    if (canIgnore) {
-        if (spec.ignore[item.name]) {
-            this.itemIcon.setText("(Click to unignore.)")
-        } else {
-            this.itemIcon.setText("(Click to ignore.)")
-        }
-        im.classList.add("recipe-icon")
-    }
-    this.image = im
-    nameCell.appendChild(im)
-    row.appendChild(nameCell)
-
-    var rateCell = document.createElement("td")
-    rateCell.classList.add("right-align", "pad-right")
-    var tt = document.createElement("tt")
-    rateCell.appendChild(tt)
-    this.rateNode = tt
-    row.appendChild(rateCell)
-
-    this.belts = addBeltCells(row, item)
-
-    var wasteCell = document.createElement("td")
-    wasteCell.classList.add("right-align", "pad-right", "waste")
-    tt = document.createElement("tt")
-    wasteCell.appendChild(tt)
-    this.wasteNode = tt
-    row.appendChild(wasteCell)
-}
-ItemRow.prototype = {
-    constructor: ItemRow,
-    setIgnore: function(ignore) {
-        if (ignore) {
-            this.itemIcon.setText("(Click to unignore.)")
-        } else {
-            this.itemIcon.setText("(Click to ignore.)")
-        }
-    },
-    setRate: function(itemRate, waste) {
-        this.rateNode.textContent = alignRate(itemRate)
-        this.wasteNode.textContent = alignRate(waste)
-        if (this.belts !== null) {
-            this.belts.setRate(itemRate)
-        }
-    },
-}
-
-function makePopOutCell() {
-    var popOutCell = document.createElement("td")
-    popOutCell.classList.add("pad")
-    var popOutLink = document.createElement("a")
-    popOutLink.target = "_blank"
-    popOutLink.title = "Open this item in separate window."
-    popOutCell.appendChild(popOutLink)
-    var popOutSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-    popOutSVG.classList.add("popout")
-    popOutSVG.setAttribute("viewBox", "0 0 24 24")
-    popOutSVG.setAttribute("width", "16")
-    popOutSVG.setAttribute("height", "16")
-    popOutLink.appendChild(popOutSVG)
-    var popOutUse = document.createElementNS("http://www.w3.org/2000/svg", "use")
-    popOutUse.setAttribute("href", "images/icons.svg#popout")
-    popOutSVG.appendChild(popOutUse)
-    return popOutCell
-}
-
-// A row in the BreakdownTable.
-class UsageRow {
-    constructor(item, destRecipe) {
-        this.name = item.name
+class BreakdownRow {
+    constructor(item, destRecipe, rate, building, count, percent, divider) {
         this.item = item
-
-        this.node = document.createElement("tr")
-        this.node.classList.add("breakdown-row", "display-row")
-
-        let arrowCell = document.createElement("td")
-        arrowCell.appendChild(getImage(item))
-        let arrowSVG = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-        arrowSVG.classList.add("usage-arrow")
-        arrowSVG.setAttribute("viewBox", "0 0 18 16")
-        arrowSVG.setAttribute("width", "18")
-        arrowSVG.setAttribute("height", "16")
-        arrowCell.appendChild(arrowSVG)
-        let arrowUse = document.createElementNS("http://www.w3.org/2000/svg", "use")
-        arrowUse.setAttribute("href", "images/icons.svg#rightarrow")
-        arrowSVG.appendChild(arrowUse)
-
-        arrowCell.appendChild(getImage(destRecipe))
-        this.node.appendChild(arrowCell)
-
-        let rateCell = document.createElement("td")
-        rateCell.classList.add("right-align", "pad-right")
-        let tt = document.createElement("tt")
-        rateCell.appendChild(tt)
-        this.rateNode = tt
-        this.node.appendChild(rateCell)
-
-        this.belts = addBeltCells(this.node, item)
-
-        this.factory = new FactoryCountCells(this.node)
-        this.factory.countNode.parentNode.classList.add("pad-right")
-
-        let percentCell = document.createElement("td")
-        percentCell.classList.add("right-align")
-        this.percentNode = document.createElement("tt")
-        percentCell.appendChild(this.percentNode)
-        this.node.appendChild(percentCell)
-    }
-    appendTo(parentNode) {
-        parentNode.appendChild(this.node)
-    }
-    setRate(totalRate, portion) {
-        this.rateNode.textContent = alignRate(portion)
-        if (this.belts !== null) {
-            this.belts.setRate(portion)
-        }
-
-        let recipe = null
-        let recipeRate = zero
-        if (this.item.recipes.length === 1) {
-            recipe = this.item.recipes[0]
-            let amount = recipe.gives(this.item, spec)
-            recipeRate = portion.div(amount)
-        }
-        this.factory.setCount(recipe, recipeRate)
-
-        if (totalRate === null) {
-            this.percentNode.textContent = ""
-        } else {
-            let percentage = portion.div(totalRate).mul(RationalFromFloat(100))
-            if (percentage.less(one)) {
-                this.percentNode.textContent = "<1%"
-            } else {
-                this.percentNode.textContent = percentage.toDecimal(0) + "%"
-            }
-        }
-    }
-}
-
-class BreakdownTable {
-    constructor(item) {
-        this.item = item
-
-        this.row = document.createElement("tr")
-        this.row.classList.add("breakdown")
-        this.row.appendChild(document.createElement("td"))
-        let breakdownCell = document.createElement("td")
-        breakdownCell.colSpan = 10
-        this.row.appendChild(breakdownCell)
-
-        this.table = document.createElement("table")
-        breakdownCell.appendChild(this.table)
-    }
-    setShow(show) {
-        if (show) {
-            this.row.classList.add("breakdown-open")
-        } else {
-            this.row.classList.remove("breakdown-open")
-        }
-    }
-    renderTable(itemRow, totals, items, fuelUsers) {
-        while (this.table.hasChildNodes()) {
-            this.table.removeChild(this.table.lastChild)
-        }
-        let rate = items[this.item.name]
-        let row = null
-        // If this recipe is not being ignored, list its inputs.
-        if (this.item.recipes.length !== 1 || !spec.ignore[this.item.recipes[0].name]) {
-            for (let recipe of this.item.recipes) {
-                if (recipe.name in totals.totals) {
-                    let recipeRate = totals.get(recipe.name)
-                    for (let ing of recipe.getIngredients(spec)) {
-                        if (ing.item === this.item) {
-                            continue
-                        }
-                        let subRate = recipeRate.mul(ing.amount)
-                        row = new UsageRow(ing.item, recipe)
-                        row.appendTo(this.table)
-                        row.setRate(null, subRate)
-                    }
-                }
-            }
-            if (row !== null) {
-                row.node.classList.add("breakdown-last-input")
-            }
-        }
-        let users = this.item.uses
-        if (fuelUsers.has(this.item)) {
-            users = users.concat(fuelUsers.get(this.item))
-        }
-        let found = false
-        for (let user of users) {
-            if (spec.ignore[user.name]) {
-                continue
-            }
-            if (user.name in totals.totals) {
-                found = true
-                let subRate = zero
-                for (let ing of user.getIngredients(spec)) {
-                    if (ing.item === this.item) {
-                        subRate = totals.get(user.name).mul(ing.amount)
-                        break
-                    }
-                }
-                let row = new UsageRow(this.item, user)
-                row.appendTo(this.table)
-                row.setRate(rate, subRate)
-            }
-        }
-        if (!found && row !== null) {
-            row.node.classList.remove("breakdown-last-input")
-        }
-    }
-    remove() {
-        this.row.parentElement.removeChild(this.row)
-    }
-}
-
-function RecipeRow(recipeName, rate, itemRate, waste, fuelUsers) {
-    this.name = recipeName
-    this.recipe = solver.recipes[recipeName]
-    this.rate = rate
-    this.node = document.createElement("tr")
-    this.node.classList.add("recipe-row")
-    this.node.classList.add("display-row")
-    var canIgnore = this.recipe.canIgnore()
-    if (spec.ignore[recipeName]) {
-        if (!canIgnore) {
-            delete spec.ignore[recipeName]
-        } else {
-            this.node.classList.add("ignore")
-        }
-    }
-
-    this.item = this.recipe.products[0].item
-    this.itemRow = new ItemRow(this.node, this.item, canIgnore)
-    if (canIgnore) {
-        this.itemRow.image.addEventListener("click", new IgnoreHandler(this))
-    }
-
-    this.factoryRow = new FactoryRow(this.node, this.recipe, this.rate)
-
-    var popOutCell = makePopOutCell()
-    this.node.appendChild(popOutCell)
-    this.popOutLink = popOutCell.firstChild
-
-    // Set values.
-    if (canIgnore) {
-        this.setIgnore(spec.ignore[recipeName])
-    }
-    this.setRate(rate, itemRate, waste, fuelUsers)
-    this.factoryRow.updateDisplayedModules()
-
-    this.breakdown = new BreakdownTable(this.item)
-    this.itemRow.arrowCell.addEventListener("click", new ToggleBreakdownHandler(this.itemRow, this.breakdown))
-}
-RecipeRow.prototype = {
-    constructor: RecipeRow,
-    appendTo: function(parentNode) {
-        parentNode.appendChild(this.node)
-        parentNode.appendChild(this.breakdown.row)
-    },
-    // Call whenever this recipe's status in the ignore list changes.
-    setIgnore: function(ignore) {
-        if (ignore) {
-            this.node.classList.add("ignore")
-        } else {
-            this.node.classList.remove("ignore")
-        }
-        this.itemRow.setIgnore(ignore)
-    },
-    hasModules: function() {
-        return !this.node.classList.contains("no-mods")
-    },
-    setDownArrow: function() {
-        this.factoryRow.downArrow.textContent = "\u2193"
-    },
-    setUpDownArrow: function() {
-        this.factoryRow.downArrow.textContent = "\u2195"
-    },
-    setUpArrow: function() {
-        this.factoryRow.downArrow.textContent = "\u2191"
-    },
-    updateDisplayedModules: function() {
-        this.factoryRow.updateDisplayedModules()
-    },
-    totalPower: function() {
-        if (this.factoryRow.power && this.factoryRow.power.fuel === "electric") {
-            return this.factoryRow.power.power
-        }
-        return zero
-    },
-    csv: function() {
-        var rate = this.rate.mul(this.recipe.gives(this.item, spec))
-        var parts = [
-            this.name,
-            displayRate(rate),
-        ]
-        parts = parts.concat(this.factoryRow.csv())
-        return [parts.join(",")]
-    },
-    // Sets the new recipe-rate for a recipe, and updates the factory count.
-    setRate: function(recipeRate, itemRate, waste, fuelUsers) {
-        this.rate = recipeRate
-        this.itemRow.setRate(itemRate, waste)
-        this.factoryRow.displayFactory(recipeRate)
-        var rate = {}
-        rate[this.item.name] = itemRate
-        var link = "#" + formatSettings(rate)
-        this.popOutLink.href = link
-    },
-    setRates: function(totals, items, fuelUsers) {
-        var recipeRate = totals.get(this.name)
-        var itemRate = items[this.item.name]
-        var waste = totals.getWaste(this.item.name)
-        this.setRate(recipeRate, itemRate, waste, fuelUsers)
-        this.breakdown.renderTable(this.itemRow, totals, items, fuelUsers)
-    },
-    remove: function() {
-        this.node.parentElement.removeChild(this.node)
-        this.breakdown.remove()
-    },
-}
-
-class FactoryCountCells {
-    constructor(row) {
-        this.factoryCell = document.createElement("td")
-        this.factoryCell.classList.add("pad", "factory", "right-align", "leftmost")
-        row.appendChild(this.factoryCell)
-
-        let countCell = document.createElement("td")
-        countCell.classList.add("factory", "right-align")
-        let tt = document.createElement("tt")
-        countCell.appendChild(tt)
-        this.countNode = tt
-        row.appendChild(countCell)
-    }
-    setCount(recipe, recipeRate) {
-        if (!recipe || recipeRate.isZero()) {
-            return {"count": zero}
-        }
-        let count = spec.getCount(recipe, recipeRate)
-        if (count.isZero()) {
-            return {count}
-        }
-        let factory = spec.getFactory(recipe)
-        var image = getImage(factory.factory)
-        image.classList.add("display")
-        while (this.factoryCell.hasChildNodes()) {
-            this.factoryCell.removeChild(this.factoryCell.lastChild)
-        }
-        if (recipe.displayGroup !== null || recipe.name !== recipe.products[0].item.name) {
-            this.factoryCell.appendChild(getImage(recipe))
-            this.factoryCell.appendChild(new Text(" : "))
-        }
-        this.factoryCell.appendChild(image)
-        this.factoryCell.appendChild(new Text(" \u00d7"))
-        this.countNode.textContent = alignCount(count)
-        return {factory, count}
-    }
-}
-
-function FactoryRow(row, recipe) {
-    this.node = row
-    var recipeName = recipe.name
-    this.recipe = recipe
-    this.factory = null
-    this.count = zero
-    this.power = null
-
-    this.factoryCells = new FactoryCountCells(row)
-
-    this.modulesCell = document.createElement("td")
-    this.modulesCell.classList.add("pad", "module", "factory")
-    this.node.appendChild(this.modulesCell)
-
-    this.copyButton = document.createElement("button")
-    this.copyButton.classList.add("ui", "copy")
-    this.copyButton.textContent = "\u2192"
-    this.copyButton.title = "copy to rest of modules"
-    this.copyButton.addEventListener("click", new ModuleCopyHandler(this))
-    this.modulesCell.appendChild(this.copyButton)
-
-    this.dropdowns = []
-    this.modules = []
-
-    var beaconCell = document.createElement("td")
-    beaconCell.classList.add("pad", "module", "factory")
-    let {inputs} = moduleDropdown(
-        d3.select(beaconCell),
-        "mod-" + recipeName + "-beacon",
-        d => d === null,
-        BeaconHandler(recipeName),
-        d => d === null || d.canBeacon(),
-    )
-    this.beacon = inputs
-    var beaconX = document.createElement("span")
-    beaconX.appendChild(new Text(" \u00D7 "))
-    beaconCell.appendChild(beaconX)
-
-    this.beaconCount = document.createElement("input")
-    this.beaconCount.addEventListener("change", new BeaconCountHandler(recipeName))
-    this.beaconCount.type = "number"
-    this.beaconCount.value = 0
-    this.beaconCount.classList.add("beacon")
-    this.beaconCount.title = "The number of broadcasted modules which will affect this factory."
-    beaconCell.appendChild(this.beaconCount)
-    this.node.appendChild(beaconCell)
-
-    var downArrowCell = document.createElement("td")
-    downArrowCell.classList.add("module", "factory")
-    this.downArrow = document.createElement("button")
-    this.downArrow.classList.add("ui")
-    this.downArrow.textContent = "\u2195"
-    this.downArrow.title = "copy this recipe's modules to all other recipes"
-    this.downArrow.addEventListener("click", new CopyAllHandler(recipeName))
-    downArrowCell.appendChild(this.downArrow)
-    this.node.appendChild(downArrowCell)
-
-    this.fuelCell = document.createElement("td")
-    this.fuelCell.classList.add("pad", "factory")
-    this.node.appendChild(this.fuelCell)
-    var powerCell = document.createElement("td")
-    powerCell.classList.add("factory", "right-align")
-    let tt = document.createElement("tt")
-    powerCell.appendChild(tt)
-    this.powerNode = tt
-    this.node.appendChild(powerCell)
-}
-FactoryRow.prototype = {
-    constructor: FactoryRow,
-    setPower: function(power) {
-        while (this.fuelCell.hasChildNodes()) {
-            this.fuelCell.removeChild(this.fuelCell.lastChild)
-        }
-        if (power.fuel === "electric") {
-            this.powerNode.textContent = alignPower(power.power)
-        } else if (power.fuel === "chemical") {
-            var fuelImage = getImage(preferredFuel)
-            this.fuelCell.appendChild(fuelImage)
-            this.fuelCell.appendChild(new Text(" \u00d7"))
-            this.powerNode.textContent = alignRate(power.power.div(preferredFuel.value)) + "/" + rateName
-        }
-    },
-    setHasModules: function() {
-        this.node.classList.remove("no-mods")
-    },
-    setHasNoModules: function() {
-        this.node.classList.add("no-mods")
-    },
-    // Call whenever the minimum factory or factory count might change (e.g. in
-    // response to speed modules being added/removed).
-    //
-    // This may change the factory icon, factory count, number (or presence)
-    // of module slots, presence of the beacon info, and/or presence of the
-    // module-copy buttons.
-    displayFactory: function(rate) {
-        let {count, factory} = this.factoryCells.setCount(this.recipe, rate)
-        if (count.isZero()) {
-            this.setHasNoModules()
-            return
-        }
+        this.recipe = destRecipe
+        this.rate = rate
+        this.building = building
         this.count = count
-        this.factory = factory
+        this.percent = percent
+        this.divider = divider
+    }
+}
 
-        var moduleDelta = this.factory.modules.length - this.modules.length
-        if (moduleDelta < 0) {
-            this.modules.length = this.factory.modules.length
-            for (var i = moduleDelta; i < 0; i++) {
-                this.dropdowns.pop().remove()
-            }
-        } else if (moduleDelta > 0) {
-            for (var i = 0; i < moduleDelta; i++) {
-                let self = this
-                var index = this.dropdowns.length
-                var installedModule = this.factory.modules[index]
-                let {dropdown, inputs} = moduleDropdown(
-                    d3.select(this.modulesCell),
-                    "mod-" + this.recipe.name + "-" + index,
-                    d => d === installedModule,
-                    ModuleHandler(this, index),
-                    d => d === null || d.canUse(self.recipe),
-                )
-                this.dropdowns.push(dropdown.parentNode)
-                this.modules.push(inputs)
-            }
+function getBreakdown(item, totals) {
+    let rows = []
+    let uses = []
+    let found = false
+    // The top half of the breakdown gives every ingredient used by every
+    // recipe that produced the given item. If a given ingredient is produced
+    // by a single recipe, then a building count for that recipe is given.
+    for (let recipe of item.recipes) {
+        if (!totals.rates.has(recipe)) {
+            continue
         }
-        if (moduleDelta != 0) {
-            if (this.dropdowns.length > 1) {
-                this.modulesCell.insertBefore(this.copyButton, this.dropdowns[1])
+        //let building = spec.getBuilding(recipe)
+        for (let ing of recipe.ingredients) {
+            let rate = totals.consumers.get(ing.item).get(recipe)
+            let building = null
+            let count = null
+            let producers = totals.producers.get(ing.item)
+            if (producers.size === 1) {
+                let r = Array.from(producers.keys())[0]
+                let recipeRate = rate.div(r.gives(ing.item))
+                building = spec.getBuilding(r)
+                count = spec.getCount(r, recipeRate)
+            }
+            rows.push(new BreakdownRow(ing.item, recipe, rate, building, count, null, false))
+            found = true
+        }
+    }
+    // The bottom half of the breakdown gives every recipe which consumes the
+    // given item. If the given item is produced by a single recipe, then the
+    // proportion of that recipe's building count is given.
+    let singleRecipe = null
+    let amount = null
+    let building = null
+    let producers = totals.producers.get(item)
+    let hundred = Rational.from_float(100)
+    if (producers.size === 1) {
+        singleRecipe = Array.from(producers.keys())[0]
+        amount = singleRecipe.gives(item)
+        building = spec.getBuilding(singleRecipe)
+    }
+    for (let [recipe, rate] of totals.consumers.get(item)) {
+        if (recipe.isReal()) {
+            let count = null
+            if (singleRecipe !== null) {
+                let recipeRate = rate.div(amount)
+                count = spec.getCount(singleRecipe, recipeRate)
+            }
+            let percent = rate.div(totals.items.get(item)).mul(hundred)
+            let percentStr
+            if (percent.less(one)) {
+                percentStr = "<1%"
             } else {
-                this.modulesCell.appendChild(this.copyButton)
+                percentStr = percent.toDecimal(0) + "%"
             }
+            rows.push(new BreakdownRow(item, recipe, rate, building, count, percentStr, found))
+            found = false
         }
-        if (this.modules.length > 0) {
-            this.setHasModules()
+    }
+    return rows
+}
+
+class ModuleInput {
+    constructor() {
+        this.moduleSlot = null
+        this.module = null
+    }
+    checked() {
+        return this.moduleSlot.moduleSpec.getModule(this.moduleSlot.index) === this.module
+    }
+    choose() {
+        let recalc = this.moduleSlot.moduleSpec.setModule(this.moduleSlot.index, this.module)
+        if (recalc || spec.isFactoryTarget(this.moduleSlot.moduleSpec.recipe)) {
+            spec.updateSolution()
         } else {
-            this.setHasNoModules()
+            spec.display()
         }
-        this.power = this.factory.powerUsage(spec, this.count)
-        this.setPower(this.power)
-    },
-    updateDisplayedModules: function() {
-        var moduleCount = spec.moduleCount(this.recipe)
-        if (moduleCount === 0) {
+    }
+    setData(slot, m) {
+        this.moduleSlot = slot
+        this.module = m
+    }
+}
+
+let slotCount = 0
+class ModuleSlot {
+    constructor() {
+        this.name = `moduleslot-${slotCount++}`
+        this.moduleSpec = null
+        this.index = null
+        this.inputRows = []
+        setlen(this.inputRows, moduleRows.length, () => [])
+        this.dropdown = null
+    }
+    setData(mSpec, i) {
+        this.moduleSpec = mSpec
+        this.index = i
+        for (let i = 0; i < this.inputRows.length; i++) {
+            let inputRow = this.inputRows[i]
+            let modules = moduleRows[i]
+            let rowIndex = 0
+            //for (let j = 0; j < modules.length) {
+            for (let module of modules) {
+                if (rowIndex > inputRow.length - 1) {
+                    inputRow.push(new ModuleInput())
+                }
+                if (module === null || module.canUse(mSpec.recipe)) {
+                    inputRow[rowIndex++].setData(this, module)
+                }
+            }
+            inputRow.length = rowIndex
+        }
+    }
+}
+
+class DisplayGroup {
+    constructor() {
+        this.rows = []
+    }
+    setData(totals, items, recipes) {
+        items = [...items]
+        recipes = [...recipes]
+        if (items.length === 0) {
+            this.rows.length = 0
             return
         }
-        for (var i = 0; i < moduleCount; i++) {
-            var module = spec.getModule(this.recipe, i)
-            this.setDisplayedModule(i, module)
-        }
-        // XXX
-        var beacon = spec.getBeaconInfo(this.recipe)
-        this.setDisplayedBeacon(beacon.module, beacon.count)
-    },
-    setDisplayedModule: function(index, module) {
-        var name
-        if (module) {
-            name = module.name
-        } else {
-            name = NO_MODULE
-        }
-        this.modules[index][name].checked = true
-    },
-    setDisplayedBeacon: function(module, count) {
-        var name
-        if (module) {
-            name = module.name
-        } else {
-            name = NO_MODULE
-        }
-        this.beacon[name].checked = true
-        this.beaconCount.value = count.toString()
-    },
-    csv: function() {
-        var parts = []
-        if (this.count.isZero()) {
-            parts.push("")
-            parts.push("")
-        } else {
-            parts.push(this.factory.name)
-            parts.push(displayCount(this.count))
-        }
-        if (this.factory && this.factory.modules.length > 0) {
-            var modules = []
-            for (var i = 0; i < this.factory.modules.length; i++) {
-                var module = this.factory.modules[i]
-                if (module) {
-                    modules.push(module.shortName())
-                } else {
-                    modules.push("")
+        let len = Math.max(items.length, recipes.length)
+        setlen(this.rows, len, () => {return {slots: []}})
+        let hundred = Rational.from_float(100)
+        for (let i = 0; i < len; i++) {
+            let item = items[i] || null
+            let recipe = recipes[i] || null
+            let building = null
+            let moduleSpec = null
+            let slotCount = 0
+            if (recipe !== null) {
+                building = spec.getBuilding(recipe)
+                if (building !== null && building.canBeacon()) {
+                    moduleSpec = spec.getModuleSpec(recipe)
+                    slotCount = moduleSpec.modules.length
                 }
             }
-            parts.push(modules.join("/"))
-            if (this.factory.beaconModule && !this.factory.beaconCount.isZero()) {
-                parts.push(this.factory.beaconModule.shortName())
-                parts.push(displayCount(this.factory.beaconCount))
-            } else {
-                parts.push("")
-                parts.push("")
+            setlen(this.rows[i].slots, slotCount, () => new ModuleSlot())
+            for (let j = 0; j < slotCount; j++) {
+                this.rows[i].slots[j].setData(moduleSpec, j)
             }
-        } else {
-            parts.push("")
-            parts.push("")
-            parts.push("")
-        }
-        if (this.factory) {
-            parts.push(displayCount(this.power.power))
-        } else {
-            parts.push("")
-        }
-        return parts.join(",")
-    },
-}
-
-function GroupRow(group, itemRates, totals, fuelUsers) {
-    this.name = group.id
-    this.group = group
-    this.items = {}
-    for (var i = 0; i < group.recipes.length; i++) {
-        var recipe = group.recipes[i]
-        for (var j = 0; j < recipe.products.length; j++) {
-            var ing = recipe.products[j]
-            this.items[ing.item.name] = ing.item
+            let single = item !== null && recipe !== null && item.name === recipe.name
+            let breakdown = null
+            if (item !== null) {
+                breakdown = getBreakdown(item, totals)
+            }
+            Object.assign(this.rows[i], {
+                item,
+                recipe,
+                building,
+                moduleSpec,
+                single,
+                breakdown,
+            })
         }
     }
-    this.itemNames = Object.keys(this.items)
-    var recipeCount = group.recipes.length
-    var tableRows = Math.max(this.itemNames.length, recipeCount)
-    this.rows = []
-    this.itemRows = []
-    this.breakdowns = []
-    this.itemRates = []
-    this.factoryRows = []
-    for (var i = 0; i < tableRows; i++) {
-        var row = document.createElement("tr")
-        row.classList.add("display-row")
-        row.classList.add("group-row")
-        if (i < this.itemNames.length) {
-            let item = this.items[this.itemNames[i]]
-            let itemRow = new ItemRow(row, item, false)
-            let breakdown = new BreakdownTable(item)
-            this.itemRows.push(itemRow)
-            this.breakdowns.push(breakdown)
-            itemRow.arrowCell.addEventListener("click", new ToggleBreakdownHandler(itemRow, breakdown))
-        } else {
-            row.appendChild(document.createElement("td"))
-            row.appendChild(document.createElement("td"))
-            row.appendChild(document.createElement("td"))
-            row.appendChild(document.createElement("td"))
-            row.appendChild(document.createElement("td"))
-            var dummyWaste = document.createElement("td")
-            dummyWaste.classList.add("waste")
-            row.appendChild(dummyWaste)
-        }
-        if (i < recipeCount) {
-            var recipe = group.recipes[i]
-            this.factoryRows.push(new FactoryRow(row, recipe, totals.get(recipe.name)))
-        } else {
-            for (var j = 0; j < 7; j++) {
-                var cell = document.createElement("td")
-                cell.classList.add("factory")
-                if (j == 0) {
-                    cell.classList.add("leftmost")
+}
+
+// Remember these values from update to update, to make it simpler to reuse
+// elements.
+let displayGroups = []
+
+function getDisplayGroups(totals) {
+    let groupObjects = topoSort(getRecipeGroups(new Set(totals.rates.keys())))
+    setlen(displayGroups, groupObjects.length, () => new DisplayGroup())
+    let i = 0
+    for (let group of groupObjects) {
+        let items = new Set()
+        for (let recipe of group) {
+            for (let ing of recipe.products) {
+                if (totals.items.has(ing.item)) {
+                    items.add(ing.item)
                 }
-                row.appendChild(cell)
             }
         }
-        this.rows.push(row)
-        // TODO: Making this work properly with GroupRow requires a little more
-        //       thought. Dummy it out for now.
-        /*if (i === 0) {
-            var popOutCell = makePopOutCell()
-            row.appendChild(popOutCell)
-            this.popOutLink = popOutCell.firstChild
-        } else {*/
-            row.appendChild(document.createElement("td"))
-        /*}*/
+        displayGroups[i++].setData(totals, items, group)
     }
-    this.rows[0].classList.add("group-top-row")
-    row.classList.add("group-bottom-row")
-    this.setRates(totals, itemRates, fuelUsers)
-    this.updateDisplayedModules()
-}
-GroupRow.prototype = {
-    constructor: GroupRow,
-    appendTo: function(parentNode) {
-        for (var i = 0; i < this.rows.length; i++) {
-            parentNode.appendChild(this.rows[i])
-            if (i < this.breakdowns.length) {
-                parentNode.appendChild(this.breakdowns[i].row)
-            }
-        }
-    },
-    groupMatches: function(group) {
-        return this.group.equal(group)
-    },
-    setRates: function(totals, itemRates, fuelUsers) {
-        this.itemRates = []
-        var rates = {}
-        for (var i = 0; i < this.itemNames.length; i++) {
-            var itemName = this.itemNames[i]
-            var rate = itemRates[itemName]
-            rates[itemName] = rate
-            this.itemRates.push(rate)
-            var waste = totals.getWaste(itemName)
-            rate = rate.sub(waste)
-            this.itemRows[i].setRate(rate, waste)
-            this.breakdowns[i].renderTable(this.itemRows[i], totals, itemRates, fuelUsers)
-        }
-        for (var i = 0; i < this.factoryRows.length; i++) {
-            var row = this.factoryRows[i]
-            var recipeName = row.recipe.name
-            row.displayFactory(totals.get(recipeName))
-        }
-    },
-    totalPower: function() {
-        var power = zero
-        for (var i = 0; i < this.factoryRows.length; i++) {
-            var p = this.factoryRows[i].power
-            if (p.fuel === "electric") {
-                power = power.add(p.power)
-            }
-        }
-        return power
-    },
-    csv: function() {
-        var lines = []
-        for (var i = 0; i < this.itemNames.length; i++) {
-            var itemName = this.itemNames[i]
-            var rate = displayRate(this.itemRates[i])
-            var parts = [itemName, rate, "", "", "", "", "", ""]
-            lines.push(parts.join(","))
-        }
-        return lines
-    },
-    hasModules: function() {
-        for (var i = 0; i < this.factoryRows.length; i++) {
-            if (this.factoryRows[i].modules.length > 0) {
-                return true
-            }
-        }
-        return false
-    },
-    setDownArrow: function() {
-        for (var i = 0; i < this.factoryRows.length; i++) {
-            var row = this.factoryRows[i]
-            if (row.modules.length > 0) {
-                row.downArrow.textContent = "\u2193"
-                return
-            }
-        }
-    },
-    setUpDownArrow: function() {
-        for (var i = 0; i < this.factoryRows.length; i++) {
-            this.factoryRows[i].downArrow.textContent = "\u2195"
-        }
-    },
-    setUpArrow: function() {
-        for (var i = this.factoryRows.length - 1; i >= 0; i--) {
-            var row = this.factoryRows[i]
-            if (row.modules.length > 0) {
-                row.downArrow.textContent = "\u2191"
-                return
-            }
-        }
-    },
-    updateDisplayedModules: function() {
-        for (var i = 0; i < this.factoryRows.length; i++) {
-            this.factoryRows[i].updateDisplayedModules()
-        }
-    },
-    remove: function() {
-        for (var i = 0; i < this.rows.length; i++) {
-            var row = this.rows[i]
-            row.parentElement.removeChild(row)
-            if (i < this.breakdowns.length) {
-                this.breakdowns[i].remove()
-            }
-        }
-    },
 }
 
-function RecipeGroup(id) {
-    this.id = id
-    this.recipes = []
-}
-RecipeGroup.prototype = {
-    constructor: RecipeGroup,
-    equal: function(other) {
-        if (this.id !== other.id) {
-            return false
-        }
-        if (this.recipes.length != other.recipes.length) {
-            return false
-        }
-        for (var i = 0; i < this.recipes.length; i++) {
-            if (this.recipes[i].name != other.recipes[i].name) {
-                return false
-            }
-        }
-        return true
-    },
+function toggleBreakdownHandler() {
+    let row = this.parentNode
+    let bdRow = row.nextSibling
+    if (row.classList.contains("breakdown-open")) {
+        row.classList.remove("breakdown-open")
+        bdRow.classList.remove("breakdown-open")
+    } else {
+        row.classList.add("breakdown-open")
+        bdRow.classList.add("breakdown-open")
+    }
 }
 
-function RecipeTable(node) {
-    this.node = node
-    var headers = [
-        Header(""),
-        Header("items/" + rateName, 2),
-        Header("belts", 2),
-        Header("surplus/" + rateName),
-        Header("factories", 2),
-        Header("modules", 1),
-        Header("beacons", 1),
-        Header(""),
-        Header("power", 2),
-        Header("")
+export function displayItems(spec, totals) {
+    let headers = [
+        new Header("", 1),
+        new Header("items/" + spec.format.rateName, 2),
+        new Header("surplus/" + spec.format.rateName, 1, true),
+        new Header("belts", 2),
+        new Header("buildings", 2),
+        new Header("modules", 1),
+        new Header("beacons", 1),
+        new Header("power", 1),
+        new Header("", 1),  // pop-out links
     ]
-    var header = document.createElement("tr")
-    header.classList.add("factory-header")
-    for (var i = 0; i < headers.length; i++) {
-        var th = document.createElement("th")
-        if (i == 1) {
-            this.recipeHeader = th
-        }
-        if (i == 3) {
-            this.wasteHeader = th
-            th.classList.add("waste")
-        }
-        th.textContent = headers[i].name
-        th.colSpan = headers[i].colSpan
-        if (i > 1) {
-            th.classList.add("pad")
-        }
-        header.appendChild(th)
-    }
-    node.appendChild(header)
-    this.totalRow = document.createElement("tr")
-    this.totalRow.classList.add("display-row", "power-row")
-    var dummyWaste = document.createElement("td")
-    dummyWaste.classList.add("waste")
-    this.totalRow.appendChild(dummyWaste)
-    var totalLabelCell = document.createElement("td")
-    totalLabelCell.colSpan = 11
-    totalLabelCell.classList.add("right-align")
-    var totalLabel = document.createElement("b")
-    totalLabel.textContent = "total power:"
-    totalLabelCell.appendChild(totalLabel)
-    this.totalRow.appendChild(totalLabelCell)
-    var totalCell = document.createElement("td")
-    totalCell.classList.add("right-align")
-    this.totalNode = document.createElement("tt")
-    totalCell.appendChild(this.totalNode)
-    this.totalRow.appendChild(totalCell)
-    this.totalRow.appendChild(document.createElement("td"))
-
-    this.rowArray = []
-    this.rows = {}
-}
-RecipeTable.prototype = {
-    constructor: RecipeTable,
-    setRecipeHeader: function() {
-        this.recipeHeader.textContent = "items/" + rateName
-        this.wasteHeader.textContent = "surplus/" + rateName
-    },
-    updateDisplayedModules: function() {
-        for (var i = 0; i < this.rowArray.length; i++) {
-            var row = this.rowArray[i]
-            row.updateDisplayedModules()
-        }
-    },
-    displaySolution: function(totals) {
-        this.setRecipeHeader()
-        var sortedTotals
-        if (sortOrder == "topo") {
-            sortedTotals = totals.topo
-        } else {
-            sortedTotals = sorted(totals.totals)
-        }
-        //var itemOrder = []
-        var items = {}
-        // Maps fuel item to list of recipes which consume that item as fuel.
-        // consumers.)
-        var fuelUsers = new Map()
-        var groups = []
-        var groupMap = {}
-        var group
-        for (var i = 0; i < sortedTotals.length; i++) {
-            var recipeName = sortedTotals[i]
-            var recipeRate = totals.totals[recipeName]
-            var recipe = solver.recipes[recipeName]
-            for (var j = 0; j < recipe.products.length; j++) {
-                var ing = recipe.products[j]
-                if (!(ing.item.name in items)) {
-                    //itemOrder.push(ing.item.name)
-                    items[ing.item.name] = zero
-                }
-                items[ing.item.name] = items[ing.item.name].add(recipeRate.mul(recipe.gives(ing.item, spec)))
-            }
-            for (let fuelIng of recipe.fuelIngredient(spec)) {
-                if (!fuelUsers.has(fuelIng.item)) {
-                    fuelUsers.set(fuelIng.item, [])
-                }
-                fuelUsers.get(fuelIng.item).push(recipe)
-            }
-            if (recipe.displayGroup === null) {
-                group = new RecipeGroup(null)
-                groups.push(group)
-            } else {
-                if (recipe.displayGroup in groupMap) {
-                    group = groupMap[recipe.displayGroup]
-                } else {
-                    group = new RecipeGroup(recipe.displayGroup)
-                    groupMap[recipe.displayGroup] = group
-                    groups.push(group)
-                }
-            }
-            group.recipes.push(recipe)
-        }
-        // XXX: Rework this, too.
-        //displaySteps(items, itemOrder, totals)
-        var last
-        var newRowArray = []
-        var downArrowShown = false
-        var sameRows = true
-        var i = 0
-        var totalPower = zero
-        var csvLines = ["item,item rate,factory,count,modules,beacon module,beacon count,power"]
-        var csvWidth = csvLines[0].length
-        var knownRows = {}
-        var drop = []
-        for (var i = 0; i < groups.length; i++) {
-            var group = groups[i]
-            // XXX: Bluh
-            var rowName = group.id
-            if (!rowName) {
-                rowName = group.recipes[0].name
-            }
-            knownRows[rowName] = true
-            var row = this.rows[rowName]
-            var groupMatch = false
-            if (group.id === null || row && row.groupMatches(group)) {
-                groupMatch = true
-            }
-            if (row && groupMatch) {
-                if (sameRows && rowName != this.rowArray[i].name) {
-                    sameRows = false
-                }
-                // Don't rearrange the DOM if we don't need to.
-                if (!sameRows) {
-                    row.appendTo(this.node)
-                }
-                row.setRates(totals, items, fuelUsers)
-            } else {
-                if (group.id === null) {
-                    var rate = totals.get(rowName)
-                    var recipe = group.recipes[0]
-                    var itemName = recipe.products[0].item.name
-                    var itemRate = items[itemName]
-                    var waste = totals.getWaste(rowName)
-                    row = new RecipeRow(rowName, rate, itemRate, waste, fuelUsers)
-                    row.setRates(totals, items, fuelUsers)
-                } else {
-                    if (row) {
-                        row.remove()
-                    }
-                    row = new GroupRow(group, items, totals, fuelUsers)
-                }
-                row.appendTo(this.node)
-                this.rows[rowName] = row
-                sameRows = false
-            }
-            totalPower = totalPower.add(row.totalPower())
-            var newCSVLines = row.csv()
-            for (var j = 0; j < newCSVLines.length; j++) {
-                var csvLine = newCSVLines[j]
-                if (csvLine.length > csvWidth) {
-                    csvWidth = csvLine.length
-                }
-                csvLines.push(csvLine)
-            }
-            newRowArray.push(row)
-            if (row.hasModules()) {
-                last = row
-                if (downArrowShown) {
-                    row.setUpDownArrow()
-                } else {
-                    downArrowShown = true
-                    row.setDownArrow()
-                }
-            }
-        }
-        this.rowArray = newRowArray
-        if (last) {
-            last.setUpArrow()
-        }
-        for (var recipeName in this.rows) {
-            if (!(recipeName in knownRows)) {
-                drop.push(recipeName)
-            }
-        }
-        for (var i = 0; i < drop.length; i++) {
-            this.rows[drop[i]].remove()
-            delete this.rows[drop[i]]
-        }
-        this.node.appendChild(this.totalRow)
-        this.totalNode.textContent = alignPower(totalPower)
-        var csv = document.getElementById("csv")
-        csv.value = csvLines.join("\n") + "\n"
-        csv.cols = csvWidth + 2
-        csv.rows = csvLines.length + 2
-
-        var wasteCells = document.querySelectorAll("td.waste, th.waste")
-        var showWaste = Object.keys(totals.waste).length > 0
-        for (var i = 0; i < wasteCells.length; i++) {
-            var cell = wasteCells[i]
-            if (showWaste) {
-                cell.classList.remove("waste-hide")
-            } else {
-                cell.classList.add("waste-hide")
-            }
-        }
-    },
-}
-
-var timesDisplayed = zero
-
-// Re-renders the current solution, without re-computing it.
-function display() {
-    // Update the display of the target rate text boxes, if needed.
-    for (var i = 0; i < build_targets.length; i++) {
-        build_targets[i].getRate()
-    }
-    var totals = globalTotals
-
-    window.location.hash = "#" + formatSettings()
-
-    if (currentTab == "graph_tab") {
-        renderGraph(totals, spec.ignore)
-    }
-    recipeTable.displaySolution(totals)
-    if (showDebug) {
-        renderDebug()
+    let totalCols = 0
+    for (let header of headers) {
+        totalCols += header.colspan
     }
 
-    timesDisplayed = timesDisplayed.add(one)
-    var dc = document.getElementById("display_count")
-    dc.textContent = timesDisplayed.toDecimal()
+    let table = d3.select("table#totals")
+        table.classed("nosurplus", totals.surplus.size === 0)
+
+    let headerRow = table.selectAll("thead tr").selectAll("th")
+        .data(headers)
+    headerRow.exit().remove()
+    headerRow.join("th")
+        .classed("surplus", d => d.surplus)
+        .text(d => d.text)
+        .attr("colspan", d => d.colspan)
+
+    getDisplayGroups(totals)
+    let rowGroup = table.selectAll("tbody")
+        .data(displayGroups)
+        .join("tbody")
+    rowGroup.selectAll("tr.breakdown").remove()
+    // Create new rows.
+    let row = rowGroup.selectAll("tr")
+        .data(d => d.rows)
+        .join(enter => {
+            let row = enter.append("tr")
+                .classed("display-row", true)
+            // cell 1: breakdown toggle
+            row.append("td")
+                .classed("item", true)
+                .on("click", toggleBreakdownHandler)
+                .append("svg")
+                    .classed("breakdown-arrow", true)
+                    .attr("viewBox", "0 0 16 16")
+                    .attr("width", 16)
+                    .attr("height", 16)
+                    .append("use")
+                        .attr("href", "images/icons.svg#right")
+            // cell 2: item icon
+            row.append("td")
+                .classed("item item-icon", true)
+            // cell 3: item rate
+            row.append("td")
+                .classed("item right-align", true)
+                .append("tt")
+                    .classed("item-rate", true)
+            // cell 4: surplus rate
+            row.append("td")
+                .classed("item surplus right-align", true)
+                .append("tt")
+                    .classed("surplus-rate", true)
+            // cell 5: belt icon
+            let beltCell = row.append("td")
+                .classed("item pad belt-icon", true)
+            // cell 6: belt count
+            row.append("td")
+                .classed("item right-align", true)
+                .append("tt")
+                    .classed("belt-count", true)
+
+            // cell 7: building icon
+            let buildingCell = row.append("td")
+                .classed("pad building building-icon right-align", true)
+            // cell 8: building count
+            row.append("td")
+                .classed("right-align building", true)
+                .append("tt")
+                    .classed("building-count", true)
+
+            // cell 9: modules
+            let moduleCell = row.append("td")
+                .classed("pad building module module-cell", true)
+
+            // cell 10: beacons
+            let beaconCell = row.append("td")
+                .classed("pad building module beacon", true)
+
+            // cell 11: power
+            row.append("td")
+                .classed("right-align pad building", true)
+                .append("tt")
+                    .classed("power", true)
+
+            row.append("td")
+                .classed("popout pad item", true)
+                .append("a")
+                    .attr("target", "_blank")
+                    .attr("title", "Open this item in separate window.")
+                    .append("svg")
+                        .classed("popout", true)
+                        .attr("viewBox", "0 0 24 24")
+                        .attr("width", 24)
+                        .attr("height", 24)
+                        .append("use")
+                            .attr("href", "images/icons.svg#popout")
+
+            return row
+        })
+        .classed("nobuilding", d => d.building === null)
+        .classed("nomodule", d => d.moduleSpec === null)
+        .classed("noitem", d => d.item === null)
+    // Update row data.
+    let itemRow = row.filter(d => d.item !== null)
+    let itemIcon = itemRow.selectAll(".item-icon")
+    itemIcon.selectAll("img").remove()
+    itemIcon.append(d => d.item.icon.make(32))
+        .classed("ignore", d => spec.ignore.has(d.item))
+        .on("click", toggleIgnoreHandler)
+    itemRow.selectAll("tt.item-rate")
+        .text(d => {
+            let rate = totals.items.get(d.item)
+            if (totals.surplus.has(d.item)) {
+                rate = rate.sub(totals.surplus.get(d.item))
+            }
+            return spec.format.alignRate(rate)
+        })
+    itemRow.selectAll("tt.surplus-rate")
+        .text(d => spec.format.alignRate(totals.surplus.has(d.item) ? totals.surplus.get(d.item) : zero))
+    let beltRow = itemRow.filter(d => d.item.phase === "solid")
+    let beltIcon = beltRow.selectAll("td.belt-icon")
+    beltIcon.selectAll("*").remove()
+    beltIcon.append(d => spec.belt.icon.make(32))
+    beltIcon.append("span")
+        .text(" \u00d7")
+    beltRow.selectAll("tt.belt-count")
+        .text(d => spec.format.alignCount(spec.getBeltCount(totals.items.get(d.item))))
+    let pipeRow = itemRow.filter(d => d.item.phase === "fluid")
+    let pipeIcon = pipeRow.selectAll("td.belt-icon")
+    pipeIcon.selectAll("*").remove()
+    /*pipeIcon.append(d => spec.pipe.icon.make(32))
+    pipeIcon.append("span")
+        .text(" \u00d7")
+    pipeRow.selectAll("tt.belt-count")
+        .text(d => spec.format.alignCount(spec.getPipeCount(totals.items.get(d.item))))*/
+    let buildingRow = row.filter(d => d.building !== null)
+    let buildingCell = buildingRow.selectAll("td.building-icon")
+    buildingCell.selectAll("*").remove()
+    let buildingExtra = buildingCell.filter(d => !d.single)
+    buildingExtra.append(d => d.recipe.icon.make(32))
+    buildingExtra.append("span")
+        .text(":")
+    buildingCell.append(d => d.building.icon.make(32))
+    buildingCell.append("span")
+        .text(" \u00d7")
+    buildingRow.selectAll("tt.building-count")
+        .text(d => spec.format.alignCount(spec.getCount(d.recipe, totals.rates.get(d.recipe))))
+    let moduleRow = row.filter(d => d.moduleSpec !== null)
+    let moduleCell = moduleRow.selectAll("td.module-cell")
+    let moduleDropdownSpan = moduleCell.selectAll("span.slot")
+        .data(d => d.slots)
+        .join(
+            enter => {
+                let s = enter.append("span")
+                    .classed("slot", true)
+                makeDropdown(s)
+                return s
+            }
+        )
+    let moduleDropdown = moduleDropdownSpan.selectAll("div.dropdown")
+    moduleDropdown.selectAll("div.moduleRow")
+        .data(d => d.inputRows)
+        .join("div")
+            .classed("moduleRow", true)
+            .selectAll("span.input")
+            .data(d => d)
+            .join(
+                enter => {
+                    let s = enter.append("span")
+                        .classed("input", true)
+                    let label = addInputs(
+                        s,
+                        d => d.moduleSlot.name,
+                        d => d.checked(),
+                        d => d.choose(),
+                    )
+                    label.append(d => {
+                        if (d.module === null) {
+                            return sprites.get("slot_icon_module").icon.make(32)
+                        } else {
+                            return d.module.icon.make(32)
+                        }
+                    })
+                    return s
+                },
+                update => {
+                    update.selectAll("input").property("checked", d => d.checked())
+                    return update
+                },
+            )
+
+    let totalPower = zero
+    buildingRow.selectAll("tt.power")
+        .text(d => {
+            let rate = totals.rates.get(d.recipe)
+            let power = spec.getPowerUsage(d.recipe, rate)
+            totalPower = totalPower.add(power)
+            return spec.format.alignCount(power) + " MW"
+        })
+    itemRow.selectAll("td.popout a")
+        .attr("href", d => {
+            let rate = totals.items.get(d.item)
+            let rates = [[d.item, rate]]
+            return "#" + formatSettings("totals", rates)
+        })
+
+    // Render breakdowns.
+    itemRow = row.filter(d => d.breakdown !== null)
+    let breakdown = itemRow.select(function () {
+        let row = document.createElement("tr")
+        this.parentNode.insertBefore(row, this.nextSibling)
+        return row
+    })
+        .classed("breakdown", true)
+        .classed("breakdown-open", function() { return this.previousSibling.classList.contains("breakdown-open") })
+    breakdown.append("td")
+    row = breakdown.append("td")
+        .attr("colspan", totalCols - 1)
+        .append("table")
+            .selectAll("tr")
+            .data(d => d.breakdown)
+            .join("tr")
+                .classed("breakdown-first-output", d => d.divider)
+    let bdIcons = row.append("td")
+    bdIcons.append(d => d.recipe.icon.make(32))
+        .classed("item-icon", true)
+    bdIcons.append("svg")
+        .classed("usage-arrow", true)
+        .attr("viewBox", "0 0 18 16")
+        .attr("width", 18)
+        .attr("height", 16)
+        .append("use")
+            .attr("href", "images/icons.svg#rightarrow")
+    bdIcons.append(d => d.item.icon.make(32))
+        .classed("item-icon", true)
+    row.append("td")
+        .classed("right-align", true)
+        .append("tt")
+            .classed("item-rate pad-right", true)
+            .text(d => spec.format.alignRate(d.rate))
+    beltRow = row.filter(d => d.item.phase === "solid")
+    let beltCell = beltRow.append("td")
+    beltCell.append(d => spec.belt.icon.make(32))
+    beltCell.append("span")
+        .text(" \u00d7")
+    beltRow.append("td")
+        .classed("right-align", true)
+        .append("tt")
+            .classed("belt-count pad-right", true)
+            .text(d => spec.format.alignCount(d.rate.div(spec.belt.rate)))
+    pipeRow = row.filter(d => d.item.phase === "fluid")
+    let pipeCell = pipeRow.append("td")
+    /*pipeCell.append(d => spec.pipe.icon.make(32))
+    pipeCell.append("span")
+        .text(" \u00d7")
+    pipeRow.append("td")
+        .classed("right-align", true)
+        .append("tt")
+            .classed("belt-count pad-right", true)
+            .text(d => spec.format.alignCount(d.rate.div(spec.pipe.rate)))*/
+    buildingCell = row.append("td")
+        .filter(d => d.building !== null)
+        .classed("building", true)
+    buildingCell.append(d => d.building.icon.make(32))
+    buildingCell.append("span")
+        .text(" \u00d7")
+    row.append("td")
+        .filter(d => d.count !== null)
+        .classed("building pad-right", true)
+        .append("tt")
+            .text(d => spec.format.alignCount(d.count))
+    row.append("td")
+        .filter(d => d.percent !== null)
+        .classed("right-align", true)
+        .append("tt")
+            .text(d => d.percent)
+
+    let footerRow = table.select("tfoot tr")
+    footerRow.select("td.power-label")
+        .attr("colspan", totalCols - 3)
+    footerRow.select("tt")
+        .text(d => spec.format.alignCount(totalPower) + " MW")
+    table.select("tfoot").raise()
 }

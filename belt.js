@@ -1,4 +1,4 @@
-/*Copyright 2015-2019 Kirk McDonald
+/*Copyright 2019-2021 Kirk McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -11,41 +11,63 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-"use strict"
+import { Icon } from "./icon.js"
+import { Rational } from "./rational.js"
 
-function Belt(name, speed) {
-    this.name = name
-    this.speed = speed
+class Belt {
+    constructor(key, name, col, row, rate) {
+        this.key = key
+        this.name = name
+        this.rate = rate
+        this.icon_col = col
+        this.icon_row = row
+        this.icon = new Icon(this)
+    }
+    renderTooltip() {
+        let self = this
+        let t = d3.create("div")
+            .classed("frame", true)
+        let header = t.append("h3")
+        header.append(() => self.icon.make(32, true))
+        header.append(() => new Text(self.name))
+        t.append("b")
+            .text(`Max throughput: `)
+        t.append(() => new Text(`${spec.format.rate(this.rate)}/${spec.format.longRate}`))
+        return t.node()
+    }
 }
 
-function getBelts(data) {
-    var beltData = data["transport-belt"]
-    var beltObjs = []
-    for (var beltName in beltData) {
-        var beltInfo = beltData[beltName]
+export function getBelts(data) {
+    let beltData = data["transport-belt"]
+    let beltObjs = []
+    for (let beltName in beltData) {
+        let beltInfo = beltData[beltName]
         // Belt speed is given in tiles/tick, which we can convert to
         // items/second as follows:
         //       tiles      ticks              32 pixels/tile
         // speed ----- * 60 ------ * 2 lanes * --------------
-        //       tick       second             9 pixels/item
-        // 0.17 changes this formula from 9 pixels/item to 8 pixels/item.
-        var baseSpeed = RationalFromFloat(beltInfo.speed)
-        var pixelsPerSecond = baseSpeed.mul(RationalFromFloat(3840))
-        var speed
-        if (useLegacyCalculations) {
-            speed = pixelsPerSecond.div(RationalFromFloat(9))
-        } else {
-            speed = pixelsPerSecond.div(RationalFromFloat(8))
-        }
-        beltObjs.push(new Belt(beltName, speed))
+        //       tick       second             8 pixels/item
+        let baseSpeed = Rational.from_float(beltInfo.speed)
+        let speed = baseSpeed.mul(Rational.from_float(480))
+        beltObjs.push(new Belt(
+            beltName,
+            beltInfo.localized_name.en,
+            beltInfo.icon_col,
+            beltInfo.icon_row,
+            speed,
+        ))
     }
     beltObjs.sort(function(a, b) {
-        if (a.speed.less(b.speed)) {
+        if (a.rate.less(b.rate)) {
             return -1
-        } else if (b.speed.less(a.speed)) {
+        } else if (b.rate.less(a.rate)) {
             return 1
         }
         return 0
     })
-    return beltObjs
+    let belts = new Map()
+    for (let belt of beltObjs) {
+        belts.set(belt.key, belt)
+    }
+    return belts
 }

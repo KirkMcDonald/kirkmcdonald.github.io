@@ -1,4 +1,4 @@
-/*Copyright 2019 Kirk McDonald
+/*Copyright 2021 Kirk McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 
-class CirclePath {
+export class CirclePath {
     constructor(nx, ny, pairs) {
         let {x, y} = pairs[0]
         let r = null
@@ -296,7 +296,7 @@ function lineAdjustPath(tx, ty, x1, y1, x2, y2, width) {
     ])
 }
 
-function makeCurve(tx, ty, x1, y1, x2, y2, width) {
+export function makeCurve(tx, ty, x1, y1, x2, y2, width) {
     let dx = x2 - x1
     let dy = y2 - y1
     let [fx, fy] = toFrame(tx, ty, dx, dy)

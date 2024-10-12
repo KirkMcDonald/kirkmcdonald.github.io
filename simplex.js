@@ -11,21 +11,22 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-"use strict"
+
+import { zero, one } from "./rational.js"
 
 function pivot(A, row, col) {
-    var x = A.index(row, col)
+    let x = A.index(row, col)
     A.mulRow(row, x.reciprocate())
-    for (var r = 0; r < A.rows; r++) {
+    for (let r = 0; r < A.rows; r++) {
         if (r === row) {
             continue
         }
-        var ratio = A.index(r, col)
+        let ratio = A.index(r, col)
         if (ratio.isZero()) {
             continue
         }
 
-        for (var c = 0; c < A.cols; c++) {
+        for (let c = 0; c < A.cols; c++) {
             x = A.index(r, c).sub(A.index(row, c).mul(ratio))
             A.setIndex(r, c, x)
         }
@@ -33,9 +34,9 @@ function pivot(A, row, col) {
 }
 
 function getTestRatios(A, col) {
-    var ratios = []
-    for (var i = 0; i < A.rows - 1; i++) {
-        var x = A.index(i, col)
+    let ratios = []
+    for (let i = 0; i < A.rows - 1; i++) {
+        let x = A.index(i, col)
         if (!zero.less(x)) {
             ratios.push(null)
         } else {
@@ -46,14 +47,14 @@ function getTestRatios(A, col) {
 }
 
 function pivotCol(A, col) {
-    var best_ratio = null
-    var best_row = null
-    for (var row = 0; row < A.rows - 1; row++) {
-        var x = A.index(row, col)
+    let best_ratio = null
+    let best_row = null
+    for (let row = 0; row < A.rows - 1; row++) {
+        let x = A.index(row, col)
         if (!zero.less(x)) {
             continue
         }
-        var ratio = A.index(row, A.cols - 1).div(x)
+        let ratio = A.index(row, A.cols - 1).div(x)
         if (best_ratio === null || ratio.less(best_ratio)) {
             best_ratio = ratio
             best_row = row
@@ -69,8 +70,8 @@ function pivotCol(A, col) {
 // invert these bases, placing the tableau into the standard form, ready for
 // application of the simplex method.
 function eliminateNegativeBases(A) {
-    var negativeBases = []
-    for (var i = 0; i < A.rows - 1; i++) {
+    let negativeBases = []
+    for (let i = 0; i < A.rows - 1; i++) {
         // If the RHS is zero, just multiply the whole row by -1.
         if (A.index(i, A.cols - 1).equal(zero)) {
             A.mulRow(i, minusOne)
@@ -79,17 +80,17 @@ function eliminateNegativeBases(A) {
             negativeBases.push(true)
         }
     }
-    var done = false
+    let done = false
     findNext: while (!done) {
-        for (var i = 0; i < negativeBases.length; i++) {
+        for (let i = 0; i < negativeBases.length; i++) {
             if (!negativeBases[i]) {
                 continue
             }
             // Find largest positive coefficient in the row.
-            var max = zero
-            var maxCol = null
-            for (var j = 0; j < A.cols - 1; j++) {
-                var x = A.index(i, j)
+            let max = zero
+            let maxCol = null
+            for (let j = 0; j < A.cols - 1; j++) {
+                let x = A.index(i, j)
                 if (max.less(x)) {
                     max = x
                     maxCol = j
@@ -102,11 +103,11 @@ function eliminateNegativeBases(A) {
             // Pivot on that column. If two rows have an equal test ratio,
             // and one has a negative basic variable, prefer the row whose
             // value is negative.
-            var ratios = getTestRatios(A, maxCol)
-            var matches = []
-            var minRatio = null
-            for (var j = 0; j < ratios.length; j++) {
-                var ratio = ratios[j]
+            let ratios = getTestRatios(A, maxCol)
+            let matches = []
+            let minRatio = null
+            for (let j = 0; j < ratios.length; j++) {
+                let ratio = ratios[j]
                 if (ratio === null || ratio.less(zero)) {
                     continue
                 }
@@ -117,7 +118,7 @@ function eliminateNegativeBases(A) {
                     matches.push(j)
                 }
             }
-            var pivotIdx = 0
+            let pivotIdx = 0
             for (; pivotIdx < matches.length; pivotIdx++) {
                 if (negativeBases[matches[pivotIdx]]) {
                     break
@@ -126,7 +127,7 @@ function eliminateNegativeBases(A) {
             if (pivotIdx === matches.length) {
                 pivotIdx = 0
             }
-            var pivotRow = matches[pivotIdx]
+            let pivotRow = matches[pivotIdx]
             negativeBases[pivotRow] = false
             pivot(A, pivotRow, maxCol)
             continue findNext
@@ -135,12 +136,12 @@ function eliminateNegativeBases(A) {
     }
 }
 
-function simplex(A) {
+export function simplex(A) {
     while (true) {
-        var min = null
-        var minCol = null
-        for (var col = 0; col < A.cols - 1; col++) {
-            var x = A.index(A.rows - 1, col)
+        let min = null
+        let minCol = null
+        for (let col = 0; col < A.cols - 1; col++) {
+            let x = A.index(A.rows - 1, col)
             if (min === null || x.less(min)) {
                 min = x
                 minCol = col
@@ -149,16 +150,19 @@ function simplex(A) {
         if (!min.less(zero)) {
             return
         }
-        pivotCol(A, minCol)
+        let bestRow = pivotCol(A, minCol)
+        if (bestRow === null) {
+            throw new Exception("failed to pivot")
+        }
     }
 }
 
 function getBasis(A) {
-    var basis = []
-    for (var i = 0; i < A.cols - 1; i++) {
-        var found = null
-        for (var j = 0; j < A.rows; j++) {
-            var x = A.index(j, i)
+    let basis = []
+    for (let i = 0; i < A.cols - 1; i++) {
+        let found = null
+        for (let j = 0; j < A.rows; j++) {
+            let x = A.index(j, i)
             if (x.isZero()) {
                 continue
             } else if (x.equal(one)) {
