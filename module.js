@@ -265,9 +265,9 @@ export function getModules(data) {
         let effect = item.effect
         let category = item.category
         let order = item.order
-        let speed = Rational.from_float((effect.speed || {}).bonus || 0)
-        let productivity = Rational.from_float((effect.productivity || {}).bonus || 0)
-        let power = Rational.from_float((effect.consumption || {}).bonus || 0)
+        let speed = Rational.from_float_approximate((effect.speed || {}).bonus || 0)
+        let productivity = Rational.from_float_approximate((effect.productivity || {}).bonus || 0)
+        let power = Rational.from_float_approximate((effect.consumption || {}).bonus || 0)
         let limit = item.limitation
         modules.set(key, new Module(
             key,

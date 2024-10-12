@@ -160,16 +160,16 @@ export class DisabledRecipe {
 }
 
 function makeRecipe(data, items, d) {
-    let time = Rational.from_float(d.energy_required)
+    let time = Rational.from_float_approximate(d.energy_required)
     let products = []
     for (let {name, amount} of d.results) {
         let item = items.get(name)
-        products.push(new Ingredient(item, Rational.from_float(amount)))
+        products.push(new Ingredient(item, Rational.from_float_approximate(amount)))
     }
     let ingredients = []
     for (let {name, amount} of d.ingredients) {
         let item = items.get(name)
-        ingredients.push(new Ingredient(item, Rational.from_float(amount)))
+        ingredients.push(new Ingredient(item, Rational.from_float_approximate(amount)))
     }
     return new Recipe(
         d.name,
@@ -291,13 +291,13 @@ export function getRecipes(data, items) {
         if ("required_fluid" in props) {
             ingredients = [new Ingredient(
                 items.get(props.required_fluid),
-                Rational.from_float(props.fluid_amount / 10),
+                Rational.from_float_approximate(props.fluid_amount / 10),
             )]
         }
         let products = []
         for (let {name, amount} of props.results) {
             let item = items.get(name)
-            products.push(new Ingredient(item, Rational.from_float(amount)))
+            products.push(new Ingredient(item, Rational.from_float_approximate(amount)))
         }
         recipes.set(d.name, new MiningRecipe(
             d.name,
@@ -305,7 +305,7 @@ export function getRecipes(data, items) {
             d.icon_col,
             d.icon_row,
             "mining-" + category,
-            Rational.from_float(props.mining_time),
+            Rational.from_float_approximate(props.mining_time),
             ingredients,
             products,
         ))

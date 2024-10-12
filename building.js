@@ -177,9 +177,9 @@ export function getBuildings(data) {
                 d.icon_col,
                 d.icon_row,
                 d.crafting_categories,
-                Rational.from_float(d.crafting_speed),
+                Rational.from_float_approximate(d.crafting_speed),
                 d.module_slots,
-                Rational.from_float(d.energy_usage),
+                Rational.from_float_approximate(d.energy_usage),
                 fuel
             ))
         }
@@ -192,9 +192,9 @@ export function getBuildings(data) {
             d.icon_col,
             d.icon_row,
             d.crafting_categories,
-            Rational.from_float(d.crafting_speed),
+            Rational.from_float_approximate(d.crafting_speed),
             d.module_slots,
-            Rational.from_float(d.energy_usage),
+            Rational.from_float_approximate(d.energy_usage),
             null
         ))
     }
@@ -213,9 +213,9 @@ export function getBuildings(data) {
             d.icon_col,
             d.icon_row,
             ["mining-basic-solid"],
-            Rational.from_float(d.mining_speed),
+            Rational.from_float_approximate(d.mining_speed),
             d.module_slots,
-            Rational.from_float(d.energy_usage),
+            Rational.from_float_approximate(d.energy_usage),
             fuel
         ))
     }

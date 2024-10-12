@@ -48,7 +48,7 @@ export function getFuel(data, items) {
             d.icon_row,
             items.get(fuelKey),
             d.fuel_category,
-            Rational.from_float(d.fuel_value)
+            Rational.from_float_approximate(d.fuel_value)
         )
         let f = fuelCategories.get(fuel.category)
         if (f === undefined) {

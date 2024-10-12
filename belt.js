@@ -47,7 +47,7 @@ export function getBelts(data) {
         //       tiles      ticks              32 pixels/tile
         // speed ----- * 60 ------ * 2 lanes * --------------
         //       tick       second             8 pixels/item
-        let baseSpeed = Rational.from_float(beltInfo.speed)
+        let baseSpeed = Rational.from_float_approximate(beltInfo.speed)
         let speed = baseSpeed.mul(Rational.from_float(480))
         beltObjs.push(new Belt(
             beltName,
