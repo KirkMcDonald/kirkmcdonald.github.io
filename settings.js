@@ -17,6 +17,7 @@ import { dropdown } from "./dropdown.js"
 import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender } from "./events.js"
 import { spec, resourcePurities, DEFAULT_BELT } from "./factory.js"
 import { getRecipeGroups } from "./groups.js"
+import { shortModules } from "./module.js"
 import { Rational } from "./rational.js"
 import { renderRecipe } from "./recipe.js"
 
@@ -69,6 +70,72 @@ function renderTargets(settings) {
         }
     } else {
         spec.addTarget()
+    }
+}
+
+// modules
+
+function getModule(moduleKey) {
+    let module
+    if (spec.modules.has(moduleKey)) {
+        module = spec.modules.get(moduleKey)
+    } else if (shortModules.has(moduleKey)) {
+        module = shortModules.get(moduleKey)
+    } else if (moduleKey === "null") {
+        module = null
+    }
+    return module
+}
+
+// NOTE: Buildings must be configured before modules!
+function renderModules(settings) {
+    let two = Rational.from_float(2)
+    let moduleString = settings.get("modules")
+    if (moduleString !== undefined && moduleString !== "") {
+        for (let recipeSetting of moduleString.split(",")) {
+            let [buildingModuleSettings, beaconSettings] = recipeSetting.split(";")
+            let [recipeKey, ...moduleKeyList] = buildingModuleSettings.split(":")
+            let recipe = spec.recipes.get(recipeKey)
+            let moduleSpec = spec.getModuleSpec(recipe)
+            for (let i = 0; i < moduleKeyList.length; i++) {
+                let moduleKey = moduleKeyList[i]
+                let module = getModule(moduleKey)
+                if (module !== undefined) {
+                    moduleSpec.setModule(i, module)
+                }
+            }
+            if (beaconSettings !== undefined) {
+                let beaconParts = beaconSettings.split(":")
+                // The legacy beacon config was simply in the form
+                // "module:module count". If the count is even, then it is
+                // adapted to the new format by dividing it by two and placing
+                // the specified module in both slots. Otherwise, a single slot
+                // is filled and the count is used as the beacon count.
+                let module1
+                let module2
+                let count
+                if (beaconParts.length === 2) {
+                    let module = getModule(beaconParts[0])
+                    count = Rational.from_string(beaconParts[1])
+                    let divmod = count.divmod(two)
+                    if (divmod.remainder.isZero()) {
+                        module1 = module
+                        module2 = module
+                        count = divmod.quotient
+                    } else {
+                        module1 = module
+                        module2 = null
+                    }
+                } else {
+                    module1 = getModule(beaconParts[0])
+                    module2 = getModule(beaconParts[1])
+                    count = Rational.from_string(beaconParts[2])
+                }
+                moduleSpec.setBeaconModule(module1, 0)
+                moduleSpec.setBeaconModule(module2, 1)
+                moduleSpec.setBeaconCount(count)
+            }
+        }
     }
 }
 
@@ -361,6 +428,7 @@ export function renderSettings(settings) {
     renderResourcePriorities(settings)
     renderRecipes(settings)
     renderTargets(settings)
+    renderModules(settings)
     renderDebugCheckbox(settings)
     renderTab(settings)
 }

@@ -31,6 +31,8 @@ class Module {
         this.icon_row = row
         this.icon = new Icon(this)
     }
+    // This naming scheme is some older cruft, which works in the vanilla
+    // dataset, but it's possible other datasets would render it unworkable.
     shortName() {
         return this.key[0] + this.key[this.key.length - 1]
     }
@@ -156,7 +158,7 @@ function moduleDropdown(selection, name, selected, callback, filter) {
 // ModuleSpec represents the set of modules (including beacons) configured for
 // a given recipe.
 export class ModuleSpec {
-    constructor(recipe) {
+    constructor(recipe, spec) {
         this.recipe = recipe
         this.building = null
         this.modules = []
@@ -188,6 +190,12 @@ export class ModuleSpec {
         let needRecalc = (oldModule && oldModule.hasProdEffect()) || (module && module.hasProdEffect())
         this.modules[index] = module
         return needRecalc
+    }
+    setBeaconModule(module, i) {
+        this.beaconModules[i] = module
+    }
+    setBeaconCount(count) {
+        this.beaconCount = count
     }
     speedEffect() {
         let speed = one
@@ -257,6 +265,7 @@ export class ModuleSpec {
 }
 
 export let moduleRows = null
+export let shortModules = null
 
 export function getModules(data) {
     let modules = new Map()
@@ -284,6 +293,7 @@ export function getModules(data) {
     }
     let sortedModules = sorted(modules.values(), m => m.order)
     moduleRows = [[null]]
+    shortModules = new Map()
     let category = null
     for (let module of sortedModules) {
         if (module.category !== category) {
@@ -291,6 +301,13 @@ export function getModules(data) {
             moduleRows.push([])
         }
         moduleRows[moduleRows.length - 1].push(module)
+        let shortName = module.shortName()
+        if (shortModules.has(shortName)) {
+            // This does not occur in the vanilla data, but let's plan ahead.
+            module.shortName = function() { return this.key }
+            shortName = module.key
+        }
+        shortModules.set(shortName, module)
     }
     return modules
 }

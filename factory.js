@@ -55,7 +55,7 @@ class FactorySpecification {
         // Maps recipe to ModuleSpec
         this.spec = new Map()
         this.defaultModule = null
-        this.defaultBeacon = null
+        this.defaultBeacon = [null, null]
         this.defaultBeaconCount = zero
 
         this.belt = null

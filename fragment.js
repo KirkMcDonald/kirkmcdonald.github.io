@@ -17,6 +17,16 @@ import { spec, DEFAULT_PURITY, DEFAULT_BELT } from "./factory.js"
 import { Rational } from "./rational.js"
 import { DEFAULT_TITLE, DEFAULT_COLOR_SCHEME, colorScheme } from "./settings.js"
 
+function getModuleKey(module) {
+    let moduleKey
+    if (module === null) {
+        moduleKey = "null"
+    } else {
+        moduleKey = module.shortName()
+    }
+    return moduleKey
+}
+
 export function formatSettings(overrideTab, targets) {
     let settings = ""
     if (document.title !== DEFAULT_TITLE) {
@@ -90,6 +100,40 @@ export function formatSettings(overrideTab, targets) {
             disable.push(d.key)
         }
         settings += "&disable=" + disable.join(",")
+    }
+
+    let moduleSettings = []
+    for (let [recipe, moduleSpec] of spec.spec) {
+        if (!spec.lastTotals || !spec.lastTotals.rates.has(recipe)) {
+            continue
+        }
+        let modules = []
+        let beacon = ""
+        let any = false
+        for (let module of moduleSpec.modules) {
+            if (module !== spec.defaultModule) {
+                modules.push(getModuleKey(module))
+                any = true
+            }
+        }
+        if (moduleSpec.beaconModules[0] !== spec.defaultBeacon[0] || moduleSpec.beaconModules[1] !== spec.defaultBeacon[1] || !moduleSpec.beaconCount.equal(spec.defaultBeaconCount)) {
+            let beaconKeys = []
+            for (let module of moduleSpec.beaconModules) {
+                beaconKeys.push(getModuleKey(module))
+            }
+            beacon = beaconKeys.join(":") + ":" + moduleSpec.beaconCount.toString()
+            any = true
+        }
+        if (any) {
+            let s = recipe.key + ":" + modules.join(":")
+            if (beacon !== "") {
+                s += ";" + beacon
+            }
+            moduleSettings.push(s)
+        }
+    }
+    if (moduleSettings.length > 0) {
+        settings += "&modules=" + moduleSettings.join(",")
     }
 
     if (!spec.isDefaultPriority()) {
