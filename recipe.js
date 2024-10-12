@@ -162,9 +162,13 @@ export class DisabledRecipe {
 function makeRecipe(data, items, d) {
     let time = Rational.from_float_approximate(d.energy_required)
     let products = []
-    for (let {name, amount} of d.results) {
+    for (let {name, amount, probability} of d.results) {
         let item = items.get(name)
-        products.push(new Ingredient(item, Rational.from_float_approximate(amount)))
+        let ratAmount = Rational.from_float_approximate(amount)
+        if (probability !== undefined) {
+            ratAmount = ratAmount.mul(Rational.from_float_approximate(probability))
+        }
+        products.push(new Ingredient(item, ratAmount))
     }
     let ingredients = []
     for (let {name, amount} of d.ingredients) {
@@ -295,9 +299,13 @@ export function getRecipes(data, items) {
             )]
         }
         let products = []
-        for (let {name, amount} of props.results) {
+        for (let {name, amount, probability} of props.results) {
             let item = items.get(name)
-            products.push(new Ingredient(item, Rational.from_float_approximate(amount)))
+            let ratAmount = Rational.from_float_approximate(amount)
+            if (probability !== undefined) {
+                ratAmount = ratAmount.mul(Rational.from_float_approximate(probability))
+            }
+            products.push(new Ingredient(item, ratAmount))
         }
         recipes.set(d.name, new MiningRecipe(
             d.name,
