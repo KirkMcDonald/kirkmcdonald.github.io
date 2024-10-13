@@ -130,8 +130,22 @@ class ModuleInput {
         return this.cell.moduleSpec.getModule(this.cell.index) === this.module
     }
     choose() {
-        let recalc = this.cell.moduleSpec.setModule(this.cell.index, this.module)
-        if (recalc || spec.isFactoryTarget(this.cell.moduleSpec.recipe)) {
+        let toUpdate = [this.cell.index]
+        if (this.cell.index === 0) {
+            let modules = this.cell.moduleSpec.modules
+            let oldModule = modules[this.cell.index]
+            for (let i = 1; i < modules.length; i++) {
+                if (modules[i] === oldModule) {
+                    toUpdate.push(i)
+                }
+            }
+        }
+        let anyRecalc = false
+        for (let i of toUpdate) {
+            let recalc = this.cell.moduleSpec.setModule(i, this.module)
+            anyRecalc = anyRecalc || recalc
+        }
+        if (anyRecalc || spec.isFactoryTarget(this.cell.moduleSpec.recipe)) {
             spec.updateSolution()
         } else {
             spec.display()
