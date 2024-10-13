@@ -11,7 +11,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-import { Icon } from "./icon.js"
+import { makeDropdown, addInputs } from "./dropdown.js"
+import { Icon, sprites } from "./icon.js"
 import { Rational, zero, half, one } from "./rational.js"
 import { sorted } from "./sort.js"
 
@@ -115,44 +116,48 @@ class Module {
     }*/
 }
 
-function moduleDropdown(selection, name, selected, callback, filter) {
-    let rows = moduleRows
-
-    let dropdown = makeDropdown(selection)
-    let options = dropdown.selectAll("div")
-        .data(rows)
+export function moduleDropdown(selector, data) {
+    let moduleDropdownSpan = selector.selectAll("span.module-wrapper")
+        .data(data)
+        .join(
+            enter => {
+                let s = enter.append("span")
+                    .classed("module-wrapper", true)
+                makeDropdown(s)
+                return s
+            }
+        )
+    let moduleDropdown = moduleDropdownSpan.selectAll("div.dropdown")
+    moduleDropdown.selectAll("div.moduleRow")
+        .data(d => d.inputRows)
         .join("div")
-            .selectAll("span")
+            .classed("moduleRow", true)
+            .selectAll("span.input")
             .data(d => d)
-            .join("span")
-    if (filter) {
-        options = options.filter(filter)
-    }
-    let labels = addInputs(
-        options,
-        name,
-        selected,
-        callback,
-    )
-    labels.append(d => {
-        if (d === null) {
-            let noModImage = getExtraImage("slot_icon_module")
-            noModImage.title = NO_MODULE
-            return noModImage
-        } else {
-            return getImage(d, false, dropdown.node())
-        }
-    })
-    let inputs = {}
-    options.each(function(d) {
-        let element = d3.select(this).select('input[type="radio"]').node()
-        if (d === null) {
-            inputs[NO_MODULE] = element
-        } else {
-            inputs[d.name] = element
-        }
-    })
-    return {dropdown: dropdown.node(), inputs: inputs}
+            .join(
+                enter => {
+                    let s = enter.append("span")
+                        .classed("input", true)
+                    let label = addInputs(
+                        s,
+                        d => d.cell.name,
+                        d => d.checked(),
+                        d => d.choose(),
+                    )
+                    label.append(d => {
+                        if (d.module === null) {
+                            return sprites.get("slot_icon_module").icon.make(32)
+                        } else {
+                            return d.module.icon.make(32)
+                        }
+                    })
+                    return s
+                },
+                update => {
+                    update.selectAll("input").property("checked", d => d.checked())
+                    return update
+                },
+            )
 }
 
 // ModuleSpec represents the set of modules (including beacons) configured for

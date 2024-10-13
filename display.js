@@ -16,8 +16,7 @@ import { toggleIgnoreHandler } from "./events.js"
 import { spec } from "./factory.js"
 import { formatSettings } from "./fragment.js"
 import { getRecipeGroups, topoSort } from "./groups.js"
-import { sprites } from "./icon.js"
-import { moduleRows } from "./module.js"
+import { moduleRows, moduleDropdown } from "./module.js"
 import { Rational, zero, one } from "./rational.js"
 
 let powerSuffixes = ["\u00A0W", "kW", "MW", "GW", "TW", "PW"]
@@ -124,22 +123,22 @@ function getBreakdown(item, totals) {
 
 class ModuleInput {
     constructor() {
-        this.moduleSlot = null
+        this.cell = null
         this.module = null
     }
     checked() {
-        return this.moduleSlot.moduleSpec.getModule(this.moduleSlot.index) === this.module
+        return this.cell.moduleSpec.getModule(this.cell.index) === this.module
     }
     choose() {
-        let recalc = this.moduleSlot.moduleSpec.setModule(this.moduleSlot.index, this.module)
-        if (recalc || spec.isFactoryTarget(this.moduleSlot.moduleSpec.recipe)) {
+        let recalc = this.cell.moduleSpec.setModule(this.cell.index, this.module)
+        if (recalc || spec.isFactoryTarget(this.cell.moduleSpec.recipe)) {
             spec.updateSolution()
         } else {
             spec.display()
         }
     }
     setData(slot, m) {
-        this.moduleSlot = slot
+        this.cell = slot
         this.module = m
     }
 }
@@ -487,88 +486,8 @@ export function displayItems(spec, totals) {
         .text(d => spec.format.alignCount(spec.getCount(d.recipe, totals.rates.get(d.recipe))))
     let moduleRow = row.filter(d => d.moduleSpec !== null)
     let moduleCell = moduleRow.selectAll("td.module-cell")
-    let moduleDropdownSpan = moduleCell.selectAll("span.slot")
-        .data(d => d.slots)
-        .join(
-            enter => {
-                let s = enter.append("span")
-                    .classed("slot", true)
-                makeDropdown(s)
-                return s
-            }
-        )
-    let moduleDropdown = moduleDropdownSpan.selectAll("div.dropdown")
-    moduleDropdown.selectAll("div.moduleRow")
-        .data(d => d.inputRows)
-        .join("div")
-            .classed("moduleRow", true)
-            .selectAll("span.input")
-            .data(d => d)
-            .join(
-                enter => {
-                    let s = enter.append("span")
-                        .classed("input", true)
-                    let label = addInputs(
-                        s,
-                        d => d.moduleSlot.name,
-                        d => d.checked(),
-                        d => d.choose(),
-                    )
-                    label.append(d => {
-                        if (d.module === null) {
-                            return sprites.get("slot_icon_module").icon.make(32)
-                        } else {
-                            return d.module.icon.make(32)
-                        }
-                    })
-                    return s
-                },
-                update => {
-                    update.selectAll("input").property("checked", d => d.checked())
-                    return update
-                },
-            )
-    let beaconCell = moduleRow.selectAll("span.beacon-container").selectAll("span.slot")
-        .data(d => d.beaconModules)
-        .join(
-            enter => {
-                let s = enter.append("span")
-                    .classed("slot", true)
-                makeDropdown(s)
-                return s
-            }
-        )
-    let beaconDropdown = beaconCell.selectAll("div.dropdown")
-    beaconDropdown.selectAll("div")
-        .data(d => d.inputRows)
-        .join("div")
-            //.classed("moduleRow", true)
-            .selectAll("span.input")
-            .data(d => d)
-            .join(
-                enter => {
-                    let s = enter.append("span")
-                        .classed("input", true)
-                    let label = addInputs(
-                        s,
-                        d => d.cell.name,
-                        d => d.checked(),
-                        d => d.choose(),
-                    )
-                    label.append(d => {
-                        if (d.module === null) {
-                            return sprites.get("slot_icon_module").icon.make(32)
-                        } else {
-                            return d.module.icon.make(32)
-                        }
-                    })
-                    return s
-                },
-                update => {
-                    update.selectAll("input").property("checked", d => d.checked())
-                    return update
-                },
-            )
+    moduleDropdown(moduleCell, d => d.slots)
+    moduleDropdown(moduleRow.selectAll("span.beacon-container"), d => d.beaconModules)
     moduleRow.selectAll("span.beacon-count input")
         .attr("value", d => spec.format.count(d.moduleSpec.beaconCount))
 
