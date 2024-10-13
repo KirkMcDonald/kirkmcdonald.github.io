@@ -89,11 +89,6 @@ class FactorySpecification {
             }
             tier.push(item)
         }
-        this.itemTiers = []
-        for (let [tier, tierItems] of tierMap) {
-            this.itemTiers.push(tierItems)
-        }
-        this.itemTiers.sort((a, b) => a[0].tier - b[0].tier)
         this.recipes = recipes
         this.modules = modules
         this.buildings = new Map()
@@ -454,7 +449,7 @@ class FactorySpecification {
             itemKey = DEFAULT_ITEM_KEY
         }
         let item = this.items.get(itemKey)
-        let target = new BuildTarget(this.buildTargets.length, itemKey, item, this.itemTiers)
+        let target = new BuildTarget(this.buildTargets.length, itemKey, item, this.itemGroups)
         this.buildTargets.push(target)
         d3.select("#targets").insert(() => target.element, "#plusButton")
         return target

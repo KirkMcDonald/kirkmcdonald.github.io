@@ -115,7 +115,7 @@ let targetCount = 0
 let recipeSelectorCount = 0
 
 export class BuildTarget {
-    constructor(index, itemKey, item, tiers) {
+    constructor(index, itemKey, item, itemGroups) {
         this.index = index
         this.itemKey = itemKey
         this.item = item
@@ -140,18 +140,24 @@ export class BuildTarget {
             d => d.select(".search").node().focus(),
             d => resetSearch(d.node()),
         )
+        dropdown.classed("itemDropdown", true)
         dropdown.append("input")
             .classed("search", true)
             .attr("placeholder", "Search")
             .on("keyup", searchTargets)
-        let itemSpan = dropdown.selectAll("div")
-            .data(tiers)
+        let group = dropdown.selectAll("div")
+            .data(itemGroups)
+            .join("div")
+        group.filter((d, i) => i > 0)
+            .append("hr")
+        let items = group.selectAll("div")
+            .data(d => d)
             .join("div")
                 .selectAll("span")
                 .data(d => d)
                 .join("span")
         let itemLabel = addInputs(
-            itemSpan,
+            items,
             `target-${targetCount}`,
             d => d === item,
             itemHandler(this),
