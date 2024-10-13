@@ -167,18 +167,15 @@ export class ModuleSpec {
         this.recipe = recipe
         this.building = null
         this.modules = []
-        this.beaconModules = [null, null]
-        this.beaconCount = zero
+        this.beaconModules = [spec.defaultBeacon[0], spec.defaultBeacon[1]]
+        this.beaconCount = spec.defaultBeaconCount
     }
     setBuilding(building, spec) {
         this.building = building
         if (this.modules.length > building.moduleSlots) {
             this.modules.length = building.moduleSlots
         }
-        let toAdd = null
-        if (spec.defaultModule && spec.defaultModule.canUse(this.recipe)) {
-            toAdd = spec.defaultModule
-        }
+        let toAdd = spec.getDefaultModule(this.recipe)
         while (this.modules.length < building.moduleSlots) {
             this.modules.push(toAdd)
         }

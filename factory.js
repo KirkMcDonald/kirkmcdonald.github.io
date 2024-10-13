@@ -55,6 +55,7 @@ class FactorySpecification {
         // Maps recipe to ModuleSpec
         this.spec = new Map()
         this.defaultModule = null
+        this.secondaryDefaultModule = null
         this.defaultBeacon = [null, null]
         this.defaultBeaconCount = zero
 
@@ -326,7 +327,7 @@ class FactorySpecification {
     }
     initModuleSpec(recipe, building) {
         if (!this.spec.has(recipe) && building !== null && building.canBeacon()) {
-            let m = new ModuleSpec(recipe)
+            let m = new ModuleSpec(recipe, this)
             m.setBuilding(building, this)
             this.spec.set(recipe, m)
             return m
@@ -359,10 +360,36 @@ class FactorySpecification {
                 let m = moduleSpec.modules[i]
                 if (m === this.defaultModule && (!module || module.canUse(recipe))) {
                     moduleSpec.modules[i] = module
+                } else if (m === this.defaultModule && (!this.secondaryDefaultModule || this.secondaryDefaultModule.canUse(recipe))) {
+                    moduleSpec.modules[i] = this.secondaryDefaultModule
                 }
             }
         }
         this.defaultModule = module
+    }
+    setSecondaryDefaultModule(module) {
+        if (this.secondaryDefaultModule !== this.defaultModule) {
+            for (let [recipe, moduleSpec] of this.spec) {
+                for (let i = 0; i < moduleSpec.modules.length; i++) {
+                    let m = moduleSpec.modules[i]
+                    if (m === this.secondaryDefaultModule && (!module || module.canUse(recipe))) {
+                        moduleSpec.modules[i] = module
+                    }
+                }
+            }
+        }
+        this.secondaryDefaultModule = module
+    }
+    // Gets the default module for this recipe, given the current
+    // default/secondary settings.
+    getDefaultModule(recipe) {
+        if (this.defaultModule === null || this.defaultModule.canUse(recipe)) {
+            return this.defaultModule
+        }
+        if (this.secondaryDefaultModule === null || this.secondaryDefaultModule.canUse(recipe)) {
+            return this.secondaryDefaultModule
+        }
+        return null
     }
     isDefaultDefaultBeacon() {
         return this.defaultBeacon[0] === null && this.defaultBeacon[1] === null

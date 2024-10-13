@@ -60,6 +60,9 @@ export function formatSettings(overrideTab, targets) {
     if (spec.defaultModule !== null) {
         settings += "dm=" + spec.defaultModule.shortName() + "&"
     }
+    if (spec.secondaryDefaultModule !== null) {
+        settings += "dm2=" + spec.secondaryDefaultModule.shortName() + "&"
+    }
     if (!spec.isDefaultDefaultBeacon()) {
         let parts = []
         for (let module of spec.defaultBeacon) {
@@ -128,7 +131,7 @@ export function formatSettings(overrideTab, targets) {
         let beacon = ""
         let any = false
         for (let module of moduleSpec.modules) {
-            if (module !== spec.defaultModule) {
+            if (module !== spec.getDefaultModule(recipe)) {
                 modules.push(getModuleKey(module))
                 any = true
             }

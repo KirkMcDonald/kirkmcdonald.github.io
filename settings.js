@@ -361,6 +361,32 @@ class DefaultModuleCell {
         }
     }
 }
+class SecondaryModuleInput {
+    constructor(cell, module) {
+        this.cell = cell
+        this.module = module
+    }
+    checked() {
+        return this.module === spec.secondaryDefaultModule
+    }
+    choose() {
+        spec.setSecondaryDefaultModule(this.module)
+        spec.updateSolution()
+    }
+}
+class SecondaryModuleCell {
+    constructor() {
+        this.name = "secondary_module_dropdown"
+        this.inputRows = []
+        for (let row of moduleRows) {
+            let inputRow = []
+            for (let module of row) {
+                inputRow.push(new SecondaryModuleInput(this, module))
+            }
+            this.inputRows.push(inputRow)
+        }
+    }
+}
 
 function renderDefaultModule(settings) {
     let defaultModule = null
@@ -368,9 +394,17 @@ function renderDefaultModule(settings) {
         defaultModule = getModule(settings.get("dm"))
     }
     spec.setDefaultModule(defaultModule)
+    let secondaryModule = null
+    if (settings.has("dm2")) {
+        secondaryModule = getModule(settings.get("dm2"))
+    }
+    spec.setSecondaryDefaultModule(secondaryModule)
 
     let cell = new DefaultModuleCell()
     let select = d3.select("#default_module")
+    moduleDropdown(select, [cell])
+    cell = new SecondaryModuleCell()
+    select = d3.select("#secondary_module")
     moduleDropdown(select, [cell])
 }
 
