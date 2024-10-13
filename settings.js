@@ -15,12 +15,13 @@ import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_
 import { colorSchemes } from "./color.js"
 import { dropdown } from "./dropdown.js"
 import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender } from "./events.js"
-import { spec, DEFAULT_BELT, DEFAULT_FUEL } from "./factory.js"
+import { spec, DEFAULT_BELT, DEFAULT_FUEL, buildingSort } from "./factory.js"
 import { getRecipeGroups } from "./groups.js"
 import { changeMod } from "./init.js"
 import { shortModules, moduleRows, moduleDropdown } from "./module.js"
 import { Rational, zero } from "./rational.js"
 import { renderRecipe } from "./recipe.js"
+import { sorted } from "./sort.js"
 
 // data set
 
@@ -336,6 +337,53 @@ function setColorScheme(schemeKey) {
     }
 }
 
+// buildings
+
+function renderBuildings(settings) {
+    let groupSet = new Set()
+    for (let [cat, group] of spec.buildings) {
+        if (group.buildings.length > 1) {
+            groupSet.add(group)
+        }
+    }
+    for (let group of groupSet) {
+        group.building = group.getDefault()
+    }
+    if (settings.has("buildings")) {
+        let buildingKeys = settings.get("buildings").split(",")
+        for (let key of buildingKeys) {
+            let building = spec.buildingKeys.get(key)
+            spec.setMinimumBuilding(building)
+        }
+    }
+
+    // It doesn't really matter how we order these, but pick something just to
+    // make it consistent.
+    let groups = sorted(groupSet, g => g.getDefault().name)
+    let groupIndex = new Map()
+    for (let [i, g] of groups.entries()) {
+        for (let building of g.buildings) {
+            groupIndex.set(building, i)
+        }
+    }
+    let div = d3.select("#building_selector")
+    div.selectAll("*").remove()
+    let set = div.selectAll("div")
+        .data(groups)
+        .join("div")
+            .classed("radio-setting", true)
+    radioSetting(
+        set,
+        d => `building_selector_${groupIndex.get(d)}`,
+        d => d.buildings,
+        d => d === spec.getBuildingGroup(d).building,
+        (event, d) => {
+            spec.setMinimumBuilding(d)
+            spec.updateSolution()
+        },
+    )
+}
+
 // belt
 
 function beltHandler(event, belt) {
@@ -343,21 +391,21 @@ function beltHandler(event, belt) {
     spec.display()
 }
 
-function radioSetting(id, name, data, checked, onchange) {
-    let form = d3.select("#" + id)
-    form.selectAll("*").remove()
+let radioInput = 0
+let radioLabel = 0
+function radioSetting(form, name, data, checked, onchange) {
     let option = form.selectAll("span")
         .data(data)
         .join("span")
     option.append("input")
-        .attr("id", d => `${name}.${d.key}`)
+        .attr("id", d => `radio-input-${radioInput++}`)
         .attr("type", "radio")
         .attr("name", name)
         .attr("value", d => d.key)
-        .attr("checked", checked)
+        .attr("checked", d => checked(d) ? "" : null)
         .on("change", onchange)
     option.append("label")
-        .attr("for", d => `${name}.${d.key}`)
+        .attr("for", d => `radio-input-${radioLabel++}`)
         .append(d => d.icon.make(32))
 }
 
@@ -372,11 +420,13 @@ function renderBelts(settings) {
     for (let [beltKey, belt] of spec.belts) {
         belts.push(belt)
     }
+    let form = d3.select("#belt_selector")
+    form.selectAll("*").remove()
     radioSetting(
-        "belt_selector",
+        form,
         "belt",
         belts,
-        d => d === spec.belt ? "" : null,
+        d => d === spec.belt,
         beltHandler,
     )
 }
@@ -396,11 +446,13 @@ function renderFuel(settings) {
     spec.fuel = spec.fuels.get(fuelKey)
 
     let fuels = Array.from(spec.fuels.values())
+    let form = d3.select("#fuel_selector")
+    form.selectAll("*").remove()
     radioSetting(
-        "fuel_selector",
+        form,
         "fuel",
         fuels,
-        d => d === spec.fuel ? "" : null,
+        d => d === spec.fuel,
         fuelHandler,
     )
 }
@@ -659,6 +711,7 @@ export function renderSettings(settings) {
     renderPrecisions(settings)
     renderValueFormat(settings)
     renderColorScheme(settings)
+    renderBuildings(settings)
     renderBelts(settings)
     renderFuel(settings)
     renderVisualizer(settings)

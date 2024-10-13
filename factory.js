@@ -28,6 +28,90 @@ const DEFAULT_ITEM_KEY = "advanced-circuit"
 
 export let DEFAULT_BELT = "transport-belt"
 export let DEFAULT_FUEL = "coal"
+let DEFAULT_BUILDINGS = new Set([
+    "assembling-machine-1",
+    "electric-furnace",
+    "electric-miner",
+])
+
+class BuildingSet {
+    constructor(building) {
+        this.categories = new Set(building.categories)
+        this.buildings = new Set([building])
+    }
+    merge(other) {
+        for (let category of other.categories) {
+            this.categories.add(category)
+        }
+        for (let building of other.buildings) {
+            this.buildings.add(building)
+        }
+    }
+    overlap(other) {
+        return this.categories.intersection(other.categories).size > 0
+    }
+}
+
+export function buildingSort(buildings) {
+    buildings.sort(function(a, b) {
+        if (a.less(b)) {
+            return -1
+        } else if (b.less(a)) {
+            return 1
+        }
+        return 0
+    })
+}
+
+class BuildingGroup {
+    constructor(bSet) {
+        this.buildings = Array.from(bSet)
+        buildingSort(this.buildings)
+        this.building = this.getDefault()
+    }
+    getDefault() {
+        for (let building of this.buildings) {
+            if (DEFAULT_BUILDINGS.has(building.key)) {
+                return building
+            }
+        }
+        return this.buildings[this.buildings.length - 1]
+    }
+    getBuilding(recipe) {
+        let b = null
+        for (let building of this.buildings) {
+            if (building.categories.has(recipe.category)) {
+                b = building
+                if (building === this.building || this.building.less(building)) {
+                    return building
+                }
+            }
+        }
+        return b
+    }
+}
+
+function getBuildingGroups(buildings) {
+    let sets = new Set()
+    for (let building of buildings) {
+        let set = new BuildingSet(building)
+        for (let s of Array.from(sets)) {
+            if (set.overlap(s)) {
+                set.merge(s)
+                sets.delete(s)
+            }
+        }
+        sets.add(set)
+    }
+    let groups = new Map()
+    for (let {categories, buildings} of sets) {
+        let group = new BuildingGroup(buildings)
+        for (let cat of categories) {
+            groups.set(cat, group)
+        }
+    }
+    return groups
+}
 
 class FactorySpecification {
     constructor() {
@@ -36,6 +120,7 @@ class FactorySpecification {
         this.recipes = null
         this.modules = null
         this.buildings = null
+        this.buildingKeys = null
         this.belts = null
         this.fuels = null
 
@@ -84,26 +169,10 @@ class FactorySpecification {
         }
         this.recipes = recipes
         this.modules = modules
-        this.buildings = new Map()
+        this.buildings = getBuildingGroups(buildings)
+        this.buildingKeys = new Map()
         for (let building of buildings) {
-            for (let category of building.categories) {
-                let categoryList = this.buildings.get(category)
-                if (categoryList === undefined) {
-                    categoryList = []
-                    this.buildings.set(category, categoryList)
-                }
-                categoryList.push(building)
-            }
-        }
-        for (let [category, buildings] of this.buildings) {
-            buildings.sort(function(a, b) {
-                if (a.less(b)) {
-                    return -1
-                } else if (b.less(a)) {
-                    return 1
-                }
-                return 0
-            })
+            this.buildingKeys.set(building.key, building)
         }
         this.belts = belts
         this.belt = belts.get(DEFAULT_BELT)
@@ -310,10 +379,16 @@ class FactorySpecification {
         if (recipe.category === null || recipe.category === undefined) {
             return null
         } else {
-            // XXX: Need to implement minimum assembler level
-            let buildings = this.buildings.get(recipe.category)
-            return buildings[buildings.length - 1]
+            return this.buildings.get(recipe.category).getBuilding(recipe)
         }
+    }
+    getBuildingGroup(building) {
+        let cat = Array.from(building.categories)[0]
+        return this.buildings.get(cat)
+    }
+    setMinimumBuilding(building) {
+        let group = this.getBuildingGroup(building)
+        group.building = building
     }
     initModuleSpec(recipe, building) {
         if (!this.spec.has(recipe) && building !== null && building.canBeacon()) {

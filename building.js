@@ -18,7 +18,7 @@ class Building {
     constructor(key, name, col, row, categories, speed, moduleSlots, power, fuel) {
         this.key = key
         this.name = name
-        this.categories = categories
+        this.categories = new Set(categories)
         this.speed = speed
         this.moduleSlots = moduleSlots
         this.power = power

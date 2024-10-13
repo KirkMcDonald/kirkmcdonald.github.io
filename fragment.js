@@ -54,6 +54,16 @@ export function formatSettings(overrideTab, targets) {
     if (spec.format.displayFormat !== DEFAULT_FORMAT) {
         settings += "vf=" + spec.format.displayFormat[0] + "&"
     }
+    let buildings = []
+    let groupSet = new Set(spec.buildings.values())
+    for (let group of groupSet) {
+        if (group.building !== group.getDefault()) {
+            buildings.push(group.building.key)
+        }
+    }
+    if (buildings.length > 0) {
+        settings += "buildings=" + buildings.join(",") + "&"
+    }
     if (spec.belt.key !== DEFAULT_BELT) {
         settings += "belt=" + spec.belt.key + "&"
     }

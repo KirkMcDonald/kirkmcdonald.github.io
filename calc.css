@@ -149,9 +149,16 @@ td.setting-label {
 div#miner_settings, div#alt_recipe_settings {
     padding-left: 3em;
 }
-.top {
+.top, .top-icon {
     vertical-align: top;
 }
+.top-icon > div {
+    height: 40px;
+    line-height: 40px;
+}
+/*.top-icon > div > span {
+    vertical-align: center;
+}*/
 input.prec {
     width: 4em;
 }
