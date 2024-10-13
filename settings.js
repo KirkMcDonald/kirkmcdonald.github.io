@@ -420,7 +420,7 @@ class DefaultBeaconInput {
     }
     choose() {
         spec.setDefaultBeacon(this.module, this.cell.index)
-        spec.display()
+        spec.updateSolution()
     }
 }
 class DefaultBeaconCell {
