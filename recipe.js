@@ -41,6 +41,25 @@ class Recipe {
         this.icon_row = row
         this.icon = new Icon(this, products[0].item.name)
     }
+    fuelIngredient() {
+        let building = spec.getBuilding(this)
+        if (building === null || building.fuel === null || building.fuel !== "chemical") {
+            return []
+        }
+        // baseRate = craft/s
+        // basePower = J/s
+        // perCraftEnergy = J/s / craft/s = J/craft
+        // fuel.value = J/i
+        // fuelAmount = J/craft / J/i = i/craft
+        let baseRate = spec.getRecipeRate(this)
+        let basePower = spec.getPowerUsage(this, baseRate).power
+        let perCraftEnergy = basePower.div(baseRate)
+        let fuelAmount = perCraftEnergy.div(spec.fuel.value)
+        return [new Ingredient(spec.fuel.item, fuelAmount)]
+    }
+    getIngredients() {
+        return this.ingredients.concat(this.fuelIngredient())
+    }
     gives(item) {
         let prodEffect = spec.getProdEffect(this).sub(one)
         for (let ing of this.products) {
@@ -62,7 +81,7 @@ class Recipe {
     // There's an asymmetry with gives() here: It returns zero if the recipe
     // does not have this item as an ingredient.
     uses(item) {
-        for (let ing of this.ingredients) {
+        for (let ing of this.getIngredients()) {
             if (ing.item === item) {
                 return ing.amount
             }

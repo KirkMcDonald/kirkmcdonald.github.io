@@ -15,7 +15,7 @@ limitations under the License.*/
 function neighbors(groupMap, group) {
     let result = new Set()
     for (let recipe of group) {
-        let ingredients = Array.from(recipe.ingredients)
+        let ingredients = Array.from(recipe.getIngredients())
         // Reverse the list of ingredients here, so that it appears in the
         // "correct" order when the overall topoSort is reversed.
         ingredients.reverse()

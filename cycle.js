@@ -18,7 +18,7 @@ function neighboringRecipes(recipes, recipe, invert) {
     if (invert) {
         itemSet = recipe.products
     } else {
-        itemSet = recipe.ingredients
+        itemSet = recipe.getIngredients()
     }
     for (let ing of itemSet) {
         let recipeSet

@@ -11,6 +11,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
+import { Icon } from "./icon.js"
 import { Rational } from "./rational.js"
 
 let energySuffixes = ["J", "kJ", "MJ", "GJ", "TJ", "PJ"]
@@ -19,11 +20,13 @@ class Fuel {
     constructor(key, name, col, row, item, category, value) {
         this.key = key
         this.name = name
-        this.icon_col = col
-        this.icon_row = row
         this.item = item
         this.category = category
         this.value = value
+
+        this.icon_col = col
+        this.icon_row = row
+        this.icon = new Icon(this)
     }
     valueString() {
         let x = this.value
@@ -34,6 +37,18 @@ class Fuel {
             i++
         }
         return x.toUpDecimal(0) + " " + energySuffixes[i]
+    }
+    renderTooltip() {
+        let self = this
+        let t = d3.create("div")
+            .classed("frame", true)
+        let header = t.append("h3")
+        header.append(() => self.icon.make(32, true))
+        header.append(() => new Text(self.name))
+        t.append("b")
+            .text("Energy: ")
+        t.append(() => new Text(self.valueString()))
+        return t.node()
     }
 }
 
@@ -67,5 +82,9 @@ export function getFuel(data, items) {
             return 0
         })
     }
-    return fuelCategories
+    let fuels = new Map()
+    for (let fuel of fuelCategories.get("chemical")) {
+        fuels.set(fuel.key, fuel)
+    }
+    return fuels
 }

@@ -26,17 +26,8 @@ import { renderTotals } from "./visualize.js"
 
 const DEFAULT_ITEM_KEY = "advanced-circuit"
 
-let minerCategories = new Set(["mining-basic-solid"])
-
-export let resourcePurities = [
-    {key: "0", name: "Impure", factor: half},
-    {key: "1", name: "Normal", factor: one},
-    {key: "2", name: "Pure", factor: Rational.from_float(2)},
-]
-
-export let DEFAULT_PURITY = resourcePurities[1]
-
 export let DEFAULT_BELT = "transport-belt"
+export let DEFAULT_FUEL = "coal"
 
 class FactorySpecification {
     constructor() {
@@ -46,7 +37,7 @@ class FactorySpecification {
         this.modules = null
         this.buildings = null
         this.belts = null
-        this.fuel = null
+        this.fuels = null
 
         this.itemGroups = null
 
@@ -60,6 +51,8 @@ class FactorySpecification {
         this.defaultBeaconCount = zero
 
         this.belt = null
+
+        this.fuel = null
 
         this.ignore = new Set()
         this.disable = new Set()
@@ -78,7 +71,7 @@ class FactorySpecification {
 
         this.debug = false
     }
-    setData(items, recipes, modules, buildings, belts, fuel, itemGroups) {
+    setData(items, recipes, modules, buildings, belts, fuels, itemGroups) {
         this.items = items
         let tierMap = new Map()
         for (let [itemKey, item] of items) {
@@ -114,7 +107,8 @@ class FactorySpecification {
         }
         this.belts = belts
         this.belt = belts.get(DEFAULT_BELT)
-        this.fuel = fuel
+        this.fuels = fuels
+        this.fuel = fuels.get(DEFAULT_FUEL)
         this.itemGroups = itemGroups
         this.defaultPriority = this.getDefaultPriorityArray()
         this.priority = null
@@ -290,7 +284,7 @@ class FactorySpecification {
                 continue
             }
             recipes.add(recipe)
-            for (let ing of recipe.ingredients) {
+            for (let ing of recipe.getIngredients()) {
                 this._getItemGraph(ing.item, recipes)
             }
         }
@@ -432,7 +426,11 @@ class FactorySpecification {
     getPowerUsage(recipe, rate) {
         let building = this.getBuilding(recipe)
         if (building === null) {
-            return zero
+            return {fuel: null, power: zero}
+        }
+        let count = this.getCount(recipe, rate)
+        if (building.fuel === null) {
+            return {fuel: building.fuel, power: building.power.mul(count)}
         }
         let modules = this.getModuleSpec(recipe)
         let powerEffect
@@ -441,8 +439,7 @@ class FactorySpecification {
         } else {
             powerEffect = one
         }
-        let count = this.getCount(recipe, rate)
-        return building.power.mul(count).mul(powerEffect)
+        return {fuel: "electric", power: building.power.mul(count).mul(powerEffect)}
     }
     addTarget(itemKey) {
         if (itemKey === undefined) {

@@ -155,23 +155,21 @@ div#miner_settings, div#alt_recipe_settings {
 input.prec {
     width: 4em;
 }
-.belt-setting input[type="radio"] {
+.radio-setting input[type="radio"] {
     display: none;
 }
-.belt-setting input[type="radio"] + label {
+.radio-setting input[type="radio"] + label {
     cursor: pointer;
     background: var(--light);
     border-radius: 4px;
-    width: 32px;
-    height: 32px;
     display: inline-block;
     margin: 2px;
     padding: 2px;
 }
-.belt-setting input[type="radio"] + label:hover {
+.radio-setting input[type="radio"] + label:hover {
     background: var(--bright);
 }
-.belt-setting input[type="radio"]:checked + label {
+.radio-setting input[type="radio"]:checked + label {
     background: var(--accent);
 }
 #recipe_toggles .toggle {
@@ -354,6 +352,9 @@ svg.sankey g.edgePathHighlight .highlighter {
 }
 g.edgePathHighlight rect.highlighter {
     fill-opacity: 1;
+}
+path.fuel {
+    stroke-dasharray: 10,5;
 }
 svg#graph {
     display: block;

@@ -19,12 +19,13 @@ import { zero, one } from "./rational.js"
 import { renderSankey } from "./sankey.js"
 
 class GraphEdge {
-    constructor(source, target, value, item, rate, beltCount, extra) {
+    constructor(source, target, value, item, rate, fuel, beltCount, extra) {
         this.source = source
         this.target = target
         this.value = value
         this.item = item
         this.rate = rate
+        this.fuel = fuel
         this.beltCount = beltCount
         this.extra = extra
         this.elements = []
@@ -57,7 +58,7 @@ class GraphEdge {
 class GraphNode {
     constructor(name, recipe, building, count, rate) {
         this.name = name
-        this.ingredients = recipe.ingredients
+        this.ingredients = recipe.getIngredients()
         this.recipe = recipe
         this.building = building || null
         this.count = count
@@ -162,7 +163,7 @@ function makeGraph(totals, ignore) {
     }
 
     let links = []
-    for (let {item, from, to, rate} of totals.proportionate) {
+    for (let {item, from, to, rate, fuel} of totals.proportionate) {
         let value = rate.toFloat()
         if (item.phase === "fluid") {
             // Fluids operate on a different scale.
@@ -179,6 +180,7 @@ function makeGraph(totals, ignore) {
             value,
             item,
             rate,
+            fuel,
             beltCount,
             extra,
         ))

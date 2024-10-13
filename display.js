@@ -72,7 +72,7 @@ function getBreakdown(item, totals) {
             continue
         }
         //let building = spec.getBuilding(recipe)
-        for (let ing of recipe.ingredients) {
+        for (let ing of recipe.getIngredients()) {
             let rate = totals.consumers.get(ing.item).get(recipe)
             let building = null
             let count = null
@@ -335,7 +335,7 @@ export function displayItems(spec, totals) {
         new Header("buildings", 2),
         new Header("modules", 1),
         new Header("beacons", 1),
-        new Header("power", 1),
+        new Header("power", 2),
         new Header("", 1),  // pop-out links
     ]
     let totalCols = 0
@@ -429,12 +429,16 @@ export function displayItems(spec, totals) {
                     spec.display()
                 })
 
-            // cell 11: power
+            // cell 11: fuel icon
             row.append("td")
-                .classed("right-align pad building", true)
+                .classed("pad building fuel-icon", true)
+            // cell 12: power value
+            row.append("td")
+                .classed("right-align building", true)
                 .append("tt")
                     .classed("power", true)
 
+            // cell 13: popout
             row.append("td")
                 .classed("popout pad item", true)
                 .append("a")
@@ -505,11 +509,25 @@ export function displayItems(spec, totals) {
     moduleRow.selectAll("span.beacon-count input")
         .attr("value", d => spec.format.count(d.moduleSpec.beaconCount))
 
-    let totalPower = zero
-    buildingRow.selectAll("tt.power")
+    let fuelRow = buildingRow.filter(d => d.building.fuel !== null)
+    let fuelIcon = fuelRow.selectAll(".fuel-icon")
+    fuelIcon.selectAll("*").remove()
+    fuelIcon.append(d => spec.fuel.icon.make(32))
+    fuelIcon.append("span")
+        .text(" \u00d7 ")
+    fuelRow.selectAll("tt.power")
         .text(d => {
             let rate = totals.rates.get(d.recipe)
-            let power = spec.getPowerUsage(d.recipe, rate)
+            let {fuel, power} = spec.getPowerUsage(d.recipe, rate)
+            return `${spec.format.alignRate(power.div(spec.fuel.value))}/${spec.format.rateName}`
+        })
+    let electricRow = buildingRow.filter(d => d.building.fuel === null)
+    let totalPower = zero
+    electricRow.selectAll(".fuel-icon").selectAll("*").remove()
+    electricRow.selectAll("tt.power")
+        .text(d => {
+            let rate = totals.rates.get(d.recipe)
+            let {fuel, power} = spec.getPowerUsage(d.recipe, rate)
             totalPower = totalPower.add(power)
             return alignPower(power)
         })

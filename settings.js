@@ -15,7 +15,7 @@ import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_
 import { colorSchemes } from "./color.js"
 import { dropdown } from "./dropdown.js"
 import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender } from "./events.js"
-import { spec, resourcePurities, DEFAULT_BELT } from "./factory.js"
+import { spec, DEFAULT_BELT, DEFAULT_FUEL } from "./factory.js"
 import { getRecipeGroups } from "./groups.js"
 import { changeMod } from "./init.js"
 import { shortModules, moduleRows, moduleDropdown } from "./module.js"
@@ -343,9 +343,22 @@ function beltHandler(event, belt) {
     spec.display()
 }
 
-function pipeHandler(event, pipe) {
-    spec.pipe = pipe
-    spec.display()
+function radioSetting(id, name, data, checked, onchange) {
+    let form = d3.select("#" + id)
+    form.selectAll("*").remove()
+    let option = form.selectAll("span")
+        .data(data)
+        .join("span")
+    option.append("input")
+        .attr("id", d => `${name}.${d.key}`)
+        .attr("type", "radio")
+        .attr("name", name)
+        .attr("value", d => d.key)
+        .attr("checked", checked)
+        .on("change", onchange)
+    option.append("label")
+        .attr("for", d => `${name}.${d.key}`)
+        .append(d => d.icon.make(32))
 }
 
 function renderBelts(settings) {
@@ -359,21 +372,37 @@ function renderBelts(settings) {
     for (let [beltKey, belt] of spec.belts) {
         belts.push(belt)
     }
-    let form = d3.select("#belt_selector")
-    form.selectAll("*").remove()
-    let beltOption = form.selectAll("span")
-        .data(belts)
-        .join("span")
-    beltOption.append("input")
-        .attr("id", d => "belt." + d.key)
-        .attr("type", "radio")
-        .attr("name", "belt")
-        .attr("value", d => d.key)
-        .attr("checked", d => d === spec.belt ? "" : null)
-        .on("change", beltHandler)
-    beltOption.append("label")
-        .attr("for", d => "belt." + d.key)
-        .append(d => d.icon.make(32))
+    radioSetting(
+        "belt_selector",
+        "belt",
+        belts,
+        d => d === spec.belt ? "" : null,
+        beltHandler,
+    )
+}
+
+// fuel
+
+function fuelHandler(event, fuel) {
+    spec.fuel = fuel
+    spec.updateSolution()
+}
+
+function renderFuel(settings) {
+    let fuelKey = DEFAULT_FUEL
+    if (settings.has("fuel")) {
+        fuelKey = settings.get("fuel")
+    }
+    spec.fuel = spec.fuels.get(fuelKey)
+
+    let fuels = Array.from(spec.fuels.values())
+    radioSetting(
+        "fuel_selector",
+        "fuel",
+        fuels,
+        d => d === spec.fuel ? "" : null,
+        fuelHandler,
+    )
 }
 
 // visualizer
@@ -631,6 +660,7 @@ export function renderSettings(settings) {
     renderValueFormat(settings)
     renderColorScheme(settings)
     renderBelts(settings)
+    renderFuel(settings)
     renderVisualizer(settings)
     renderDefaultModule(settings)
     renderDefaultBeacon(settings)

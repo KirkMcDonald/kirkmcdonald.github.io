@@ -55,7 +55,7 @@ export class Totals {
         // that item.
         this.consumers = new Map()
         for (let [recipe, rate] of rates) {
-            for (let ing of recipe.ingredients) {
+            for (let ing of recipe.getIngredients()) {
                 let itemRate = rate.mul(ing.amount)
                 set(this.consumers, ing.item, recipe, itemRate)
                 add(this.items, ing.item, itemRate)
@@ -69,10 +69,13 @@ export class Totals {
         // between multiple consumers and producers of each item.
         this.proportionate = []
         for (let [recipe, recipeRate] of rates) {
-            for (let ing of recipe.ingredients) {
+            let ingredients = recipe.getIngredients()
+            for (let i = 0; i < ingredients.length; i++) {
+                let ing = ingredients[i]
                 let totalRate = this.items.get(ing.item)
                 let rate = recipeRate.mul(ing.amount)
                 let ratio = rate.div(totalRate)
+                let fuel = i >= recipe.ingredients.length
                 for (let subRecipe of spec.getRecipes(ing.item)) {
                     if (!rates.has(subRecipe)) {
                         continue
@@ -83,6 +86,7 @@ export class Totals {
                         "from": subRecipe,
                         "to": recipe,
                         "rate": subRate,
+                        "fuel": fuel,
                     })
                 }
             }

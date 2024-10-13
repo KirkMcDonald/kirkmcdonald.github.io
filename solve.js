@@ -29,6 +29,9 @@ class OutputRecipe {
         }
         this.products = []
     }
+    getIngredients() {
+        return this.ingredients
+    }
     isReal() {
         return false
     }
@@ -93,7 +96,7 @@ function traverse(spec, cyclic, item, rate, forceRecipe) {
         console.log("ignored:", item)
         return result
     }
-    for (let ing of recipe.ingredients) {
+    for (let ing of recipe.getIngredients()) {
         let sub = traverse(spec, cyclic, ing.item, recipeRate.mul(ing.amount))
         result.combine(sub)
     }
@@ -172,17 +175,6 @@ export function solve(spec, fullOutputs) {
         t.column = items.length + i
     }*/
 
-    /*for (let recipe of recipes) {
-        for (let ing of recipe.ingredients) {
-            if (!products.has(ing.item) && !ingredients.has(ing.item)) {
-                itemColumns.set(ing.item, items.length)
-                items.push(ing.item)
-                //disabledItems.push(ing.item)
-            }
-            ingredients.add(ing.item)
-        }
-    }*/
-
     let columns = items.length + partialSolution.targets.length + recipeArray.length + /*disabledItems.length +*/ 3
     let rows = recipeArray.length + /*disabledItems.length +*/ 2
     let A = new Matrix(rows, columns)
@@ -196,7 +188,7 @@ export function solve(spec, fullOutputs) {
             let j = itemColumns.get(ing.item)
             A.setIndex(i, j, ing.amount)
         }
-        for (let ing of recipe.ingredients) {
+        for (let ing of recipe.getIngredients()) {
             let j = itemColumns.get(ing.item)
             A.addIndex(i, j, zero.sub(ing.amount))
         }

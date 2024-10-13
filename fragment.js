@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT } from "./align.js"
 import { DEFAULT_TAB, currentTab, DEFAULT_VISUALIZER, visualizerType, DEFAULT_RENDER, visualizerRender } from "./events.js"
-import { spec, DEFAULT_PURITY, DEFAULT_BELT } from "./factory.js"
+import { spec, DEFAULT_BELT, DEFAULT_FUEL } from "./factory.js"
 import { Rational } from "./rational.js"
 import { DEFAULT_TITLE, DEFAULT_COLOR_SCHEME, colorScheme } from "./settings.js"
 
@@ -56,6 +56,9 @@ export function formatSettings(overrideTab, targets) {
     }
     if (spec.belt.key !== DEFAULT_BELT) {
         settings += "belt=" + spec.belt.key + "&"
+    }
+    if (spec.fuel.key !== DEFAULT_FUEL) {
+        settings += "fuel=" + spec.fuel.key + "&"
     }
     if (spec.defaultModule !== null) {
         settings += "dm=" + spec.defaultModule.shortName() + "&"
@@ -172,10 +175,10 @@ export function formatSettings(overrideTab, targets) {
         settings += "&debug=1"
     }
 
-    /*let zip = "zip=" + window.btoa(String.fromCharCode.apply(null, pako.deflateRaw(settings)))
+    let zip = "zip=" + window.btoa(String.fromCharCode.apply(null, pako.deflateRaw(settings)))
     if (zip.length < settings.length) {
         return zip
-    }*/
+    }
     return settings
 }
 

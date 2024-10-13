@@ -36,7 +36,7 @@ function itemNeighbors(item) {
     let touching = new Set()
     let recipes = item.recipes.concat(item.uses)
     for (let recipe of recipes) {
-        let ingredients = recipe.ingredients.concat(recipe.products)
+        let ingredients = recipe.getIngredients().concat(recipe.products)
         for (let ing of ingredients) {
             touching.add(ing.item)
         }

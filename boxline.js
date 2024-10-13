@@ -115,6 +115,8 @@ export function renderBoxGraph({nodes, links}, ignore, callback) {
             tab.style("display", style)
             edges.selectAll("path, polygon")
                 .classed("highlighter", true)
+            edges.filter(d => d.fuel).selectAll("path")
+                .classed("fuel", true)
             let edgeLabel = svg.select("g").append("g")
                 .selectAll("g")
                 .data(links)
