@@ -261,12 +261,18 @@ class FactorySpecification {
     getDefaultPriorityArray() {
         let a = []
         for (let [recipeKey, recipe] of this.recipes) {
-            if (recipe.isResource()) {
+            if (recipe.defaultPriority !== undefined) {
                 let pri = recipe.defaultPriority
                 while (a.length < pri + 1) {
                     a.push(new Map())
                 }
-                a[pri].set(recipe, recipe.defaultWeight)
+                let item = recipe.products[0].item
+                let weight = recipe.defaultWeight
+                // Fluids operate on a ten-fold scale compared to other items.
+                if (item.phase === "fluid") {
+                    weight = weight.div(Rational.from_float(10))
+                }
+                a[pri].set(recipe, weight)
             }
         }
         return a

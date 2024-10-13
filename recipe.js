@@ -234,7 +234,7 @@ class MiningRecipe extends Recipe {
         super(key, name, col, row, category, zero, ingredients, products)
         this.miningTime = miningTime
 
-        this.defaultPriority = 0
+        this.defaultPriority = 1
         this.defaultWeight = Rational.from_float(100)
     }
     allModules() {
@@ -246,9 +246,10 @@ class MiningRecipe extends Recipe {
 }
 
 export function getRecipes(data, items) {
+    let hundred = Rational.from_float(100)
     let recipes = new Map()
     let water = items.get("water")
-    recipes.set("water", new Recipe(
+    let waterRecipe = new Recipe(
         "water",
         "Water",
         water.icon_col,
@@ -257,7 +258,10 @@ export function getRecipes(data, items) {
         Rational.from_floats(1, 1200),
         [],
         [new Ingredient(water, one)]
-    ))
+    )
+    recipes.set("water", waterRecipe)
+    waterRecipe.defaultPriority = 0
+    waterRecipe.defaultWeight = hundred
     let reactor = data.items["nuclear-reactor"]
     recipes.set("nuclear-reactor-cycle", new Recipe(
         "nuclear-reactor-cycle",
@@ -301,7 +305,6 @@ export function getRecipes(data, items) {
         let d = data.recipes[key]
         recipes.set(d.name, makeRecipe(data, items, d))
     }
-    let hundred = Rational.from_float(100)
     //for (let d of data.resource) {
     for (let key in data.resource) {
         let d = data.resource[key]
@@ -348,11 +351,14 @@ export function getRecipes(data, items) {
             reapItems.push(itemKey)
         } else if (item.recipes.length === 0) {
             console.log("item with no recipes:", item)
-            recipes.set(itemKey, new ResourceRecipe(item, null, 1, hundred))
+            recipes.set(itemKey, new ResourceRecipe(item, null, 2, hundred))
         }
     }
     for (let key of reapItems) {
         items.delete(key)
     }
+    // XXX: There's gotta be a better way to do this...
+    let crudeOilRecipe = recipes.get("crude-oil")
+    crudeOilRecipe.defaultPriority = 1
     return recipes
 }

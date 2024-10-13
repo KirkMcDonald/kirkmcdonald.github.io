@@ -127,7 +127,7 @@ class PriorityLevel {
         resource.level = this
         for (let i = 0; i < this.resources.length; i++) {
             let r = this.resources[i]
-            if (r.weight.less(resource.weight)) {
+            if (resource.weight.less(r.weight)) {
                 this.resources.splice(i, 0, resource)
                 this.div.node().insertBefore(resource.div.node(), r.div.node())
                 return
