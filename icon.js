@@ -56,10 +56,17 @@ export class Icon {
         let x = -this.obj.icon_col * PX_WIDTH
         let y = -this.obj.icon_row * PX_HEIGHT
         let img = d3.select(makeEmptyIcon(size))
-            //.attr("src", this.path())
-                .classed("icon", true)
-                .style("background", "url(images/sprite-sheet-" + sheetHash + ".png)")
-                .style("background-position", x + "px " + y + "px")
+            .classed("icon", true)
+            .style("background", "url(images/sprite-sheet-" + sheetHash + ".png)")
+        if (size !== 32) {
+            let ratio = size / 32
+            x *= ratio
+            y *= ratio
+            let width = sheetWidth * ratio
+            let height = sheetHeight * ratio
+            img.style("background-size", `${width}px ${height}px`)
+        }
+        img.style("background-position", `${x}px ${y}px`)
         if (!suppressTooltip && this.obj.renderTooltip) {
             new Tooltip(img.node(), this.obj.renderTooltip(), target)
         } else {
