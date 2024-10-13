@@ -353,6 +353,37 @@ class FactorySpecification {
         }
         return this.getModuleSpec(recipe).prodEffect(this)
     }
+    setDefaultModule(module) {
+        for (let [recipe, moduleSpec] of this.spec) {
+            for (let i = 0; i < moduleSpec.modules.length; i++) {
+                let m = moduleSpec.modules[i]
+                if (m === this.defaultModule && (!module || module.canUse(recipe))) {
+                    moduleSpec.modules[i] = module
+                }
+            }
+        }
+        this.defaultModule = module
+    }
+    isDefaultDefaultBeacon() {
+        return this.defaultBeacon[0] === null && this.defaultBeacon[1] === null
+    }
+    setDefaultBeacon(module, i) {
+        for (let [recipe, moduleSpec] of this.spec) {
+            let m = moduleSpec.beaconModules[i]
+            if (m === this.defaultBeacon[i] && (!module || module.canUse(recipe))) {
+                moduleSpec.beaconModules[i] = module
+            }
+        }
+        this.defaultBeacon[i] = module
+    }
+    setDefaultBeaconCount(count) {
+        for (let [recipe, moduleSpec] of this.spec) {
+            if (moduleSpec.beaconCount.equal(this.defaultBeaconCount)) {
+                moduleSpec.beaconCount = count
+            }
+        }
+        this.defaultBeaconCount = count
+    }
     // Returns the recipe-rate at which a single building can produce a recipe.
     // Returns null for recipes that do not have a building.
     getRecipeRate(recipe) {

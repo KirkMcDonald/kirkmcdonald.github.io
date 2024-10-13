@@ -57,6 +57,23 @@ export function formatSettings(overrideTab, targets) {
     if (spec.belt.key !== DEFAULT_BELT) {
         settings += "belt=" + spec.belt.key + "&"
     }
+    if (spec.defaultModule !== null) {
+        settings += "dm=" + spec.defaultModule.shortName() + "&"
+    }
+    if (!spec.isDefaultDefaultBeacon()) {
+        let parts = []
+        for (let module of spec.defaultBeacon) {
+            if (module === null) {
+                parts.push("null")
+            } else {
+                parts.push(module.shortName())
+            }
+        }
+        settings += "db=" + parts.join(":") + "&"
+    }
+    if (!spec.defaultBeaconCount.isZero()) {
+        settings += "dbc=" + spec.defaultBeaconCount.toDecimal(0) + "&"
+    }
     if (visualizerType !== DEFAULT_VISUALIZER) {
         settings += "vt=" + visualizerType + "&"
     }
@@ -152,10 +169,10 @@ export function formatSettings(overrideTab, targets) {
         settings += "&debug=1"
     }
 
-    let zip = "zip=" + window.btoa(String.fromCharCode.apply(null, pako.deflateRaw(settings)))
+    /*let zip = "zip=" + window.btoa(String.fromCharCode.apply(null, pako.deflateRaw(settings)))
     if (zip.length < settings.length) {
         return zip
-    }
+    }*/
     return settings
 }
 

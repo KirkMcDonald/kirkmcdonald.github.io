@@ -218,6 +218,9 @@ class MiningRecipe extends Recipe {
         this.defaultPriority = 0
         this.defaultWeight = Rational.from_float(100)
     }
+    allModules() {
+        return true
+    }
     isResource() {
         return true
     }

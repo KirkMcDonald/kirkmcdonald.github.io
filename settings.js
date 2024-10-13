@@ -17,8 +17,8 @@ import { dropdown } from "./dropdown.js"
 import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender } from "./events.js"
 import { spec, resourcePurities, DEFAULT_BELT } from "./factory.js"
 import { getRecipeGroups } from "./groups.js"
-import { shortModules } from "./module.js"
-import { Rational } from "./rational.js"
+import { shortModules, moduleRows, moduleDropdown } from "./module.js"
+import { Rational, zero } from "./rational.js"
 import { renderRecipe } from "./recipe.js"
 
 // There are several things going on with this control flow. Settings should
@@ -333,6 +333,119 @@ function renderVisualizer(settings) {
     d3.select(`#${visualizerRender}_render`).attr("checked", true)
 }
 
+// default module
+
+class DefaultModuleInput {
+    constructor(cell, module) {
+        this.cell = cell
+        this.module = module
+    }
+    checked() {
+        return this.module === spec.defaultModule
+    }
+    choose() {
+        spec.setDefaultModule(this.module)
+        spec.updateSolution()
+    }
+}
+class DefaultModuleCell {
+    constructor() {
+        this.name = "default_module_dropdown"
+        this.inputRows = []
+        for (let row of moduleRows) {
+            let inputRow = []
+            for (let module of row) {
+                inputRow.push(new DefaultModuleInput(this, module))
+            }
+            this.inputRows.push(inputRow)
+        }
+    }
+}
+
+function renderDefaultModule(settings) {
+    let defaultModule = null
+    if (settings.has("dm")) {
+        defaultModule = getModule(settings.get("dm"))
+    }
+    spec.setDefaultModule(defaultModule)
+
+    let cell = new DefaultModuleCell()
+    let select = d3.select("#default_module")
+    moduleDropdown(select, [cell])
+}
+
+// default beacon
+
+class DefaultBeaconInput {
+    constructor(cell, module) {
+        this.cell = cell
+        this.module = module
+    }
+    checked() {
+        return this.module === spec.defaultBeacon[this.cell.index]
+    }
+    choose() {
+        spec.setDefaultBeacon(this.module, this.cell.index)
+        spec.display()
+    }
+}
+class DefaultBeaconCell {
+    constructor(index) {
+        this.name = `default_beacon_dropdown_${index}`
+        this.index = index
+        this.inputRows = []
+        for (let row of moduleRows) {
+            let inputRow = []
+            for (let module of row) {
+                if (module === null || module.canBeacon()) {
+                    inputRow.push(new DefaultBeaconInput(this, module))
+                }
+            }
+            this.inputRows.push(inputRow)
+        }
+    }
+}
+
+function renderDefaultBeacon(settings) {
+    let defaultBeacon = [null, null]
+    let defaultCount = zero
+    let legacy = false
+    if (settings.has("db")) {
+        let keys = settings.get("db").split(":")
+        if (keys.length === 1) {
+            legacy = true
+        }
+        for (let i = 0; i < keys.length; i++) {
+            defaultBeacon[i] = getModule(keys[i])
+        }
+    }
+    if (settings.has("dbc")) {
+        defaultCount = Rational.from_string(settings.get("dbc"))
+    }
+    if (legacy) {
+        let two = Rational.from_float(2)
+        let divmod = defaultCount.divmod(two)
+        if (divmod.remainder.isZero()) {
+            defaultBeacon = [defaultBeacon[0], defaultBeacon[0]]
+            defaultCount = divmod.quotient
+        }
+    }
+    for (let i = 0; i < defaultBeacon.length; i++) {
+        spec.setDefaultBeacon(defaultBeacon[i], i)
+    }
+    spec.setDefaultBeaconCount(defaultCount)
+
+    let cells = [new DefaultBeaconCell(0), new DefaultBeaconCell(1)]
+    let select = d3.select("#default_beacon")
+    moduleDropdown(select, cells)
+    d3.select("#default_beacon_count")
+        .attr("value", defaultCount.toDecimal())
+        .on("change", (event) => {
+            spec.setDefaultBeaconCount(Rational.from_string(event.target.value))
+            spec.display()
+        })
+}
+
 // recipe disabling
 
 function renderRecipes(settings) {
@@ -425,6 +538,8 @@ export function renderSettings(settings) {
     renderColorScheme(settings)
     renderBelts(settings)
     renderVisualizer(settings)
+    renderDefaultModule(settings)
+    renderDefaultBeacon(settings)
     renderResourcePriorities(settings)
     renderRecipes(settings)
     renderTargets(settings)
