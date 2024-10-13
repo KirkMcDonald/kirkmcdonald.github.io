@@ -476,7 +476,7 @@ function renderDefaultBeacon(settings) {
         .attr("value", defaultCount.toDecimal())
         .on("change", (event) => {
             spec.setDefaultBeaconCount(Rational.from_string(event.target.value))
-            spec.display()
+            spec.updateSolution()
         })
 }
 
