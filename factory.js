@@ -389,6 +389,13 @@ class FactorySpecification {
     setMinimumBuilding(building) {
         let group = this.getBuildingGroup(building)
         group.building = building
+        for (let [recipe, moduleSpec] of this.spec) {
+            let g = this.buildings.get(recipe.category)
+            if (group === g) {
+                let b = this.getBuilding(recipe)
+                moduleSpec.setBuilding(b, this)
+            }
+        }
     }
     initModuleSpec(recipe, building) {
         if (!this.spec.has(recipe) && building !== null && building.canBeacon()) {
