@@ -16,14 +16,27 @@ import { getBuildings } from "./building.js"
 import { spec } from "./factory.js"
 import { loadSettings } from "./fragment.js"
 import { getFuel } from "./fuel.js"
+import { getItemGroups } from "./group.js"
 import { getSprites } from "./icon.js"
 import { getItems } from "./item.js"
 import { getModules } from "./module.js"
 import { getRecipes } from "./recipe.js"
-import { renderSettings } from "./settings.js"
+import { currentMod, MODIFICATIONS, renderDataSetOptions, renderSettings } from "./settings.js"
 
-function loadData(settings) {
-    d3.json("data/vanilla-1.1.110.json", {cache: "reload"}).then(function(data) {
+function reset() {
+    window.location.hash = ""
+}
+
+export function changeMod() {
+    let modName = currentMod()
+    reset()
+    loadData(modName, new Map())
+}
+
+function loadData(modName, settings) {
+    let mod = MODIFICATIONS.get(modName)
+    let filename = "data/" + mod.filename
+    d3.json(filename, {cache: "reload"}).then(function(data) {
         let items = getItems(data)
         let recipes = getRecipes(data, items)
         let modules = getModules(data)
@@ -31,13 +44,8 @@ function loadData(settings) {
         let belts = getBelts(data)
         let fuel = getFuel(data, items)
         getSprites(data)
-        window.items = items
-        window.recipes = recipes
-        window.modules = modules
-        window.buildings = buildings
-        window.belts = belts
-        window.fuel = fuel
-        spec.setData(items, recipes, modules, buildings, belts, fuel)
+        let itemGroups = getItemGroups(items, data)
+        spec.setData(items, recipes, modules, buildings, belts, fuel, itemGroups)
 
         renderSettings(settings)
 
@@ -47,5 +55,6 @@ function loadData(settings) {
 
 export function init() {
     let settings = loadSettings(window.location.hash)
-    loadData(settings)
+    renderDataSetOptions(settings)
+    loadData(currentMod(), settings)
 }

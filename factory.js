@@ -48,7 +48,7 @@ class FactorySpecification {
         this.belts = null
         this.fuel = null
 
-        this.itemTiers = []
+        this.itemGroups = null
 
         this.buildTargets = []
 
@@ -78,7 +78,7 @@ class FactorySpecification {
 
         this.debug = false
     }
-    setData(items, recipes, modules, buildings, belts, fuel) {
+    setData(items, recipes, modules, buildings, belts, fuel, itemGroups) {
         this.items = items
         let tierMap = new Map()
         for (let [itemKey, item] of items) {
@@ -120,6 +120,7 @@ class FactorySpecification {
         this.belts = belts
         this.belt = belts.get(DEFAULT_BELT)
         this.fuel = fuel
+        this.itemGroups = itemGroups
         this.defaultPriority = this.getDefaultPriorityArray()
         this.priority = null
     }

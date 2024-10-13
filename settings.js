@@ -17,9 +17,69 @@ import { dropdown } from "./dropdown.js"
 import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender } from "./events.js"
 import { spec, resourcePurities, DEFAULT_BELT } from "./factory.js"
 import { getRecipeGroups } from "./groups.js"
+import { changeMod } from "./init.js"
 import { shortModules, moduleRows, moduleDropdown } from "./module.js"
 import { Rational, zero } from "./rational.js"
 import { renderRecipe } from "./recipe.js"
+
+// data set
+
+// This setting is somewhat special. It prompts a reset of the full calculator
+// state.
+class Modification {
+    constructor(name, filename) {
+        this.name = name
+        this.filename = filename
+    }
+}
+
+export let MODIFICATIONS = new Map([
+    ["1-1-110", new Modification("Vanilla 1.1.110", "vanilla-1.1.110.json")],
+    ["1-1-110x", new Modification("Vanilla 1.1.110 - Expensive", "vanilla-1.1.110-expensive.json")],
+])
+
+let DEFAULT_MODIFICATION = "1-1-110"
+
+// Ideally we'd write this as a generalized function, but for now we can hard-
+// code these version upgrades.
+var modUpdates = new Map([
+    ["1-1-19", "1-1-110"],
+    ["1-1-19x", "1-1-110x"],
+])
+
+function normalizeDataSetName(modName) {
+    let newName = modUpdates.get(modName)
+    if (newName !== undefined) {
+        modName = newName
+    }
+    if (MODIFICATIONS.has(modName)) {
+        return modName
+    }
+    return DEFAULT_MODIFICATION
+}
+
+export function renderDataSetOptions(settings) {
+    let modSelector = document.getElementById("data_set")
+    d3.select(modSelector).on("change", function(event) {
+        changeMod()
+    })
+    let configuredMod = normalizeDataSetName(settings.get("data"))
+    for (let [modName, mod] of MODIFICATIONS) {
+        let option = document.createElement("option")
+        option.textContent = mod.name
+        option.value = modName
+        if (configuredMod && configuredMod === modName || !configuredMod && modName === DEFAULT_MODIFICATION) {
+            option.selected = true
+        }
+        modSelector.appendChild(option)
+    }
+}
+
+// Returns currently-selected data set.
+export function currentMod() {
+    let elem = document.getElementById("data_set")
+    return elem.value
+}
 
 // There are several things going on with this control flow. Settings should
 // work like this:
