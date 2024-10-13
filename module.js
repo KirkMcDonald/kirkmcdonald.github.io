@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 import { Icon } from "./icon.js"
-import { Rational, zero, one } from "./rational.js"
+import { Rational, zero, half, one } from "./rational.js"
 import { sorted } from "./sort.js"
 
 class Module {
@@ -206,9 +206,11 @@ export class ModuleSpec {
             speed = speed.add(module.speed)
         }
         if (this.modules.length > 0) {
-            let beaconModule = this.beaconModule
-            if (beaconModule) {
-                speed = speed.add(beaconModule.speed.mul(this.beaconCount).mul(half))
+            for (let module of this.beaconModules) {
+                if (module === null) {
+                    continue
+                }
+                speed = speed.add(module.speed.mul(this.beaconCount).mul(half))
             }
         }
         return speed
@@ -232,9 +234,11 @@ export class ModuleSpec {
             power = power.add(module.power)
         }
         if (this.modules.length > 0) {
-            let beaconModule = this.beaconModule
-            if (beaconModule) {
-                power = power.add(beaconModule.power.mul(this.beaconCount).mul(half))
+            for (let module of this.beaconModules) {
+                if (module === null) {
+                    continue
+                }
+                power = power.add(module.power.mul(this.beaconCount).mul(half))
             }
         }
         let minimum = Rational.from_floats(1, 5)

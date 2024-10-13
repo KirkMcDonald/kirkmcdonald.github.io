@@ -389,6 +389,10 @@ tr.nomodule td.module > *{
 tr.noitem td.item > * {
     display: none;
 }
+span.beacon-container {
+    background-color: var(--light);
+    padding: 0.5em;
+}
 svg.popout {
     color: var(--accent);
     width: 16;

@@ -20,6 +20,18 @@ import { sprites } from "./icon.js"
 import { moduleRows } from "./module.js"
 import { Rational, zero, one } from "./rational.js"
 
+let powerSuffixes = ["\u00A0W", "kW", "MW", "GW", "TW", "PW"]
+
+function alignPower(x) {
+    var thousand = Rational.from_float(1000)
+    var i = 0
+    while (thousand.less(x) && i < powerSuffixes.length - 1) {
+        x = x.div(thousand)
+        i++
+    }
+    return spec.format.alignCount(x) + " " + powerSuffixes[i]
+}
+
 class Header {
     constructor(text, colspan, surplus) {
         this.text = text
@@ -140,7 +152,6 @@ class ModuleSlot {
         this.index = null
         this.inputRows = []
         setlen(this.inputRows, moduleRows.length, () => [])
-        this.dropdown = null
     }
     setData(mSpec, i) {
         this.moduleSpec = mSpec
@@ -163,6 +174,60 @@ class ModuleSlot {
     }
 }
 
+class BeaconInput {
+    constructor(cell, module) {
+        this.cell = cell
+        this.module = module
+    }
+    checked() {
+        return this.module === this.cell.row.moduleSpec.beaconModules[this.cell.index]
+    }
+    choose() {
+        this.cell.row.moduleSpec.setBeaconModule(this.module, this.cell.index)
+        spec.display()
+    }
+}
+
+let beaconCount = 0
+class BeaconCell {
+    constructor(row, index) {
+        this.name = `beaconslot-${beaconCount++}`
+        this.row = row
+        this.index = index
+        this.inputRows = []
+        for (let row of moduleRows) {
+            let inputRow = []
+            for (let module of row) {
+                if (module === null || module.canBeacon()) {
+                    inputRow.push(new BeaconInput(this, module))
+                }
+            }
+            if (inputRow.length > 0) {
+                this.inputRows.push(inputRow)
+            }
+        }
+        //setlen(this.inputRows, moduleRows.length, () => [])
+    }
+}
+
+class DisplayRow {
+    constructor() {
+        this.slots = []
+        this.beaconModules = []
+        for (let i = 0; i < 2; i++) {
+            this.beaconModules.push(new BeaconCell(this, i))
+        }
+    }
+    setData(item, recipe, building, moduleSpec, single, breakdown) {
+        this.item = item
+        this.recipe = recipe
+        this.building = building
+        this.moduleSpec = moduleSpec
+        this.single = single
+        this.breakdown = breakdown
+    }
+}
+
 class DisplayGroup {
     constructor() {
         this.rows = []
@@ -175,9 +240,10 @@ class DisplayGroup {
             return
         }
         let len = Math.max(items.length, recipes.length)
-        setlen(this.rows, len, () => {return {slots: []}})
+        setlen(this.rows, len, () => new DisplayRow())
         let hundred = Rational.from_float(100)
         for (let i = 0; i < len; i++) {
+            let row = this.rows[i]
             let item = items[i] || null
             let recipe = recipes[i] || null
             let building = null
@@ -188,25 +254,28 @@ class DisplayGroup {
                 if (building !== null && building.canBeacon()) {
                     moduleSpec = spec.getModuleSpec(recipe)
                     slotCount = moduleSpec.modules.length
+                } else {
+                    moduleSpec = null
+                    slotCount = 0
                 }
             }
-            setlen(this.rows[i].slots, slotCount, () => new ModuleSlot())
+            setlen(row.slots, slotCount, () => new ModuleSlot())
             for (let j = 0; j < slotCount; j++) {
-                this.rows[i].slots[j].setData(moduleSpec, j)
+                row.slots[j].setData(moduleSpec, j)
             }
             let single = item !== null && recipe !== null && item.name === recipe.name
             let breakdown = null
             if (item !== null) {
                 breakdown = getBreakdown(item, totals)
             }
-            Object.assign(this.rows[i], {
+            row.setData(
                 item,
                 recipe,
                 building,
                 moduleSpec,
                 single,
                 breakdown,
-            })
+            )
         }
     }
 }
@@ -332,6 +401,20 @@ export function displayItems(spec, totals) {
             // cell 10: beacons
             let beaconCell = row.append("td")
                 .classed("pad building module beacon", true)
+            beaconCell.append("span")
+                .classed("beacon-container", true)
+            let beaconCountSpan = beaconCell.append("span")
+                .classed("beacon-count", true)
+            beaconCountSpan.append("span")
+                .text(" \u00d7 ")
+            beaconCountSpan.append("input")
+                .attr("type", "text")
+                .attr("size", 3)
+                .on("change", function (event, d) {
+                    let count = Rational.from_string(event.target.value)
+                    d.moduleSpec.setBeaconCount(count)
+                    spec.display()
+                })
 
             // cell 11: power
             row.append("td")
@@ -445,6 +528,49 @@ export function displayItems(spec, totals) {
                     return update
                 },
             )
+    let beaconCell = moduleRow.selectAll("span.beacon-container").selectAll("span.slot")
+        .data(d => d.beaconModules)
+        .join(
+            enter => {
+                let s = enter.append("span")
+                    .classed("slot", true)
+                makeDropdown(s)
+                return s
+            }
+        )
+    let beaconDropdown = beaconCell.selectAll("div.dropdown")
+    beaconDropdown.selectAll("div")
+        .data(d => d.inputRows)
+        .join("div")
+            //.classed("moduleRow", true)
+            .selectAll("span.input")
+            .data(d => d)
+            .join(
+                enter => {
+                    let s = enter.append("span")
+                        .classed("input", true)
+                    let label = addInputs(
+                        s,
+                        d => d.cell.name,
+                        d => d.checked(),
+                        d => d.choose(),
+                    )
+                    label.append(d => {
+                        if (d.module === null) {
+                            return sprites.get("slot_icon_module").icon.make(32)
+                        } else {
+                            return d.module.icon.make(32)
+                        }
+                    })
+                    return s
+                },
+                update => {
+                    update.selectAll("input").property("checked", d => d.checked())
+                    return update
+                },
+            )
+    moduleRow.selectAll("span.beacon-count input")
+        .attr("value", d => spec.format.count(d.moduleSpec.beaconCount))
 
     let totalPower = zero
     buildingRow.selectAll("tt.power")
@@ -452,7 +578,7 @@ export function displayItems(spec, totals) {
             let rate = totals.rates.get(d.recipe)
             let power = spec.getPowerUsage(d.recipe, rate)
             totalPower = totalPower.add(power)
-            return spec.format.alignCount(power) + " MW"
+            return alignPower(power)
         })
     itemRow.selectAll("td.popout a")
         .attr("href", d => {
@@ -536,6 +662,6 @@ export function displayItems(spec, totals) {
     footerRow.select("td.power-label")
         .attr("colspan", totalCols - 3)
     footerRow.select("tt")
-        .text(d => spec.format.alignCount(totalPower) + " MW")
+        .text(d => alignPower(totalPower))
     table.select("tfoot").raise()
 }

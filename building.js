@@ -39,7 +39,12 @@ class Building {
     }
     getRecipeRate(spec, recipe) {
         let modules = spec.getModuleSpec(recipe)
-        let speedEffect = modules.speedEffect()
+        let speedEffect
+        if (modules) {
+            speedEffect = modules.speedEffect()
+        } else {
+            speedEffect = one
+        }
         return recipe.time.reciprocate().mul(this.speed).mul(speedEffect)
     }
     canBeacon() {

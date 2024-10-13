@@ -325,7 +325,7 @@ class FactorySpecification {
         }
     }
     initModuleSpec(recipe, building) {
-        if (!this.spec.has(recipe) && building !== null) {
+        if (!this.spec.has(recipe) && building !== null && building.canBeacon()) {
             let m = new ModuleSpec(recipe)
             m.setBuilding(building, this)
             this.spec.set(recipe, m)
@@ -381,8 +381,14 @@ class FactorySpecification {
             return zero
         }
         let modules = this.getModuleSpec(recipe)
+        let powerEffect
+        if (modules) {
+            powerEffect = modules.powerEffect(this)
+        } else {
+            powerEffect = one
+        }
         let count = this.getCount(recipe, rate)
-        return building.power.mul(count).mul(modules.powerEffect(this))
+        return building.power.mul(count).mul(powerEffect)
     }
     addTarget(itemKey) {
         if (itemKey === undefined) {
