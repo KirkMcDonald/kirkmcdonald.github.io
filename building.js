@@ -14,6 +14,8 @@ limitations under the License.*/
 import { Icon } from "./icon.js"
 import { Rational, zero, one } from "./rational.js"
 
+let thirty = Rational.from_float(30)
+
 class Building {
     constructor(key, name, col, row, categories, speed, moduleSlots, power, fuel) {
         this.key = key
@@ -50,6 +52,9 @@ class Building {
     canBeacon() {
         return this.moduleSlots > 0
     }
+    drain() {
+        return this.power.div(thirty)
+    }
     renderTooltip() {
         let self = this
         let t = d3.create("div")
@@ -71,6 +76,9 @@ class Miner extends Building {
     }
     less(other) {
         return this.miningSpeed.less(other.miningSpeed)
+    }
+    drain() {
+        return zero
     }
     getRecipeRate(spec, recipe) {
         // XXX: Speed effect

@@ -517,7 +517,7 @@ class FactorySpecification {
             return {fuel: null, power: zero}
         }
         let count = this.getCount(recipe, rate)
-        if (building.fuel === null) {
+        if (building.fuel !== null) {
             return {fuel: building.fuel, power: building.power.mul(count)}
         }
         let modules = this.getModuleSpec(recipe)
@@ -527,7 +527,8 @@ class FactorySpecification {
         } else {
             powerEffect = one
         }
-        return {fuel: "electric", power: building.power.mul(count).mul(powerEffect)}
+        let power = building.power.mul(count).mul(powerEffect).add(building.drain().mul(count.ceil()))
+        return {"fuel": "electric", "power": power}
     }
     addTarget(itemKey) {
         if (itemKey === undefined) {
