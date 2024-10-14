@@ -33,6 +33,25 @@ export function changeMod() {
     loadData(modName, new Map())
 }
 
+function fixLegacySettings(settings) {
+    if ((settings.has("min") || settings.has("furnace")) && !settings.has("buildings")) {
+        let parts = []
+        if (settings.has("min")) {
+            parts.push("assembling-machine-" + settings.get("min"))
+            settings.delete("min")
+        }
+        if (settings.has("furnace")) {
+            parts.push(settings.get("furnace"))
+            settings.delete("furnace")
+        }
+        settings.set("buildings", parts.join(","))
+    }
+    if (settings.has("k") && !settings.has("disable")) {
+        settings.delete("k")
+        settings.set("disable", "kovarex-processing")
+    }
+}
+
 function loadData(modName, settings) {
     let mod = MODIFICATIONS.get(modName)
     let filename = "data/" + mod.filename
@@ -47,6 +66,7 @@ function loadData(modName, settings) {
         let itemGroups = getItemGroups(items, data)
         spec.setData(items, recipes, modules, buildings, belts, fuel, itemGroups)
 
+        fixLegacySettings(settings)
         renderSettings(settings)
 
         spec.updateSolution()
