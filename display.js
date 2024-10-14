@@ -282,7 +282,7 @@ class DisplayGroup {
             for (let j = 0; j < slotCount; j++) {
                 row.slots[j].setData(moduleSpec, j)
             }
-            let single = item !== null && recipe !== null && item.name === recipe.name
+            let single = item !== null && recipe !== null && item.key === recipe.key
             let breakdown = null
             if (item !== null) {
                 breakdown = getBreakdown(item, totals)
