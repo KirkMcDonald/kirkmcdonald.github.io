@@ -17,12 +17,12 @@ let currentTooltip = null
 let tooltipRegistry = new Set()
 
 export class Tooltip {
-    constructor(reference, content, target) {
+    constructor(reference, callback, target) {
         if (!target) {
             target = reference
         }
         this.reference = reference
-        this.content = content
+        this.callback = callback
         this.target = target
         this.isOpen = false
         this.node = null
@@ -90,7 +90,7 @@ export class Tooltip {
     create() {
         let node = document.createElement("div")
         node.classList.add("tooltip")
-        node.appendChild(this.content)
+        node.appendChild(this.callback())
         return node
     }
     remove() {

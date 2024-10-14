@@ -22,14 +22,19 @@ import { Rational, zero, one } from "./rational.js"
 
 let powerSuffixes = ["\u00A0W", "kW", "MW", "GW", "TW", "PW"]
 
-function alignPower(x) {
-    var thousand = Rational.from_float(1000)
-    var i = 0
+export function powerRepr(x) {
+    let thousand = Rational.from_float(1000)
+    let i = 0
     while (thousand.less(x) && i < powerSuffixes.length - 1) {
         x = x.div(thousand)
         i++
     }
-    return spec.format.alignCount(x) + " " + powerSuffixes[i]
+    return {power: x, suffix: powerSuffixes[i]}
+}
+
+function alignPower(x) {
+    let {power, suffix} = powerRepr(x)
+    return spec.format.alignCount(power) + " " + suffix
 }
 
 class Header {
@@ -327,6 +332,24 @@ function toggleBreakdownHandler() {
     }
 }
 
+class ItemIcon {
+    constructor(item) {
+        this.item = item
+        this.name = item.name
+        this.extra = d3.create("span")
+
+        this.icon_col = item.icon_col
+        this.icon_row = item.icon_row
+        this.icon = new Icon(this)
+    }
+    setText(text) {
+        this.extra.text(text)
+    }
+    renderTooltip() {
+        return this.item.renderTooltip(this.extra.node())
+    }
+}
+
 class PipeIcon {
     constructor() {
         let item = spec.items.get("pipe")
@@ -472,7 +495,15 @@ export function displayItems(spec, totals) {
     let itemRow = row.filter(d => d.item !== null)
     let itemIcon = itemRow.selectAll(".item-icon")
     itemIcon.selectAll("img").remove()
-    itemIcon.append(d => d.item.icon.make(32))
+    itemIcon.append(d => {
+        let icon = new ItemIcon(d.item)
+        if (spec.ignore.has(d.item)) {
+            icon.setText("(Click to unignore.)")
+        } else {
+            icon.setText("(Click to ignore.)")
+        }
+        return icon.icon.make(32)
+    })
         .classed("ignore", d => spec.ignore.has(d.item))
         .on("click", toggleIgnoreHandler)
     itemRow.selectAll("tt.item-rate")

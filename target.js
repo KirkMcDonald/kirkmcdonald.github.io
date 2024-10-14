@@ -163,13 +163,7 @@ export class BuildTarget {
             itemHandler(this),
         )
 
-        /*itemLabel.append("img")
-            .classed("icon", true)
-            .attr("src", d => d.icon.path())
-            //.attr("width", 32)
-            //.attr("height", 32)
-            .attr("title", d => d.name)*/
-        itemLabel.append(d => d.icon.make(32))
+        itemLabel.append(d => d.icon.make(32, false, dropdown.node()))
 
         targetCount++
 
@@ -246,8 +240,7 @@ export class BuildTarget {
                 spec.updateSolution()
             },
         )
-        // XXX: Alt-recipes in Satisfactory don't have icons.
-        labels.append(d => new Text(d.name))
+        labels.append(d => d.icon.make(32, false, dropdown.node()))
         recipeSelectorCount++
         this.recipeSelector.append("span")
             .text(" \u00d7 ")

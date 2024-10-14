@@ -84,7 +84,7 @@ div.tooltip h3 {
 div.tooltip h3:not(:last-child) {
     margin-bottom: 0.5em;
 }
-/*div.tooltip div.product {
+div.tooltip div.product {
     position: relative;
     display: inline-block;
     background-color: var(--light);
@@ -101,7 +101,7 @@ div.tooltip div.product span.count {
 }
 div.tooltip img.ingredient {
     background-color: var(--light);
-}*/
+}
 /* build targets */
 .targetButton {
     height: 2em;
@@ -156,9 +156,6 @@ div#miner_settings, div#alt_recipe_settings {
     height: 40px;
     line-height: 40px;
 }
-/*.top-icon > div > span {
-    vertical-align: center;
-}*/
 input.prec {
     width: 4em;
 }
@@ -252,38 +249,6 @@ table.resource input[type="radio"] + label:hover {
 }
 table.resource input[type="radio"]:checked + label {
     fill: var(--accent);
-}
-.recipe .title {
-    font-size: 12px;
-    color: var(--foreground);
-    font-style: italic;
-}
-.recipe .ingredient {
-    position: relative;
-    display: inline-block;
-}
-.recipe .count {
-    position: absolute;
-    right: 0px;
-    bottom: 0px;
-    font-size: 12px;
-    color: var(--foreground);
-    background-color: var(--light);
-    border-top-left-radius: 4px;
-    padding-left: 2px;
-    padding-top: 2px;
-}
-.recipe .arrow {
-    font-size: 16px;
-}
-/*#recipe_toggles .open .count {
-    font-size: 16px
-}
-#recipe_toggles .open .arrow {
-    font-size: 32px;
-}*/
-#recipe_toggles .toggle-row {
-    margin: 1em;
 }
 /* tabs */
 div.tabs {

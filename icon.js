@@ -68,7 +68,8 @@ export class Icon {
         }
         img.style("background-position", `${x}px ${y}px`)
         if (!suppressTooltip && this.obj.renderTooltip) {
-            new Tooltip(img.node(), this.obj.renderTooltip(), target)
+            let self = this
+            new Tooltip(img.node(), () => self.obj.renderTooltip(), target)
         } else {
             img.attr("title", this.obj.name)
         }

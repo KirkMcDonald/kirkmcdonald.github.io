@@ -19,8 +19,6 @@ export class Item {
     constructor(key, name, col, row, phase, group, subgroup, order) {
         this.key = key
         this.name = name
-        // XXX: Satisfactory cruft
-        this.tier = 0
         this.phase = phase
         this.recipes = []
         this.uses = []
@@ -44,13 +42,19 @@ export class Item {
     addUse(recipe) {
         this.uses.push(recipe)
     }
-    renderTooltip() {
+    renderTooltip(extra) {
+        if (this.recipes.length === 1 && this.recipes[0].name === this.name) {
+            return this.recipes[0].renderTooltip(extra)
+        }
         let self = this
         let t = d3.create("div")
             .classed("frame", true)
         let header = t.append("h3")
         header.append(() => self.icon.make(32, true))
         header.append(() => new Text(self.name))
+        if (extra) {
+            t.append(() => extra)
+        }
         return t.node()
     }
 }

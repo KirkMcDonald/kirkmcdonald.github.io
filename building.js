@@ -11,6 +11,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
+import { powerRepr } from "./display.js"
 import { Icon } from "./icon.js"
 import { Rational, zero, one } from "./rational.js"
 
@@ -62,9 +63,22 @@ class Building {
         let header = t.append("h3")
         header.append(() => self.icon.make(32, true))
         header.append(() => new Text(self.name))
-        t.append("b")
-            .text(`Power usage: `)
-        t.append(() => new Text(`${this.power.toString()} MW`))
+        let line = t.append("div")
+        line.append("b")
+            .text("Energy consumption: ")
+        let {power, suffix} = powerRepr(this.power)
+        line.append("span")
+            .text(`${power.toDecimal(0)} ${suffix}`)
+        line = t.append("div")
+        line.append("b")
+            .text("Crafting speed: ")
+        line.append("span")
+            .text(this.speed.toDecimal())
+        line = t.append("div")
+        line.append("b")
+            .text("Module slots: ")
+        line.append("span")
+            .text(String(this.moduleSlots))
         return t.node()
     }
 }
@@ -83,6 +97,31 @@ class Miner extends Building {
     getRecipeRate(spec, recipe) {
         // XXX: Speed effect
         return this.miningSpeed.div(recipe.miningTime)
+    }
+    renderTooltip() {
+        let self = this
+        let t = d3.create("div")
+            .classed("frame", true)
+        let header = t.append("h3")
+        header.append(() => self.icon.make(32, true))
+        header.append(() => new Text(self.name))
+        let line = t.append("div")
+        line.append("b")
+            .text("Energy consumption: ")
+        let {power, suffix} = powerRepr(this.power)
+        line.append("span")
+            .text(`${power.toDecimal(0)} ${suffix}`)
+        line = t.append("div")
+        line.append("b")
+            .text("Mining speed: ")
+        line.append("span")
+            .text(this.miningSpeed.toDecimal())
+        line = t.append("div")
+        line.append("b")
+            .text("Module slots: ")
+        line.append("span")
+            .text(String(this.moduleSlots))
+        return t.node()
     }
 }
 
@@ -116,7 +155,16 @@ class RocketSilo extends Building {
     }
 }
 
-//constructor(key, name, col, row, categories, speed, moduleSlots, power, fuel)
+function renderTooltipBase() {
+    let self = this
+    let t = d3.create("div")
+        .classed("frame", true)
+    let header = t.append("h3")
+    header.append(() => self.icon.make(32, true))
+    header.append(() => new Text(self.name))
+    return t.node()
+}
+
 export function getBuildings(data) {
     let buildings = []
     let pumpDef = data["offshore-pump"]["offshore-pump"]
@@ -131,7 +179,7 @@ export function getBuildings(data) {
         zero,
         null,
     )
-    //pump.renderTooltip = renderTooltipBase
+    pump.renderTooltip = renderTooltipBase
     buildings.push(pump)
     let reactorDef = data["reactor"]["nuclear-reactor"]
     let reactor = new Building(
@@ -145,7 +193,7 @@ export function getBuildings(data) {
         zero,
         null
     )
-    //reactor.renderTooltip = renderTooltipBase
+    reactor.renderTooltip = renderTooltipBase
     buildings.push(reactor)
     let boilerDef = data["boiler"]["boiler"]
     // XXX: Should derive this from game data.
@@ -161,7 +209,7 @@ export function getBuildings(data) {
         boiler_energy,
         "chemical"
     )
-    //boiler.renderTooltip = renderTooltipBase
+    boiler.renderTooltip = renderTooltipBase
     buildings.push(boiler)
     let siloDef = data["rocket-silo"]["rocket-silo"]
     let launch = new RocketLaunch(
@@ -175,7 +223,7 @@ export function getBuildings(data) {
         zero,
         null
     )
-    //launch.renderTooltip = renderTooltipBase
+    launch.renderTooltip = renderTooltipBase
     buildings.push(launch)
     for (let type of ["assembling-machine", "furnace"]) {
         for (let key in data[type]) {

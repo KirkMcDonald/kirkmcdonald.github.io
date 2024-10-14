@@ -13,14 +13,12 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT, longRateNames } from "./align.js"
 import { colorSchemes } from "./color.js"
-import { dropdown } from "./dropdown.js"
 import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender } from "./events.js"
 import { spec, DEFAULT_BELT, DEFAULT_FUEL, buildingSort } from "./factory.js"
 import { getRecipeGroups } from "./groups.js"
 import { changeMod } from "./init.js"
 import { shortModules, moduleRows, moduleDropdown } from "./module.js"
 import { Rational, zero } from "./rational.js"
-import { renderRecipe } from "./recipe.js"
 import { sorted } from "./sort.js"
 
 // data set
@@ -655,7 +653,6 @@ function renderRecipes(settings) {
             .join("div")
                 .classed("toggle recipe", true)
                 .classed("selected", d => !spec.disable.has(d))
-                .attr("title", d => d.name)
                 .on("click", function(event, d) {
                     let disabled = spec.disable.has(d)
                     d3.select(this).classed("selected", disabled)
@@ -666,7 +663,7 @@ function renderRecipes(settings) {
                     }
                     spec.updateSolution()
                 })
-    renderRecipe(recipe)
+    recipe.append(d => d.icon.make(32))
 }
 
 // resource priority

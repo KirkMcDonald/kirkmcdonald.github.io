@@ -65,7 +65,7 @@ limitations under the License.-->
     <div class="tabs">
         <button class="tab_button" id="totals_button" onclick="handlers.clickTab('totals')">Factory</button>
         <button class="tab_button" id="graph_button" onclick="handlers.clickTab('graph')">Visualize</button>
-        <button class="tab_button" id="recipes_button" onclick="handlers.clickTab('recipes')">Alt-Recipes</button>
+        <!--<button class="tab_button" id="recipes_button" onclick="handlers.clickTab('recipes')">Alt-Recipes</button>-->
         <!--<button class="tab_button" id="miners_button" onclick="handlers.clickTab('miners')">Miners</button>-->
         <button class="tab_button" id="resources_button" onclick="handlers.clickTab('resources')">Resources</button>
         <button class="tab_button" id="settings_button" onclick="handlers.clickTab('settings')">Settings</button>
@@ -205,13 +205,21 @@ limitations under the License.-->
             <td><span id="building_selector"></span></td>
             </tr>
 
+        <tr class="setting-section">
+        <td colspan="2"><span>Recipes</span><hr></td>
+        </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label top-icon"><div><span>Toggle recipes:</span></div></td>
+            <td><div id="recipe_toggles"></div></td>
+            </tr>
+
         </table>
     </div>
 
-    <div id="recipes_tab" class="tab">
+    <!--<div id="recipes_tab" class="tab">
         <p>Click to toggle recipe.</p>
-        <div id="recipe_toggles"></div>
-    </div>
+    </div>-->
 
     <div id="resources_tab" class="tab">
         <p>Click and drag items to configure resource priority.<br />

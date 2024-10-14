@@ -16,6 +16,15 @@ import { Icon, sprites } from "./icon.js"
 import { Rational, zero, half, one } from "./rational.js"
 import { sorted } from "./sort.js"
 
+let hundred = Rational.from_float(100)
+function percent(x) {
+    let sign = ""
+    if (!x.less(zero)) {
+        sign = "+"
+    }
+    return `${sign}${x.mul(hundred).toDecimal()}%`
+}
+
 class Module {
     constructor(key, name, col, row, category, order, productivity, speed, power, limit) {
         // Other module effects not modeled by this calculator.
@@ -53,67 +62,37 @@ class Module {
     hasProdEffect() {
         return !this.productivity.isZero()
     }
-    /*renderTooltip() {
-        var t = document.createElement("div")
-        t.classList.add("frame")
-        var title = document.createElement("h3")
-        var im = getImage(this, true)
-        title.appendChild(im)
-        title.appendChild(new Text(formatName(this.name)))
-        t.appendChild(title)
-        var b
-        var hundred = RationalFromFloat(100)
-        var first = false
+    renderTooltip() {
+        let self = this
+        let t = d3.create("div")
+            .classed("frame", true)
+        let header = t.append("h3")
+        header.append(() => self.icon.make(32, true))
+        header.append(() => new Text(self.name))
+        let line
         if (!this.power.isZero()) {
-            var power = this.power.mul(hundred)
-            if (first) {
-                t.appendChild(document.createElement("br"))
-            } else {
-                first = true
-            }
-            b = document.createElement("b")
-            b.textContent = "Energy consumption: "
-            t.appendChild(b)
-            var sign = ""
-            if (!this.power.less(zero)) {
-                sign = "+"
-            }
-            t.appendChild(new Text(sign + power.toDecimal() + "%"))
+            line = t.append("div")
+            line.append("b")
+                .text("Energy consumption: ")
+            line.append("span")
+                .text(percent(this.power))
         }
         if (!this.speed.isZero()) {
-            var speed = this.speed.mul(hundred)
-            if (first) {
-                t.appendChild(document.createElement("br"))
-            } else {
-                first = true
-            }
-            b = document.createElement("b")
-            b.textContent = "Speed: "
-            t.appendChild(b)
-            var sign = ""
-            if (!this.speed.less(zero)) {
-                sign = "+"
-            }
-            t.appendChild(new Text(sign + speed.toDecimal() + "%"))
+            line = t.append("div")
+            line.append("b")
+                .text("Speed: ")
+            line.append("span")
+                .text(percent(this.speed))
         }
         if (!this.productivity.isZero()) {
-            var productivity = this.productivity.mul(hundred)
-            if (first) {
-                t.appendChild(document.createElement("br"))
-            } else {
-                first = true
-            }
-            b = document.createElement("b")
-            b.textContent = "Productivity: "
-            t.appendChild(b)
-            var sign = ""
-            if (!this.productivity.less(zero)) {
-                sign = "+"
-            }
-            t.appendChild(new Text(sign + productivity.toDecimal() + "%"))
+            line = t.append("div")
+            line.append("b")
+                .text("Productivity: ")
+            line.append("span")
+                .text(percent(this.productivity))
         }
-        return t
-    }*/
+        return t.node()
+    }
 }
 
 export function moduleDropdown(selector, data) {
@@ -144,11 +123,11 @@ export function moduleDropdown(selector, data) {
                         d => d.checked(),
                         d => d.choose(),
                     )
-                    label.append(d => {
+                    label.append(function(d) {
                         if (d.module === null) {
                             return sprites.get("slot_icon_module").icon.make(32)
                         } else {
-                            return d.module.icon.make(32)
+                            return d.module.icon.make(32, false, this.parentNode.parentNode.parentNode)
                         }
                     })
                     return s
