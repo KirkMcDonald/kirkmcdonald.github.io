@@ -12,7 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 
-function neighboringRecipes(recipes, recipe, invert) {
+function getFuelConsumers(spec, recipes) {
+    let consumers = []
+    for (let recipe of recipes) {
+        let building = spec.getBuilding(recipe)
+        if (building !== null && building.fuel === "chemical") {
+            consumers.push(recipe)
+        }
+    }
+    return consumers
+}
+
+function neighboringRecipes(spec, recipes, recipe, invert) {
     let result = new Set()
     let itemSet
     if (invert) {
@@ -24,6 +35,9 @@ function neighboringRecipes(recipes, recipe, invert) {
         let recipeSet
         if (invert) {
             recipeSet = ing.item.uses
+            if (ing.item === spec.fuel.item) {
+                recipeSet = recipeSet.concat(getFuelConsumers(spec, recipes))
+            }
         } else {
             recipeSet = ing.item.recipes
         }
@@ -37,26 +51,40 @@ function neighboringRecipes(recipes, recipe, invert) {
     return result
 }
 
-function visit(recipes, recipe, seen, invert) {
+function visit(spec, recipes, recipe, seen, invert) {
     if (seen.has(recipe)) {
         return []
     }
     seen.add(recipe)
-    let neighbors = neighboringRecipes(recipes, recipe, invert)
+    let neighbors = neighboringRecipes(spec, recipes, recipe, invert)
     let result = []
     for (let neighbor of neighbors) {
-        let x = visit(recipes, neighbor, seen, invert)
+        let x = visit(spec, recipes, neighbor, seen, invert)
         result.push(...x)
     }
     result.push(recipe)
     return result
 }
 
-export function getCycleRecipes(recipes) {
+function isSelfCycle(component) {
+    let recipe = Array.from(component)[0]
+    let products = new Set()
+    for (let {item} of recipe.products) {
+        products.add(item)
+    }
+    for (let {item} of recipe.getIngredients()) {
+        if (products.has(item)) {
+            return true
+        }
+    }
+    return false
+}
+
+export function getCycleRecipes(spec, recipes) {
     let seen = new Set()
     let L = []
     for (let recipe of recipes) {
-        let x = visit(recipes, recipe, seen, false)
+        let x = visit(spec, recipes, recipe, seen, false)
         L.push(...x)
     }
     //let components = []
@@ -67,8 +95,8 @@ export function getCycleRecipes(recipes) {
         if (seen.has(root)) {
             continue
         }
-        let component = visit(recipes, root, seen, true)
-        if (component.length > 1) {
+        let component = visit(spec, recipes, root, seen, true)
+        if (component.length > 1 || isSelfCycle(component)) {
             for (let recipe of component) {
                 result.add(recipe)
             }

@@ -130,7 +130,7 @@ export function solve(spec, fullOutputs) {
         outputs.set(item, rate)
     }
     let recipes = spec.getRecipeGraph(outputs)
-    let cyclic = getCycleRecipes(recipes)
+    let cyclic = getCycleRecipes(spec, recipes)
     let partialSolution = recursiveSolve(spec, cyclic, fullOutputs)
     let solution = partialSolution.recipeRates
     spec.lastPartial = partialSolution
