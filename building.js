@@ -53,6 +53,9 @@ class Building {
     canBeacon() {
         return this.moduleSlots > 0
     }
+    prodEffect(spec) {
+        return zero
+    }
     drain() {
         return this.power.div(thirty)
     }
@@ -97,6 +100,9 @@ class Miner extends Building {
     getRecipeRate(spec, recipe) {
         // XXX: Speed effect
         return this.miningSpeed.div(recipe.miningTime)
+    }
+    prodEffect(spec) {
+        return spec.miningProd
     }
     renderTooltip() {
         let self = this

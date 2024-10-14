@@ -204,6 +204,7 @@ export class ModuleSpec {
             }
             prod = prod.add(module.productivity)
         }
+        prod = prod.add(this.building.prodEffect(spec))
         return prod
     }
     powerEffect(spec) {

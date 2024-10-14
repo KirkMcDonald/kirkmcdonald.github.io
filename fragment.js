@@ -54,6 +54,11 @@ export function formatSettings(overrideTab, targets) {
     if (spec.format.displayFormat !== DEFAULT_FORMAT) {
         settings += "vf=" + spec.format.displayFormat[0] + "&"
     }
+    if (!spec.miningProd.isZero()) {
+        let hundred = Rational.from_float(100)
+        let mprod = spec.miningProd.mul(hundred).toString()
+        settings += "mprod=" + mprod + "&"
+    }
     let buildings = []
     let groupSet = new Set(spec.buildings.values())
     for (let group of groupSet) {

@@ -140,6 +140,8 @@ class FactorySpecification {
 
         this.fuel = null
 
+        this.miningProd = null
+
         this.ignore = new Set()
         this.disable = new Set()
 
@@ -179,6 +181,7 @@ class FactorySpecification {
         this.belt = belts.get(DEFAULT_BELT)
         this.fuels = fuels
         this.fuel = fuels.get(DEFAULT_FUEL)
+        this.miningProd = zero
         this.itemGroups = itemGroups
         this.defaultPriority = this.getDefaultPriorityArray()
         this.priority = null

@@ -156,7 +156,7 @@ div#miner_settings, div#alt_recipe_settings {
     height: 40px;
     line-height: 40px;
 }
-input.prec {
+input.prec, input.mprod {
     width: 4em;
 }
 .radio-setting input[type="radio"] {

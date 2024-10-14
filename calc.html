@@ -25,7 +25,7 @@
         var handlers = {}
     </script>
     <script type="module">
-        import { plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeVisType, changeVisRender, toggleDebug } from "./events.js"
+        import { plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeMprod, changeVisType, changeVisRender, toggleDebug } from "./events.js"
         import { init } from "./init.js"
         handlers.plusHandler = plusHandler
         handlers.clickTab = clickTab
@@ -34,6 +34,7 @@
         handlers.changeRatePrecision = changeRatePrecision
         handlers.changeCountPrecision = changeCountPrecision
         handlers.changeFormat = changeFormat
+        handlers.changeMprod = changeMprod
         handlers.changeVisType = changeVisType
         handlers.changeVisRender = changeVisRender
         handlers.toggleDebug = toggleDebug
@@ -204,6 +205,11 @@ limitations under the License.-->
             <tr class="setting-row">
             <td class="setting-label top-icon"><div><span>Buildings:</span></div></td>
             <td><span id="building_selector"></span></td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label">Mining productivity bonus:</td>
+            <td>+<input id="mprod" class="mprod" type="number" step="10" value="0" min="0" onchange="handlers.changeMprod(event)">%</td>
             </tr>
 
         <tr class="setting-section">

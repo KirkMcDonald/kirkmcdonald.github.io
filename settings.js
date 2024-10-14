@@ -301,6 +301,18 @@ function renderValueFormat(settings) {
     input.checked = true
 }
 
+// mining productivity
+
+function renderMiningProd(settings) {
+    let mprod = "0"
+    if (settings.has("mprod")) {
+        mprod = settings.get("mprod")
+    }
+    let mprodInput = document.getElementById("mprod")
+    mprodInput.value = mprod
+    spec.miningProd = Rational.from_string(mprod).div(Rational.from_float(100))
+}
+
 // color scheme
 export const DEFAULT_COLOR_SCHEME = "default"
 
@@ -707,6 +719,7 @@ export function renderSettings(settings) {
     renderRateOptions(settings)
     renderPrecisions(settings)
     renderValueFormat(settings)
+    renderMiningProd(settings)
     renderColorScheme(settings)
     renderBuildings(settings)
     renderBelts(settings)
