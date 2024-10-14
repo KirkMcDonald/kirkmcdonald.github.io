@@ -349,10 +349,17 @@ svg#graph text, svg.test text {
 tr.display-row td.pad, th.pad {
     padding-left: 1em;
 }
-/*tr.display-row td {
+tr.display-row td, tr.factory-header th, tr.breakdown-row td {
     padding-top: 8px;
     padding-bottom: 8px;
-}*/
+}
+/*tr.recipe-row td, tr.group-top-row td, tr.power-row td {*/
+tbody.display-group > tr:first-child td {
+    border-top: 1px solid var(--light);
+}
+tbody.display-group.multi td.leftmost {
+    border-left: 1px solid var(--light);
+}
 tr.nobuilding td.building > *{
     display: none;
 }
