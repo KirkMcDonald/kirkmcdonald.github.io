@@ -325,7 +325,7 @@ svg.sankey g.edgePathHighlight .highlighter {
 g.edgePathHighlight rect.highlighter {
     fill-opacity: 1;
 }
-path.fuel {
+g.fuel path, path.fuel {
     stroke-dasharray: 10,5;
 }
 svg#graph {

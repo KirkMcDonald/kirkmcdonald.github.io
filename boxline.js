@@ -33,7 +33,7 @@ export function renderBoxGraph({nodes, links}, ignore, callback) {
     let [itemColors, recipeColors] = getColorMaps(nodes, links)
     let dpi = 72
     let dot = [
-        "digraph {\n",
+        "digraph calc {\n",
         "    bgcolor=transparent;\n",
         `    dpi=${dpi};\n`,
         "    ranksep=1;\n",
@@ -76,9 +76,15 @@ export function renderBoxGraph({nodes, links}, ignore, callback) {
     let dotText = dot.join("")
     let div = d3.select("#graph_container")
     div.selectAll("*").remove()
-    div.graphviz(/*{useWorker: false}*/)
+    let graphvizConfig = {
+        useWorker: false,
+        growEnteringEdges: false,
+        tweenShapes: false,
+        tweenPaths: false,
         // Disable default zoom stuff; we have our own.
-        .zoom(false)
+        zoom: false,
+    }
+    div.graphviz(graphvizConfig)
         .renderDot(dotText, () => {
             let svg = div.select("svg")
                 .attr("id", "graph")

@@ -11,7 +11,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-import { renderBoxGraph } from "./boxline.js"
+import { renderBoxGraph } from "./boxline2.js"
 import { visualizerType, visualizerRender, installSVGEvents } from "./events.js"
 import { spec } from "./factory.js"
 import { iconSize, colonWidth, nodeMargin } from "./graph.js"
