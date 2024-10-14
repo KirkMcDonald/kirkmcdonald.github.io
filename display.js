@@ -16,6 +16,7 @@ import { toggleIgnoreHandler } from "./events.js"
 import { spec } from "./factory.js"
 import { formatSettings } from "./fragment.js"
 import { getRecipeGroups, topoSort } from "./groups.js"
+import { Icon } from "./icon.js"
 import { moduleRows, moduleDropdown } from "./module.js"
 import { Rational, zero, one } from "./rational.js"
 
@@ -326,6 +327,16 @@ function toggleBreakdownHandler() {
     }
 }
 
+class PipeIcon {
+    constructor() {
+        let item = spec.items.get("pipe")
+        this.name = item.name
+        this.icon_col = item.icon_col
+        this.icon_row = item.icon_row
+        this.icon = new Icon(this)
+    }
+}
+
 export function displayItems(spec, totals) {
     let headers = [
         new Header("", 1),
@@ -485,11 +496,9 @@ export function displayItems(spec, totals) {
     let pipeRow = itemRow.filter(d => d.item.phase === "fluid")
     let pipeIcon = pipeRow.selectAll("td.belt-icon")
     pipeIcon.selectAll("*").remove()
-    /*pipeIcon.append(d => spec.pipe.icon.make(32))
-    pipeIcon.append("span")
-        .text(" \u00d7")
+    pipeIcon.append(d => new PipeIcon().icon.make(32))
     pipeRow.selectAll("tt.belt-count")
-        .text(d => spec.format.alignCount(spec.getPipeCount(totals.items.get(d.item))))*/
+        .text("")
     let buildingRow = row.filter(d => d.building !== null)
     let buildingCell = buildingRow.selectAll("td.building-icon")
     buildingCell.selectAll("*").remove()
@@ -583,15 +592,9 @@ export function displayItems(spec, totals) {
             .classed("belt-count pad-right", true)
             .text(d => spec.format.alignCount(d.rate.div(spec.belt.rate)))
     pipeRow = row.filter(d => d.item.phase === "fluid")
-    let pipeCell = pipeRow.append("td")
-    /*pipeCell.append(d => spec.pipe.icon.make(32))
-    pipeCell.append("span")
-        .text(" \u00d7")
     pipeRow.append("td")
-        .classed("right-align", true)
-        .append("tt")
-            .classed("belt-count pad-right", true)
-            .text(d => spec.format.alignCount(d.rate.div(spec.pipe.rate)))*/
+        .append(d => new PipeIcon().icon.make(32))
+    pipeRow.append("td")
     buildingCell = row.append("td")
         .filter(d => d.building !== null)
         .classed("building", true)
