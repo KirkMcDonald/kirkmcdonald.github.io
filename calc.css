@@ -334,7 +334,7 @@ svg#graph {
 svg#graph text, svg.test text {
     stroke: none;
     fill: var(--foreground);
-    font: 12px sans-serif;
+    /*font: 12px sans-serif;*/
 }
 /* items tab */
 #totals {
