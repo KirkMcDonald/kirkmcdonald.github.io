@@ -14,6 +14,7 @@ limitations under the License.*/
 import { Formatter } from "./align.js"
 import { renderDebug } from "./debug.js"
 import { displayItems } from "./display.js"
+import { currentTab } from "./events.js"
 import { formatSettings } from "./fragment.js"
 import { ModuleSpec } from "./module.js"
 import { PriorityList } from "./priority.js"
@@ -629,7 +630,9 @@ class FactorySpecification {
             target.getRate()
         }
         displayItems(this, this.lastTotals)
-        renderTotals(this.lastTotals, this.ignore)
+        if (currentTab === "graph") {
+            renderTotals(this.lastTotals, this.ignore)
+        }
         reapTooltips()
         this.setHash()
 

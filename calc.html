@@ -25,10 +25,11 @@
         var handlers = {}
     </script>
     <script type="module">
-        import { plusHandler, clickTab, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeVisType, changeVisRender, toggleDebug } from "./events.js"
+        import { plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeVisType, changeVisRender, toggleDebug } from "./events.js"
         import { init } from "./init.js"
         handlers.plusHandler = plusHandler
         handlers.clickTab = clickTab
+        handlers.clickVisualize = clickVisualize
         handlers.changeTitle = changeTitle
         handlers.changeRatePrecision = changeRatePrecision
         handlers.changeCountPrecision = changeCountPrecision
@@ -64,7 +65,7 @@ limitations under the License.-->
 
     <div class="tabs">
         <button class="tab_button" id="totals_button" onclick="handlers.clickTab('totals')">Factory</button>
-        <button class="tab_button" id="graph_button" onclick="handlers.clickTab('graph')">Visualize</button>
+        <button class="tab_button" id="graph_button" onclick="handlers.clickVisualize()">Visualize</button>
         <!--<button class="tab_button" id="recipes_button" onclick="handlers.clickTab('recipes')">Alt-Recipes</button>-->
         <!--<button class="tab_button" id="miners_button" onclick="handlers.clickTab('miners')">Miners</button>-->
         <button class="tab_button" id="resources_button" onclick="handlers.clickTab('resources')">Resources</button>

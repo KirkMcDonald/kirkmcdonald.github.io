@@ -14,6 +14,7 @@ limitations under the License.*/
 import { spec } from "./factory.js"
 import { formatSettings } from "./fragment.js"
 import { setTitle } from "./settings.js"
+import { renderTotals } from "./visualize.js"
 
 // build target events
 
@@ -39,6 +40,11 @@ export function clickTab(tabName) {
     d3.select("#" + tabName + "_button")
         .classed("active", true)
     spec.setHash()
+}
+
+export function clickVisualize() {
+    clickTab("graph")
+    renderTotals(spec.lastTotals, spec.ignore)
 }
 
 // shared events
