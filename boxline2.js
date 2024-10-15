@@ -17,12 +17,11 @@ import { colorList, iconSize, nodeMargin, getColorMaps, renderNode, imageViewBox
 import { sheetHash, sheetWidth, sheetHeight } from "./icon.js"
 
 function edgePath(edge) {
-    let start = edge.points[0]
-    let parts = [`M ${start.x},${start.y}`]
-    for (let point of edge.points.slice(1)) {
-        parts.push(`L ${point.x},${point.y}`)
-    }
-    return parts.join(" ")
+    let line = d3.line()
+        .x(d => d.x)
+        .y(d => d.y)
+        .curve(d3.curveBasis)
+    return line(edge.points)
 }
 
 function edgeName(link) {
