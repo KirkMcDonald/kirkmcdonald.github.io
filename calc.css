@@ -359,6 +359,9 @@ svg#graph text, svg.test text {
 tr.display-row td.pad, th.pad {
     padding-left: 1em;
 }
+tr.display-row .item-icon img {
+    cursor: pointer;
+}
 tr.display-row td, tr.factory-header th, tr.breakdown-row td, tr.power-row td {
     padding-top: 8px;
     padding-bottom: 8px;
