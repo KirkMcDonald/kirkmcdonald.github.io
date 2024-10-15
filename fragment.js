@@ -27,9 +27,9 @@ function getModuleKey(module) {
     return moduleKey
 }
 
-export function formatSettings(overrideTab, targets) {
+export function formatSettings(excludeTitle, overrideTab, targets) {
     let settings = ""
-    if (document.title !== DEFAULT_TITLE) {
+    if (!excludeTitle && document.title !== DEFAULT_TITLE) {
         settings += "title=" + encodeURIComponent(document.title) + "&"
     }
     let tab = currentTab

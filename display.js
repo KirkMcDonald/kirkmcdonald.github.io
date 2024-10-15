@@ -592,7 +592,7 @@ export function displayItems(spec, totals) {
         .attr("href", d => {
             let rate = totals.items.get(d.item)
             let rates = [[d.item, rate]]
-            return "#" + formatSettings("totals", rates)
+            return "#" + formatSettings(true, "totals", rates)
         })
 
     // Render breakdowns.
