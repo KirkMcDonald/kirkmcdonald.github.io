@@ -660,7 +660,7 @@ function renderRecipes(settings) {
     let groups = []
     for (let group of allGroups) {
         if (group.size > 1) {
-            groups.push(Array.from(group))
+            groups.push(sorted(group, d => d.order))
         }
     }
 

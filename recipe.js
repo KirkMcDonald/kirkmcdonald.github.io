@@ -23,9 +23,10 @@ export class Ingredient {
 }
 
 class Recipe {
-    constructor(key, name, col, row, category, time, ingredients, products) {
+    constructor(key, name, order, col, row, category, time, ingredients, products) {
         this.key = key
         this.name = name
+        this.order = order
         this.category = category
         this.time = time
         this.ingredients = ingredients
@@ -213,6 +214,7 @@ function makeRecipe(data, items, d) {
     return new Recipe(
         d.name,
         d.localized_name.en,
+        d.order,
         d.icon_col,
         d.icon_row,
         d.category,
@@ -227,6 +229,7 @@ class ResourceRecipe extends Recipe {
         super(
             item.key,
             item.name,
+            item.order,
             item.icon_col,
             item.icon_row,
             category,
@@ -243,11 +246,11 @@ class ResourceRecipe extends Recipe {
 }
 
 class MiningRecipe extends Recipe {
-    constructor(key, name, col, row, category, miningTime, ingredients, products) {
+    constructor(key, name, order, col, row, category, miningTime, ingredients, products) {
         if (!ingredients) {
             ingredients = []
         }
-        super(key, name, col, row, category, zero, ingredients, products)
+        super(key, name, order, col, row, category, zero, ingredients, products)
         this.miningTime = miningTime
 
         this.defaultPriority = 1
@@ -268,6 +271,7 @@ export function getRecipes(data, items) {
     let waterRecipe = new Recipe(
         "water",
         "Water",
+        water.order,
         water.icon_col,
         water.icon_row,
         "water",
@@ -282,6 +286,7 @@ export function getRecipes(data, items) {
     recipes.set("nuclear-reactor-cycle", new Recipe(
         "nuclear-reactor-cycle",
         "Nuclear reactor cycle",
+        reactor.order,
         reactor.icon_col,
         reactor.icon_row,
         "nuclear",
@@ -296,6 +301,7 @@ export function getRecipes(data, items) {
     recipes.set("rocket-launch", new Recipe(
         "rocket-launch",
         "Rocket launch",
+        rocket.order,
         rocket.icon_col,
         rocket.icon_row,
         "rocket-launch",
@@ -309,6 +315,7 @@ export function getRecipes(data, items) {
     recipes.set("steam", new Recipe(
         "steam",
         "Steam",
+        steam.order,
         steam.icon_col,
         steam.icon_row,
         "boiler",
@@ -351,6 +358,7 @@ export function getRecipes(data, items) {
         recipes.set(d.name, new MiningRecipe(
             d.name,
             d.localized_name.en,
+            d.order,  // this may be undefined
             d.icon_col,
             d.icon_row,
             "mining-" + category,
