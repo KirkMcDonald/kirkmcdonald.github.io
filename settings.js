@@ -262,7 +262,7 @@ function renderRateOptions(settings) {
         .attr("type", "radio")
         .attr("name", "rate")
         .attr("value", d => d.rateName)
-        .attr("checked", d => d.rateName === rateName ? "" : null)
+        .property("checked", d => d.rateName === rateName)
         .on("change", rateHandler)
     rateOption.append("label")
         .attr("for", d => d.rateName + "_rate")
@@ -333,7 +333,7 @@ function renderColorScheme(settings) {
         .data(colorSchemes)
         .join("option")
             .attr("value", d => d.key)
-            .attr("selected", d => d.key === color ? true : null)
+            .property("selected", d => d.key === color)
             .text(d => d.name)
 }
 
@@ -412,7 +412,7 @@ function radioSetting(form, name, data, checked, onchange) {
         .attr("type", "radio")
         .attr("name", name)
         .attr("value", d => d.key)
-        .attr("checked", d => checked(d) ? "" : null)
+        .property("checked", d => checked(d))
         .on("change", onchange)
     option.append("label")
         .attr("for", d => `radio-input-${radioLabel++}`)
@@ -475,13 +475,13 @@ function renderVisualizer(settings) {
     } else {
         setVisualizerType(DEFAULT_VISUALIZER)
     }
-    d3.select(`#${visualizerType}_type`).attr("checked", true)
+    d3.select(`#${visualizerType}_type`).property("checked", true)
     if (settings.has("vr")) {
         setVisualizerRender(settings.get("vr"))
     } else {
         setVisualizerRender(DEFAULT_RENDER)
     }
-    d3.select(`#${visualizerRender}_render`).attr("checked", true)
+    d3.select(`#${visualizerRender}_render`).property("checked", true)
 }
 
 // default module
@@ -720,7 +720,7 @@ function renderResourcePriorities(settings) {
 
 function renderDebugCheckbox(settings) {
     spec.debug = settings.has("debug")
-    d3.select("#render_debug").attr("checked", spec.debug ? true : null)
+    d3.select("#render_debug").property("checked", spec.debug)
 }
 
 export function renderSettings(settings) {
