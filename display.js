@@ -362,6 +362,69 @@ class ItemIcon {
     }
 }
 
+// All this pipe stuff is legacy code, irrelevant as of 2.0, but we might as
+// well keep it around for legacy datasets.
+
+// For pipe segment of the given length, returns maximum throughput as fluid/s.
+function pipeThroughput(length) {
+    let R = Rational.from_float
+    if (length.equal(zero)) {
+        // A length of zero represents a solid line of pumps.
+        return R(12000)
+    } else if (length.less(R(198))) {
+        let numerator = R(50).mul(length).add(R(150))
+        let denominator = R(3).mul(length).sub(one)
+        return numerator.div(denominator).mul(R(60))
+    } else {
+        return R(60*4000).div(R(39).add(length))
+    }
+}
+
+// Throughput at which pipe length equation changes.
+let pipeThreshold = Rational.from_floats(4000, 236)
+
+// For fluid throughput in fluid/s, returns maximum length of pipe that can
+// support it.
+function pipeLength(throughput) {
+    let R = Rational.from_float
+    throughput = throughput.div(R(60))
+    if (R(200).less(throughput)) {
+        return null
+    } else if (R(100).less(throughput)) {
+        return zero
+    } else if (pipeThreshold.less(throughput)) {
+        let numerator = throughput.add(R(150))
+        let denominator = R(3).mul(throughput).sub(R(50))
+        return numerator.div(denominator)
+    } else {
+        return R(4000).div(throughput).sub(R(39))
+    }
+}
+
+// Just hardcode this. It used to be a setting, but now it's defunct.
+let minPipeLength = Rational.from_float(17)
+let maxPipeThroughput = pipeThroughput(minPipeLength)
+
+function pipeValues(rate) {
+    let pipes = rate.div(maxPipeThroughput).ceil()
+    let perPipeRate = rate.div(pipes)
+    let length = pipeLength(perPipeRate).floor()
+    return {pipes: pipes, length: length}
+}
+
+function pipeText(rate) {
+    if (rate.equal(zero)) {
+        return " \u00d7 0"
+    }
+    let {pipes, length} = pipeValues(rate)
+    let pipeString = ""
+    if (one.less(pipes)) {
+        pipeString += " \u00d7 " + pipes.toDecimal(0)
+    }
+    pipeString += " \u2264 " + length.toDecimal(0)
+    return pipeString
+}
+
 class PipeIcon {
     constructor() {
         let item = spec.items.get("pipe")
@@ -444,7 +507,7 @@ export function displayItems(spec, totals) {
                 .classed("item pad belt-icon", true)
             // cell 6: belt count
             row.append("td")
-                .classed("item right-align", true)
+                .classed("item right-align belt-count-cell pad-right", true)
                 .append("tt")
                     .classed("belt-count", true)
 
@@ -538,18 +601,28 @@ export function displayItems(spec, totals) {
         .text(d => spec.format.alignRate(totals.surplus.has(d.item) ? totals.surplus.get(d.item) : zero))
     let beltRow = itemRow.filter(d => d.item.phase === "solid")
     let beltIcon = beltRow.selectAll("td.belt-icon")
+        .classed("pad-right", false)
+        .attr("colspan", 1)
     beltIcon.selectAll("*").remove()
     beltIcon.append(d => spec.belt.icon.make(32))
     beltIcon.append("span")
         .text(" \u00d7")
-    beltRow.selectAll("tt.belt-count")
-        .text(d => spec.format.alignCount(spec.getBeltCount(totals.items.get(d.item))))
+    beltRow.selectAll("td.belt-count-cell")
+        .classed("hide", false)
+        .selectAll("tt.belt-count")
+            .text(d => spec.format.alignCount(spec.getBeltCount(totals.items.get(d.item))))
     let pipeRow = itemRow.filter(d => d.item.phase === "fluid")
     let pipeIcon = pipeRow.selectAll("td.belt-icon")
+        .classed("pad-right", true)
+        .attr("colspan", 2)
     pipeIcon.selectAll("*").remove()
     pipeIcon.append(d => new PipeIcon().icon.make(32))
-    pipeRow.selectAll("tt.belt-count")
-        .text("")
+    pipeIcon.append("tt")
+        .text(d => pipeText(totals.items.get(d.item)))
+    pipeRow.selectAll("td.belt-count-cell")
+        .classed("hide", true)
+        .selectAll("tt.belt-count")
+            .text("")
     let buildingRow = row.filter(d => d.building !== null)
     let buildingCell = buildingRow.selectAll("td.building-icon")
         .classed("leftmost", true)

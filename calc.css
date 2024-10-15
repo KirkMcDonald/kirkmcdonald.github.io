@@ -381,6 +381,9 @@ tr.nomodule td.module > *{
 tr.noitem td.item > * {
     display: none;
 }
+td.belt-count-cell.hide {
+    display: none;
+}
 span.beacon-container {
     background-color: var(--light);
     padding: 0.5em;
