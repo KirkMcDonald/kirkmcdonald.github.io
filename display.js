@@ -476,7 +476,11 @@ export function displayItems(spec, totals) {
                 .on("change", function (event, d) {
                     let count = Rational.from_string(event.target.value)
                     d.moduleSpec.setBeaconCount(count)
-                    spec.display()
+                    if (spec.isFactoryTarget(d.recipe)) {
+                        spec.updateSolution()
+                    } else {
+                        spec.display()
+                    }
                 })
 
             // cell 11: fuel icon
