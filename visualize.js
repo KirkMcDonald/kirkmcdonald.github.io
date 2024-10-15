@@ -14,7 +14,7 @@ limitations under the License.*/
 import { renderBoxGraph } from "./boxline2.js"
 import { visualizerType, visualizerRender, installSVGEvents } from "./events.js"
 import { spec } from "./factory.js"
-import { iconSize, colonWidth, nodeMargin } from "./graph.js"
+import { iconSize, colonWidth } from "./graph.js"
 import { zero, one } from "./rational.js"
 import { renderSankey } from "./sankey.js"
 
@@ -98,14 +98,15 @@ class GraphNode {
     // between the recipe and building icons; the colon symbol is then centered
     // in this gap.
     //
-    // The constant `nodeMargin` is 2: 1 pixel for the rect border, and one
-    // pixel for separation from the border.
+    // `nodeMargin` is 2 for the Sankey visualization: 1 pixel for the rect
+    // border, and one pixel for separation from the border. It is 10 for the
+    // boxline visualziation, which looks nicer.
     //
     // These calculations hold for both the Sankey and boxline visualizations,
     // with the slight caveat that this is the exact width of each node in the
     // boxline mode, while nodes are of a uniform width in the Sankey diagram,
     // chosen from the maximum node width calculated here.
-    labelWidth(text) {
+    labelWidth(text, nodeMargin) {
         text.text(this.text())
         let textWidth = text.node().getBBox().width
         let nodeWidth = textWidth + nodeMargin*2

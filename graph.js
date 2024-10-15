@@ -30,7 +30,6 @@ export const colorList = [
 
 export const iconSize = 32
 export const colonWidth = 12
-export const nodeMargin = 2
 
 function itemNeighbors(item) {
     let touching = new Set()
@@ -104,7 +103,7 @@ export function imageViewBox(obj) {
     return `${x1} ${y1} ${PX_WIDTH-1} ${PX_HEIGHT-1}`
 }
 
-export function renderNode(rects, recipeColors, ignore) {
+export function renderNode(rects, nodeMargin, recipeColors, ignore) {
     // main rect
     rects.append("rect")
         .attr("x", d => d.x0)

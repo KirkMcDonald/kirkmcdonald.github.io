@@ -21,6 +21,7 @@ import { one } from "./rational.js"
 import * as d3sankey from "./d3-sankey/index.js"
 
 const nodePadding = 36
+const sankeyNodeMargin = 2
 
 const columnWidth = 200
 const maxNodeHeight = 175
@@ -98,7 +99,7 @@ export function renderSankey(data, ignore) {
         .classed("sankey test", true)
     let text = testSVG.append("text")
     for (let node of data.nodes) {
-        let nodeWidth = node.labelWidth(text, 2)
+        let nodeWidth = node.labelWidth(text, sankeyNodeMargin)
         if (nodeWidth > maxNodeWidth) {
             maxNodeWidth = nodeWidth
         }
@@ -145,7 +146,7 @@ export function renderSankey(data, ignore) {
         .join("g")
             .classed("node", true)
 
-    renderNode(rects, recipeColors, ignore)
+    renderNode(rects, sankeyNodeMargin, recipeColors, ignore)
 
     // Link paths
     let link = svg.append("g")

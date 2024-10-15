@@ -13,8 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 
 import { spec } from "./factory.js"
-import { colorList, iconSize, nodeMargin, getColorMaps, renderNode, imageViewBox } from "./graph.js"
+import { colorList, iconSize, getColorMaps, renderNode, imageViewBox } from "./graph.js"
 import { sheetHash, sheetWidth, sheetHeight } from "./icon.js"
+
+const boxlineNodeMargin = 10
 
 function edgePath(edge) {
     let line = d3.line()
@@ -37,7 +39,7 @@ export function renderBoxGraph({nodes, links}, ignore, callback) {
     let testSVG = d3.select("body").append("svg").classed("test", true)
     let text = testSVG.append("text")
     for (let node of nodes) {
-        let width = node.labelWidth(text, 10)
+        let width = node.labelWidth(text, boxlineNodeMargin)
         let height = 52
         let label = {node, width, height}
         g.setNode(node.name, label)
@@ -177,7 +179,7 @@ export function renderBoxGraph({nodes, links}, ignore, callback) {
         .data(nodes)
         .join("g")
             .classed("node", true)
-    renderNode(rects, recipeColors, ignore)
+    renderNode(rects, boxlineNodeMargin, recipeColors, ignore)
 
     svg.append("g")
         .classed("overlay", true)
