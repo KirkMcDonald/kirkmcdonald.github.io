@@ -202,8 +202,21 @@ class BeaconInput {
         return this.module === this.cell.row.moduleSpec.beaconModules[this.cell.index]
     }
     choose() {
-        this.cell.row.moduleSpec.setBeaconModule(this.module, this.cell.index)
-        spec.display()
+        let toUpdate = [this.cell.index]
+        if (this.cell.index === 0) {
+            let modules = this.cell.row.moduleSpec.beaconModules
+            if (modules[0] === modules[1]) {
+                toUpdate.push(1)
+            }
+        }
+        for (let index of toUpdate) {
+            this.cell.row.moduleSpec.setBeaconModule(this.module, index)
+        }
+        if (spec.isFactoryTarget(this.cell.row.moduleSpec.recipe)) {
+            spec.updateSolution()
+        } else {
+            spec.display()
+        }
     }
 }
 
@@ -225,7 +238,6 @@ class BeaconCell {
                 this.inputRows.push(inputRow)
             }
         }
-        //setlen(this.inputRows, moduleRows.length, () => [])
     }
 }
 

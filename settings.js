@@ -570,7 +570,17 @@ class DefaultBeaconInput {
         return this.module === spec.defaultBeacon[this.cell.index]
     }
     choose() {
+        let self = this
+        let oldModule = spec.defaultBeacon[this.cell.index]
         spec.setDefaultBeacon(this.module, this.cell.index)
+        if (this.cell.index === 0) {
+            let modules = spec.defaultBeacon
+            if (oldModule === modules[1]) {
+                spec.setDefaultBeacon(this.module, 1)
+                d3.selectAll("#default_beacon span.module-wrapper:nth-child(2) input")
+                    .property("checked", d => self.module === d.module)
+            }
+        }
         spec.updateSolution()
     }
 }
