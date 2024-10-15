@@ -58,20 +58,30 @@ See the License for the specific language governing permissions and
 limitations under the License.-->
 
 <body onload="handlers.init()">
+    <table><tr>
+    <td>
     <ul id="targets">
         <li id="plusButton">
             <button class="targetButton ui" title="Add new item."
                     onclick="handlers.plusHandler()">+</button>
         </li>
     </ul>
+    </td>
+
+    <td class="changecell">
+    <div class="changebox">
+    Recent changes:<br>
+    2024-10-15 - Major update. <a href="docs/changelog.html" target="_blank">Changelog</a>.
+    </div>
+    </td>
+    </tr></table>
 
     <div class="tabs">
         <button class="tab_button" id="totals_button" onclick="handlers.clickTab('totals')">Factory</button>
         <button class="tab_button" id="graph_button" onclick="handlers.clickVisualize()">Visualize</button>
-        <!--<button class="tab_button" id="recipes_button" onclick="handlers.clickTab('recipes')">Alt-Recipes</button>-->
-        <!--<button class="tab_button" id="miners_button" onclick="handlers.clickTab('miners')">Miners</button>-->
         <button class="tab_button" id="resources_button" onclick="handlers.clickTab('resources')">Resources</button>
         <button class="tab_button" id="settings_button" onclick="handlers.clickTab('settings')">Settings</button>
+        <button class="tab_button" id="faq_button" onclick="handlers.clickTab('faq')">FAQ</button>
         <button class="tab_button" id="about_button" onclick="handlers.clickTab('about')">About</button>
         <button class="tab_button" id="debug_button" onclick="handlers.clickTab('debug')">Debug</button>
     </div>
@@ -226,19 +236,29 @@ limitations under the License.-->
         </table>
     </div>
 
-    <!--<div id="recipes_tab" class="tab">
-        <p>Click to toggle recipe.</p>
-    </div>-->
-
     <div id="resources_tab" class="tab">
         <p>Click and drag items to configure resource priority.<br />
         Higher numbers = more valuable</p>
         <div id="resource_settings"></div>
     </div>
 
-    <!--<div id="miners_tab" class="tab">
-        <div id="miner_settings"></div>
-    </div>-->
+    <div id="faq_tab" class="tab">
+    <div class="about-content">
+        <h3>What does clicking on an item's icon in the "Factory" tab do?</h3>
+        It omits the dependencies of that item from the solution. The intent behind this feature is to model the case of building a factory when you are shipping in one or more ingredients from elsewhere. For example, if you are making an advanced circuit factory and want to ship in electronic circuits, and want to see the remaining copper cable requirements on their own.
+        <p>
+        Clicking on the icon a second time will restore its dependencies.
+
+        <h3>How do I interpret the pipe numbers on the "Factory" tab?</h3>
+        Pipe throughput is inversely proportional to the length of the pipe. This means that the longer a pipe is, the more parallel lanes of pipes will be required.
+        <p>
+        Say the solution calls for 7500 units of heavy oil per second. With the default "minimum pipe length" setting, the calculator will display a value of "[pipe] &times; 7 &le; 47." This means you will need seven parallel lanes of pipes, each with a maximum length of 47 segments.
+        <p>
+        The "minimum pipe length" setting controls the minimum number of segments that a pipe will be permitted before the calculator uses multiple lanes of pipes. It defaults to 17, which corresponds to a fluid rate of 1200/s, which is the output rate of an offshore pump.
+        <p>
+        The number of pipes will be omitted if only one pipe is required.
+    </div>
+    </div>
 
     <div id="about_tab" class="tab">
     <div class = "about-content">

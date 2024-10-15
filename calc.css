@@ -102,6 +102,16 @@ div.tooltip div.product span.count {
 div.tooltip img.ingredient {
     background-color: var(--light);
 }
+/* "recent changes" box */
+.changecell {
+    vertical-align: top;
+}
+.changebox {
+    margin-left: 3em;
+    padding: 1em;
+    border: 2px solid var(--bright);
+    font-family: monospace;
+}
 /* build targets */
 .targetButton {
     height: 2em;

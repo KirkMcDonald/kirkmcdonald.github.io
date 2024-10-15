@@ -1,0 +1,86 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Factorio Calculator Changelog</title>
+    <link rel="stylesheet" type="text/css" href="docs.css">
+</head>
+
+<body>
+<h1>Changelog</h1>
+
+<h2>2024-10-15</h2>
+
+This represents a major update for the Factorio Calculator. It has been virtually rewritten from scratch, updating the nearly ten year old codebase to a more modern version of JavaScript, and paving the way to better supporting Factorio 2.0 and Space Age. Several things have changed along the way, and this document will walk through them.
+
+<h3>Factory tab changes</h3>
+
+The Factory tab has received a handful of subtle changes. The most obvious is the beacons column.
+
+<div class="image"><img src="beacon.png"><div>A new beacon UI.</div></div>
+
+The old behavior was <em>by far</em> the most common point of confusion with the Factorio Calculator. The new layout more closely matches the game: Each row now has <em>two</em> module slots for beacons, and the count is now the number of <em>beacons</em>. If you want to run the numbers on your 4, 8, or 12-beacon setup, you no longer need to remember to multiply by two.
+<p>
+A more subtle change has to do with the selection of modules. Selecting the first module in a row will now set the remainder of the modules in that row. (Likewise, selecting the module for the first slot in a beacon will set both slots.)
+
+<div class="image"><img src="modules.png"><div>Change the first module to change all the modules.</div></div>
+
+This replaces the old "arrow" button. You can alter or remove the other modules in the row if you wish, but it has been my observation that setting all of a building's modules to the same thing is, by far, the most common operation, and so I have streamlined this operation. (If you only wish to set one module, you can always set one other than the first one.)
+<p>
+Between this and the default module options, all of the old arrow buttons have been rendered obsolete, and they have been removed.
+
+<div class="image"><img src="recipe-select.png"><div>This feature actually works now.</div></div>
+
+If you specify a number of buildings for an item which may be created with multiple recipes, there is a dropdown which allows you to select which recipe will be used when interpreting the building count. While this feature has been present in the calculator for a long time, it didn't really work like one might have expected. This has changed, and the calculator will now actually calculate how to make that number of buildings of that specific recipe.
+
+<div class="image"><img src="breakdown.png"><div>The arrows now point the other way.</div></div>
+
+The item breakdowns (the per-item tables that pop up when you click the arrows on the left hand side) have received the minor change of reversing the order of the icons and the arrow. This places the numbers representing the rates of individual items next to the icons of the items they represent, which should make things more clear.
+
+<div class="image"><img src="ignore.png"><div>You can ignore this now.</div></div>
+
+The item ignoring feature has been improved as a side effect of the new solver (see below). Various items which could not previously be ignored no longer have this limitation.
+
+<h3>Setting Changes</h3>
+
+The Settings tab has undergone a visual overhaul, and several of the settings have changed.
+
+<div class="image"><img src="title-setting.png"><div>Set the window title with this.</div></div>
+
+A Title setting has been added. This will change the window title, aiding in organization if you run the calculator in multiple tabs.
+
+<div class="image"><img src="default-modules.png"><div>People have been asking for this for a while.</div></div>
+
+A <em>secondary</em> default module has been added. This is useful, for example, if you wish to set a primary default for a productivity module, and then use speed modules for anything which does not support productivity modules.
+
+<div class="image"><img src="buildings.png"><div>You can change the miner now.</div></div>
+
+The old "minimum assembler" and "furnace" settings have been combined into a single generalized "buildings" setting. Each row represents a different class of building. As a consequence, it is also now also possible to configure the miner you wish to use for ore.
+
+<div class="image"><img src="recipes.png"><div>This is much more flexible than before.</div></div>
+
+You can now toggle some individual recipes on and off. This replaces (and ought to work better than) the old oil and Kovarex settings. This ought to give much more fine-grained control over which solutions the calculator will generate.
+
+<h3>Visualizer Changes</h3>
+
+<div class="image"><img src="visualizer.png"><div>The visualizer UI has changed.</div></div>
+
+The visualizer UI has been generally overhauled. Visualizations may be panned and zoomed more easily, though the old behavior has been retained as an option if you find that more convenient.
+
+<div class="image"><img src="curves.png"><div>The box &amp; line diagram is less angular.</div></div>
+
+The visualizations themselves haven't changed much, but the look of the box-and-line diagrams has been slightly improved.
+
+<p>
+The old option to change the direction of the visualizations has been removed. The feature was always an afterthought, and the visualizations were always designed to look best in the orientations in which they are now given: Horizontal for the Sankey diagram, vertical for the box-and-line diagram.
+
+<h3>Resources Tab</h3>
+
+<div class="image"><img src="resources.png"><div>You can control the calculator's priorities.</div></div>
+
+This all-new tab comes along with a new solver in the guts of the calculator. It takes functionality which was previously hard-coded and hidden away and exposes it to the user to be configured as they wish. It defines the <b>resource priority</b> for different resources, controlling the solver's preferences when it has the option to pick one recipe over another.
+<p>
+(As an aside, crude oil and water default to a lower weight because fluids in Factorio generally operate on a scale that is an order of magnitude larger than ordinary items. Dividing their weights in this way makes the numbers work out in a more expected fashion.)
+<p>
+This is not terribly useful in vanilla Factorio, but it may be more important in Space Age, and it opens the door to supporting more complex mods in the future.
+</body>
+</html>
