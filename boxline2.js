@@ -49,7 +49,7 @@ export function renderBoxGraph({nodes, links}, ignore, callback) {
 
     for (let [i, link] of links.entries()) {
         link.index = i
-        let s = ` \u00d7 ${spec.format.rate(link.rate)}/${spec.format.rateName}`
+        let s = `\u00a0\u00d7 ${spec.format.rate(link.rate)}/${spec.format.rateName}`
         text.text(s)
         let textWidth = text.node().getBBox().width
         let width = 32 + 10 + textWidth

@@ -72,9 +72,9 @@ class GraphNode {
         if (this.rate === null) {
             return this.name
         } else if (this.count.isZero()) {
-            return ` \u00d7 ${spec.format.rate(this.rate)}/${spec.format.rateName}`
+            return `\u00a0\u00d7 ${spec.format.rate(this.rate)}/${spec.format.rateName}`
         } else {
-            return ` \u00d7 ${spec.format.count(this.count)}`
+            return `\u00a0\u00d7 ${spec.format.count(this.count)}`
         }
     }
     // There are three types of nodes, each of which calculate their width
