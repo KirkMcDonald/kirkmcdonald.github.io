@@ -33,6 +33,11 @@ export function changeMod() {
     loadData(modName, new Map())
 }
 
+let OIL_EXCLUSION = new Map([
+    ["basic", ["advanced-oil-processing"]],
+    ["coal", ["advanced-oil-processing", "basic-oil-processing"]],
+])
+
 function fixLegacySettings(settings) {
     if ((settings.has("min") || settings.has("furnace")) && !settings.has("buildings")) {
         let parts = []
@@ -46,9 +51,20 @@ function fixLegacySettings(settings) {
         }
         settings.set("buildings", parts.join(","))
     }
-    if (settings.has("k") && !settings.has("disable")) {
-        settings.delete("k")
-        settings.set("disable", "kovarex-processing")
+    if ((settings.has("k") || settings.has("p")) && !settings.has("disable")) {
+        let parts = []
+        if (settings.has("k")) {
+            settings.delete("k")
+            parts.push("kovarex-processing")
+        }
+        if (settings.has("p")) {
+            let p = settings.get("p")
+            for (let r of OIL_EXCLUSION.get(p)) {
+                parts.push(r)
+            }
+            settings.delete("p")
+        }
+        settings.set("disable", parts.join(","))
     }
 }
 
