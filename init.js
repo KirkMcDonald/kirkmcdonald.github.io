@@ -39,11 +39,18 @@ let OIL_EXCLUSION = new Map([
 ])
 
 function fixLegacySettings(settings) {
-    if ((settings.has("min") || settings.has("furnace")) && !settings.has("buildings")) {
+    if ((settings.has("use_3") || settings.has("min") || settings.has("furnace")) && !settings.has("buildings")) {
         let parts = []
         if (settings.has("min")) {
-            parts.push("assembling-machine-" + settings.get("min"))
+            let n = settings.get("min")
+            if (n === "4") {
+                n = "3"
+            }
+            parts.push("assembling-machine-" + n)
             settings.delete("min")
+        } else if (settings.has("use_3")) {
+            parts.push("assembling-machine-3")
+            settings.delete("use_3")
         }
         if (settings.has("furnace")) {
             parts.push(settings.get("furnace"))
