@@ -98,8 +98,14 @@ class Miner extends Building {
         return zero
     }
     getRecipeRate(spec, recipe) {
-        // XXX: Speed effect
-        return this.miningSpeed.div(recipe.miningTime)
+        let modules = spec.getModuleSpec(recipe)
+        let speedEffect
+        if (modules) {
+            speedEffect = modules.speedEffect()
+        } else {
+            speedEffect = one
+        }
+        return this.miningSpeed.div(recipe.miningTime).mul(speedEffect)
     }
     prodEffect(spec) {
         return spec.miningProd
