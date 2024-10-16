@@ -139,7 +139,7 @@ function launchRate(spec) {
     let partItem = spec.items.get("rocket-part")
     let gives = partRecipe.gives(partItem)
     // The base rate at which the silo can make rocket parts.
-    let rate = Building.prototype.getRecipeRate.call(partFactory, partRecipe, spec)
+    let rate = Building.prototype.getRecipeRate.call(partFactory, spec, partRecipe)
     // Number of times to complete the rocket part recipe per launch.
     let perLaunch = Rational.from_float(100).div(gives)
     // Total length of time required to launch a rocket.
