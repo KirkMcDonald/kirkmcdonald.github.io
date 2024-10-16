@@ -513,7 +513,7 @@ export function displayItems(spec, totals) {
 
             // cell 7: building icon
             let buildingCell = row.append("td")
-                .classed("pad building building-icon right-align", true)
+                .classed("pad building building-icon leftmost right-align", true)
             // cell 8: building count
             row.append("td")
                 .classed("right-align building", true)
@@ -625,7 +625,6 @@ export function displayItems(spec, totals) {
             .text("")
     let buildingRow = row.filter(d => d.building !== null)
     let buildingCell = buildingRow.selectAll("td.building-icon")
-        .classed("leftmost", true)
     buildingCell.selectAll("*").remove()
     let buildingExtra = buildingCell.filter(d => !d.single)
     buildingExtra.append(d => d.recipe.icon.make(32))
