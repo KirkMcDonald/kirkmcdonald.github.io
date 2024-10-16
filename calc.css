@@ -49,7 +49,6 @@ button.ui {
     background: linear-gradient(to bottom, var(--light), var(--medium));
     border: 2px outset var(--light);
     border-radius: 0.4em;
-    cursor: pointer;
 }
 button.ui:active {
     border-style: inset;
@@ -58,25 +57,12 @@ button.ui:focus {
     border-color: var(--accent);
     outline: none;
 }
-button#debug_button {
-    float: right;
-}
 img.icon {
-    background-repeat: no-repeat;
     display: inline-block;
-    height: 32px;
-    width: 32px;
     vertical-align: middle;
 }
-/* "recent changes" box */
-.changecell {
-    vertical-align: top;
-}
-.changebox {
-    margin-left: 3em;
-    padding: 1em;
-    border: 2px solid var(--bright);
-    font-family: monospace;
+.ignore {
+    opacity: 0.3;
 }
 /* tooltips */
 div.tooltip {
@@ -116,6 +102,16 @@ div.tooltip div.product span.count {
 div.tooltip img.ingredient {
     background-color: var(--light);
 }
+/* "recent changes" box */
+.changecell {
+    vertical-align: top;
+}
+.changebox {
+    margin-left: 3em;
+    padding: 1em;
+    border: 2px solid var(--bright);
+    font-family: monospace;
+}
 /* build targets */
 .targetButton {
     height: 2em;
@@ -126,103 +122,278 @@ div.tooltip img.ingredient {
     font-family: sans-serif;
     margin-right: 0.5em;
 }
-ul.targets {
+ul#targets {
     list-style-type: none;
     margin-top: 0;
 }
-ul.targets li {
+ul#targets li {
     margin: 0.25em;
     border-radius: 0.5em;
-}
-ul.targets a {
-    font-size: large;
-    font-weight: bold;
-    cursor: pointer;
 }
 label.selected {
     font-weight: bold;
     color: var(--bright);
 }
 /* settings */
-.setting-label {
+table#settings {
+    border-collapse: collapse;
+}
+tr.setting-section td {
+    padding-top: 1em;
+    padding-bottom: 0.5em;
+}
+tr.setting-section td span {
+    color: var(--accent);
+    font-style: italic;
+}
+tr.setting-section td hr {
+    display: block;
+    border: 1px solid var(--accent);
+}
+tr.setting-row td:first-child {
+    padding-left: 3em;
+}
+td.setting-label {
     text-align: right;
-    vertical-align: middle;
 }
-.middle {
-    align-self: center;
+div#miner_settings, div#alt_recipe_settings {
+    padding-left: 3em;
 }
-.top {
+.top, .top-icon {
     vertical-align: top;
 }
-input.prec, input.length {
+.top-icon > div {
+    height: 40px;
+    line-height: 40px;
+}
+input.prec, input.mprod {
     width: 4em;
 }
-input.mprod {
-    width: 4em;
+.radio-setting input[type="radio"] {
+    display: none;
 }
-/* factories tab */
-input.beacon {
-    width: 4em;
+.radio-setting input[type="radio"] + label {
+    cursor: pointer;
+    background: var(--light);
+    border-radius: 4px;
+    display: inline-block;
+    margin: 2px;
+    padding: 2px;
 }
+.radio-setting input[type="radio"] + label:hover {
+    background: var(--bright);
+}
+.radio-setting input[type="radio"]:checked + label {
+    background: var(--accent);
+}
+#recipe_toggles .toggle {
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 4px;
+    border: 2px solid var(--light);
+    margin: 2px;
+    padding: 2px;
+    background-color: var(--dark);
+}
+#recipe_toggles .toggle:hover {
+    border-color: var(--bright);
+}
+#recipe_toggles .selected {
+    border-color: var(--accent);
+}
+#recipe_toggles .selected:hover {
+    /*border-color: var(--accent);*/
+}
+#resource_settings {
+    border: 2px solid var(--light);
+    border-radius: 5px;
+    background-color: var(--dark);
+}
+#resource_settings .resource-tier {
+    border: 1px solid transparent;
+}
+#resource_settings .resource-tier.highlight {
+    border-color: var(--accent);
+}
+#resource_settings .bookend {
+    background-color: var(--light);
+}
+#resource_settings .bookend.highlight {
+    background-color: var(--accent);
+}
+#resource_settings .bookend * {
+    pointer-events: none;
+}
+#resource_settings .middle {
+    height: 10px;
+    background-color: var(--light);
+}
+#resource_settings .middle.highlight {
+    background-color: var(--accent);
+}
+#resource_settings .resource {
+    display: inline-block;
+    margin: 3px;
+}
+#resource_settings img.icon {
+    display: block;
+}
+#resource_settings.dragging .resource-tier > * {
+    pointer-events: none;
+}
+table.resource {
+    border-collapse: collapse;
+}
+table.resource td {
+    text-align: right;
+}
+table.resource input[type="radio"] {
+    display: none;
+}
+table.resource input[type="radio"] + label {
+    cursor: pointer;
+    fill: var(--light);
+}
+table.resource input[type="radio"] + label:hover {
+    fill: var(--bright);
+}
+table.resource input[type="radio"]:checked + label {
+    fill: var(--accent);
+}
+/* tabs */
+div.tabs {
+    overflow: hidden;
+}
+div.tabs button.tab_button {
+    color: var(--accent);
+    background-color: inherit;
+    border-top-left-radius: 0.25em;
+    border-top-right-radius: 0.25em;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0.5em;
+}
+div.tabs button.tab_button:hover {
+    background-color: var(--medium);
+}
+div.tabs button.active, div.tabs button.active:hover {
+    color: var(--bright);
+    background-color: var(--main);
+}
+button#debug_button {
+    float: right;
+}
+div.tab {
+    display: none;
+    padding: 0.5em;
+    background-color: var(--main);
+}
+/* visualizer */
+div.graph {
+    /*min-width: max-content;*/
+}
+div.graph_setting {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+#graph_type input[type="radio"] {
+    display: none;
+}
+#graph_type input[type="radio"] + label:hover {
+    color: var(--bright);
+}
+#graph_type input[type="radio"]:checked + label {
+    color: var(--accent);
+}
+#graph_type input[type="radio"]:checked + label:hover {
+    color: var(--accent);
+}
+g.node rect {
+    /*stroke: var(--foreground);*/
+    stroke-width: 1px;
+}
+g.overlay {
+    cursor: pointer;
+}
+g.node .colon {
+    stroke: none;
+    fill: var(--foreground);
+}
+rect.nodeHighlight {
+    stroke: var(--accent);
+}
+g.edgePathHighlight .highlighter {
+    stroke: var(--accent);
+}
+svg.sankey g.edgePathHighlight .highlighter {
+    stroke-opacity: 0.7;
+}
+g.edgePathHighlight rect.highlighter {
+    fill-opacity: 1;
+}
+g.fuel path, path.fuel {
+    stroke-dasharray: 10,5;
+}
+svg#graph {
+    display: block;
+}
+svg#graph text, svg.test text {
+    stroke: none;
+    fill: var(--foreground);
+    /*font: 12px sans-serif;*/
+}
+/* items tab */
 #totals {
     border-collapse: collapse;
+}
+#totals.nosurplus .surplus {
+    display: none;
+}
+.pad-right {
+    padding-right: 1em;
 }
 tr.display-row td.pad, th.pad {
     padding-left: 1em;
 }
-tr.display-row img.recipe-icon {
+tr.display-row .item-icon img {
     cursor: pointer;
 }
-tr.display-row td.pad-right {
-    padding-right: 1em;
-}
-tr.display-row .dropdown, tr.display-row .dropdown + .spacer {
-    margin-left: 5px;
-    margin-right: 5px;
-}
-tr.display-row .dropdown + .spacer {
-    padding-left: 2px;
-    padding-right: 2px;
-}
-tr.display-row td, tr.factory-header th {
+tr.display-row td, tr.factory-header th, tr.breakdown-row td, tr.power-row td {
     padding-top: 8px;
     padding-bottom: 8px;
 }
-tr.recipe-row td, tr.group-top-row td, tr.power-row td {
+tbody.display-group > tr:first-child td, tr.power-row td {
     border-top: 1px solid var(--light);
 }
-tr.group-row td.leftmost {
+tbody.display-group.multi td.leftmost {
     border-left: 1px solid var(--light);
 }
-tr.ignore img.display {
-    opacity: 0.2;
-}
-tr.no-mods td.module * {
+tr.nobuilding td.building > *{
     display: none;
 }
-td.waste-hide, th.waste-hide {
+tr.nomodule td.module > *{
     display: none;
 }
-span.displaylink {
-    font-size: x-small;
+tr.noitem td.item > * {
+    display: none;
 }
-tr.display-row button.copy {
-    padding: 0px;
-    height: 32px;
+td.belt-count-cell.hide {
+    display: none;
 }
-/* items tab */
-input.pipe {
-    width: 4em;
-}
-input.pipeLength {
-    width: 5em;
+span.beacon-container {
+    background-color: var(--light);
+    padding: 0.5em;
 }
 svg.popout {
     color: var(--accent);
     width: 16;
     height: 16;
 }
-/* breakdown */
+/* breakdowns */
 .breakdown-open .breakdown-arrow {
     transform: rotate(90deg);
 }
@@ -252,129 +423,10 @@ svg.popout {
 }
 .usage-arrow {
     vertical-align: middle;
+    rotate: 180deg;
 }
-.breakdown-last-input td {
-    border-bottom: 1px solid var(--light);
-}
-/* tabs */
-div.tabs {
-    overflow: hidden;
-}
-
-div.tabs button.tab_button {
-    color: var(--accent);
-    background-color: inherit;
-    border-top-left-radius: 0.25em;
-    border-top-right-radius: 0.25em;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 0.5em;
-}
-
-div.tabs button.tab_button:hover {
-    background-color: var(--medium)
-}
-
-div.tabs button.active, div.tabs button.active:hover {
-    color: var(--bright);
-    background-color: var(--main);
-}
-
-div.tab {
-    display: none;
-    padding: 1em;
-    background-color: var(--main);
-}
-/* visualizer settings */
-#graph-wrapper {
-    display: grid;
-    grid-template-columns: minmax(auto, max-content) minmax(auto, max-content);
-    gap: 1em 0.5em;
-}
-#graph-wrapper .graph-button {
-    grid-row: 1 / 2;
-    color: var(--accent);
-    cursor: pointer;
-}
-#graph-wrapper .graph-button-span:hover {
-    color: var(--bright);
-}
-#graph-wrapper .graph-button .gear {
-    vertical-align: middle;
-}
-#graph-wrapper .graph-button-span::after {
-    content: "\300B";
-    font-size: 20px;
-    vertical-align: middle;
-}
-#graph-wrapper.open .graph-button-span::after {
-    content: "\300A";
-}
-#graph-wrapper .graph-setting-box {
-    display: none;
-    padding: 0.5em;
-    border: 2px solid var(--accent);
-    border-radius: 5px;
-}
-#graph-wrapper.open .graph-setting-box {
-    grid-row: 1 / 3;
-    grid-column: 1 / 2;
-    display: block;
-}
-#graph-wrapper.open .graph-settings {
-    display: grid;
-    grid-template-columns: minmax(auto, max-content) minmax(auto, max-content);
-    grid-template-rows: minmax(auto, max-content) minmax(auto, max-content);
-    gap: 1em 0.5em;
-}
-#graph-wrapper .graph-content {
-    grid-row: 2 / 3;
-}
-/* visualizer */
-g.node rect {
-    stroke-width: 1px;
-}
-g.overlay rect {
-    cursor: pointer;
-}
-g.node .colon {
-    stroke: none;
-    fill: var(--foreground);
-}
-rect.nodeHighlight {
-    stroke: var(--accent);
-}
-g.edgePathHighlight .highlighter {
-    stroke: var(--accent);
-}
-svg.sankey g.edgePathHighlight .highlighter {
-    stroke-opacity: 0.7;
-}
-g.edgePathHighlight rect.highlighter {
-    fill-opacity: 1;
-}
-g.edgePathFuel path {
-    stroke-dasharray: 10,5;
-}
-text {
-    stroke: none;
-    fill: var(--foreground);
-}
-svg.sankey text {
-    font: 12px sans-serif;
-}
-div.graph {
-    min-width: max-content;
-    min-width: -moz-max-content;
-}
-/* about */
-.about-content {
-    max-width: 40em;
-}
-.about-content h3 {
-    color: var(--bright);
+.breakdown-first-output td {
+    border-top: 1px solid var(--light);
 }
 /* dropdowns */
 .dropdownWrapper .dropdown .search {
@@ -392,12 +444,9 @@ div.graph {
     overflow-y: scroll;
     transition: height 0.3s;
 }
-/* debug */
-#debug_tab table td.zero-out {
-    background-color: var(--dark);
-}
-#debug_tab table td.ignore {
-    color: var(--accent);
+/* about */
+.about-content {
+    max-width: 40em;
 }
 /* footer */
 #footer {

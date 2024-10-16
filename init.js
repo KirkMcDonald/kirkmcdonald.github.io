@@ -1,4 +1,4 @@
-/*Copyright 2015-2019 Kirk McDonald
+/*Copyright 2019 Kirk McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -11,232 +11,86 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-"use strict"
+import { getBelts } from "./belt.js"
+import { getBuildings } from "./building.js"
+import { spec } from "./factory.js"
+import { loadSettings } from "./fragment.js"
+import { getFuel } from "./fuel.js"
+import { getItemGroups } from "./group.js"
+import { getSprites } from "./icon.js"
+import { getItems } from "./item.js"
+import { getModules } from "./module.js"
+import { getRecipes } from "./recipe.js"
+import { currentMod, MODIFICATIONS, renderDataSetOptions, renderSettings } from "./settings.js"
 
-var recipeTable
-
-// Contains collections of items and recipes. (solve.js)
-var solver
-
-// Contains module and factory settings, as well as other settings. (factory.js)
-var spec
-
-// Map from module name to Module object.
-var modules
-// Array of modules, sorted by 'order'.
-var sortedModules
-// Map from short module name to Module object.
-var shortModules
-// Array of arrays of modules, separated by category and sorted.
-var moduleRows
-
-// Array of Belt objects, sorted by speed.
-var belts
-
-// Array of Fuel objects, sorted by value.
-var fuel
-
-// Array of item groups, in turn divided into subgroups. For display purposes.
-var itemGroups
-
-// Boolean with whether to use old (0.16) calculations.
-var useLegacyCalculations
-
-// Size of the sprite sheet, as [x, y] array.
-var spriteSheetSize
-
-var initDone = false
-
-// Set the page back to a state immediately following initial setup, but before
-// the dataset is loaded for the first time.
-//
-// This is intended to be called when the top-level dataset is changed.
-// Therefore, it also resets the fragment and settings.
 function reset() {
     window.location.hash = ""
-
-    build_targets = []
-    var targetList = document.getElementById("targets")
-    var plus = targetList.lastChild
-    var newTargetList = document.createElement("ul")
-    newTargetList.id = "targets"
-    newTargetList.classList.add("targets")
-    newTargetList.appendChild(plus)
-    var targetParent = document.getElementById("targetparent")
-    targetParent.replaceChild(newTargetList, targetList)
-
-    var oldSteps = document.getElementById("steps")
-    var newSteps = document.createElement("table")
-    newSteps.id = "steps"
-    oldSteps.parentNode.replaceChild(newSteps, oldSteps)
-
-    var oldTotals = document.getElementById("totals")
-    var newTotals = document.createElement("table")
-    newTotals.id = "totals"
-    oldTotals.parentNode.replaceChild(newTotals, oldTotals)
 }
 
-function loadDataRunner(modName, callback) {
-    var xobj = new XMLHttpRequest()
-    var mod = MODIFICATIONS[modName]
-    if (!mod) {
-        mod = MODIFICATIONS[DEFAULT_MODIFICATION]
-    }
-    spriteSheetSize = mod.sheetSize
-    useLegacyCalculations = mod.legacy
-    var filename = "data/" + mod.filename
-    xobj.overrideMimeType("application/json")
-    xobj.open("GET", filename, true)
-    xobj.onreadystatechange = function() {
-        if (xobj.readyState == 4 && xobj.status == "200") {
-            var data = JSON.parse(xobj.responseText)
-            callback(data)
+export function changeMod() {
+    let modName = currentMod()
+    reset()
+    loadData(modName, new Map())
+}
+
+let OIL_EXCLUSION = new Map([
+    ["basic", ["advanced-oil-processing"]],
+    ["coal", ["advanced-oil-processing", "basic-oil-processing"]],
+])
+
+function fixLegacySettings(settings) {
+    if ((settings.has("min") || settings.has("furnace")) && !settings.has("buildings")) {
+        let parts = []
+        if (settings.has("min")) {
+            parts.push("assembling-machine-" + settings.get("min"))
+            settings.delete("min")
         }
+        if (settings.has("furnace")) {
+            parts.push(settings.get("furnace"))
+            settings.delete("furnace")
+        }
+        settings.set("buildings", parts.join(","))
     }
-    xobj.send(null)
+    if ((settings.has("k") || settings.has("p")) && !settings.has("disable")) {
+        let parts = []
+        if (settings.has("k")) {
+            settings.delete("k")
+            parts.push("kovarex-processing")
+        }
+        if (settings.has("p")) {
+            let p = settings.get("p")
+            for (let r of OIL_EXCLUSION.get(p)) {
+                parts.push(r)
+            }
+            settings.delete("p")
+        }
+        settings.set("disable", parts.join(","))
+    }
 }
 
 function loadData(modName, settings) {
-    recipeTable = new RecipeTable(document.getElementById("totals"))
-    if (!settings) {
-        settings = {}
-    }
-    loadDataRunner(modName, function(data) {
+    let mod = MODIFICATIONS.get(modName)
+    let filename = "data/" + mod.filename
+    d3.json(filename, {cache: "reload"}).then(function(data) {
+        let items = getItems(data)
+        let recipes = getRecipes(data, items)
+        let modules = getModules(data)
+        let buildings = getBuildings(data)
+        let belts = getBelts(data)
+        let fuel = getFuel(data, items)
         getSprites(data)
-        var graph = getRecipeGraph(data)
-        modules = getModules(data)
-        sortedModules = sorted(modules, function(m) { return modules[m].order })
-        moduleRows = []
-        let category = null
-        for (let moduleName of sortedModules) {
-            let module = modules[moduleName]
-            if (module.category !== category) {
-                category = module.category
-                moduleRows.push([])
-            }
-            moduleRows[moduleRows.length - 1].push(module)
-        }
-        shortModules = {}
-        for (var moduleName in modules) {
-            var module = modules[moduleName]
-            shortModules[module.shortName()] = module
-        }
-        var factories = getFactories(data)
-        spec = new FactorySpec(factories)
-        if ("ignore" in settings) {
-            var ignore = settings.ignore.split(",")
-            for (var i = 0; i < ignore.length; i++) {
-                spec.ignore[ignore[i]] = true
-            }
-        }
+        let itemGroups = getItemGroups(items, data)
+        spec.setData(items, recipes, modules, buildings, belts, fuel, itemGroups)
 
-        var items = graph[0]
-        var recipes = graph[1]
-
-        belts = getBelts(data)
-        fuel = getFuel(data, items)["chemical"]
-
-        itemGroups = getItemGroups(items, data)
-        solver = new Solver(items, recipes)
-
+        fixLegacySettings(settings)
         renderSettings(settings)
 
-        solver.findSubgraphs(spec)
-
-        if ("items" in settings && settings.items != "") {
-            var targets = settings.items.split(",")
-            for (var i=0; i < targets.length; i++) {
-                var targetString = targets[i]
-                var parts = targetString.split(":")
-                var name = parts[0]
-                var target = addTarget(name)
-                var type = parts[1]
-                if (type == "f") {
-                    var j = parts[2].indexOf(";")
-                    if (j === -1) {
-                        target.setFactories(0, parts[2])
-                    } else {
-                        var count = parts[2].slice(0, j)
-                        var idx = Number(parts[2].slice(j+1))
-                        target.setFactories(idx, count)
-                        target.displayRecipes()
-                    }
-                } else if (type == "r") {
-                    target.setRate(parts[2])
-                } else {
-                    throw new Error("unknown target type")
-                }
-            }
-        } else {
-            addTarget()
-        }
-        if ("modules" in settings && settings.modules != "") {
-            var moduleSettings = settings.modules.split(",")
-            for (var i=0; i < moduleSettings.length; i++) {
-                var bothSettings = moduleSettings[i].split(";")
-                var factoryModuleSettings = bothSettings[0]
-                var beaconSettings = bothSettings[1]
-
-                var singleModuleSettings = factoryModuleSettings.split(":")
-                var recipeName = singleModuleSettings[0]
-                var recipe = recipes[recipeName]
-                var moduleNameList = singleModuleSettings.slice(1)
-                for (var j=0; j < moduleNameList.length; j++) {
-                    var moduleName = moduleNameList[j]
-                    if (moduleName) {
-                        var module
-                        if (moduleName in modules) {
-                            module = modules[moduleName]
-                        } else if (moduleName in shortModules) {
-                            module = shortModules[moduleName]
-                        } else if (moduleName === "null") {
-                            module = null
-                        }
-                        if (module !== undefined) {
-                            spec.setModule(recipe, j, module)
-                        }
-                    }
-                }
-                if (beaconSettings) {
-                    beaconSettings = beaconSettings.split(":")
-                    var moduleName = beaconSettings[0]
-                    var module
-                    if (moduleName in modules) {
-                        module = modules[moduleName]
-                    } else if (moduleName in shortModules) {
-                        module = shortModules[moduleName]
-                    } else if (moduleName === "null") {
-                        module = null
-                    }
-                    var factory = spec.getFactory(recipe)
-                    if (factory) {
-                        var count = RationalFromFloat(Number(beaconSettings[1]))
-                        factory.beaconModule = module
-                        factory.beaconCount = count
-                    }
-                }
-            }
-        }
-        initDone = true
-        itemUpdate()
-
-        // Prune factory spec after first solution is calculated.
-        pruneSpec(globalTotals)
-        window.location.hash = "#" + formatSettings()
+        spec.updateSolution()
     })
 }
 
-function init() {
-    var settings = loadSettings(window.location.hash)
-    if (OVERRIDE !== null) {
-        addOverrideOptions(OVERRIDE)
-    }
+export function init() {
+    let settings = loadSettings(window.location.hash)
     renderDataSetOptions(settings)
-    if ("tab" in settings) {
-        currentTab = settings.tab + "_tab"
-    }
     loadData(currentMod(), settings)
-    // We don't need to call clickVisualize here, as we will properly render
-    // the graph when we call itemUpdate() at the end of initialization.
-    clickTab(currentTab)
 }

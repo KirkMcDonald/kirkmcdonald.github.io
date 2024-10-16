@@ -1,4 +1,4 @@
-/*Copyright 2015-2019 Kirk McDonald
+/*Copyright 2015-2024 Kirk McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -11,39 +11,39 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-"use strict"
+import { sorted } from "./sort.js"
 
-function getItemGroups(items, data) {
+// Sorts items into their groups and subgroups. Used chiefly by the target
+// dropdown.
+export function getItemGroups(items, data) {
     // {groupName: {subgroupName: [item]}}
-    var itemGroupMap = {}
-    for (var itemName in items) {
-        var item = items[itemName]
-        var group = itemGroupMap[item.group]
-        if (!group) {
-            group = {}
-            itemGroupMap[item.group] = group
+    let itemGroupMap = new Map()
+    //for (var itemName in items) {
+    for (let [itemKey, item] of items) {
+        let group = itemGroupMap.get(item.group)
+        if (group === undefined) {
+            group = new Map()
+            itemGroupMap.set(item.group, group)
         }
-        var subgroup = group[item.subgroup]
-        if (!subgroup) {
+        let subgroup = group.get(item.subgroup)
+        if (subgroup === undefined) {
             subgroup = []
-            group[item.subgroup] = subgroup
+            group.set(item.subgroup, subgroup)
         }
         subgroup.push(item)
     }
-    var itemGroups = []
-    var groupNames = sorted(itemGroupMap, function(k) {
+    let itemGroups = []
+    let groupNames = sorted(itemGroupMap.keys(), function(k) {
         return data.groups[k].order
     })
-    for (var i = 0; i < groupNames.length; i++) {
-        var groupName = groupNames[i]
-        var subgroupNames = sorted(itemGroupMap[groupName], function(k) {
+    for (let groupName of groupNames) {
+        let subgroupNames = sorted(itemGroupMap.get(groupName).keys(), function(k) {
             return data.groups[groupName].subgroups[k]
         })
-        var group = []
+        let group = []
         itemGroups.push(group)
-        for (var j = 0; j < subgroupNames.length; j++) {
-            var subgroupName = subgroupNames[j]
-            var items = itemGroupMap[groupName][subgroupName]
+        for (let subgroupName of subgroupNames) {
+            let items = itemGroupMap.get(groupName).get(subgroupName)
             items = sorted(items, function(item) {
                 return item.order
             })

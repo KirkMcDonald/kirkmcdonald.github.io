@@ -1,4 +1,4 @@
-/*Copyright 2015-2019 Kirk McDonald
+/*Copyright 2015-2024 Kirk McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -11,54 +11,69 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-"use strict"
+import { Icon } from "./icon.js"
+import { Rational } from "./rational.js"
 
-var energySuffixes = ["J", "kJ", "MJ", "GJ", "TJ", "PJ"]
+let energySuffixes = ["J", "kJ", "MJ", "GJ", "TJ", "PJ"]
 
-function Fuel(name, col, row, item, category, value) {
-    this.name = name
-    this.icon_col = col
-    this.icon_row = row
-    this.item = item
-    this.category = category
-    this.value = value
-}
-Fuel.prototype = {
-    constructor: Fuel,
-    valueString: function() {
-        var x = this.value
-        var thousand = RationalFromFloat(1000)
-        var i = 0
+class Fuel {
+    constructor(key, name, col, row, item, category, value) {
+        this.key = key
+        this.name = name
+        this.item = item
+        this.category = category
+        this.value = value
+
+        this.icon_col = col
+        this.icon_row = row
+        this.icon = new Icon(this)
+    }
+    valueString() {
+        let x = this.value
+        let thousand = Rational.from_float(1000)
+        let i = 0
         while (thousand.less(x) && i < energySuffixes.length - 1) {
             x = x.div(thousand)
             i++
         }
         return x.toUpDecimal(0) + " " + energySuffixes[i]
     }
+    renderTooltip() {
+        let self = this
+        let t = d3.create("div")
+            .classed("frame", true)
+        let header = t.append("h3")
+        header.append(() => self.icon.make(32, true))
+        header.append(() => new Text(self.name))
+        t.append("b")
+            .text("Energy: ")
+        t.append(() => new Text(self.valueString()))
+        return t.node()
+    }
 }
 
-function getFuel(data, items) {
-    var fuelCategories = {}
-    for (var i = 0; i < data.fuel.length; i++) {
-        var fuelName = data.fuel[i]
-        var d = data.items[fuelName]
-        var fuel = new Fuel(
-            fuelName,
+export function getFuel(data, items) {
+    let fuelCategories = new Map()
+    for (let fuelKey of data.fuel) {
+        let d = data.items[fuelKey]
+        let fuel = new Fuel(
+            fuelKey,
+            d.localized_name.en,
             d.icon_col,
             d.icon_row,
-            getItem(data, items, fuelName),
+            items.get(fuelKey),
             d.fuel_category,
-            RationalFromFloat(d.fuel_value)
+            Rational.from_float_approximate(d.fuel_value)
         )
-        var f = fuelCategories[fuel.category]
-        if (!f) {
+        let f = fuelCategories.get(fuel.category)
+        if (f === undefined) {
             f = []
-            fuelCategories[fuel.category] = f
+            fuelCategories.set(fuel.category, f)
         }
         f.push(fuel)
     }
-    for (var category in fuelCategories) {
-        fuelCategories[category].sort(function(a, b) {
+    for (let [categoryKey, category] of fuelCategories) {
+        category.sort(function(a, b) {
             if (a.value.less(b.value)) {
                 return -1
             } else if (b.value.less(a.value)) {
@@ -67,5 +82,9 @@ function getFuel(data, items) {
             return 0
         })
     }
-    return fuelCategories
+    let fuels = new Map()
+    for (let fuel of fuelCategories.get("chemical")) {
+        fuels.set(fuel.key, fuel)
+    }
+    return fuels
 }

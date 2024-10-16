@@ -1,4 +1,4 @@
-/*Copyright 2015-2019 Kirk McDonald
+/*Copyright 2019-2021 Kirk McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -11,290 +11,378 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-"use strict"
+import { spec } from "./factory.js"
+import { Icon, sprites } from "./icon.js"
+import { Rational, zero, one } from "./rational.js"
 
-function Ingredient(amount, item) {
-    this.amount = amount
-    this.item = item
+export class Ingredient {
+    constructor(item, amount) {
+        this.item = item
+        this.amount = amount
+    }
 }
 
-function makeIngredient(data, i, items) {
-    var name
-    if ("name" in i) {
-        name = i.name
-    } else {
-        name = i[0]
-    }
-    var amount
-    if ("amount" in i) {
-        amount = i.amount
-    } else if ("amount_min" in i && "amount_max" in i) {
-        amount = (i.amount_min + i.amount_max) / 2
-    } else {
-        amount = i[1]
-    }
-    amount *= i.probability || 1
-    return new Ingredient(RationalFromFloat(amount), getItem(data, items, name))
-}
-
-function Recipe(name, col, row, category, time, ingredients, products) {
-    this.name = name
-    this.icon_col = col
-    this.icon_row = row
-    this.category = category
-    this.time = time
-    this.ingredients = ingredients
-    for (var i = 0; i < ingredients.length; i++) {
-        ingredients[i].item.addUse(this)
-    }
-    this.products = products
-    for (var i = 0; i < products.length; i++) {
-        products[i].item.addRecipe(this)
-    }
-    this.displayGroup = null
-    this.solveGroup = null
-}
-Recipe.prototype = {
-    constructor: Recipe,
-    gives: function(item, spec) {
-        var factory = spec.getFactory(this)
-        var prod = one
-        if (factory) {
-            prod = factory.prodEffect(spec)
+class Recipe {
+    constructor(key, name, order, col, row, category, time, ingredients, products) {
+        this.key = key
+        this.name = name
+        this.order = order
+        this.category = category
+        this.time = time
+        this.ingredients = ingredients
+        for (let ing of ingredients) {
+            ing.item.addUse(this)
         }
-        for (var i=0; i < this.products.length; i++) {
-            var product = this.products[i]
-            if (product.item.name == item.name) {
-                return product.amount.mul(prod)
-            }
+        this.products = products
+        for (let ing of products) {
+            ing.item.addRecipe(this)
         }
-    },
-    fuelIngredient: function(spec) {
-        var factory = spec.getFactory(this)
-        if (!factory || !factory.factory.fuel || factory.factory.fuel !== "chemical") {
+
+        this.icon_col = col
+        this.icon_row = row
+        this.icon = new Icon(this, products[0].item.name)
+    }
+    fuelIngredient() {
+        let building = spec.getBuilding(this)
+        if (building === null || building.fuel === null || building.fuel !== "chemical") {
             return []
         }
-        var basePower = factory.powerUsage(spec, one).power
-        var baseRate = factory.recipeRate(spec, this)
-        var perItemEnergy = basePower.div(baseRate)
-        var fuelAmount = perItemEnergy.div(preferredFuel.value)
-        return [new Ingredient(fuelAmount, preferredFuel.item)]
-    },
-    getIngredients: function(spec) {
-        return this.ingredients.concat(this.fuelIngredient(spec))
-    },
-    makesResource: function() {
-        return false
-    },
-    allModules: function() {
-        return false
-    },
-    canIgnore: function() {
-        if (this.ingredients.length == 0) {
-            return false
-        }
-        for (var i = 0; i < this.products.length; i++) {
-            if (this.products[i].item.isWeird()) {
-                return false
+        // baseRate = craft/s
+        // basePower = J/s
+        // perCraftEnergy = J/s / craft/s = J/craft
+        // fuel.value = J/i
+        // fuelAmount = J/craft / J/i = i/craft
+        let baseRate = spec.getRecipeRate(this)
+        let basePower = spec.getPowerUsage(this, baseRate).power
+        let perCraftEnergy = basePower.div(baseRate)
+        let fuelAmount = perCraftEnergy.div(spec.fuel.value)
+        return [new Ingredient(spec.fuel.item, fuelAmount)]
+    }
+    getIngredients() {
+        return this.ingredients.concat(this.fuelIngredient())
+    }
+    gives(item) {
+        let prodEffect = spec.getProdEffect(this).sub(one)
+        for (let ing of this.products) {
+            if (ing.item === item) {
+                if (!prodEffect.isZero()) {
+                    // The prod bonus is based on the *net* output from the
+                    // recipe, not the bare yield.
+                    let net = ing.amount.sub(this.uses(item))
+                    if (net.less(zero)) {
+                        return ing.amount
+                    }
+                    return ing.amount.add(net.mul(prodEffect))
+                }
+                return ing.amount
             }
         }
+        throw new Error("recipe does not give item")
+    }
+    // There's an asymmetry with gives() here: It returns zero if the recipe
+    // does not have this item as an ingredient.
+    uses(item) {
+        for (let ing of this.getIngredients()) {
+            if (ing.item === item) {
+                return ing.amount
+            }
+        }
+        return zero
+    }
+    isNetProducer(item) {
+        let amount = this.gives(item)
+        return zero.less(amount.sub(this.uses(item)))
+    }
+    allModules() {
+        return false
+    }
+    isResource() {
+        return false
+    }
+    isReal() {
         return true
-    },
-    renderTooltip: function(extra) {
-        var t = document.createElement("div")
-        t.classList.add("frame")
-        var title = document.createElement("h3")
-        var im = getImage(this, true)
-        title.appendChild(im)
-        var name = formatName(this.name)
+    }
+    isDisable() {
+        return false
+    }
+    renderTooltip(extra) {
+        let self = this
+        let t = d3.create("div")
+            .classed("frame recipe", true)
+            .datum(this)
+        let header = t.append("h3")
+        header.append(() => self.icon.make(32, true))
+        let name = this.name
         if (this.products.length === 1 && this.products[0].item.name === this.name && one.less(this.products[0].amount)) {
             name = this.products[0].amount.toDecimal() + " \u00d7 " + name
         }
-        title.appendChild(new Text("\u00A0" + name))
-        t.appendChild(title)
+        header.append(() => new Text("\u00A0" + name))
         if (extra) {
-            t.appendChild(extra)
+            t.append(() => extra)
         }
         if (this.ingredients.length === 0) {
-            return t
+            return t.node()
         }
         if (this.products.length > 1 || this.products[0].item.name !== this.name) {
-            t.appendChild(new Text("Products: "))
-            for (var i = 0; i < this.products.length; i++) {
-                var ing = this.products[i]
-                var p = document.createElement("div")
-                p.classList.add("product")
-                p.appendChild(getImage(ing.item, true))
-                var count = document.createElement("span")
-                count.classList.add("count")
-                count.textContent = ing.amount.toDecimal()
-                p.appendChild(count)
-                t.appendChild(p)
-                t.appendChild(new Text("\u00A0"))
+            let productLine = t.append("div")
+            productLine.append("span")
+                .text("Products:")
+            let product = productLine.append("span").selectAll("span")
+                .data(this.products)
+                .join("span")
+            product.append("span")
+                .text("\u00A0")
+            let prodIcon = product.append("div")
+                .classed("product", true)
+            prodIcon.append(d => d.item.icon.make(32, true))
+            prodIcon.append("span")
+                .classed("count", true)
+                .text(d => d.amount.toDecimal())
+        }
+        let time = t.append("div")
+        time.append("div")
+            .classed("product", true)
+            .append(() => sprites.get("clock").icon.make(32, true))
+        time.append("span")
+            .text("\u00A0" + this.time.toDecimal())
+        let ingredient = t.append("div").selectAll("div")
+            .data(this.ingredients)
+            .join("div")
+        ingredient.append("div")
+            .classed("product", true)
+            .append(d => d.item.icon.make(32, true))
+        ingredient.append("span")
+            .text(d => `\u00A0${d.amount.toDecimal()} \u00d7 ${d.item.name}`)
+        return t.node()
+    }
+}
+
+export const DISABLED_RECIPE_PREFIX = "D-"
+
+// Pseudo-recipe representing the ex nihilo production of items with all
+// recipes disabled.
+export class DisabledRecipe {
+    constructor(item) {
+        this.key = DISABLED_RECIPE_PREFIX + item.key
+        this.name = item.name
+        this.category = null
+        this.ingredients = []
+        this.products = [new Ingredient(item, one)]
+
+        this.icon_col = item.icon_col
+        this.icon_row = item.icon_row
+        this.icon = new Icon(this)
+    }
+    getIngredients() {
+        return this.ingredients
+    }
+    gives(item) {
+        for (let ing of this.products) {
+            if (ing.item === item) {
+                return ing.amount
             }
-            t.appendChild(document.createElement("br"))
         }
-        var time = document.createElement("div")
-        time.classList.add("product")
-        time.appendChild(getExtraImage("clock"))
-        t.appendChild(time)
-        t.appendChild(new Text("\u00A0" + this.time.toDecimal()))
-        for (var i = 0; i < this.ingredients.length; i++) {
-            var ing = this.ingredients[i]
-            t.appendChild(document.createElement("br"))
-            var p = document.createElement("div")
-            p.classList.add("product")
-            p.appendChild(getImage(ing.item, true))
-            t.appendChild(p)
-            t.appendChild(new Text("\u00A0" + ing.amount.toDecimal() + " \u00d7 " + formatName(ing.item.name)))
+        return null
+    }
+    isResource() {
+        return false
+    }
+    isReal() {
+        return true
+    }
+    isDisable() {
+        return true
+    }
+}
+
+function makeRecipe(data, items, d) {
+    let time = Rational.from_float_approximate(d.energy_required)
+    let products = []
+    for (let {name, amount, probability} of d.results) {
+        let item = items.get(name)
+        let ratAmount = Rational.from_float_approximate(amount)
+        if (probability !== undefined) {
+            ratAmount = ratAmount.mul(Rational.from_float_approximate(probability))
         }
-        return t
+        products.push(new Ingredient(item, ratAmount))
+    }
+    let ingredients = []
+    for (let {name, amount} of d.ingredients) {
+        let item = items.get(name)
+        ingredients.push(new Ingredient(item, Rational.from_float_approximate(amount)))
+    }
+    return new Recipe(
+        d.name,
+        d.localized_name.en,
+        d.order,
+        d.icon_col,
+        d.icon_row,
+        d.category,
+        time,
+        ingredients,
+        products
+    )
+}
+
+class ResourceRecipe extends Recipe {
+    constructor(item, category, priority, weight) {
+        super(
+            item.key,
+            item.name,
+            item.order,
+            item.icon_col,
+            item.icon_row,
+            category,
+            zero,
+            [],
+            [new Ingredient(item, one)]
+        )
+        this.defaultPriority = priority
+        this.defaultWeight = weight
+    }
+    isResource() {
+        return true
     }
 }
 
-function makeRecipe(data, d, items) {
-    var time = RationalFromFloat(d.energy_required)
-    var products = []
-    for (var i=0; i < d.results.length; i++) {
-        products.push(makeIngredient(data, d.results[i], items))
+class MiningRecipe extends Recipe {
+    constructor(key, name, order, col, row, category, miningTime, ingredients, products) {
+        if (!ingredients) {
+            ingredients = []
+        }
+        super(key, name, order, col, row, category, zero, ingredients, products)
+        this.miningTime = miningTime
+
+        this.defaultPriority = 1
+        this.defaultWeight = Rational.from_float(100)
     }
-    var ingredients = []
-    for (var i=0; i < d.ingredients.length; i++) {
-        ingredients.push(makeIngredient(data, d.ingredients[i], items))
+    allModules() {
+        return true
     }
-    return new Recipe(d.name, d.icon_col, d.icon_row, d.category, time, ingredients, products)
-}
-
-function ResourceRecipe(item) {
-    Recipe.call(this, item.name, item.icon_col, item.icon_row, null, zero, [], [new Ingredient(one, item)])
-}
-ResourceRecipe.prototype = Object.create(Recipe.prototype)
-ResourceRecipe.prototype.makesResource = function() {
-    return true
-}
-
-function MiningRecipe(name, col, row, category, hardness, mining_time, ingredients, products) {
-    this.hardness = hardness
-    this.mining_time = mining_time
-    if (!ingredients) {
-        ingredients = []
+    isResource() {
+        return true
     }
-    Recipe.call(this, name, col, row, category, zero, ingredients, products)
-}
-MiningRecipe.prototype = Object.create(Recipe.prototype)
-MiningRecipe.prototype.makesResource = function() {
-    return true
-}
-MiningRecipe.prototype.allModules = function() {
-    return true
 }
 
-function ignoreRecipe(d) {
-    return d.subgroup == "empty-barrel"
-}
-
-function getRecipeGraph(data) {
-    var recipes = {}
-    var items = getItems(data)
-    var water = getItem(data, items, "water")
-    recipes["water"] = new Recipe(
+export function getRecipes(data, items) {
+    let hundred = Rational.from_float(100)
+    let recipes = new Map()
+    let water = items.get("water")
+    let waterRecipe = new Recipe(
         "water",
+        "Water",
+        water.order,
         water.icon_col,
         water.icon_row,
         "water",
-        RationalFromFloats(1, 1200),
+        Rational.from_floats(1, 1200),
         [],
-        [new Ingredient(one, water)]
+        [new Ingredient(water, one)]
     )
-    var reactor = data.items["nuclear-reactor"]
-    recipes["nuclear-reactor-cycle"] = new Recipe(
+    recipes.set("water", waterRecipe)
+    waterRecipe.defaultPriority = 0
+    waterRecipe.defaultWeight = hundred
+    let reactor = data.items["nuclear-reactor"]
+    recipes.set("nuclear-reactor-cycle", new Recipe(
         "nuclear-reactor-cycle",
+        "Nuclear reactor cycle",
+        reactor.order,
         reactor.icon_col,
         reactor.icon_row,
         "nuclear",
-        RationalFromFloat(200),
-        [new Ingredient(one, getItem(data, items, "uranium-fuel-cell"))],
+        Rational.from_float(200),
+        [new Ingredient(items.get("uranium-fuel-cell"), one)],
         [
-            new Ingredient(one, getItem(data, items, "used-up-uranium-fuel-cell")),
-            new Ingredient(one, items["nuclear-reactor-cycle"]),
+            new Ingredient(items.get("used-up-uranium-fuel-cell"), one),
+            new Ingredient(items.get("nuclear-reactor-cycle"), one),
         ]
-    )
-    var rocket = data.items["rocket-silo"]
-    recipes["rocket-launch"] = new Recipe(
+    ))
+    let rocket = data.items["rocket-silo"]
+    recipes.set("rocket-launch", new Recipe(
         "rocket-launch",
+        "Rocket launch",
+        rocket.order,
         rocket.icon_col,
         rocket.icon_row,
         "rocket-launch",
         one,
         [
-            new Ingredient(RationalFromFloat(100), getItem(data, items, "rocket-part")),
-            new Ingredient(one, getItem(data, items, "satellite"))
-        ], [new Ingredient(RationalFromFloat(1000), getItem(data, items, "space-science-pack"))]
-    )
-    var steam = data.items["steam"]
-    recipes["steam"] = new Recipe(
+            new Ingredient(items.get("rocket-part"), Rational.from_float(100)),
+            new Ingredient(items.get("satellite"), one),
+        ], [new Ingredient(items.get("space-science-pack"), Rational.from_float(1000))]
+    ))
+    let steam = data.items["steam"]
+    recipes.set("steam", new Recipe(
         "steam",
+        "Steam",
+        steam.order,
         steam.icon_col,
         steam.icon_row,
         "boiler",
-        RationalFromFloats(1, 60),
-        [new Ingredient(one, getItem(data, items, "water"))],
-        [new Ingredient(one, getItem(data, items, "steam"))]
-    )
-
-    for (var name in data.recipes) {
-        var recipe = data.recipes[name]
-        if (ignoreRecipe(recipe)) {
-            continue
-        }
-        var r = makeRecipe(data, recipe, items)
-        recipes[recipe.name] = r
+        Rational.from_floats(1, 60),
+        [new Ingredient(items.get("water"), one)],
+        [new Ingredient(items.get("steam"), one)],
+    ))
+    //for (let d of data.recipes) {
+    for (let key in data.recipes) {
+        let d = data.recipes[key]
+        recipes.set(d.name, makeRecipe(data, items, d))
     }
-    for (var entityName in data.resource) {
-        var entity = data.resource[entityName]
-        var category = entity.category
+    //for (let d of data.resource) {
+    for (let key in data.resource) {
+        let d = data.resource[key]
+        let category = d.category
         if (!category) {
             category = "basic-solid"
         }
-        if (category != "basic-solid") {
+        if (category !== "basic-solid") {
             continue
         }
-        var name = entity.name
-        var props = entity.minable
-        var ingredients = null
+        let props = d.minable
+        let ingredients = null
         if ("required_fluid" in props) {
             ingredients = [new Ingredient(
-                RationalFromFloat(props.fluid_amount / 10),
-                items[props.required_fluid]
+                items.get(props.required_fluid),
+                Rational.from_float_approximate(props.fluid_amount / 10),
             )]
         }
-        var products = []
-        for (var i = 0; i < props.results.length; i++) {
-            products.push(makeIngredient(data, props.results[i], items))
+        let products = []
+        for (let {name, amount, probability} of props.results) {
+            let item = items.get(name)
+            let ratAmount = Rational.from_float_approximate(amount)
+            if (probability !== undefined) {
+                ratAmount = ratAmount.mul(Rational.from_float_approximate(probability))
+            }
+            products.push(new Ingredient(item, ratAmount))
         }
-        var hardness
-        if (props.hardness) {
-            hardness = RationalFromFloat(props.hardness)
-        } else {
-            hardness = null
-        }
-        recipes[name] = new MiningRecipe(
-            name,
-            entity.icon_col,
-            entity.icon_row,
+        recipes.set(d.name, new MiningRecipe(
+            d.name,
+            d.localized_name.en,
+            d.order,  // this may be undefined
+            d.icon_col,
+            d.icon_row,
             "mining-" + category,
-            hardness,
-            RationalFromFloat(props.mining_time),
+            Rational.from_float_approximate(props.mining_time),
             ingredients,
-            products
-        )
+            products,
+        ))
     }
-    for (var itemName in items) {
-        var item = items[itemName]
-        if (item.recipes.length == 0) {
-            var r = new ResourceRecipe(item)
-            recipes[r.name] = r
+    // Reap items both produced by no recipes and consumed by no recipes.
+    let reapItems = []
+    for (let [itemKey, item] of items) {
+        if (item.recipes.length === 0 && item.uses.length === 0) {
+            //console.log("item with no recipes or uses:", item)
+            reapItems.push(itemKey)
+        } else if (item.recipes.length === 0) {
+            console.log("item with no recipes:", item)
+            recipes.set(itemKey, new ResourceRecipe(item, null, 2, hundred))
         }
     }
-    return [items, recipes]
+    for (let key of reapItems) {
+        items.delete(key)
+    }
+    // XXX: There's gotta be a better way to do this...
+    let crudeOilRecipe = recipes.get("crude-oil")
+    crudeOilRecipe.defaultPriority = 1
+    return recipes
 }

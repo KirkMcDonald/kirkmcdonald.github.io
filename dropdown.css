@@ -10,7 +10,6 @@
     display: inline-block;
     vertical-align: middle;
     cursor: pointer;
-    -moz-user-select: none;
 }
 .dropdownWrapper.open .dropdown {
     border-color: var(--accent);
@@ -66,9 +65,17 @@
     display: none;
     margin: 2px;
 }
+/*.dropdownWrapper .dropdown input[type="radio"] + label img {
+    height: 32px;
+    width: 32px;
+}*/
 .dropdownWrapper.open .dropdown input[type="radio"] + label {
     display: inline-block;
 }
+/*.dropdownWrapper.open .dropdown input[type="radio"] + label img {
+    height: 64px;
+    width: 64px;
+}*/
 .dropdownWrapper .dropdown input[type="radio"] + label:hover {
     background-color: var(--light);
 }

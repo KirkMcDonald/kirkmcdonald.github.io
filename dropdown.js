@@ -1,4 +1,4 @@
-/*Copyright 2019 Kirk McDonald
+/*Copyright 2019-2021 Kirk McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -11,7 +11,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-"use strict"
 
 let dropdownLocal = d3.local()
 
@@ -38,7 +37,7 @@ function toggleDropdown() {
 
 // Appends a dropdown to the selection, and returns a selection over the div
 // for the content of the dropdown.
-function makeDropdown(selector, onOpen, onClose) {
+export function makeDropdown(selector, onOpen, onClose) {
     let dropdown = selector.append("div")
         .classed("dropdownWrapper", true)
         .each(function() {
@@ -68,11 +67,11 @@ let labelFor = 0
 //
 // Returns:
 //   Selection with the input's label.
-function addInputs(selector, name, checked, callback) {
+export function addInputs(selector, name, checked, callback) {
     selector.append("input")
-        .on("change", function(d, i, nodes) {
+        .on("change", function(event, d) {
             toggleDropdown.call(this)
-            callback.call(this, d, i, nodes)
+            callback.call(this, d)
         })
         .attr("id", () => "input-" + inputId++)
         .attr("name", name)
@@ -85,7 +84,7 @@ function addInputs(selector, name, checked, callback) {
 
 // Wrapper around makeDropdown/addInputs to create an input for each item in
 // data.
-function dropdownInputs(selector, data, name, checked, callback) {
+export function dropdown(selector, data, name, checked, callback) {
     let dd = makeDropdown(selector)
         .selectAll("div")
         .data(data)

@@ -1,0 +1,48 @@
+:root {
+    /* main background, dropdown backgrounds */
+    --dark: #171717;
+    /* tooltip background; should be same as dark, but with alpha channel */
+    --dark-overlay: rgba(23, 23, 23, 0.8);
+    /* visualization node backgrounds, button backgrounds */
+    --medium: #212427;
+    /* background of main visual area */
+    --main: #272b30;
+    /* input field backgrounds, collapsed dropdown borders */
+    --light: #3a3f44;
+
+    /* main foreground text color */
+    --foreground: #c8c8c8;
+    /* makes things stand out */
+    --accent: #ff7200;
+    /* slightly brighter than main foreground color */
+    --bright: #f1fff2;
+}
+/* top-level/shared elements */
+body {
+    font-family: sans-serif;
+    color: var(--foreground);
+    background-color: var(--dark);
+    max-width: 40em;
+}
+a {
+    text-decoration: none;
+    color: var(--accent);
+}
+a:active, a:hover {
+    color: var(--bright);
+}
+.image {
+    text-align: center;
+    margin: 1em;
+}
+/*.image span {
+    display: inline-block;
+}*/
+.image img {
+    /*border: 0.5em ridge var(--medium);*/
+}
+.image div {
+    font-style: italic;
+    color: var(--bright);
+    margin-top: 2px;
+}

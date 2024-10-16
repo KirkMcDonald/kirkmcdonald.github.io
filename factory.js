@@ -1,4 +1,4 @@
-/*Copyright 2015-2019 Kirk McDonald
+/*Copyright 2019-2021 Kirk McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -11,617 +11,639 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-"use strict"
+import { Formatter } from "./align.js"
+import { renderDebug } from "./debug.js"
+import { displayItems } from "./display.js"
+import { currentTab } from "./events.js"
+import { formatSettings } from "./fragment.js"
+import { ModuleSpec } from "./module.js"
+import { PriorityList } from "./priority.js"
+import { Rational, zero, half, one } from "./rational.js"
+import { DISABLED_RECIPE_PREFIX } from "./recipe.js"
+import { solve } from "./solve.js"
+import { BuildTarget } from "./target.js"
+import { reapTooltips } from "./tooltip.js"
+import { renderTotals } from "./visualize.js"
 
-function FactoryDef(name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel) {
-    this.name = name
-    this.icon_col = col
-    this.icon_row = row
-    this.categories = categories
-    this.max_ing = max_ingredients
-    this.speed = speed
-    this.moduleSlots = moduleSlots
-    this.energyUsage = energyUsage
-    this.fuel = fuel
-}
-FactoryDef.prototype = {
-    constructor: FactoryDef,
-    less: function(other) {
-        if (!this.speed.equal(other.speed)) {
-            return this.speed.less(other.speed)
+const DEFAULT_ITEM_KEY = "advanced-circuit"
+
+export let DEFAULT_BELT = "transport-belt"
+export let DEFAULT_FUEL = "coal"
+let DEFAULT_BUILDINGS = new Set([
+    "assembling-machine-1",
+    "electric-furnace",
+    "electric-miner",
+])
+
+class BuildingSet {
+    constructor(building) {
+        this.categories = new Set(building.categories)
+        this.buildings = new Set([building])
+    }
+    merge(other) {
+        for (let category of other.categories) {
+            this.categories.add(category)
         }
-        return this.moduleSlots < other.moduleSlots
-    },
-    makeFactory: function(spec, recipe) {
-        return new Factory(this, spec, recipe)
-    },
-    canBeacon: function() {
-        return this.moduleSlots > 0
-    },
-    renderTooltip: function() {
-        var t = document.createElement("div")
-        t.classList.add("frame")
-        var title = document.createElement("h3")
-        var im = getImage(this, true)
-        title.appendChild(im)
-        title.appendChild(new Text(formatName(this.name)))
-        t.appendChild(title)
-        var b
-        if (this.max_ing) {
-            b = document.createElement("b")
-            b.textContent = "Max ingredients: "
-            t.appendChild(b)
-            t.appendChild(new Text(this.max_ing))
-            t.appendChild(document.createElement("br"))
+        for (let building of other.buildings) {
+            this.buildings.add(building)
         }
-        b = document.createElement("b")
-        b.textContent = "Energy consumption: "
-        t.appendChild(b)
-        t.appendChild(new Text(alignPower(this.energyUsage, 0)))
-        t.appendChild(document.createElement("br"))
-        b = document.createElement("b")
-        b.textContent = "Crafting speed: "
-        t.appendChild(b)
-        t.appendChild(new Text(this.speed.toDecimal()))
-        t.appendChild(document.createElement("br"))
-        b = document.createElement("b")
-        b.textContent = "Module slots: "
-        t.appendChild(b)
-        t.appendChild(new Text(this.moduleSlots))
-        return t
+    }
+    overlap(other) {
+        return this.categories.intersection(other.categories).size > 0
     }
 }
 
-function MinerDef(name, col, row, categories, power, speed, moduleSlots, energyUsage, fuel) {
-    FactoryDef.call(this, name, col, row, categories, 0, 0, moduleSlots, energyUsage, fuel)
-    this.mining_power = power
-    this.mining_speed = speed
+export function buildingSort(buildings) {
+    buildings.sort(function(a, b) {
+        if (a.less(b)) {
+            return -1
+        } else if (b.less(a)) {
+            return 1
+        }
+        return 0
+    })
 }
-MinerDef.prototype = Object.create(FactoryDef.prototype)
-MinerDef.prototype.less = function(other) {
-    if (useLegacyCalculations && !this.mining_power.equal(other.mining_power)) {
-        return this.mining_power.less(other.mining_power)
+
+class BuildingGroup {
+    constructor(bSet) {
+        this.buildings = Array.from(bSet)
+        buildingSort(this.buildings)
+        this.building = this.getDefault()
     }
-    return this.mining_speed.less(other.mining_speed)
-}
-MinerDef.prototype.makeFactory = function(spec, recipe) {
-    return new Miner(this, spec, recipe)
-}
-MinerDef.prototype.renderTooltip = function() {
-    var t = document.createElement("div")
-    t.classList.add("frame")
-    var title = document.createElement("h3")
-    var im = getImage(this, true)
-    title.appendChild(im)
-    title.appendChild(new Text(formatName(this.name)))
-    t.appendChild(title)
-    var b = document.createElement("b")
-    b.textContent = "Energy consumption: "
-    t.appendChild(b)
-    t.appendChild(new Text(alignPower(this.energyUsage, 0)))
-    t.appendChild(document.createElement("br"))
-    if (useLegacyCalculations) {
-        b = document.createElement("b")
-        b.textContent = "Mining power: "
-        t.appendChild(b)
-        t.appendChild(new Text(this.mining_power.toDecimal()))
-        t.appendChild(document.createElement("br"))
+    getDefault() {
+        for (let building of this.buildings) {
+            if (DEFAULT_BUILDINGS.has(building.key)) {
+                return building
+            }
+        }
+        return this.buildings[this.buildings.length - 1]
     }
-    b = document.createElement("b")
-    b.textContent = "Mining speed: "
-    t.appendChild(b)
-    t.appendChild(new Text(this.mining_speed.toDecimal()))
-    t.appendChild(document.createElement("br"))
-    b = document.createElement("b")
-    b.textContent = "Module slots: "
-    t.appendChild(b)
-    t.appendChild(new Text(this.moduleSlots))
-    return t
+    getBuilding(recipe) {
+        let b = null
+        for (let building of this.buildings) {
+            if (building.categories.has(recipe.category)) {
+                b = building
+                if (building === this.building || this.building.less(building)) {
+                    return building
+                }
+            }
+        }
+        return b
+    }
 }
 
-function RocketLaunchDef(name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel) {
-    FactoryDef.call(this, name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel)
-}
-RocketLaunchDef.prototype = Object.create(FactoryDef.prototype)
-RocketLaunchDef.prototype.makeFactory = function(spec, recipe) {
-    return new RocketLaunch(this, spec, recipe)
+function getBuildingGroups(buildings) {
+    let sets = new Set()
+    for (let building of buildings) {
+        let set = new BuildingSet(building)
+        for (let s of Array.from(sets)) {
+            if (set.overlap(s)) {
+                set.merge(s)
+                sets.delete(s)
+            }
+        }
+        sets.add(set)
+    }
+    let groups = new Map()
+    for (let {categories, buildings} of sets) {
+        let group = new BuildingGroup(buildings)
+        for (let cat of categories) {
+            groups.set(cat, group)
+        }
+    }
+    return groups
 }
 
-function RocketSiloDef(name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel) {
-    FactoryDef.call(this, name, col, row, categories, max_ingredients, speed, moduleSlots, energyUsage, fuel)
-}
-RocketSiloDef.prototype = Object.create(FactoryDef.prototype)
-RocketSiloDef.prototype.makeFactory = function(spec, recipe) {
-    return new RocketSilo(this, spec, recipe)
-}
+class FactorySpecification {
+    constructor() {
+        // Game data definitions
+        this.items = null
+        this.recipes = null
+        this.modules = null
+        this.buildings = null
+        this.buildingKeys = null
+        this.belts = null
+        this.fuels = null
 
-function Factory(factoryDef, spec, recipe) {
-    this.recipe = recipe
-    this.modules = []
-    this.setFactory(factoryDef, spec)
-    this.beaconModule = spec.defaultBeacon
-    this.beaconCount = spec.defaultBeaconCount
-}
-Factory.prototype = {
-    constructor: Factory,
-    setFactory: function(factoryDef, spec) {
-        this.name = factoryDef.name
-        this.factory = factoryDef
-        if (this.modules.length > factoryDef.moduleSlots) {
-            this.modules.length = factoryDef.moduleSlots
+        this.itemGroups = null
+
+        this.buildTargets = []
+
+        // Maps recipe to ModuleSpec
+        this.spec = new Map()
+        this.defaultModule = null
+        this.secondaryDefaultModule = null
+        this.defaultBeacon = [null, null]
+        this.defaultBeaconCount = zero
+
+        this.belt = null
+
+        this.fuel = null
+
+        this.miningProd = null
+
+        this.ignore = new Set()
+        this.disable = new Set()
+
+        this.priority = null
+        this.defaultPriority = null
+
+        this.format = new Formatter()
+
+        this.lastTotals = null
+
+        this.lastPartial = null
+        this.lastTableau = null
+        this.lastMetadata = null
+        this.lastSolution = null
+
+        this.debug = false
+    }
+    setData(items, recipes, modules, buildings, belts, fuels, itemGroups) {
+        this.items = items
+        let tierMap = new Map()
+        for (let [itemKey, item] of items) {
+            let tier = tierMap.get(item.tier)
+            if (tier === undefined) {
+                tier = []
+                tierMap.set(item.tier, tier)
+            }
+            tier.push(item)
         }
-        var toAdd = null
-        if (spec.defaultModule && spec.defaultModule.canUse(this.recipe)) {
-            toAdd = spec.defaultModule
+        this.recipes = recipes
+        this.modules = modules
+        this.buildings = getBuildingGroups(buildings)
+        this.buildingKeys = new Map()
+        for (let building of buildings) {
+            this.buildingKeys.set(building.key, building)
         }
-        while (this.modules.length < factoryDef.moduleSlots) {
-            this.modules.push(toAdd)
+        this.belts = belts
+        this.belt = belts.get(DEFAULT_BELT)
+        this.fuels = fuels
+        this.fuel = fuels.get(DEFAULT_FUEL)
+        this.miningProd = zero
+        this.itemGroups = itemGroups
+        this.defaultPriority = this.getDefaultPriorityArray()
+        this.priority = null
+    }
+    setDefaultDisable() {
+        this.disable.clear()
+    }
+    isDefaultDisable() {
+        return this.disable.size === 0
+    }
+    setDisable(recipe) {
+        let candidates = new Set()
+        let items = new Set()
+        for (let ing of recipe.products) {
+            let item = ing.item
+            items.add(item)
+            if (!this.isItemDisabled(item) && !this.ignore.has(item)) {
+                candidates.add(item)
+            }
         }
-    },
-    getModule: function(index) {
-        return this.modules[index]
-    },
-    // Returns true if the module change requires a recalculation.
-    setModule: function(index, module) {
-        if (index >= this.modules.length) {
-            return false
+        this.disable.add(recipe)
+        for (let item of candidates) {
+            if (this.isItemDisabled(item)) {
+                let resource = this.priority.getResource(item.disableRecipe)
+                // The item might already be in the priority list due to being
+                // ignored. In this case, do nothing.
+                if (resource === null) {
+                    let level = this.priority.getLastLevel()
+                    let makeNew = true
+                    for (let r of level) {
+                        if (r.recipe.isDisable()) {
+                            makeNew = false
+                            break
+                        }
+                    }
+                    if (makeNew) {
+                        level = this.priority.addPriorityBefore(null)
+                    }
+                    let hundred = Rational.from_float(100)
+                    this.priority.addRecipe(item.disableRecipe, hundred, level)
+                }
+            }
         }
-        var oldModule = this.modules[index]
-        var needRecalc = (oldModule && oldModule.hasProdEffect()) || (module && module.hasProdEffect())
-        this.modules[index] = module
-        return needRecalc
-    },
-    speedEffect: function(spec) {
-        var speed = one
-        for (var i=0; i < this.modules.length; i++) {
-            var module = this.modules[i]
-            if (!module) {
+        // Update build targets.
+        for (let target of this.buildTargets) {
+            if (items.has(target.item)) {
+                target.displayRecipes()
+            }
+        }
+    }
+    setEnable(recipe) {
+        // Enabling this recipe could potentially remove these items'
+        // disableRecipe from the priority list. The item is only removed if it
+        // goes from being disabled to not disabled, and is not ignored.
+        //
+        // Note that enabling a recipe for an item does not inherently mean the
+        // item is not considered "disabled" in this sense. For example, if the
+        // enabled recipe is net-negative in its use of the item.
+        let candidates = new Set()
+        let items = new Set()
+        for (let ing of recipe.products) {
+            let item = ing.item
+            items.add(item)
+            if (this.isItemDisabled(item) && !this.ignore.has(item)) {
+                candidates.add(item)
+            }
+        }
+        this.disable.delete(recipe)
+        for (let item of candidates) {
+            if (!this.isItemDisabled(item)) {
+                this.priority.removeRecipe(item.disableRecipe)
+            }
+        }
+        // Update build targets.
+        for (let target of this.buildTargets) {
+            if (items.has(target.item)) {
+                target.displayRecipes()
+            }
+        }
+    }
+    getDefaultPriorityArray() {
+        let a = []
+        for (let [recipeKey, recipe] of this.recipes) {
+            if (recipe.defaultPriority !== undefined) {
+                let pri = recipe.defaultPriority
+                while (a.length < pri + 1) {
+                    a.push(new Map())
+                }
+                let item = recipe.products[0].item
+                let weight = recipe.defaultWeight
+                // Fluids operate on a ten-fold scale compared to other items.
+                if (item.phase === "fluid") {
+                    weight = weight.div(Rational.from_float(10))
+                }
+                a[pri].set(recipe, weight)
+            }
+        }
+        return a
+    }
+    setDefaultPriority() {
+        this.priority = PriorityList.fromArray(this.defaultPriority)
+    }
+    setPriorities(tiers) {
+        let a = []
+        for (let tier of tiers) {
+            let m = new Map()
+            for (let [recipeKey, weight] of tier) {
+                let recipe = this.recipes.get(recipeKey)
+                if (recipe === undefined && recipeKey.startsWith(DISABLED_RECIPE_PREFIX)) {
+                    let itemKey = recipeKey.slice(DISABLED_RECIPE_PREFIX.length)
+                    recipe = this.items.get(itemKey).disableRecipe
+                }
+                m.set(recipe, weight)
+            }
+            a.push(m)
+        }
+        this.priority.applyArray(a)
+    }
+    isDefaultPriority() {
+        return this.priority.equalArray(this.defaultPriority)
+    }
+    getUses(item) {
+        let recipes = []
+        for (let recipe of item.uses) {
+            if (!this.disable.has(recipe)) {
+                recipes.push(recipe)
+            }
+        }
+        return recipes
+    }
+    // Returns whether the current item requires the use of its DisabledRecipe
+    // as a consequence of its recipes being disabled. (It may still require it
+    // as a consequence of the item being ignored, independent of this.)
+    //
+    // It's worth mentioning that this is insufficent to guarantee that no
+    // infeasible solutions exist. Catching net-negative single recipes ought
+    // to account for the most common cases, but net-negative recipe loops are
+    // still possible.
+    isItemDisabled(item) {
+        for (let recipe of item.recipes) {
+            if (!this.disable.has(recipe)) {
+                if (recipe.isNetProducer(item)) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    getRecipes(item) {
+        let recipes = []
+        for (let recipe of item.recipes) {
+            if (!this.disable.has(recipe)) {
+                recipes.push(recipe)
+            }
+        }
+        // The disableRecipe's purpose is to provide an item ex nihilo, in
+        // cases where solutions are infeasible otherwise. This happens in two
+        // cases: When enough recipes have been disabled to prevent its
+        // production in any other way, and when the item is being ignored.
+        if (this.isItemDisabled(item) || this.ignore.has(item)) {
+            let result = [item.disableRecipe]
+            // Still consider any recipes which produce both this item and any
+            // other un-ignored items.
+            for (let r of recipes) {
+                for (let ing of r.products) {
+                    if (!this.ignore.has(ing.item)) {
+                        result.push(r)
+                        break
+                    }
+                }
+            }
+            return result
+        }
+        return recipes
+    }
+    _getItemGraph(item, recipes) {
+        for (let recipe of this.getRecipes(item)) {
+            if (recipes.has(recipe)) {
                 continue
             }
-            speed = speed.add(module.speed)
-        }
-        if (this.modules.length > 0) {
-            var beaconModule = this.beaconModule
-            if (beaconModule) {
-                speed = speed.add(beaconModule.speed.mul(this.beaconCount).mul(half))
+            recipes.add(recipe)
+            for (let ing of recipe.getIngredients()) {
+                this._getItemGraph(ing.item, recipes)
             }
-        }
-        return speed
-    },
-    prodEffect: function(spec) {
-        var prod = one
-        for (var i=0; i < this.modules.length; i++) {
-            var module = this.modules[i]
-            if (!module) {
-                continue
-            }
-            prod = prod.add(module.productivity)
-        }
-        return prod
-    },
-    powerEffect: function(spec) {
-        var power = one
-        for (var i=0; i < this.modules.length; i++) {
-            var module = this.modules[i]
-            if (!module) {
-                continue
-            }
-            power = power.add(module.power)
-        }
-        if (this.modules.length > 0) {
-            var beaconModule = this.beaconModule
-            if (beaconModule) {
-                power = power.add(beaconModule.power.mul(this.beaconCount).mul(half))
-            }
-        }
-        var minimum = RationalFromFloats(1, 5)
-        if (power.less(minimum)) {
-            power = minimum
-        }
-        return power
-    },
-    powerUsage: function(spec, count) {
-        var power = this.factory.energyUsage
-        if (this.factory.fuel) {
-            return {"fuel": this.factory.fuel, "power": power.mul(count)}
-        }
-        // Default drain value.
-        var drain = power.div(RationalFromFloat(30))
-        var divmod = count.divmod(one)
-        power = power.mul(count)
-        if (!divmod.remainder.isZero()) {
-            var idle = one.sub(divmod.remainder)
-            power = power.add(idle.mul(drain))
-        }
-        power = power.mul(this.powerEffect(spec))
-        return {"fuel": "electric", "power": power}
-    },
-    recipeRate: function(spec, recipe) {
-        return recipe.time.reciprocate().mul(this.factory.speed).mul(this.speedEffect(spec))
-    },
-    copyModules: function(other, recipe) {
-        var length = Math.max(this.modules.length, other.modules.length)
-        var needRecalc = false
-        for (var i = 0; i < length; i++) {
-            var module = this.getModule(i)
-            if (!module || module.canUse(recipe)) {
-                needRecalc = other.setModule(i, module) || needRecalc
-            }
-        }
-        if (other.factory.canBeacon()) {
-            other.beaconModule = this.beaconModule
-            other.beaconCount = this.beaconCount
-        }
-        return needRecalc
-    },
-}
-
-function Miner(factory, spec, recipe) {
-    Factory.call(this, factory, spec, recipe)
-}
-Miner.prototype = Object.create(Factory.prototype)
-Miner.prototype.recipeRate = function(spec, recipe) {
-    var miner = this.factory
-    var rate
-    if (useLegacyCalculations) {
-        rate = miner.mining_power.sub(recipe.hardness)
-    } else {
-        rate = one
-    }
-    return rate.mul(miner.mining_speed).div(recipe.mining_time).mul(this.speedEffect(spec))
-}
-Miner.prototype.prodEffect = function(spec) {
-    var prod = Factory.prototype.prodEffect.call(this, spec)
-    return prod.add(spec.miningProd)
-}
-
-var rocketLaunchDuration = RationalFromFloats(2434, 60)
-
-function launchRate(spec) {
-    var partRecipe = solver.recipes["rocket-part"]
-    var partFactory = spec.getFactory(partRecipe)
-    var partItem = solver.items["rocket-part"]
-    var gives = partRecipe.gives(partItem, spec)
-    // The base rate at which the silo can make rocket parts.
-    var rate = Factory.prototype.recipeRate.call(partFactory, spec, partRecipe)
-    // Number of times to complete the rocket part recipe per launch.
-    var perLaunch = RationalFromFloat(100).div(gives)
-    // Total length of time required to launch a rocket.
-    var time = perLaunch.div(rate).add(rocketLaunchDuration)
-    var launchRate = time.reciprocate()
-    var partRate = perLaunch.div(time)
-    return {part: partRate, launch: launchRate}
-}
-
-function RocketLaunch(factory, spec, recipe) {
-    Factory.call(this, factory, spec, recipe)
-}
-RocketLaunch.prototype = Object.create(Factory.prototype)
-RocketLaunch.prototype.recipeRate = function(spec, recipe) {
-    return launchRate(spec).launch
-}
-
-function RocketSilo(factory, spec, recipe) {
-    Factory.call(this, factory, spec, recipe)
-}
-RocketSilo.prototype = Object.create(Factory.prototype)
-RocketSilo.prototype.recipeRate = function(spec, recipe) {
-    return launchRate(spec).part
-}
-
-var assembly_machine_categories = {
-    "advanced-crafting": true,
-    "crafting": true,
-    "crafting-with-fluid": true,
-}
-
-function compareFactories(a, b) {
-    if (a.less(b)) {
-        return -1
-    }
-    if (b.less(a)) {
-        return 1
-    }
-    return 0
-}
-
-function FactorySpec(factories) {
-    this.spec = {}
-    this.factories = {}
-    for (var i = 0; i < factories.length; i++) {
-        var factory = factories[i]
-        for (var j = 0; j < factory.categories.length; j++) {
-            var category = factory.categories[j]
-            if (!(category in this.factories)) {
-                this.factories[category] = []
-            }
-            this.factories[category].push(factory)
         }
     }
-    for (var category in this.factories) {
-        this.factories[category].sort(compareFactories)
+    // Returns the set of recipes which may contribute to the production of
+    // the given collection of items.
+    getRecipeGraph(items) {
+        let graph = new Set()
+        for (let [item, rate] of items) {
+            this._getItemGraph(item, graph)
+        }
+        return graph
     }
-    this.setMinimum("1")
-    var smelters = this.factories["smelting"]
-    this.furnace = smelters[smelters.length - 1]
-    DEFAULT_FURNACE = this.furnace.name
-    this.miningProd = zero
-    this.ignore = {}
-
-    this.defaultModule = null
-    // XXX: Not used yet.
-    this.defaultBeacon = null
-    this.defaultBeaconCount = zero
-}
-FactorySpec.prototype = {
-    constructor: FactorySpec,
-    // min is a string like "1", "2", or "3".
-    setMinimum: function(min) {
-        var minIndex = Number(min) - 1
-        this.minimum = this.factories["crafting"][minIndex]
-    },
-    useMinimum: function(recipe) {
-        return recipe.category in assembly_machine_categories
-    },
-    setFurnace: function(name) {
-        var smelters = this.factories["smelting"]
-        for (var i = 0; i < smelters.length; i++) {
-            if (smelters[i].name == name) {
-                this.furnace = smelters[i]
-                return
+    isFactoryTarget(recipe) {
+        for (let target of this.buildTargets) {
+            if (target.recipe === recipe && target.changedBuilding) {
+                return true
             }
         }
-    },
-    useFurnace: function(recipe) {
-        return recipe.category == "smelting"
-    },
-    getFactoryDef: function(recipe) {
-        if (this.useFurnace(recipe)) {
-            return this.furnace
-        }
-        var factories = this.factories[recipe.category]
-        if (!factories) {
+        return false
+    }
+    getBuilding(recipe) {
+        if (recipe.category === null || recipe.category === undefined) {
             return null
+        } else {
+            return this.buildings.get(recipe.category).getBuilding(recipe)
         }
-        if (!this.useMinimum(recipe)) {
-            return factories[factories.length - 1]
-        }
-        var factoryDef
-        for (var i = 0; i < factories.length; i++) {
-            factoryDef = factories[i]
-            if (factoryDef.less(this.minimum) || useLegacyCalculations && factoryDef.max_ing < recipe.ingredients.length) {
-                continue
+    }
+    getBuildingGroup(building) {
+        let cat = Array.from(building.categories)[0]
+        return this.buildings.get(cat)
+    }
+    setMinimumBuilding(building) {
+        let group = this.getBuildingGroup(building)
+        group.building = building
+        for (let [recipe, moduleSpec] of this.spec) {
+            let g = this.buildings.get(recipe.category)
+            if (group === g) {
+                let b = this.getBuilding(recipe)
+                moduleSpec.setBuilding(b, this)
             }
-            break
         }
-        return factoryDef
-    },
-    // TODO: This should be very cheap. Calling getFactoryDef on each call
-    // should not be necessary. Changing the minimum should proactively update
-    // all of the factories to which it applies.
-    getFactory: function(recipe) {
-        if (!recipe.category) {
-            return null
+    }
+    initModuleSpec(recipe, building) {
+        if (!this.spec.has(recipe) && building !== null && building.canBeacon()) {
+            let m = new ModuleSpec(recipe, this)
+            m.setBuilding(building, this)
+            this.spec.set(recipe, m)
+            return m
         }
-        var factoryDef = this.getFactoryDef(recipe)
-        if (!factoryDef) {
-            return null
+    }
+    populateModuleSpec(totals) {
+        for (let [recipe, rate] of totals.rates) {
+            let building = this.getBuilding(recipe)
+            this.initModuleSpec(recipe, building)
         }
-        var factory = this.spec[recipe.name]
-        // If the minimum changes, update the factory the next time we get it.
-        if (factory) {
-            factory.setFactory(factoryDef, this)
-            return factory
+    }
+    getModuleSpec(recipe) {
+        let m = this.spec.get(recipe)
+        if (m === undefined) {
+            let building = this.getBuilding(recipe)
+            return this.initModuleSpec(recipe, building)
         }
-        this.spec[recipe.name] = factoryDef.makeFactory(this, recipe)
-        this.spec[recipe.name].beaconCount = this.defaultBeaconCount
-        return this.spec[recipe.name]
-    },
-    moduleCount: function(recipe) {
-        var factory = this.getFactory(recipe)
-        if (!factory) {
-            return 0
+        return m
+    }
+    getProdEffect(recipe) {
+        let m = this.getModuleSpec(recipe)
+        if (m === undefined) {
+            return one
         }
-        return factory.modules.length
-    },
-    getModule: function(recipe, index) {
-        var factory = this.getFactory(recipe)
-        var module = factory.getModule(index)
-        return module
-    },
-    setModule: function(recipe, index, module) {
-        var factory = this.getFactory(recipe)
-        if (!factory) {
-            return false
-        }
-        return factory.setModule(index, module)
-    },
-    getBeaconInfo: function(recipe) {
-        var factory = this.getFactory(recipe)
-        var module = factory.beaconModule
-        return {"module": module, "count": factory.beaconCount}
-    },
-    setDefaultModule: function(module) {
-        // Set anything set to the old default to the new.
-        for (var recipeName in this.spec) {
-            var factory = this.spec[recipeName]
-            var recipe = factory.recipe
-            for (var i = 0; i < factory.modules.length; i++) {
-                if (factory.modules[i] === this.defaultModule && (!module || module.canUse(recipe))) {
-                    factory.modules[i] = module
+        return this.getModuleSpec(recipe).prodEffect(this)
+    }
+    setDefaultModule(module) {
+        for (let [recipe, moduleSpec] of this.spec) {
+            for (let i = 0; i < moduleSpec.modules.length; i++) {
+                let m = moduleSpec.modules[i]
+                if (m === this.defaultModule && (!module || module.canUse(recipe))) {
+                    moduleSpec.modules[i] = module
+                } else if (m === this.defaultModule && (!this.secondaryDefaultModule || this.secondaryDefaultModule.canUse(recipe))) {
+                    moduleSpec.modules[i] = this.secondaryDefaultModule
                 }
             }
         }
         this.defaultModule = module
-    },
-    setDefaultBeacon: function(module, count) {
-        for (var recipeName in this.spec) {
-            var factory = this.spec[recipeName]
-            var recipe = factory.recipe
-            // Set anything set to the old defeault beacon module to the new.
-            if (factory.beaconModule === this.defaultBeacon && (!module || module.canUse(recipe))) {
-                factory.beaconModule = module
-            }
-            // Set any beacon counts equal to the old default to the new one.
-            if (factory.beaconCount.equal(this.defaultBeaconCount)) {
-                factory.beaconCount = count
+    }
+    setSecondaryDefaultModule(module) {
+        if (this.secondaryDefaultModule !== this.defaultModule) {
+            for (let [recipe, moduleSpec] of this.spec) {
+                for (let i = 0; i < moduleSpec.modules.length; i++) {
+                    let m = moduleSpec.modules[i]
+                    if (m === this.secondaryDefaultModule && (!module || module.canUse(recipe))) {
+                        moduleSpec.modules[i] = module
+                    }
+                }
             }
         }
-        this.defaultBeacon = module
+        this.secondaryDefaultModule = module
+    }
+    // Gets the default module for this recipe, given the current
+    // default/secondary settings.
+    getDefaultModule(recipe) {
+        if (this.defaultModule === null || this.defaultModule.canUse(recipe)) {
+            return this.defaultModule
+        }
+        if (this.secondaryDefaultModule === null || this.secondaryDefaultModule.canUse(recipe)) {
+            return this.secondaryDefaultModule
+        }
+        return null
+    }
+    isDefaultDefaultBeacon() {
+        return this.defaultBeacon[0] === null && this.defaultBeacon[1] === null
+    }
+    setDefaultBeacon(module, i) {
+        for (let [recipe, moduleSpec] of this.spec) {
+            let m = moduleSpec.beaconModules[i]
+            if (m === this.defaultBeacon[i] && (!module || module.canUse(recipe))) {
+                moduleSpec.beaconModules[i] = module
+            }
+        }
+        this.defaultBeacon[i] = module
+    }
+    setDefaultBeaconCount(count) {
+        for (let [recipe, moduleSpec] of this.spec) {
+            if (moduleSpec.beaconCount.equal(this.defaultBeaconCount)) {
+                moduleSpec.beaconCount = count
+            }
+        }
         this.defaultBeaconCount = count
-    },
-    getCount: function(recipe, rate) {
-        var factory = this.getFactory(recipe)
-        if (!factory) {
-            return zero
-        }
-        return rate.div(factory.recipeRate(this, recipe))
-    },
-    recipeRate: function(recipe) {
-        var factory = this.getFactory(recipe)
-        if (!factory) {
+    }
+    // Returns the recipe-rate at which a single building can produce a recipe.
+    // Returns null for recipes that do not have a building.
+    getRecipeRate(recipe) {
+        let building = this.getBuilding(recipe)
+        if (building === null) {
             return null
         }
-        return factory.recipeRate(this, recipe)
-    },
-}
-
-function renderTooltipBase() {
-    var t = document.createElement("div")
-    t.classList.add("frame")
-    var title = document.createElement("h3")
-    var im = getImage(this, true)
-    title.appendChild(im)
-    title.appendChild(new Text(formatName(this.name)))
-    t.appendChild(title)
-    return t
-}
-
-function getFactories(data) {
-    var factories = []
-    var pumpDef = data["offshore-pump"]["offshore-pump"]
-    var pump = new FactoryDef(
-        "offshore-pump",
-        pumpDef.icon_col,
-        pumpDef.icon_row,
-        ["water"],
-        1,
-        one,
-        0,
-        zero,
-        null
-    )
-    pump.renderTooltip = renderTooltipBase
-    factories.push(pump)
-    var reactorDef = data["reactor"]["nuclear-reactor"]
-    var reactor = new FactoryDef(
-        "nuclear-reactor",
-        reactorDef.icon_col,
-        reactorDef.icon_row,
-        ["nuclear"],
-        1,
-        one,
-        0,
-        zero,
-        null
-    )
-    reactor.renderTooltip = renderTooltipBase
-    factories.push(reactor)
-    var boilerDef = data["boiler"]["boiler"]
-    // XXX: Should derive this from game data.
-    var boiler_energy
-    if (useLegacyCalculations) {
-        boiler_energy = RationalFromFloat(3600000)
-    } else {
-        boiler_energy = RationalFromFloat(1800000)
+        return building.getRecipeRate(this, recipe)
     }
-    var boiler = new FactoryDef(
-        "boiler",
-        boilerDef.icon_col,
-        boilerDef.icon_row,
-        ["boiler"],
-        1,
-        one,
-        0,
-        boiler_energy,
-        "chemical"
-    )
-    boiler.renderTooltip = renderTooltipBase
-    factories.push(boiler)
-    var siloDef = data["rocket-silo"]["rocket-silo"]
-    var launch = new RocketLaunchDef(
-        "rocket-silo",
-        siloDef.icon_col,
-        siloDef.icon_row,
-        ["rocket-launch"],
-        2,
-        one,
-        0,
-        zero,
-        null
-    )
-    launch.renderTooltip = renderTooltipBase
-    factories.push(launch)
-    for (var type in {"assembling-machine": true, "furnace": true}) {
-        for (var name in data[type]) {
-            var d = data[type][name]
-            var fuel = null
-            if (d.energy_source && d.energy_source.type === "burner") {
-                fuel = d.energy_source.fuel_category
-            }
-            factories.push(new FactoryDef(
-                d.name,
-                d.icon_col,
-                d.icon_row,
-                d.crafting_categories,
-                d.ingredient_count,
-                RationalFromFloat(d.crafting_speed),
-                d.module_slots,
-                RationalFromFloat(d.energy_usage),
-                fuel
-            ))
-        }
+    setMiner(recipe, miner, purity) {
+        this.minerSettings.set(recipe, {miner, purity})
     }
-    for (var name in data["rocket-silo"]) {
-        var d = data["rocket-silo"][name]
-        factories.push(new RocketSiloDef(
-            d.name,
-            d.icon_col,
-            d.icon_row,
-            d.crafting_categories,
-            d.ingredient_count,
-            RationalFromFloat(d.crafting_speed),
-            d.module_slots,
-            RationalFromFloat(d.energy_usage),
-            null
-        ))
+    getCount(recipe, rate) {
+        let building = this.getBuilding(recipe)
+        if (building === null) {
+            return zero
+        }
+        return building.getCount(this, recipe, rate)
     }
-    for (var name in data["mining-drill"]) {
-        var d = data["mining-drill"][name]
-        if (d.name == "pumpjack") {
-            continue
+    getBeltCount(rate) {
+        return rate.div(this.belt.rate)
+    }
+    getPowerUsage(recipe, rate) {
+        let building = this.getBuilding(recipe)
+        if (building === null) {
+            return {fuel: null, power: zero}
         }
-        var fuel = null
-        if (d.energy_source && d.energy_source.type === "burner") {
-            fuel = d.energy_source.fuel_category
+        let count = this.getCount(recipe, rate)
+        if (building.fuel !== null) {
+            return {fuel: building.fuel, power: building.power.mul(count)}
         }
-        var power
-        if (d.mining_power) {
-            power = RationalFromFloat(d.mining_power)
+        let modules = this.getModuleSpec(recipe)
+        let powerEffect
+        if (modules) {
+            powerEffect = modules.powerEffect(this)
         } else {
-            power = null
+            powerEffect = one
         }
-        factories.push(new MinerDef(
-            d.name,
-            d.icon_col,
-            d.icon_row,
-            ["mining-basic-solid"],
-            power,
-            RationalFromFloat(d.mining_speed),
-            d.module_slots,
-            RationalFromFloat(d.energy_usage),
-            fuel
-        ))
+        let power = building.power.mul(count).mul(powerEffect).add(building.drain().mul(count.ceil()))
+        return {"fuel": "electric", "power": power}
     }
-    return factories
+    addTarget(itemKey) {
+        if (itemKey === undefined) {
+            itemKey = DEFAULT_ITEM_KEY
+        }
+        let item = this.items.get(itemKey)
+        let target = new BuildTarget(this.buildTargets.length, itemKey, item, this.itemGroups)
+        this.buildTargets.push(target)
+        d3.select("#targets").insert(() => target.element, "#plusButton")
+        return target
+    }
+    removeTarget(target) {
+        this.buildTargets.splice(target.index, 1)
+        for (let i=target.index; i < this.buildTargets.length; i++) {
+            this.buildTargets[i].index--
+        }
+        d3.select(target.element).remove()
+    }
+    toggleIgnore(item) {
+        if (this.ignore.has(item)) {
+            this.ignore.delete(item)
+            if (!this.isItemDisabled(item)) {
+                this.priority.removeRecipe(item.disableRecipe)
+            }
+        } else {
+            this.ignore.add(item)
+            if (!this.isItemDisabled(item)) {
+                let level = this.priority.getFirstLevel()
+                let makeNew = true
+                for (let r of level) {
+                    if (r.recipe.isDisable()) {
+                        makeNew = false
+                        break
+                    }
+                }
+                if (makeNew) {
+                    level = this.priority.addPriorityBefore(level)
+                }
+                let hundred = Rational.from_float(100)
+                this.priority.addRecipe(item.disableRecipe, hundred, level)
+            }
+        }
+    }
+    solve() {
+        let outputs = []
+        for (let target of this.buildTargets) {
+            let item = target.item
+            let rate = target.getRate()
+            let recipe
+            if (target.changedBuilding) {
+                recipe = target.recipe
+            } else {
+                recipe = null
+            }
+            outputs.push([item, rate, recipe])
+        }
+        // JS isn't good at using tuples as Map keys/Set items, so just do this
+        // quadratically. It's fine.
+        let dedupedOutputs = []
+        outer: for (let [origItem, origRate, origRecipe] of outputs) {
+            for (let i = 0; i < dedupedOutputs.length; i++) {
+                let {item, rate, recipe} = dedupedOutputs[i]
+                if (recipe === origRecipe && item === origItem) {
+                    rate = rate.add(origRate)
+                    dedupedOutputs[i] = {item, rate, recipe}
+                    continue outer
+                }
+            }
+            dedupedOutputs.push({
+                item: origItem,
+                rate: origRate,
+                recipe: origRecipe,
+            })
+        }
+        let totals = solve(this, dedupedOutputs)
+        return totals
+    }
+    setHash() {
+        window.location.hash = "#" + formatSettings()
+    }
+    // The top-level calculation function. Called whenever the solution
+    // requires recalculation.
+    updateSolution() {
+        this.lastTotals = this.solve()
+        this.populateModuleSpec(this.lastTotals)
+        this.display()
+    }
+    // Re-renders the current solution, without re-computing it.
+    //
+    // This is useful for when settings can be applied without altering the
+    // solution. In general, if something would alter recipe-rate ratios, then
+    // it requires a new solution. If it only alters building counts (e.g.
+    // from changing the speed of a building), then we need merely re-display
+    // the existing solution.
+    display() {
+        // Update build target text boxes, if needed.
+        for (let target of this.buildTargets) {
+            target.getRate()
+        }
+        displayItems(this, this.lastTotals)
+        if (currentTab === "graph") {
+            renderTotals(this.lastTotals, this.ignore)
+        }
+        reapTooltips()
+        this.setHash()
+
+        if (this.debug) {
+            renderDebug()
+        }
+    }
 }
+
+export let spec = new FactorySpecification()
+window.spec = spec

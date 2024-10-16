@@ -1,4 +1,4 @@
-/*Copyright 2015-2019 Kirk McDonald
+/*Copyright 2019-2021 Kirk McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -11,495 +11,225 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-"use strict"
+import { spec } from "./factory.js"
+import { Rational } from "./rational.js"
+import { setTitle } from "./settings.js"
+import { renderTotals } from "./visualize.js"
 
 // build target events
 
-// The "+" button to add a new target.
-function plusHandler() {
-    addTarget()
-    itemUpdate()
-}
-
-// Triggered when the item dropdown box opens.
-function resetSearch(dropdown) {
-    dropdown.getElementsByClassName("search")[0].value = ""
-
-    // unhide all child nodes
-    let elems = dropdown.querySelectorAll("label, hr")
-    for (let elem of elems) {
-        elem.style.display = ""
-    }
-}
-
-// Triggered when user is searching target
-function searchTargets() {
-    let ev = d3.event
-    let search = this
-    let search_text = search.value.toLowerCase().replace(/[^a-z0-9]+/g, "")
-    let dropdown = d3.select(search.parentNode)
-
-    if (!search_text) {
-        resetSearch(search.parentNode)
-        return
-    }
-
-    // handle enter key press (select target if only one is visible)
-    if (ev.keyCode === 13) {
-        let labels = dropdown.selectAll("label")
-            .filter(function() {
-                return this.style.display !== "none"
-            })
-        // don't do anything if more than one icon is visible
-        if (labels.size() === 1) {
-            let input = document.getElementById(labels.attr("for"))
-            input.checked = true
-            input.dispatchEvent(new Event("change"))
-        }
-        return
-    }
-
-    // hide non-matching labels & icons
-    let currentHrHasContent = false
-    let lastHrWithContent = null
-    dropdown.selectAll("hr, label").each(function(item) {
-        if (this.tagName === "HR") {
-            if (currentHrHasContent) {
-                this.style.display = ""
-                lastHrWithContent = this
-            } else {
-                this.style.display = "none"
-            }
-            currentHrHasContent = false
-        } else {
-            let title = item.name.replace(/-/g, "")
-            if (title.indexOf(search_text) === -1) {
-                this.style.display = "none"
-            } else {
-                this.style.display = ""
-                currentHrHasContent = true
-            }
-        }
-    })
-    if (!currentHrHasContent && lastHrWithContent !== null) {
-        lastHrWithContent.style.display = "none"
-    }
-}
-
-// Triggered when a build target's item is changed.
-function ItemHandler(target) {
-    return function(item) {
-        target.itemName = item.name
-        target.recipeIndex = 0
-        target.displayRecipes()
-        itemUpdate()
-    }
-}
-
-// Triggered when a build target's recipe selector is changed.
-function RecipeSelectorHandler(target, i) {
-    target.recipeIndex = i
-    itemUpdate()
-}
-
-// The "x" button to remove a target.
-function RemoveHandler(target) {
-    this.handleEvent = function(event) {
-        build_targets.splice(target.index, 1)
-        for (var i=target.index; i < build_targets.length; i++) {
-            build_targets[i].index--
-        }
-        target.element.remove()
-        itemUpdate()
-    }
-}
-
-// Triggered when a "Factories:" text box is changed.
-function FactoryHandler(target) {
-    this.handleEvent = function(event) {
-        target.factoriesChanged()
-        itemUpdate()
-    }
-}
-
-// Triggered when a "Rate:" text box is changed.
-function RateHandler(target) {
-    this.handleEvent = function(event) {
-        target.rateChanged()
-        itemUpdate()
-    }
-}
-
-// settings events
-
-// Obtains current data set from UI element, and resets the world with the new
-// data.
-function changeMod() {
-    var modName = currentMod()
-
-    reset()
-    loadData(modName)
-}
-
-function changeColor(event) {
-    setColorScheme(event.target.value)
-    display()
-}
-
-// Triggered when the display rate is changed.
-function displayRateHandler(event) {
-    var value = event.target.value
-    displayRateFactor = displayRates[value]
-    rateName = value
-    display()
-}
-
-function changeRPrec(event) {
-    ratePrecision = Number(event.target.value)
-    display()
-}
-
-function changeFPrec(event) {
-    countPrecision = Number(event.target.value)
-    display()
-}
-
-// Triggered when the "minimum assembling machine" setting is changed.
-function changeMin(min) {
-    setMinimumAssembler(min)
-    itemUpdate()
-}
-
-// Triggered when the furnace is changed.
-function changeFurnace(furnace) {
-    spec.setFurnace(furnace.name)
-    solver.findSubgraphs(spec)
-    itemUpdate()
-}
-
-// Triggered when the preferred fuel is changed.
-function changeFuel(fuel) {
-    setPreferredFuel(fuel.name)
-    solver.findSubgraphs(spec)
-    itemUpdate()
-}
-
-// Triggered when the preferred oil recipe is changed.
-function changeOil(oil) {
-    setOilRecipe(oil.priority)
-    itemUpdate()
-}
-
-// Triggered when the Kovarex checkbox is toggled.
-function changeKovarex(event) {
-    setKovarex(event.target.checked)
-    itemUpdate()
-}
-
-// Triggered when the preferred belt is changed.
-function changeBelt(belt) {
-    setPreferredBelt(belt.name)
-    display()
-}
-
-// Triggered when the minimum pipe length is changed.
-function changePipeLength(event) {
-    setMinPipe(event.target.value)
-    display()
-}
-
-// Triggered when the mining productivity bonus is changed.
-function changeMprod() {
-    spec.miningProd = getMprod()
-    itemUpdate()
-}
-
-// Triggered when the default module is changed.
-function changeDefaultModule(module) {
-    spec.setDefaultModule(module)
-    recipeTable.updateDisplayedModules()
-    itemUpdate()
-}
-
-// Triggered when the default beacon module is changed.
-function changeDefaultBeacon(module) {
-    spec.setDefaultBeacon(module, spec.defaultBeaconCount)
-    recipeTable.updateDisplayedModules()
-    itemUpdate()
-}
-
-// Triggered when the default beacon count is changed.
-function changeDefaultBeaconCount(event) {
-    var count = RationalFromString(event.target.value)
-    spec.setDefaultBeacon(spec.defaultBeacon, count)
-    recipeTable.updateDisplayedModules()
-    itemUpdate()
-}
-
-// Triggered when the visualizer setting box is toggled.
-function toggleVisualizerSettings() {
-    let classes = document.getElementById("graph-wrapper").classList
-    if (classes.contains("open")) {
-        classes.remove("open")
-    } else {
-        classes.add("open")
-    }
-}
-
-// Triggered when the visualizer type is changed.
-function changeVisualizerType(event) {
-    visualizer = event.target.value
-    display()
-}
-
-// Triggered when the visualizer direction is changed.
-function changeVisualizerDirection(event) {
-    visDirection = event.target.value
-    display()
-}
-
-// Triggered when the max node breadth is changed.
-function changeNodeBreadth(event) {
-    maxNodeHeight = Number(event.target.value)
-    display()
-}
-
-// Triggered when the link length is changed.
-function changeLinkLength(event) {
-    linkLength = Number(event.target.value)
-    display()
-}
-
-// Triggered when the recipe sort order is changed.
-function changeSortOrder(event) {
-    sortOrder = event.target.value
-    display()
-}
-
-// Triggered when the value format (decimal vs. rational) is changed.
-function changeFormat(event) {
-    displayFormat = event.target.value
-    display()
-}
-
-// Triggered when fancy tooltip box is toggled.
-function changeTooltip(event) {
-    tooltipsEnabled = event.target.checked
-    display()
-}
-
-// recipe row events
-
-function IgnoreHandler(row) {
-    this.handleEvent = function(event) {
-        if (spec.ignore[row.name]) {
-            delete spec.ignore[row.name]
-            row.setIgnore(false)
-        } else {
-            spec.ignore[row.name] = true
-            row.setIgnore(true)
-        }
-        itemUpdate()
-    }
-}
-
-// Triggered when a factory module is changed.
-function ModuleHandler(row, index) {
-    return function(module) {
-        if (spec.setModule(row.recipe, index, module) || isFactoryTarget(row.recipe.name)) {
-            itemUpdate()
-        } else {
-            display()
-        }
-    }
-}
-
-// Triggered when the right-arrow "copy module" button is pressed.
-function ModuleCopyHandler(row) {
-    this.handleEvent = function(event) {
-        var moduleCount = spec.moduleCount(row.recipe)
-        var module = spec.getModule(row.recipe, 0)
-        var needRecalc = false
-        for (var i = 0; i < moduleCount; i++) {
-            needRecalc = spec.setModule(row.recipe, i, module) || needRecalc
-            row.setDisplayedModule(i, module)
-        }
-        if (needRecalc || isFactoryTarget(row.recipe.name)) {
-            itemUpdate()
-        } else {
-            display()
-        }
-    }
-}
-
-// Gets Factory object for a corresponding recipe name.
-function getFactory(recipeName) {
-    var recipe = solver.recipes[recipeName]
-    return spec.getFactory(recipe)
-}
-
-// Triggered when a beacon module is changed.
-function BeaconHandler(recipeName) {
-    return function(module) {
-        var factory = getFactory(recipeName)
-        factory.beaconModule = module
-        if (isFactoryTarget(recipeName) && !factory.beaconCount.isZero()) {
-            itemUpdate()
-        } else {
-            display()
-        }
-    }
-}
-
-// Triggered when a beacon module count is changed.
-function BeaconCountHandler(recipeName) {
-    this.handleEvent = function(event) {
-        var moduleCount = RationalFromString(event.target.value)
-        var factory = getFactory(recipeName)
-        factory.beaconCount = moduleCount
-        if (isFactoryTarget(recipeName) && factory.beaconModule) {
-            itemUpdate()
-        } else {
-            display()
-        }
-    }
-}
-
-// Triggered when the up/down arrow "copy to all recipes" button is pressed.
-function CopyAllHandler(name) {
-    this.handleEvent = function(event) {
-        var factory = spec.spec[name]
-        var needRecalc = false
-        for (var recipeName in spec.spec) {
-            if (recipeName == name) {
-                continue
-            }
-            var f = spec.spec[recipeName]
-            if (!f) {
-                continue
-            }
-            var recipe = solver.recipes[recipeName]
-            needRecalc = factory.copyModules(f, recipe) || needRecalc || isFactoryTarget(recipeName)
-        }
-        recipeTable.updateDisplayedModules()
-        if (needRecalc) {
-            itemUpdate()
-        } else {
-            display()
-        }
-    }
-}
-
-// breakdown events
-
-function ToggleBreakdownHandler(itemRow, breakdown) {
-    this.handleEvent = function(event) {
-        if (itemRow.arrowCell.classList.contains("breakdown-open")) {
-            itemRow.arrowCell.classList.remove("breakdown-open")
-            breakdown.row.classList.remove("breakdown-open")
-        } else {
-            itemRow.arrowCell.classList.add("breakdown-open")
-            breakdown.row.classList.add("breakdown-open")
-        }
-    }
-}
-
-// items tab events
-
-function PipeCountHandler(config) {
-    this.handleEvent = function(event) {
-        config.setPipes(event.target.value)
-    }
-}
-
-function PipeLengthHandler(config) {
-    this.handleEvent = function(event) {
-        config.setLength(event.target.value)
-    }
-}
-
-// graph hover events
-
-function GraphMouseOverHandler(node) {
-    node.highlight()
-}
-
-function GraphMouseLeaveHandler(node) {
-    if (node !== clickedNode) {
-        node.unhighlight()
-    }
-}
-
-var clickedNode = null
-
-function GraphClickHandler(node) {
-    if (node === clickedNode) {
-        node.unhighlight()
-        clickedNode = null
-    } else if (clickedNode) {
-        clickedNode.unhighlight()
-        clickedNode = node
-    } else {
-        clickedNode = node
-    }
+export function plusHandler() {
+    spec.addTarget()
+    spec.updateSolution()
 }
 
 // tab events
 
-var DEFAULT_TAB = "totals_tab"
+export const DEFAULT_TAB = "totals"
 
-var currentTab = DEFAULT_TAB
+export let currentTab = DEFAULT_TAB
 
-var tabMap = {
-    "totals_tab": "totals_button",
-    "steps_tab": "steps_button",
-    "graph_tab": "graph_button",
-    "settings_tab": "settings_button",
-    "about_tab": "about_button",
-    "faq_tab": "faq_button",
-    "debug_tab": "debug_button",
-}
-
-// Triggered when a tab is clicked on.
-function clickTab(tabName) {
+export function clickTab(tabName) {
     currentTab = tabName
-    var tabs = document.getElementsByClassName("tab")
-    for (var i=0; i < tabs.length; i++) {
-        tabs[i].style.display = "none"
-    }
-
-    var buttons = document.getElementsByClassName("tab_button")
-    for (var i=0; i < buttons.length; i++) {
-        buttons[i].classList.remove("active")
-    }
-
-    document.getElementById(tabName).style.display = "block"
-    var button = document.getElementById(tabMap[tabName])
-    button.classList.add("active")
-    if (initDone) {
-        window.location.hash = "#" + formatSettings()
-    }
+    d3.selectAll(".tab")
+        .style("display", "none")
+    d3.selectAll(".tab_button")
+        .classed("active", false)
+    d3.select("#" + tabName + "_tab")
+        .style("display", "block")
+    d3.select("#" + tabName + "_button")
+        .classed("active", true)
+    spec.setHash()
 }
 
-// Triggered when the "Visualize" tab is clicked on.
-function clickVisualize(event, tabName) {
-    clickTab(event, tabName)
-    renderGraph(globalTotals, spec.ignore)
+export function clickVisualize() {
+    clickTab("graph")
+    renderTotals(spec.lastTotals, spec.ignore)
 }
 
-// debug event
-function toggleDebug(event) {
-    showDebug = event.target.checked
-    display()
+// shared events
+
+export function toggleIgnoreHandler(event, d) {
+    spec.toggleIgnore(d.item)
+    spec.updateSolution()
 }
 
-// utility events
+// setting events
 
-function toggleVisible(targetID) {
-    var target = document.getElementById(targetID)
-    if (target.style.display == "none") {
-        target.style.display = "block"
-    } else {
-        target.style.display = "none"
+export function changeTitle(event) {
+    setTitle(event.target.value)
+    spec.setHash()
+}
+
+export function changeRatePrecision(event) {
+    spec.format.ratePrecision = Number(event.target.value)
+    spec.display()
+}
+
+export function changeCountPrecision(event) {
+    spec.format.countPrecision = Number(event.target.value)
+    spec.display()
+}
+
+export function changeFormat(event) {
+    spec.format.displayFormat = event.target.value
+    spec.display()
+}
+
+export function changeMprod(event) {
+    spec.miningProd = Rational.from_string(event.target.value).div(Rational.from_float(100))
+    spec.updateSolution()
+}
+
+// visualizer events
+
+export const DEFAULT_VISUALIZER = "sankey"
+
+export let visualizerType = DEFAULT_VISUALIZER
+
+export function setVisualizerType(vt) {
+    visualizerType = vt
+}
+
+export function changeVisType(event) {
+    visualizerType = event.target.value
+    spec.display()
+}
+
+export const DEFAULT_RENDER = "zoom"
+
+export let visualizerRender = DEFAULT_RENDER
+
+export function setVisualizerRender(vr) {
+    visualizerRender = vr
+}
+
+export function changeVisRender(event) {
+    visualizerRender = event.target.value
+    spec.display()
+}
+
+// Number of SVG coordinate points per zoom level.
+const ZOOM_SCALE = 100
+// Number of distinct zoom "steps."
+const MAX_SCALE = 10
+// Aspect ratio of visualizer display.
+const ASPECT_RATIO = 16/9
+
+export function installSVGEvents(svg) {
+    let node = svg.node()
+    // Flash the graph to be visible, in order to measure its bounding box.
+    let tab = d3.select("#graph_tab")
+    let style = tab.style("display")
+    tab.style("display", "block")
+    // These variables will contain and control the viewport.
+    svg.selectAll("image").style("display", "none")
+    let {x, y, width, height} = node.getBBox()
+    svg.selectAll("image").style("display", null)
+    tab.style("display", style)
+    // The diagram's bounding box.
+    let [diagramX, diagramY, diagramWidth, diagramHeight] = [x, y, width, height]
+    // Calculate initial scale.
+    //let scale = Math.max(Math.ceil(width/ZOOM_SCALE), Math.ceil(height/ZOOM_SCALE))
+    if (width / height < ASPECT_RATIO) {
+        // Too thin. Expand width.
+        let newWidth = height * ASPECT_RATIO
+        x -= (newWidth - width) / 2
+        width = newWidth
+    } else if (width / height > ASPECT_RATIO) {
+        // Too wide. Expand height.
+        let newHeight = width / ASPECT_RATIO
+        y -= (newHeight - height) / 2
+        height = newHeight
     }
+    // The size and position of the viewport with diagram centered and zoomed
+    // all the way out.
+    let [origX, origY, origWidth, origHeight] = [x, y, width, height]
+    // Place the graph at the top of the viewport by default; this will get
+    // clamped.
+    y = diagramY
+    let scale = MAX_SCALE
+
+    function clamp() {
+        let midX = x + width/2
+        let midY = y + height/2
+        // The outer edges of the diagram should not proceed past halfway
+        // across the viewport.
+        if (diagramX > midX) {
+            x = diagramX - width/2
+        } else if (diagramX + diagramWidth < midX) {
+            x = diagramX + diagramWidth - width/2
+        }
+        if (diagramY > midY) {
+            y = diagramY - height/2
+        } else if (diagramY + diagramHeight < midY) {
+            y = diagramY + diagramHeight - height/2
+        }
+    }
+    function setViewBox() {
+        clamp()
+        svg.attr("viewBox", `${x} ${y} ${width} ${height}`)
+    }
+    function point(event) {
+        let clientPoint = new DOMPointReadOnly(event.clientX, event.clientY)
+        return clientPoint.matrixTransform(node.getScreenCTM().inverse())
+    }
+    function zoom(event) {
+        event.preventDefault()
+        let origScale = scale
+        if (event.deltaY < 0) {
+            // zoom in
+            if (scale === 1) {
+                return
+            }
+            scale -= 1
+        } else if (event.deltaY > 0) {
+            // zoom out
+            if (scale === MAX_SCALE+2) {
+                return
+            }
+            scale += 1
+        }
+        let pt = point(event)
+        let dx = pt.x - x
+        let dy = pt.y - y
+        x = pt.x - (dx / origScale * scale)
+        y = pt.y - (dy / origScale * scale)
+        width = origWidth * (scale / MAX_SCALE)
+        height = origHeight * (scale / MAX_SCALE)
+        setViewBox()
+    }
+    let clickPt = null
+    function mouseDown(event) {
+        clickPt = point(event)
+        event.preventDefault()
+    }
+    function mouseMove(event) {
+        if (clickPt === null) {
+            return
+        }
+        let pt = point(event)
+        let dx = pt.x - clickPt.x
+        let dy = pt.y - clickPt.y
+        x -= dx
+        y -= dy
+        setViewBox()
+        event.preventDefault()
+    }
+    function mouseUp(event) {
+        clickPt = null
+        event.preventDefault()
+    }
+
+    setViewBox()
+    svg.on("wheel", zoom)
+    svg.on("mousedown", mouseDown)
+    svg.on("mousemove", mouseMove)
+    svg.on("mouseup", mouseUp)
+}
+
+// debug events
+export function toggleDebug(event) {
+    spec.debug = event.target.checked
+    spec.display()
 }
