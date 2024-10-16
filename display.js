@@ -316,7 +316,9 @@ class DisplayGroup {
 let displayGroups = []
 
 function getDisplayGroups(totals) {
-    let groupObjects = topoSort(getRecipeGroups(new Set(totals.rates.keys())))
+    let recipes = Array.from(totals.rates.keys())
+    recipes.reverse()
+    let groupObjects = topoSort(getRecipeGroups(new Set(recipes)))
     setlen(displayGroups, groupObjects.length, () => new DisplayGroup())
     let i = 0
     for (let group of groupObjects) {
