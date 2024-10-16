@@ -18,6 +18,30 @@ import { iconSize, colonWidth } from "./graph.js"
 import { zero, one } from "./rational.js"
 import { renderSankey } from "./sankey.js"
 
+let clickedNode = null
+
+export function graphClickHandler(event, node) {
+    if (node === clickedNode) {
+        node.unhighlight()
+        clickedNode = null
+    } else if (clickedNode) {
+        clickedNode.unhighlight()
+        clickedNode = node
+    } else {
+        clickedNode = node
+    }
+}
+
+export function graphMouseOverHandler(event, node) {
+    node.highlight()
+}
+
+export function graphMouseLeaveHandler(event, node) {
+    if (node !== clickedNode) {
+        node.unhighlight()
+    }
+}
+
 class GraphEdge {
     constructor(source, target, value, item, rate, fuel, beltCount, extra) {
         this.source = source

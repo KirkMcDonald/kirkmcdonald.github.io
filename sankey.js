@@ -17,6 +17,8 @@ import { spec } from "./factory.js"
 import { colorList, iconSize, getColorMaps, renderNode, imageViewBox } from "./graph.js"
 import { sheetHash, sheetWidth, sheetHeight } from "./icon.js"
 import { one } from "./rational.js"
+import { graphClickHandler, graphMouseOverHandler, graphMouseLeaveHandler } from "./visualize.js"
+
 
 import * as d3sankey from "./d3-sankey/index.js"
 
@@ -233,8 +235,9 @@ export function renderSankey(data, ignore) {
             .attr("y", d => d.rect.y)
             .attr("width", d => d.rect.width)
             .attr("height", d => d.rect.height)
-            .on("mouseover", (event, d) => d.node.highlight())
-            .on("mouseleave", (event, d) => d.node.unhighlight())
+            .on("mouseover", (event, d) => graphMouseOverHandler(event, d.node))
+            .on("mouseleave", (event, d) => graphMouseLeaveHandler(event, d.node))
+            .on("click", (event, d) => graphClickHandler(event, d.node))
             .append("title")
                 .text(d => d.node.name + (d.node.count.isZero() ? "" : `\n${d.node.building.name} \u00d7 ${spec.format.count(d.node.count)}`))
 }

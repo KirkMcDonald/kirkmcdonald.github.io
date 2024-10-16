@@ -15,6 +15,8 @@ limitations under the License.*/
 import { spec } from "./factory.js"
 import { colorList, iconSize, getColorMaps, renderNode, imageViewBox } from "./graph.js"
 import { sheetHash, sheetWidth, sheetHeight } from "./icon.js"
+import { graphClickHandler, graphMouseOverHandler, graphMouseLeaveHandler } from "./visualize.js"
+
 
 const boxlineNodeMargin = 10
 
@@ -192,15 +194,9 @@ export function renderBoxGraph({nodes, links}, ignore, callback) {
             .attr("y", d => d.y0)
             .attr("width", d => d.x1 - d.x0)
             .attr("height", d => d.y1 - d.y0)
-            .on("mouseover", (event, d) => {
-                d.highlight()
-            })
-            .on("mouseout", (event, d) => {
-                d.unhighlight()
-            })
-            //.on("mouseover", d => GraphMouseOverHandler(d))
-            //.on("mouseout", d => GraphMouseLeaveHandler(d))
-            //.on("click", d => GraphClickHandler(d))
+            .on("mouseover", graphMouseOverHandler)
+            .on("mouseout", graphMouseLeaveHandler)
+            .on("click", graphClickHandler)
             .append("title")
                 .text(d => d.name)
     callback()
