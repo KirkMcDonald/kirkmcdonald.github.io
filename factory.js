@@ -49,7 +49,12 @@ class BuildingSet {
         }
     }
     overlap(other) {
-        return this.categories.intersection(other.categories).size > 0
+        for (let category of this.categories) {
+            if (other.categories.has(category)) {
+                return true
+            }
+        }
+        return false
     }
 }
 
