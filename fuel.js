@@ -54,16 +54,16 @@ class Fuel {
 
 export function getFuel(data, items) {
     let fuelCategories = new Map()
-    for (let fuelKey of data.fuel) {
-        let d = data.items[fuelKey]
+    for (let d of data.fuel) {
+        let item = items.get(d.item_key)
         let fuel = new Fuel(
-            fuelKey,
-            d.localized_name.en,
-            d.icon_col,
-            d.icon_row,
-            items.get(fuelKey),
-            d.fuel_category,
-            Rational.from_float_approximate(d.fuel_value)
+            d.item_key,
+            item.name,
+            item.icon_col,
+            item.icon_row,
+            item,
+            d.category,
+            Rational.from_float_approximate(d.value)
         )
         let f = fuelCategories.get(fuel.category)
         if (f === undefined) {

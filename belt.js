@@ -38,10 +38,8 @@ class Belt {
 }
 
 export function getBelts(data) {
-    let beltData = data["transport-belt"]
     let beltObjs = []
-    for (let beltName in beltData) {
-        let beltInfo = beltData[beltName]
+    for (let beltInfo of data.belts) {
         // Belt speed is given in tiles/tick, which we can convert to
         // items/second as follows:
         //       tiles      ticks              32 pixels/tile
@@ -50,7 +48,7 @@ export function getBelts(data) {
         let baseSpeed = Rational.from_float_approximate(beltInfo.speed)
         let speed = baseSpeed.mul(Rational.from_float(480))
         beltObjs.push(new Belt(
-            beltName,
+            beltInfo.key,
             beltInfo.localized_name.en,
             beltInfo.icon_col,
             beltInfo.icon_row,

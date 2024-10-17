@@ -23,10 +23,11 @@ export class Ingredient {
 }
 
 class Recipe {
-    constructor(key, name, order, col, row, category, time, ingredients, products) {
+    constructor(key, name, order, col, row, allow_prod, category, time, ingredients, products) {
         this.key = key
         this.name = name
         this.order = order
+        this.allow_productivity = allow_prod
         this.category = category
         this.time = time
         this.ingredients = ingredients
@@ -92,9 +93,6 @@ class Recipe {
     isNetProducer(item) {
         let amount = this.gives(item)
         return zero.less(amount.sub(this.uses(item)))
-    }
-    allModules() {
-        return false
     }
     isResource() {
         return false
@@ -212,11 +210,12 @@ function makeRecipe(data, items, d) {
         ingredients.push(new Ingredient(item, Rational.from_float_approximate(amount)))
     }
     return new Recipe(
-        d.name,
+        d.key,
         d.localized_name.en,
         d.order,
         d.icon_col,
         d.icon_row,
+        d.allow_productivity,
         d.category,
         time,
         ingredients,
@@ -232,6 +231,7 @@ class ResourceRecipe extends Recipe {
             item.order,
             item.icon_col,
             item.icon_row,
+            false,
             category,
             zero,
             [],
@@ -250,14 +250,11 @@ class MiningRecipe extends Recipe {
         if (!ingredients) {
             ingredients = []
         }
-        super(key, name, order, col, row, category, zero, ingredients, products)
+        super(key, name, order, col, row, true, category, zero, ingredients, products)
         this.miningTime = miningTime
 
         this.defaultPriority = 1
         this.defaultWeight = Rational.from_float(100)
-    }
-    allModules() {
-        return true
     }
     isResource() {
         return true
@@ -274,6 +271,7 @@ export function getRecipes(data, items) {
         water.order,
         water.icon_col,
         water.icon_row,
+        false,
         "water",
         Rational.from_floats(1, 1200),
         [],
@@ -282,13 +280,14 @@ export function getRecipes(data, items) {
     recipes.set("water", waterRecipe)
     waterRecipe.defaultPriority = 0
     waterRecipe.defaultWeight = hundred
-    let reactor = data.items["nuclear-reactor"]
+    let reactor = items.get("nuclear-reactor")
     recipes.set("nuclear-reactor-cycle", new Recipe(
         "nuclear-reactor-cycle",
         "Nuclear reactor cycle",
         reactor.order,
         reactor.icon_col,
         reactor.icon_row,
+        false,
         "nuclear",
         Rational.from_float(200),
         [new Ingredient(items.get("uranium-fuel-cell"), one)],
@@ -297,13 +296,14 @@ export function getRecipes(data, items) {
             new Ingredient(items.get("nuclear-reactor-cycle"), one),
         ]
     ))
-    let rocket = data.items["rocket-silo"]
+    let rocket = items.get("rocket-silo")
     recipes.set("rocket-launch", new Recipe(
         "rocket-launch",
         "Rocket launch",
         rocket.order,
         rocket.icon_col,
         rocket.icon_row,
+        false,
         "rocket-launch",
         one,
         [
@@ -311,26 +311,23 @@ export function getRecipes(data, items) {
             new Ingredient(items.get("satellite"), one),
         ], [new Ingredient(items.get("space-science-pack"), Rational.from_float(1000))]
     ))
-    let steam = data.items["steam"]
+    let steam = items.get("steam")
     recipes.set("steam", new Recipe(
         "steam",
         "Steam",
         steam.order,
         steam.icon_col,
         steam.icon_row,
+        false,
         "boiler",
         Rational.from_floats(1, 60),
         [new Ingredient(items.get("water"), one)],
         [new Ingredient(items.get("steam"), one)],
     ))
-    //for (let d of data.recipes) {
-    for (let key in data.recipes) {
-        let d = data.recipes[key]
-        recipes.set(d.name, makeRecipe(data, items, d))
+    for (let d of data.recipes) {
+        recipes.set(d.key, makeRecipe(data, items, d))
     }
-    //for (let d of data.resource) {
-    for (let key in data.resource) {
-        let d = data.resource[key]
+    for (let d of data.resources) {
         let category = d.category
         if (!category) {
             category = "basic-solid"
@@ -338,16 +335,15 @@ export function getRecipes(data, items) {
         if (category !== "basic-solid") {
             continue
         }
-        let props = d.minable
         let ingredients = null
-        if ("required_fluid" in props) {
+        if ("required_fluid" in d) {
             ingredients = [new Ingredient(
-                items.get(props.required_fluid),
-                Rational.from_float_approximate(props.fluid_amount / 10),
+                items.get(d.required_fluid),
+                Rational.from_float_approximate(d.fluid_amount / 10),
             )]
         }
         let products = []
-        for (let {name, amount, probability} of props.results) {
+        for (let {name, amount, probability} of d.results) {
             let item = items.get(name)
             let ratAmount = Rational.from_float_approximate(amount)
             if (probability !== undefined) {
@@ -355,14 +351,14 @@ export function getRecipes(data, items) {
             }
             products.push(new Ingredient(item, ratAmount))
         }
-        recipes.set(d.name, new MiningRecipe(
-            d.name,
+        recipes.set(d.key, new MiningRecipe(
+            d.key,
             d.localized_name.en,
             d.order,  // this may be undefined
             d.icon_col,
             d.icon_row,
             "mining-" + category,
-            Rational.from_float_approximate(props.mining_time),
+            Rational.from_float_approximate(d.mining_time),
             ingredients,
             products,
         ))

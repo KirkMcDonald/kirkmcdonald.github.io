@@ -177,12 +177,12 @@ function renderTooltipBase() {
     return t.node()
 }
 
-export function getBuildings(data) {
+export function getBuildings(data, items) {
     let buildings = []
-    let pumpDef = data["offshore-pump"]["offshore-pump"]
+    let pumpDef = items.get("offshore-pump")
     let pump = new Building(
         "offshore-pump",
-        pumpDef.localized_name.en,
+        pumpDef.name,
         pumpDef.icon_col,
         pumpDef.icon_row,
         ["water"],
@@ -193,10 +193,10 @@ export function getBuildings(data) {
     )
     pump.renderTooltip = renderTooltipBase
     buildings.push(pump)
-    let reactorDef = data["reactor"]["nuclear-reactor"]
+    let reactorDef = items.get("nuclear-reactor")
     let reactor = new Building(
         "nuclear-reactor",
-        reactorDef.localized_name.en,
+        reactorDef.name,
         reactorDef.icon_col,
         reactorDef.icon_row,
         ["nuclear"],
@@ -207,12 +207,12 @@ export function getBuildings(data) {
     )
     reactor.renderTooltip = renderTooltipBase
     buildings.push(reactor)
-    let boilerDef = data["boiler"]["boiler"]
+    let boilerDef = items.get("boiler")
     // XXX: Should derive this from game data.
     let boiler_energy = Rational.from_float(1800000)
     let boiler = new Building(
         "boiler",
-        boilerDef.localized_name.en,
+        boilerDef.name,
         boilerDef.icon_col,
         boilerDef.icon_row,
         ["boiler"],
@@ -223,10 +223,10 @@ export function getBuildings(data) {
     )
     boiler.renderTooltip = renderTooltipBase
     buildings.push(boiler)
-    let siloDef = data["rocket-silo"]["rocket-silo"]
+    let siloDef = items.get("rocket-silo")
     let launch = new RocketLaunch(
         "rocket-silo",
-        siloDef.localized_name.en,
+        siloDef.name,
         siloDef.icon_col,
         siloDef.icon_row,
         ["rocket-launch"],
@@ -237,30 +237,26 @@ export function getBuildings(data) {
     )
     launch.renderTooltip = renderTooltipBase
     buildings.push(launch)
-    for (let type of ["assembling-machine", "furnace"]) {
-        for (let key in data[type]) {
-            let d = data[type][key]
-            let fuel = null
-            if (d.energy_source && d.energy_source.type === "burner") {
-                fuel = d.energy_source.fuel_category
-            }
-            buildings.push(new Building(
-                d.name,
-                d.localized_name.en,
-                d.icon_col,
-                d.icon_row,
-                d.crafting_categories,
-                Rational.from_float_approximate(d.crafting_speed),
-                d.module_slots,
-                Rational.from_float_approximate(d.energy_usage),
-                fuel
-            ))
+    for (let d of data.crafting_machines) {
+        let fuel = null
+        if (d.energy_source && d.energy_source.type === "burner") {
+            fuel = d.energy_source.fuel_category
         }
+        buildings.push(new Building(
+            d.key,
+            d.localized_name.en,
+            d.icon_col,
+            d.icon_row,
+            d.crafting_categories,
+            Rational.from_float_approximate(d.crafting_speed),
+            d.module_slots,
+            Rational.from_float_approximate(d.energy_usage),
+            fuel
+        ))
     }
-    for (let key in data["rocket-silo"]) {
-        let d = data["rocket-silo"][key]
+    for (let d of data.rocket_silo) {
         buildings.push(new RocketSilo(
-            d.name,
+            d.key,
             d.localized_name.en,
             d.icon_col,
             d.icon_row,
@@ -271,9 +267,8 @@ export function getBuildings(data) {
             null
         ))
     }
-    for (let key in data["mining-drill"]) {
-        let d = data["mining-drill"][key]
-        if (d.name == "pumpjack") {
+    for (let d of data.mining_drills) {
+        if (d.key == "pumpjack") {
             continue
         }
         let fuel = null
@@ -281,7 +276,7 @@ export function getBuildings(data) {
             fuel = d.energy_source.fuel_category
         }
         buildings.push(new Miner(
-            d.name,
+            d.key,
             d.localized_name.en,
             d.icon_col,
             d.icon_row,

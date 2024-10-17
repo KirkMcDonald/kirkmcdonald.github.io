@@ -61,15 +61,14 @@ export class Item {
 
 export function getItems(data) {
     let items = new Map()
-    //for (let d of data.items) {
-    for (let key in data.items) {
-        let d = data.items[key]
+    for (let d of data.items) {
         if (!d.localized_name) {
+            console.log("bad item:", d)
             continue
         }
         let phase = (d.type === "fluid") ? "fluid" : "solid"
-        items.set(d.name, new Item(
-            d.name,
+        items.set(d.key, new Item(
+            d.key,
             d.localized_name.en,
             d.icon_col,
             d.icon_row,
@@ -80,7 +79,7 @@ export function getItems(data) {
         ))
     }
     let cycleKey = "nuclear-reactor-cycle"
-    let reactor = data.items["nuclear-reactor"]
+    let reactor = items.get("nuclear-reactor")
     items.set(cycleKey, new Item(
         cycleKey,
         "Nuclear reactor cycle",

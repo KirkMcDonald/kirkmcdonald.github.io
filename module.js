@@ -26,7 +26,7 @@ function percent(x) {
 }
 
 class Module {
-    constructor(key, name, col, row, category, order, productivity, speed, power, limit) {
+    constructor(key, name, col, row, category, order, productivity, speed, power) {
         // Other module effects not modeled by this calculator.
         this.key = key
         this.name = name
@@ -35,7 +35,6 @@ class Module {
         this.productivity = productivity
         this.speed = speed
         this.power = power
-        this.limit = new Set(limit)
 
         this.icon_col = col
         this.icon_row = row
@@ -47,12 +46,8 @@ class Module {
         return this.key[0] + this.key[this.key.length - 1]
     }
     canUse(recipe) {
-        if (recipe.allModules()) {
-            return true
-        }
-        //if (Object.keys(this.limit).length > 0) {
-        if (this.limit.size > 0) {
-            return this.limit.has(recipe.key)
+        if (this.hasProdEffect() && !recipe.allow_productivity) {
+            return false
         }
         return true
     }
@@ -229,44 +224,24 @@ export class ModuleSpec {
         }
         return power
     }
-    /*powerUsage(spec, count) {
-        let power = this.building.power
-        if (this.building.fuel) {
-            return {"fuel": this.building.fuel, "power": power.mul(count)}
-        }
-        // Default drain value.
-        let drain = power.div(Rational.from_float(30))
-        let divmod = count.divmod(one)
-        power = power.mul(count)
-        if (!divmod.remainder.isZero()) {
-            let idle = one.sub(divmod.remainder)
-            power = power.add(idle.mul(drain))
-        }
-        power = power.mul(this.powerEffect(spec))
-        return {"fuel": "electric", "power": power}
-    }
-    recipeRate: function(spec, recipe) {
-        return recipe.time.reciprocate().mul(this.factory.speed).mul(this.speedEffect(spec))
-    }*/
 }
 
 export let moduleRows = null
 export let shortModules = null
 
-export function getModules(data) {
+export function getModules(data, items) {
     let modules = new Map()
-    for (let key of data.modules) {
-        let item = data.items[key]
-        let effect = item.effect
-        let category = item.category
+    for (let d of data.modules) {
+        let item = items.get(d.item_key)
+        let effect = d.effect
+        let category = d.category
         let order = item.order
-        let speed = Rational.from_float_approximate((effect.speed || {}).bonus || 0)
-        let productivity = Rational.from_float_approximate((effect.productivity || {}).bonus || 0)
-        let power = Rational.from_float_approximate((effect.consumption || {}).bonus || 0)
-        let limit = item.limitation
-        modules.set(key, new Module(
-            key,
-            item.localized_name.en,
+        let speed = Rational.from_float_approximate(effect.speed || 0)
+        let productivity = Rational.from_float_approximate(effect.productivity || 0)
+        let power = Rational.from_float_approximate(effect.consumption || 0)
+        modules.set(d.item_key, new Module(
+            d.item_key,
+            item.name,
             item.icon_col,
             item.icon_row,
             category,
@@ -274,7 +249,6 @@ export function getModules(data) {
             productivity,
             speed,
             power,
-            limit
         ))
     }
     let sortedModules = sorted(modules.values(), m => m.order)
