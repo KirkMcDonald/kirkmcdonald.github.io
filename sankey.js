@@ -165,19 +165,18 @@ export function renderSankey(data, ignore) {
         .attr("d", d => d.curve.path())
         .attr("stroke", d => colorList[itemColors.get(d.item) % colorList.length])
         .attr("stroke-width", d => Math.max(1, d.width))
-    link.filter(d => d.width >= 3)
-        .append("g")
-            .selectAll("path")
-            .data(d => [
-                d.curve.offset(-d.width/2),
-                d.curve.offset(d.width/2),
-            ])
-            .join("path")
-                .classed("highlighter", true)
-                .attr("fill", "none")
-                .attr("d", d => d.path())
-                .attr("stroke", "none")
-                .attr("stroke-width", 1)
+    link.append("g")
+        .selectAll("path")
+        .data(d => [
+            d.curve.offset(-d.width/2),
+            d.curve.offset(d.width/2),
+        ])
+        .join("path")
+            .classed("highlighter", true)
+            .attr("fill", "none")
+            .attr("d", d => d.path())
+            .attr("stroke", "none")
+            .attr("stroke-width", 1)
     link.append("g")
         .classed("belts", true)
         .selectAll("path")
