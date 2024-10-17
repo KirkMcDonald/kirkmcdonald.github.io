@@ -165,7 +165,9 @@ class ModuleInput {
 
 let slotCount = 0
 class ModuleSlot {
-    constructor() {
+    constructor(group, row) {
+        this.group = group
+        this.row = row
         this.name = `moduleslot-${slotCount++}`
         this.moduleSpec = null
         this.index = null
@@ -179,14 +181,18 @@ class ModuleSlot {
             let inputRow = this.inputRows[i]
             let modules = moduleRows[i]
             let rowIndex = 0
-            //for (let j = 0; j < modules.length) {
-            for (let module of modules) {
-                if (rowIndex > inputRow.length - 1) {
-                    inputRow.push(new ModuleInput())
-                }
+            let j = 0
+            for ( ; j < modules.length; j++) {
+                let module = modules[j]
                 if (module === null || module.canUse(mSpec.recipe)) {
+                    if (rowIndex > inputRow.length - 1) {
+                        inputRow.push(new ModuleInput())
+                    }
                     inputRow[rowIndex++].setData(this, module)
                 }
+            }
+            if (inputRow.length > rowIndex) {
+                inputRow.length = rowIndex
             }
             inputRow.length = rowIndex
         }
@@ -264,6 +270,7 @@ class DisplayGroup {
         this.rows = []
     }
     setData(totals, items, recipes) {
+        let self = this
         items = [...items]
         recipes = [...recipes]
         if (items.length === 0) {
@@ -290,7 +297,7 @@ class DisplayGroup {
                     slotCount = 0
                 }
             }
-            setlen(row.slots, slotCount, () => new ModuleSlot())
+            setlen(row.slots, slotCount, () => new ModuleSlot(self, row))
             for (let j = 0; j < slotCount; j++) {
                 row.slots[j].setData(moduleSpec, j)
             }
@@ -639,6 +646,7 @@ export function displayItems(spec, totals) {
         .text(d => spec.format.alignCount(spec.getCount(d.recipe, totals.rates.get(d.recipe))))
     let moduleRow = row.filter(d => d.moduleSpec !== null)
     let moduleCell = moduleRow.selectAll("td.module-cell")
+    moduleCell.selectAll("*").remove()
     moduleDropdown(moduleCell, d => d.slots)
     moduleDropdown(moduleRow.selectAll("span.beacon-container"), d => d.beaconModules)
     moduleRow.selectAll("span.beacon-count input")
