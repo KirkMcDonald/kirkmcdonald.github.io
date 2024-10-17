@@ -646,7 +646,10 @@ export function displayItems(spec, totals) {
         .text(d => spec.format.alignCount(spec.getCount(d.recipe, totals.rates.get(d.recipe))))
     let moduleRow = row.filter(d => d.moduleSpec !== null)
     let moduleCell = moduleRow.selectAll("td.module-cell")
+    // XXX: Something's wrong with how I did the module dropdowns. Work around
+    // the issue for now by re-rendering all of them on each update.
     moduleCell.selectAll("*").remove()
+    moduleRow.selectAll("span.beacon-container").selectAll("*").remove()
     moduleDropdown(moduleCell, d => d.slots)
     moduleDropdown(moduleRow.selectAll("span.beacon-container"), d => d.beaconModules)
     moduleRow.selectAll("span.beacon-count input")
