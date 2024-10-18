@@ -57,6 +57,8 @@ function normalizeDataSetName(modName) {
     return DEFAULT_MODIFICATION
 }
 
+// Unlike most "renderSetting" functions, this is called exactly once, on
+// initialization, and so does not need to wipe and re-render its UI elements.
 export function renderDataSetOptions(settings) {
     let modSelector = document.getElementById("data_set")
     d3.select(modSelector).on("change", function(event) {
@@ -111,12 +113,20 @@ function renderTargets(settings) {
         for (let targetString of targets) {
             let parts = targetString.split(":")
             let itemKey = parts[0]
+            if (!spec.items.has(itemKey)) {
+                console.log("unknown item:", itemKey)
+                continue
+            }
             let target = spec.addTarget(itemKey)
             let type = parts[1]
             if (type === "f") {
                 let recipe = null
                 if (parts.length > 3) {
                     let recipeKey = parts[3]
+                    if (!spec.recipes.has(recipeKey)) {
+                        console.log("unknown recipe:", recipeKey)
+                        continue
+                    }
                     recipe = spec.recipes.get(recipeKey)
                 }
                 target.setBuildings(parts[2], recipe)
@@ -143,6 +153,10 @@ function getModule(moduleKey) {
     } else if (moduleKey === "null") {
         module = null
     }
+    if (module === undefined) {
+        console.log("unknown module:", moduleKey)
+        return null
+    }
     return module
 }
 
@@ -155,6 +169,10 @@ function renderModules(settings) {
             let [buildingModuleSettings, beaconSettings] = recipeSetting.split(";")
             let [recipeKey, ...moduleKeyList] = buildingModuleSettings.split(":")
             let recipe = spec.recipes.get(recipeKey)
+            if (recipe === undefined) {
+                console.log("unknown recipe:", recipeKey)
+                continue
+            }
             let moduleSpec = spec.getModuleSpec(recipe)
             for (let i = 0; i < moduleKeyList.length; i++) {
                 let moduleKey = moduleKeyList[i]
@@ -208,6 +226,10 @@ function renderIgnore(settings) {
         let ignore = ignoreSetting.split(",")
         for (let itemKey of ignore) {
             let item = spec.items.get(itemKey)
+            if (item === undefined) {
+                console.log("unknown item:", itemKey)
+                continue
+            }
             spec.ignore.add(item)
         }
     }
@@ -363,6 +385,10 @@ function renderBuildings(settings) {
         let buildingKeys = settings.get("buildings").split(",")
         for (let key of buildingKeys) {
             let building = spec.buildingKeys.get(key)
+            if (building === undefined) {
+                console.log("unknown building:", key)
+                continue
+            }
             spec.setMinimumBuilding(building)
         }
     }
@@ -422,7 +448,12 @@ function radioSetting(form, name, data, checked, onchange) {
 function renderBelts(settings) {
     let beltKey = DEFAULT_BELT
     if (settings.has("belt")) {
-        beltKey = settings.get("belt")
+        let b = settings.get("belt")
+        if (spec.belts.has(b)) {
+            beltKey = b
+        } else {
+            console.log("unknown belt:", b)
+        }
     }
     spec.belt = spec.belts.get(beltKey)
 
@@ -451,7 +482,12 @@ function fuelHandler(event, fuel) {
 function renderFuel(settings) {
     let fuelKey = DEFAULT_FUEL
     if (settings.has("fuel")) {
-        fuelKey = settings.get("fuel")
+        let f = settings.get("fuel")
+        if (spec.fuels.has(f)) {
+            fuelKey = f
+        } else {
+            console.log("unknown fuel:", f)
+        }
     }
     spec.fuel = spec.fuels.get(fuelKey)
 
@@ -553,9 +589,11 @@ function renderDefaultModule(settings) {
 
     let cell = new DefaultModuleCell()
     let select = d3.select("#default_module")
+    select.selectAll("*").remove()
     moduleDropdown(select, [cell])
     cell = new SecondaryModuleCell()
     select = d3.select("#secondary_module")
+    select.selectAll("*").remove()
     moduleDropdown(select, [cell])
 }
 
@@ -632,6 +670,7 @@ function renderDefaultBeacon(settings) {
 
     let cells = [new DefaultBeaconCell(0), new DefaultBeaconCell(1)]
     let select = d3.select("#default_beacon")
+    select.selectAll("*").remove()
     moduleDropdown(select, cells)
     d3.select("#default_beacon_count")
         .attr("value", defaultCount.toDecimal())
@@ -706,6 +745,10 @@ function renderResourcePriorities(settings) {
                     break outer
                 }
                 let [key, weightStr] = pair.split("=")
+                if (!spec.isValidPriorityKey(key)) {
+                    console.log("invalid priority key:", key)
+                    continue
+                }
                 tier.push([key, Rational.from_string(weightStr)])
             }
             tiers.push(tier)

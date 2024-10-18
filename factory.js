@@ -289,6 +289,17 @@ class FactorySpecification {
     setDefaultPriority() {
         this.priority = PriorityList.fromArray(this.defaultPriority)
     }
+    isValidPriorityKey(key) {
+        if (key.startsWith(DISABLED_RECIPE_PREFIX)) {
+            let itemKey = recipeKey.slice(DISABLED_RECIPE_PREFIX.length)
+            return this.items.has(itemKey)
+        }
+        let recipe = this.recipes.get(key)
+        if (recipe === undefined) {
+            return false
+        }
+        return recipe.defaultPriority !== undefined
+    }
     setPriorities(tiers) {
         let a = []
         for (let tier of tiers) {

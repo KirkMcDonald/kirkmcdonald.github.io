@@ -15,7 +15,7 @@ import { getBelts } from "./belt.js"
 import { getBuildings } from "./building.js"
 import { resetDisplay } from "./display.js"
 import { spec, resetSpec } from "./factory.js"
-import { loadSettings } from "./fragment.js"
+import { formatSettings, loadSettings } from "./fragment.js"
 import { getFuel } from "./fuel.js"
 import { getItemGroups } from "./group.js"
 import { getSprites } from "./icon.js"
@@ -31,9 +31,12 @@ function reset() {
 }
 
 export function changeMod() {
+    let currentSettings = loadSettings("#" + formatSettings())
+    currentSettings.delete("data")
     let modName = currentMod()
     reset()
-    loadData(modName, new Map())
+    console.log("settings on reset:", currentSettings)
+    loadData(modName, currentSettings)
 }
 
 let OIL_EXCLUSION = new Map([
