@@ -13,7 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import { getBelts } from "./belt.js"
 import { getBuildings } from "./building.js"
-import { spec } from "./factory.js"
+import { resetDisplay } from "./display.js"
+import { spec, resetSpec } from "./factory.js"
 import { loadSettings } from "./fragment.js"
 import { getFuel } from "./fuel.js"
 import { getItemGroups } from "./group.js"
@@ -25,6 +26,8 @@ import { currentMod, MODIFICATIONS, renderDataSetOptions, renderSettings } from 
 
 function reset() {
     window.location.hash = ""
+    resetDisplay()
+    resetSpec()
 }
 
 export function changeMod() {

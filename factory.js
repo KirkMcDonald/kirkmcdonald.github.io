@@ -650,5 +650,10 @@ class FactorySpecification {
     }
 }
 
+export function resetSpec() {
+    spec = new FactorySpecification()
+    window.spec = spec
+}
+
 export let spec = new FactorySpecification()
 window.spec = spec

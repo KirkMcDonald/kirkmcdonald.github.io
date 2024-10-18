@@ -318,6 +318,11 @@ class DisplayGroup {
     }
 }
 
+export function resetDisplay() {
+    d3.selectAll("table#totals > tbody").remove()
+    displayGroups = []
+}
+
 // Remember these values from update to update, to make it simpler to reuse
 // elements.
 let displayGroups = []
