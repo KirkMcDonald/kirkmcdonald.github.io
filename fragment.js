@@ -15,7 +15,7 @@ import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_
 import { DEFAULT_TAB, currentTab, DEFAULT_VISUALIZER, visualizerType, DEFAULT_RENDER, visualizerRender } from "./events.js"
 import { spec, DEFAULT_BELT, DEFAULT_FUEL } from "./factory.js"
 import { Rational } from "./rational.js"
-import { DEFAULT_TITLE, DEFAULT_COLOR_SCHEME, colorScheme } from "./settings.js"
+import { currentMod, DEFAULT_TITLE, DEFAULT_COLOR_SCHEME, colorScheme } from "./settings.js"
 
 function getModuleKey(module) {
     let moduleKey
@@ -32,6 +32,7 @@ export function formatSettings(excludeTitle, overrideTab, targets) {
     if (!excludeTitle && document.title !== DEFAULT_TITLE) {
         settings += "title=" + encodeURIComponent(document.title) + "&"
     }
+    settings += "data=" + currentMod() + "&"
     let tab = currentTab
     if (overrideTab) {
         tab = overrideTab
