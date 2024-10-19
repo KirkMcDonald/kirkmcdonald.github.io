@@ -73,6 +73,7 @@ export class Icon {
         } else {
             img.attr("title", this.obj.name)
         }
+        img.attr("alt", this.name)
         return img.node()
     }
 }
