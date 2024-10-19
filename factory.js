@@ -291,7 +291,7 @@ class FactorySpecification {
     }
     isValidPriorityKey(key) {
         if (key.startsWith(DISABLED_RECIPE_PREFIX)) {
-            let itemKey = recipeKey.slice(DISABLED_RECIPE_PREFIX.length)
+            let itemKey = key.slice(DISABLED_RECIPE_PREFIX.length)
             return this.items.has(itemKey)
         }
         let recipe = this.recipes.get(key)
