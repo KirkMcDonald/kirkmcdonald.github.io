@@ -13,6 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import { makeDropdown, addInputs } from "./dropdown.js"
 import { Icon, sprites } from "./icon.js"
+import { useLegacyCalculation } from "./init.js"
 import { Rational, zero, half, one } from "./rational.js"
 import { sorted } from "./sort.js"
 
@@ -186,7 +187,15 @@ export class ModuleSpec {
                 if (module === null) {
                     continue
                 }
-                speed = speed.add(module.speed.mul(this.beaconCount).mul(half))
+                let beacon = module.speed.mul(this.beaconCount).mul(beaconEffect)
+                if (!useLegacyCalculation) {
+                    let i = this.beaconCount.ceil().toFloat() - 1
+                    if (i >= beaconProfile.length) {
+                        i = beaconProfile.length - 1
+                    }
+                    beacon = beacon.mul(beaconProfile[i])
+                }
+                speed = speed.add(beacon)
             }
         }
         return speed
@@ -215,7 +224,15 @@ export class ModuleSpec {
                 if (module === null) {
                     continue
                 }
-                power = power.add(module.power.mul(this.beaconCount).mul(half))
+                let beacon = module.power.mul(this.beaconCount).mul(beaconEffect)
+                if (!useLegacyCalculation) {
+                    let i = this.beaconCount.ceil().toFloat() - 1
+                    if (i >= beaconProfile.length) {
+                        i = beaconProfile.length - 1
+                    }
+                    beacon = beacon.mul(beaconProfile[i])
+                }
+                power = power.add(beacon)
             }
         }
         let minimum = Rational.from_floats(1, 5)
@@ -228,6 +245,9 @@ export class ModuleSpec {
 
 export let moduleRows = null
 export let shortModules = null
+
+let beaconProfile
+let beaconEffect
 
 export function getModules(data, items) {
     let modules = new Map()
@@ -268,6 +288,15 @@ export function getModules(data, items) {
             shortName = module.key
         }
         shortModules.set(shortName, module)
+    }
+    beaconEffect = Rational.from_float_approximate(data.beacon.distribution_effectivity)
+    if (useLegacyCalculation) {
+        beaconProfile = null
+    } else {
+        beaconProfile = []
+        for (let x of data.beacon.profile) {
+            beaconProfile.push(Rational.from_float_approximate(x))
+        }
     }
     return modules
 }

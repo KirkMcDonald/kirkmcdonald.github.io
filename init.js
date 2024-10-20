@@ -81,8 +81,11 @@ function fixLegacySettings(settings) {
     }
 }
 
+export let useLegacyCalculation
+
 function loadData(modName, settings) {
     let mod = MODIFICATIONS.get(modName)
+    useLegacyCalculation = mod.legacy
     let filename = "data/" + mod.filename
     d3.json(filename, {cache: "reload"}).then(function(data) {
         let items = getItems(data)

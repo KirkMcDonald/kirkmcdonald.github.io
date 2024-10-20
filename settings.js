@@ -26,16 +26,17 @@ import { sorted } from "./sort.js"
 // This setting is somewhat special. It prompts a reset of the full calculator
 // state.
 class Modification {
-    constructor(name, filename) {
+    constructor(name, filename, legacy) {
         this.name = name
         this.filename = filename
+        this.legacy = legacy
     }
 }
 
 export let MODIFICATIONS = new Map([
-    ["1-1-110", new Modification("Vanilla 1.1.110", "vanilla-1.1.110.json")],
-    ["1-1-110x", new Modification("Vanilla 1.1.110 - Expensive", "vanilla-1.1.110-expensive.json")],
-    ["2-0-6", new Modification("Vanilla 2.0.6", "vanilla-2.0.6.json")],
+    ["1-1-110", new Modification("Vanilla 1.1.110", "vanilla-1.1.110.json", true)],
+    ["1-1-110x", new Modification("Vanilla 1.1.110 - Expensive", "vanilla-1.1.110-expensive.json", true)],
+    ["2-0-6", new Modification("Vanilla 2.0.6", "vanilla-2.0.6.json", false)],
 ])
 
 let DEFAULT_MODIFICATION = "1-1-110"
