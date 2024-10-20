@@ -178,6 +178,9 @@ function renderModules(settings) {
             let moduleSpec = spec.getModuleSpec(recipe)
             for (let i = 0; i < moduleKeyList.length; i++) {
                 let moduleKey = moduleKeyList[i]
+                if (moduleKey === "") {
+                    continue
+                }
                 let module = getModule(moduleKey)
                 if (module !== undefined) {
                     moduleSpec.setModule(i, module)
