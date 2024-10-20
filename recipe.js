@@ -261,10 +261,49 @@ class MiningRecipe extends Recipe {
     }
 }
 
+function getSteam(data) {
+    let R = Rational.from_float
+    let boilerDef
+    for (let d of data.boilers) {
+        if (d.key === "boiler") {
+            boilerDef = d
+            break
+        }
+    }
+    let water
+    let steam
+    for (let fluid of data.fluids) {
+        if (fluid.item_key === "water") {
+            water = fluid
+        } else if (fluid.item_key === "steam") {
+            steam = fluid
+        }
+        if (water !== undefined && steam !== undefined) {
+            break
+        }
+    }
+    let power = R(boilerDef.energy_consumption)
+    let tempDelta = R(boilerDef.target_temperature).sub(R(water.default_temperature))
+    // heat_capacity is denominated in J/degrees C/unit.
+    let waterCap = R(water.heat_capacity)
+    let steamCap = R(steam.heat_capacity)
+    // water/second
+    let waterRate = power.div(tempDelta.mul(waterCap))
+    // steam/second
+    let steamRate = power.div(tempDelta.mul(steamCap))
+    return [waterRate, steamRate]
+}
+
 export function getRecipes(data, items) {
     let hundred = Rational.from_float(100)
     let recipes = new Map()
     let water = items.get("water")
+    // XXX: There's only one offshore pump in the game data, but maybe we can
+    // do this better later.
+    let pumpDef = data.offshore_pumps[0]
+    // Pumping speed is given in water/tick. We want seconds/water.
+    let pumpingSpeed = Rational.from_float_approximate(pumpDef.pumping_speed)
+    let craftTime = Rational.from_float(60).mul(pumpingSpeed).reciprocate()
     let waterRecipe = new Recipe(
         "water",
         "Water",
@@ -273,7 +312,7 @@ export function getRecipes(data, items) {
         water.icon_row,
         false,
         "water",
-        Rational.from_floats(1, 1200),
+        craftTime,
         [],
         [new Ingredient(water, one)]
     )
@@ -318,6 +357,7 @@ export function getRecipes(data, items) {
         ))
     }
     let steam = items.get("steam")
+    let [waterRate, steamRate] = getSteam(data)
     recipes.set("steam", new Recipe(
         "steam",
         "Steam",
@@ -326,9 +366,9 @@ export function getRecipes(data, items) {
         steam.icon_row,
         false,
         "boiler",
-        Rational.from_floats(1, 60),
-        [new Ingredient(items.get("water"), one)],
-        [new Ingredient(items.get("steam"), one)],
+        one,
+        [new Ingredient(items.get("water"), waterRate)],
+        [new Ingredient(items.get("steam"), steamRate)],
     ))
     for (let d of data.recipes) {
         if (d.key.endsWith("-recycling")) {

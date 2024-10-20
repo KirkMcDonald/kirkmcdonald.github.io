@@ -207,19 +207,26 @@ export function getBuildings(data, items) {
     )
     reactor.renderTooltip = renderTooltipBase
     buildings.push(reactor)
-    let boilerDef = items.get("boiler")
-    // XXX: Should derive this from game data.
-    let boiler_energy = Rational.from_float(1800000)
+    let boilerItem = items.get("boiler")
+    let boilerDef
+    for (let d of data.boilers) {
+        if (d.key === "boiler") {
+            boilerDef = d
+            break
+        }
+    }
+    let boiler_energy = Rational.from_float(boilerDef.energy_consumption)
     let boiler = new Building(
         "boiler",
-        boilerDef.name,
-        boilerDef.icon_col,
-        boilerDef.icon_row,
+        boilerItem.name,
+        boilerItem.icon_col,
+        boilerItem.icon_row,
         ["boiler"],
         one,
         0,
         boiler_energy,
-        "chemical"
+        "chemical",
+        //boilerDef.target_temperature,
     )
     boiler.renderTooltip = renderTooltipBase
     buildings.push(boiler)
