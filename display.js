@@ -17,6 +17,7 @@ import { spec } from "./factory.js"
 import { formatSettings } from "./fragment.js"
 import { getRecipeGroups, topoSort } from "./groups.js"
 import { Icon } from "./icon.js"
+import { useLegacyCalculation } from "./init.js"
 import { moduleRows, moduleDropdown } from "./module.js"
 import { Rational, zero, one } from "./rational.js"
 
@@ -427,6 +428,9 @@ function pipeValues(rate) {
 }
 
 function pipeText(rate) {
+    if (!useLegacyCalculation) {
+        return ""
+    }
     if (rate.equal(zero)) {
         return " \u00d7 0"
     }
