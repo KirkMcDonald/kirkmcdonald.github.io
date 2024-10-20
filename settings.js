@@ -35,6 +35,7 @@ class Modification {
 export let MODIFICATIONS = new Map([
     ["1-1-110", new Modification("Vanilla 1.1.110", "vanilla-1.1.110.json")],
     ["1-1-110x", new Modification("Vanilla 1.1.110 - Expensive", "vanilla-1.1.110-expensive.json")],
+    ["2-0-6", new Modification("Vanilla 2.0.6", "vanilla-2.0.6.json")],
 ])
 
 let DEFAULT_MODIFICATION = "1-1-110"
@@ -105,7 +106,7 @@ function renderTab(settings) {
 
 function renderTargets(settings) {
     spec.buildTargets = []
-    d3.select("#targets li.target").remove()
+    d3.selectAll("#targets li.target").remove()
 
     let targetSetting = settings.get("items")
     if (targetSetting !== undefined && targetSetting !== "") {

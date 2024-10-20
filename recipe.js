@@ -281,6 +281,10 @@ export function getRecipes(data, items) {
     waterRecipe.defaultPriority = 0
     waterRecipe.defaultWeight = hundred
     let reactor = items.get("nuclear-reactor")
+    let used_cell_name = "used-up-uranium-fuel-cell"
+    if (!items.has(used_cell_name)) {
+        used_cell_name = "depleted-uranium-fuel-cell"
+    }
     recipes.set("nuclear-reactor-cycle", new Recipe(
         "nuclear-reactor-cycle",
         "Nuclear reactor cycle",
@@ -292,25 +296,27 @@ export function getRecipes(data, items) {
         Rational.from_float(200),
         [new Ingredient(items.get("uranium-fuel-cell"), one)],
         [
-            new Ingredient(items.get("used-up-uranium-fuel-cell"), one),
+            new Ingredient(items.get(used_cell_name), one),
             new Ingredient(items.get("nuclear-reactor-cycle"), one),
         ]
     ))
-    let rocket = items.get("rocket-silo")
-    recipes.set("rocket-launch", new Recipe(
-        "rocket-launch",
-        "Rocket launch",
-        rocket.order,
-        rocket.icon_col,
-        rocket.icon_row,
-        false,
-        "rocket-launch",
-        one,
-        [
-            new Ingredient(items.get("rocket-part"), Rational.from_float(100)),
-            new Ingredient(items.get("satellite"), one),
-        ], [new Ingredient(items.get("space-science-pack"), Rational.from_float(1000))]
-    ))
+    if (items.has("satellite")) {
+        let rocket = items.get("rocket-silo")
+        recipes.set("rocket-launch", new Recipe(
+            "rocket-launch",
+            "Rocket launch",
+            rocket.order,
+            rocket.icon_col,
+            rocket.icon_row,
+            false,
+            "rocket-launch",
+            one,
+            [
+                new Ingredient(items.get("rocket-part"), Rational.from_float(100)),
+                new Ingredient(items.get("satellite"), one),
+            ], [new Ingredient(items.get("space-science-pack"), Rational.from_float(1000))]
+        ))
+    }
     let steam = items.get("steam")
     recipes.set("steam", new Recipe(
         "steam",
@@ -325,6 +331,9 @@ export function getRecipes(data, items) {
         [new Ingredient(items.get("steam"), one)],
     ))
     for (let d of data.recipes) {
+        if (d.key.endsWith("-recycling")) {
+            continue
+        }
         recipes.set(d.key, makeRecipe(data, items, d))
     }
     for (let d of data.resources) {
