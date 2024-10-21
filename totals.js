@@ -33,7 +33,7 @@ function set(map, key1, key2, value) {
 }
 
 export class Totals {
-    constructor(spec, products, rates, surplus) {
+    constructor(spec, products, rates, surplus, extraRecipes) {
         this.products = products
         this.rates = rates
         this.surplus = surplus
@@ -76,7 +76,11 @@ export class Totals {
                 let rate = recipeRate.mul(ing.amount)
                 let ratio = rate.div(totalRate)
                 let fuel = i >= recipe.ingredients.length
-                for (let subRecipe of spec.getRecipes(ing.item)) {
+                let subRecipes = spec.getRecipes(ing.item)
+                if (extraRecipes.has(ing.item)) {
+                    subRecipes.push(extraRecipes.get(ing.item))
+                }
+                for (let subRecipe of subRecipes) {
                     if (!rates.has(subRecipe)) {
                         continue
                     }

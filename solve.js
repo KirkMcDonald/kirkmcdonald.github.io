@@ -140,10 +140,29 @@ export function solve(spec, fullOutputs) {
         spec.lastMetadata = null
         spec.lastSolution = null
         solution.set(new OutputRecipe(outputs), one)
-        return new Totals(spec, outputs, solution, new Map())
+        return new Totals(spec, outputs, solution, new Map(), new Map())
     }
 
     recipes = spec.getRecipeGraph(partialSolution.remaining)
+
+    // If an item
+    // 1) Is used as a link internal to a recipe cycle.
+    //     and
+    // 2) Is not produced by a recipe outside of the cycle.
+    //     unless
+    //   2a) It is a product of a factory target.
+    // then include that item's disableRecipe in the tableau, at the maximum
+    // possible priority level, as a producer of last resort. It is possible
+    // for such items to be involved in a net-negative production loop, and
+    // doing so will avoid infeasible solutions.
+
+    // Map of build target items to recipes, if they are recipe-targets.
+    let targetItemMap = new Map()
+    for (let target of spec.buildTargets) {
+        if (target.changedBuilding && target.recipe) {
+            targetItemMap.set(target.item, target.recipe)
+        }
+    }
 
     let products = new Set()
     //let ingredients = new Set()
@@ -153,6 +172,34 @@ export function solve(spec, fullOutputs) {
     let recipeArray = []
     let recipeRows = new Map()
 
+    let maxPriorityRecipes = new Map()
+
+    for (let recipe of recipes) {
+        if (cyclic.has(recipe)) {
+            for (let {item} of recipe.getIngredients()) {
+                if (recipes.has(item.disableRecipe)) {
+                    continue
+                }
+                let candidate = false
+                let outside = false
+                for (let subrecipe of item.recipes) {
+                    if (cyclic.has(subrecipe)) {
+                        candidate = true
+                    } else {
+                        if (recipes.has(subrecipe)) {
+                            outside = true
+                        }
+                    }
+                }
+                if (candidate && (targetItemMap.has(item) || !outside)) {
+                    maxPriorityRecipes.set(item, item.disableRecipe)
+                }
+            }
+        }
+    }
+    for (let [item, recipe] of maxPriorityRecipes) {
+        recipes.add(recipe)
+    }
     for (let recipe of recipes) {
         recipeRows.set(recipe, recipeArray.length)
         recipeArray.push(recipe)
@@ -273,6 +320,9 @@ export function solve(spec, fullOutputs) {
             P = P.mul(cost_ratio).mul(N)
         }
     }
+    for (let [item, recipe] of maxPriorityRecipes) {
+        A.setIndex(recipeRows.get(recipe), columns - 1, P)
+    }
 
     spec.lastTableau = A.copy()
     spec.lastMetadata = {
@@ -309,6 +359,6 @@ export function solve(spec, fullOutputs) {
     if (surplus.size > 0) {
         solution.set(new SurplusRecipe(surplus), one)
     }
-    return new Totals(spec, outputs, solution, surplus)
+    return new Totals(spec, outputs, solution, surplus, maxPriorityRecipes)
     //return {"solution": solution, "surplus": surplus}
 }
