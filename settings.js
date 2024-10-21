@@ -34,7 +34,7 @@ class Modification {
 }
 
 export let MODIFICATIONS = new Map([
-    ["2-0-6", new Modification("Vanilla 2.0.6", "vanilla-2.0.6.json", false)],
+    ["2-0-7", new Modification("Vanilla 2.0.7", "vanilla-2.0.7.json", false)],
     ["1-1-110", new Modification("Vanilla 1.1.110", "vanilla-1.1.110.json", true)],
     ["1-1-110x", new Modification("Vanilla 1.1.110 - Expensive", "vanilla-1.1.110-expensive.json", true)],
     //["space-age", new Modification("Space Age 2.0.6", "space-age-2.0.6.json", false)],
@@ -45,6 +45,7 @@ let DEFAULT_MODIFICATION = "2-0-6"
 // Ideally we'd write this as a generalized function, but for now we can hard-
 // code these version upgrades.
 var modUpdates = new Map([
+    ["2-0-6", "2-0-7"],
     ["1-1-19", "1-1-110"],
     ["1-1-19x", "1-1-110x"],
 ])
