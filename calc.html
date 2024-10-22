@@ -26,7 +26,7 @@
         var handlers = {}
     </script>
     <script type="module">
-        import { plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeMprod, changeVisType, changeVisRender, toggleDebug } from "./events.js"
+        import { plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeMprod, changeVisType, changeVisRender, changeVisDir, toggleDebug } from "./events.js"
         import { init } from "./init.js"
         handlers.plusHandler = plusHandler
         handlers.clickTab = clickTab
@@ -38,6 +38,7 @@
         handlers.changeMprod = changeMprod
         handlers.changeVisType = changeVisType
         handlers.changeVisRender = changeVisRender
+        handlers.changeVisDir = changeVisDir
         handlers.toggleDebug = toggleDebug
         handlers.init = init
     </script>
@@ -113,6 +114,16 @@ limitations under the License.-->
 
                 <input id="fix_render" type="radio" name="render" value="fix" autocomplete="off" onchange="handlers.changeVisRender(event)">
                 <label for="fix_render">Fixed</label>
+            </form>
+        </div>
+        <div class="graph_setting">
+            Graph direction:<br>
+            <form id="graph_direction">
+                <input id="right_direction" type="radio" name="direction" value="right" autocomplete="off" onchange="handlers.changeVisDir(event)">
+                <label for="right_direction">Left to right</label>
+
+                <input id="down_direction" type="radio" name="direction" value="down" autocomplete="off" onchange="handlers.changeVisDir(event)">
+                <label for="down_direction">Top to bottom</label>
             </form>
         </div>
         <div id="graph_container">

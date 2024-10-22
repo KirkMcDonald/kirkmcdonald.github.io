@@ -32,10 +32,15 @@ function edgeName(link) {
         return `link-${link.index}`
 }
 
-export function renderBoxGraph({nodes, links}, ignore, callback) {
+export function renderBoxGraph({nodes, links}, direction, ignore, callback) {
     let [itemColors, recipeColors] = getColorMaps(nodes, links)
+    if (direction === "down") {
+        direction = "TB"
+    } else {
+        direction = "LR"
+    }
     let g = new dagre.graphlib.Graph({multigraph: true})
-    g.setGraph({rankdir: "TB"})
+    g.setGraph({rankdir: direction})
     g.setDefaultEdgeLabel(() => {})
 
     let testSVG = d3.select("body").append("svg").classed("test", true)
@@ -181,7 +186,7 @@ export function renderBoxGraph({nodes, links}, ignore, callback) {
         .data(nodes)
         .join("g")
             .classed("node", true)
-    renderNode(rects, boxlineNodeMargin, recipeColors, ignore)
+    renderNode(rects, boxlineNodeMargin, "left", recipeColors, ignore)
 
     svg.append("g")
         .classed("overlay", true)

@@ -93,6 +93,8 @@ export function setVisualizerType(vt) {
 
 export function changeVisType(event) {
     visualizerType = event.target.value
+    visualizerDirection = getDefaultVisDirection()
+    d3.select(`#${visualizerDirection}_direction`).property("checked", true)
     spec.display()
 }
 
@@ -106,6 +108,29 @@ export function setVisualizerRender(vr) {
 
 export function changeVisRender(event) {
     visualizerRender = event.target.value
+    spec.display()
+}
+
+export let visualizerDirection
+
+export function getDefaultVisDirection() {
+    if (visualizerType === "sankey") {
+        return "right"
+    } else {
+        return "down"
+    }
+}
+
+export function isDefaultVisDirection() {
+    return visualizerDirection === getDefaultVisDirection()
+}
+
+export function setVisualizerDirection(vd) {
+    visualizerDirection = vd
+}
+
+export function changeVisDir(event) {
+    visualizerDirection = event.target.value
     spec.display()
 }
 

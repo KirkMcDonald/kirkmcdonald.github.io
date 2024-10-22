@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT } from "./align.js"
-import { DEFAULT_TAB, currentTab, DEFAULT_VISUALIZER, visualizerType, DEFAULT_RENDER, visualizerRender } from "./events.js"
+import { DEFAULT_TAB, currentTab, DEFAULT_VISUALIZER, visualizerType, DEFAULT_RENDER, visualizerRender, isDefaultVisDirection, visualizerDirection } from "./events.js"
 import { spec, DEFAULT_BELT, DEFAULT_FUEL } from "./factory.js"
 import { Rational } from "./rational.js"
 import { currentMod, DEFAULT_TITLE, DEFAULT_COLOR_SCHEME, colorScheme } from "./settings.js"
@@ -101,6 +101,9 @@ export function formatSettings(excludeTitle, overrideTab, targets) {
     }
     if (visualizerRender !== DEFAULT_RENDER) {
         settings += "vr=" + visualizerRender + "&"
+    }
+    if (!isDefaultVisDirection()) {
+        settings += "vd=" + visualizerDirection + "&"
     }
 
     settings += "items="

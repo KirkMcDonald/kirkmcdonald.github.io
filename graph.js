@@ -103,7 +103,14 @@ export function imageViewBox(obj) {
     return `${x1} ${y1} ${PX_WIDTH-1} ${PX_HEIGHT-1}`
 }
 
-export function renderNode(rects, nodeMargin, recipeColors, ignore) {
+export function renderNode(rects, nodeMargin, justification, recipeColors, ignore) {
+    rects.each(d => {
+        if (justification === "left") {
+            d.labelX = d.x0
+        } else {
+            d.labelX = (d.x0 + d.x1)/2 - d.width/2
+        }
+    })
     // main rect
     rects.append("rect")
         .attr("x", d => d.x0)
@@ -125,7 +132,7 @@ export function renderNode(rects, nodeMargin, recipeColors, ignore) {
     // recipe icon
     labeledNode.append("svg")
         .attr("viewBox", d => imageViewBox(d.recipe))
-        .attr("x", d => d.x0 + nodeMargin + 0.5)
+        .attr("x", d => d.labelX + nodeMargin + 0.5)
         .attr("y", d => (d.y0 + d.y1) / 2 - iconSize/2 + 0.5)
         .attr("width", iconSize)
         .attr("height", iconSize)
@@ -136,7 +143,7 @@ export function renderNode(rects, nodeMargin, recipeColors, ignore) {
             .attr("height", sheetHeight)
     // node text (building count, or plain rate if no building)
     labeledNode.append("text")
-        .attr("x", d => d.x0 + nodeMargin + iconSize + (d.building === null ? 0 : colonWidth + iconSize) /*+ 5*/)
+        .attr("x", d => d.labelX + nodeMargin + iconSize + (d.building === null ? 0 : colonWidth + iconSize) /*+ 5*/)
         .attr("y", d => (d.y0 + d.y1) / 2)
         .attr("dy", "0.35em")
         .text(d => d.text())
@@ -144,18 +151,18 @@ export function renderNode(rects, nodeMargin, recipeColors, ignore) {
     // colon
     buildingNode.append("circle")
         .classed("colon", true)
-        .attr("cx", d => d.x0 + nodeMargin + iconSize + colonWidth/2)
+        .attr("cx", d => d.labelX + nodeMargin + iconSize + colonWidth/2)
         .attr("cy", d => (d.y0 + d.y1) / 2 - 4)
         .attr("r", 1)
     buildingNode.append("circle")
         .classed("colon", true)
-        .attr("cx", d => d.x0 + nodeMargin + iconSize + colonWidth/2)
+        .attr("cx", d => d.labelX + nodeMargin + iconSize + colonWidth/2)
         .attr("cy", d => (d.y0 + d.y1) / 2 + 4)
         .attr("r", 1)
     // building icon
     buildingNode.append("svg")
         .attr("viewBox", d => imageViewBox(d.building))
-        .attr("x", d => d.x0 + iconSize + colonWidth + nodeMargin + 0.5)
+        .attr("x", d => d.labelX + iconSize + colonWidth + nodeMargin + 0.5)
         .attr("y", d => (d.y0 + d.y1) / 2 - iconSize/2 + 0.5)
         .attr("width", iconSize)
         .attr("height", iconSize)

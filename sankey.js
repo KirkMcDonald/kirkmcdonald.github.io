@@ -95,7 +95,7 @@ function linkPath(d) {
     return makeCurve(1, 0, x0, y0, x1, y1, d.width)
 }
 
-export function renderSankey(data, ignore) {
+export function renderSankey(data, direction, ignore) {
     let maxNodeWidth = 0
     let testSVG = d3.select("body").append("svg")
         .classed("sankey test", true)
@@ -110,9 +110,17 @@ export function renderSankey(data, ignore) {
     text.remove()
     testSVG.remove()
 
+    let nw, np
+    if (direction === "down") {
+        nw = nodePadding
+        np = maxNodeWidth
+    } else if (direction === "right") {
+        nw = maxNodeWidth
+        np = nodePadding
+    }
     let sankey = d3sankey.sankey()
-        .nodeWidth(maxNodeWidth)
-        .nodePadding(nodePadding)
+        .nodeWidth(nw)
+        .nodePadding(np)
         .nodeAlign(d3sankey.sankeyRight)
         .maxNodeHeight(maxNodeHeight)
         .linkLength(columnWidth)
@@ -121,6 +129,9 @@ export function renderSankey(data, ignore) {
 
     for (let link of links) {
         link.curve = linkPath(link)
+        if (direction === "down") {
+            link.curve = link.curve.transpose()
+        }
         let belts = []
         if (link.beltCount !== null) {
             let dy = link.width / link.beltCount.toFloat()
@@ -136,6 +147,13 @@ export function renderSankey(data, ignore) {
         link.belts = belts
     }
 
+    if (direction === "down") {
+        for (let node of nodes) {
+            [node.x0, node.y0] = [node.y0, node.x0];
+            [node.x1, node.y1] = [node.y1, node.x1];
+        }
+    }
+
     let svg = d3.select("svg#graph")
         .classed("sankey", true)
     svg.selectAll("g").remove()
@@ -148,7 +166,11 @@ export function renderSankey(data, ignore) {
         .join("g")
             .classed("node", true)
 
-    renderNode(rects, sankeyNodeMargin, recipeColors, ignore)
+    let nodeJust = "left"
+    if (direction === "down") {
+        nodeJust = "center"
+    }
+    renderNode(rects, sankeyNodeMargin, nodeJust, recipeColors, ignore)
 
     // Link paths
     let link = svg.append("g")
@@ -190,23 +212,38 @@ export function renderSankey(data, ignore) {
             .attr("stroke-width", 1)
     link.append("title")
         .text(d => `${d.source.name} \u2192 ${d.target.name}\n${spec.format.rate(d.rate)}`)
-    link.filter(d => d.extra)
+    let linkIcon = link.filter(d => d.extra)
         .append("svg")
             .attr("viewBox", d => imageViewBox(d.item))
             .attr("x", d => d.source.x1 + 2.25)
             .attr("y", d => d.y0 - iconSize/4 + 0.25)
             .attr("width", iconSize/2)
             .attr("height", iconSize/2)
-            .append("image")
-                .attr("xlink:href", "images/sprite-sheet-" + sheetHash + ".png")
-                .attr("width", sheetWidth)
-                .attr("height", sheetHeight)
-    link.append("text")
+    linkIcon.append("image")
+        .attr("xlink:href", "images/sprite-sheet-" + sheetHash + ".png")
+        .attr("width", sheetWidth)
+        .attr("height", sheetHeight)
+    if (direction === "down") {
+        linkIcon
+            .attr("x", d => d.y0 - iconSize/4 + 0.25)
+            .attr("y", d => d.source.y1 + 2.25)
+    }
+    let linkLabel = link.append("text")
         .attr("x", d => d.source.x1 + 2 + (d.extra ? iconSize/2 : 0))
         .attr("y", d => d.y0)
         .attr("dy", "0.35em")
         .attr("text-anchor", "start")
         .text(d => (d.extra ? "\u00d7 " : "") + spec.format.rate(d.rate) + "/" + spec.format.rateName)
+    if (direction === "down") {
+        linkLabel
+            .attr("x", null)
+            .attr("y", null)
+            .attr("transform", d => {
+                let x = d.y0
+                let y = d.source.y1 + 2 + (d.extra ? 16 : 0)
+                return `translate(${x},${y}) rotate(90)`
+            })
+    }
 
     // Overlay transparent rect on top of each node, for click events.
     let rectElements = svg.selectAll("g.node rect").nodes()

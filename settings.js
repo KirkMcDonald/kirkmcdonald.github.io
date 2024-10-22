@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT, longRateNames } from "./align.js"
 import { colorSchemes } from "./color.js"
-import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender } from "./events.js"
+import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender, visualizerDirection, getDefaultVisDirection, setVisualizerDirection } from "./events.js"
 import { spec, DEFAULT_BELT, DEFAULT_FUEL, buildingSort } from "./factory.js"
 import { getRecipeGroups } from "./groups.js"
 import { changeMod } from "./init.js"
@@ -40,7 +40,7 @@ export let MODIFICATIONS = new Map([
     //["space-age", new Modification("Space Age 2.0.6", "space-age-2.0.6.json", false)],
 ])
 
-let DEFAULT_MODIFICATION = "2-0-6"
+let DEFAULT_MODIFICATION = "2-0-7"
 
 // Ideally we'd write this as a generalized function, but for now we can hard-
 // code these version upgrades.
@@ -525,6 +525,12 @@ function renderVisualizer(settings) {
         setVisualizerRender(DEFAULT_RENDER)
     }
     d3.select(`#${visualizerRender}_render`).property("checked", true)
+    if (settings.has("vd")) {
+        setVisualizerDirection(settings.get("vd"))
+    } else {
+        setVisualizerDirection(getDefaultVisDirection())
+    }
+    d3.select(`#${visualizerDirection}_direction`).property("checked", true)
 }
 
 // default module

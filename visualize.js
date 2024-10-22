@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 import { renderBoxGraph } from "./boxline2.js"
-import { visualizerType, visualizerRender, installSVGEvents } from "./events.js"
+import { visualizerType, visualizerRender, visualizerDirection, installSVGEvents } from "./events.js"
 import { spec } from "./factory.js"
 import { iconSize, colonWidth } from "./graph.js"
 import { zero, one } from "./rational.js"
@@ -247,9 +247,9 @@ export function renderTotals(totals, ignore) {
     }
 
     if (visualizerType === "sankey") {
-        renderSankey(data, ignore)
+        renderSankey(data, visualizerDirection, ignore)
         callback()
     } else {
-        renderBoxGraph(data, ignore, callback)
+        renderBoxGraph(data, visualizerDirection, ignore, callback)
     }
 }
