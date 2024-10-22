@@ -568,10 +568,12 @@ class FactorySpecification {
         d3.select(target.element).remove()
     }
     toggleIgnore(item) {
+        let updateTargets = false
         if (this.ignore.has(item)) {
             this.ignore.delete(item)
             if (!this.isItemDisabled(item)) {
                 this.priority.removeRecipe(item.disableRecipe)
+                updateTargets = true
             }
         } else {
             this.ignore.add(item)
@@ -589,6 +591,16 @@ class FactorySpecification {
                 }
                 let hundred = Rational.from_float(100)
                 this.priority.addRecipe(item.disableRecipe, hundred, level)
+                updateTargets = true
+            }
+        }
+        if (updateTargets) {
+            // Update build targets.
+            for (let target of this.buildTargets) {
+                if (target.item === item) {
+                    target.displayRecipes()
+                    target.rateChanged()
+                }
             }
         }
     }

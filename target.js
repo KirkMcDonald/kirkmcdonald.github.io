@@ -202,14 +202,16 @@ export class BuildTarget {
         this.recipeSelector.selectAll("*").remove()
         let recipes = []
         let found = false
-        for (let recipe of this.item.recipes) {
-            if (spec.disable.has(recipe) || !recipe.isNetProducer(this.item)) {
-                continue
+        if (!spec.ignore.has(this.item)) {
+            for (let recipe of this.item.recipes) {
+                if (spec.disable.has(recipe) || !recipe.isNetProducer(this.item)) {
+                    continue
+                }
+                if (recipe === this.recipe) {
+                    found = true
+                }
+                recipes.push(recipe)
             }
-            if (recipe === this.recipe) {
-                found = true
-            }
-            recipes.push(recipe)
         }
         if (!found) {
             this.recipe = null
