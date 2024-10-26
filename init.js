@@ -21,6 +21,7 @@ import { getItemGroups } from "./group.js"
 import { getSprites } from "./icon.js"
 import { getItems } from "./item.js"
 import { getModules } from "./module.js"
+import { getPlanets } from "./planet.js"
 import { getRecipes } from "./recipe.js"
 import { currentMod, MODIFICATIONS, renderDataSetOptions, renderSettings } from "./settings.js"
 
@@ -90,13 +91,14 @@ function loadData(modName, settings) {
     d3.json(filename, {cache: "reload"}).then(function(data) {
         let items = getItems(data)
         let recipes = getRecipes(data, items)
+        let planets = getPlanets(data, recipes)
         let modules = getModules(data, items)
         let buildings = getBuildings(data, items)
         let belts = getBelts(data)
         let fuel = getFuel(data, items)
         getSprites(data)
         let itemGroups = getItemGroups(items, data)
-        spec.setData(items, recipes, modules, buildings, belts, fuel, itemGroups)
+        spec.setData(items, recipes, planets, modules, buildings, belts, fuel, itemGroups)
 
         fixLegacySettings(settings)
         renderSettings(settings)

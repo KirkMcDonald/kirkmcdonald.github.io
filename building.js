@@ -18,11 +18,12 @@ import { Rational, zero, one } from "./rational.js"
 let thirty = Rational.from_float(30)
 
 class Building {
-    constructor(key, name, col, row, categories, speed, moduleSlots, power, fuel) {
+    constructor(key, name, col, row, categories, speed, prodBonus, moduleSlots, power, fuel) {
         this.key = key
         this.name = name
         this.categories = new Set(categories)
         this.speed = speed
+        this.prodBonus = prodBonus
         this.moduleSlots = moduleSlots
         this.power = power
         this.fuel = fuel
@@ -54,7 +55,7 @@ class Building {
         return this.moduleSlots > 0
     }
     prodEffect(spec) {
-        return zero
+        return this.prodBonus
     }
     drain() {
         return this.power.div(thirty)
@@ -88,7 +89,7 @@ class Building {
 
 class Miner extends Building {
     constructor(key, name, col, row, categories, miningSpeed, moduleSlots, power, fuel) {
-        super(key, name, col, row, categories, 0, moduleSlots, power, fuel)
+        super(key, name, col, row, categories, zero, zero, moduleSlots, power, fuel)
         this.miningSpeed = miningSpeed
     }
     less(other) {
@@ -137,6 +138,33 @@ class Miner extends Building {
     }
 }
 
+class OffshorePump extends Building {
+    constructor(key, name, col, row, pumpingSpeed) {
+        super(key, name, col, row, ["offshore-pumping"], zero, zero, 0, zero, null)
+        this.pumpingSpeed = pumpingSpeed
+    }
+    less(other) {
+        return this.pumpingSpeed.less(other.pumpingSpeed)
+    }
+    getRecipeRate(spec, recipe) {
+        return this.pumpingSpeed
+    }
+    renderTooltip() {
+        let self = this
+        let t = d3.create("div")
+            .classed("frame", true)
+        let header = t.append("h3")
+        header.append(() => self.icon.make(32, true))
+        header.append(() => new Text(self.name))
+        let line = t.append("div")
+        line.append("b")
+            .text("Pumping speed: ")
+        line.append("span")
+            .text(`${spec.format.rate(this.pumpingSpeed)}/${spec.format.rateName}`)
+        return t.node()
+    }
+}
+
 let rocketLaunchDuration = Rational.from_floats(2434, 60)
 
 function launchRate(spec) {
@@ -179,20 +207,6 @@ function renderTooltipBase() {
 
 export function getBuildings(data, items) {
     let buildings = []
-    let pumpDef = items.get("offshore-pump")
-    let pump = new Building(
-        "offshore-pump",
-        pumpDef.name,
-        pumpDef.icon_col,
-        pumpDef.icon_row,
-        ["water"],
-        one,
-        0,
-        zero,
-        null,
-    )
-    pump.renderTooltip = renderTooltipBase
-    buildings.push(pump)
     let reactorDef = items.get("nuclear-reactor")
     let reactor = new Building(
         "nuclear-reactor",
@@ -201,6 +215,7 @@ export function getBuildings(data, items) {
         reactorDef.icon_row,
         ["nuclear"],
         one,
+        zero,
         0,
         zero,
         null
@@ -223,6 +238,7 @@ export function getBuildings(data, items) {
         boilerItem.icon_row,
         ["boiler"],
         one,
+        zero,
         0,
         boiler_energy,
         "chemical",
@@ -238,6 +254,7 @@ export function getBuildings(data, items) {
         siloDef.icon_row,
         ["rocket-launch"],
         one,
+        zero,
         0,
         zero,
         null
@@ -249,6 +266,10 @@ export function getBuildings(data, items) {
         if (d.energy_source && d.energy_source.type === "burner") {
             fuel = d.energy_source.fuel_category
         }
+        let prod = zero
+        if (d.prod_bonus) {
+            prod = Rational.from_float_approximate(d.prod_bonus)
+        }
         buildings.push(new Building(
             d.key,
             d.localized_name.en,
@@ -256,6 +277,7 @@ export function getBuildings(data, items) {
             d.icon_row,
             d.crafting_categories,
             Rational.from_float_approximate(d.crafting_speed),
+            prod,
             d.module_slots,
             Rational.from_float_approximate(d.energy_usage),
             fuel
@@ -269,9 +291,21 @@ export function getBuildings(data, items) {
             d.icon_row,
             d.crafting_categories,
             Rational.from_float_approximate(d.crafting_speed),
+            zero,
             d.module_slots,
             Rational.from_float_approximate(d.energy_usage),
             null
+        ))
+    }
+    for (let d of data.offshore_pumps) {
+        // Pumping speed is given in units/tick.
+        let speed = Rational.from_float_approximate(d.pumping_speed).mul(Rational.from_float(60))
+        buildings.push(new OffshorePump(
+            d.key,
+            d.localized_name.en,
+            d.icon_col,
+            d.icon_row,
+            speed,
         ))
     }
     for (let d of data.mining_drills) {
@@ -287,7 +321,7 @@ export function getBuildings(data, items) {
             d.localized_name.en,
             d.icon_col,
             d.icon_row,
-            ["mining-basic-solid"],
+            d.resource_categories,
             Rational.from_float_approximate(d.mining_speed),
             d.module_slots,
             Rational.from_float_approximate(d.energy_usage),

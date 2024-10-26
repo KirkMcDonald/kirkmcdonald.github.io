@@ -16,6 +16,7 @@ import { DEFAULT_TAB, currentTab, DEFAULT_VISUALIZER, visualizerType, DEFAULT_RE
 import { spec, DEFAULT_BELT, DEFAULT_FUEL } from "./factory.js"
 import { Rational } from "./rational.js"
 import { currentMod, DEFAULT_TITLE, DEFAULT_COLOR_SCHEME, colorScheme } from "./settings.js"
+import { sorted } from "./sort.js"
 
 function getModuleKey(module) {
     let moduleKey
@@ -136,12 +137,27 @@ export function formatSettings(excludeTitle, overrideTab, targets) {
         settings += "&ignore=" + ignore.join(",")
     }
 
-    if (!spec.isDefaultDisable()) {
-        let disable = []
-        for (let d of spec.disable) {
-            disable.push(d.key)
+    if (!spec.isDefaultPlanet()) {
+        let planets = []
+        for (let p of sorted(spec.selectedPlanets, p => p.order)) {
+            planets.push(p.key)
         }
-        settings += "&disable=" + disable.join(",")
+        settings += "&planet=" + planets.join(",")
+    }
+    let {disable, enable} = spec.getNetDisable()
+    if (disable.size !== 0) {
+        let parts = []
+        for (let d of disable) {
+            parts.push(d.key)
+        }
+        settings += "&disable=" + parts.join(",")
+    }
+    if (enable.size !== 0) {
+        let parts = []
+        for (let d of enable) {
+            parts.push(d.key)
+        }
+        settings += "&enable=" + parts.join(",")
     }
 
     let moduleSettings = []

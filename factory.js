@@ -27,12 +27,13 @@ import { renderTotals } from "./visualize.js"
 
 const DEFAULT_ITEM_KEY = "advanced-circuit"
 
+export let DEFAULT_PLANET = "nauvis"
 export let DEFAULT_BELT = "transport-belt"
 export let DEFAULT_FUEL = "coal"
 let DEFAULT_BUILDINGS = new Set([
     "assembling-machine-1",
     "electric-furnace",
-    "electric-miner",
+    "electric-mining-drill",
 ])
 
 class BuildingSet {
@@ -125,6 +126,7 @@ class FactorySpecification {
         this.items = null
         this.recipes = null
         this.modules = null
+        this.planets = null
         this.buildings = null
         this.buildingKeys = null
         this.belts = null
@@ -149,6 +151,8 @@ class FactorySpecification {
 
         this.ignore = new Set()
         this.disable = new Set()
+        this.selectedPlanets = new Set()
+        this.planetaryBaseline = null
 
         this.priority = null
         this.defaultPriority = null
@@ -164,18 +168,10 @@ class FactorySpecification {
 
         this.debug = false
     }
-    setData(items, recipes, modules, buildings, belts, fuels, itemGroups) {
+    setData(items, recipes, planets, modules, buildings, belts, fuels, itemGroups) {
         this.items = items
-        let tierMap = new Map()
-        for (let [itemKey, item] of items) {
-            let tier = tierMap.get(item.tier)
-            if (tier === undefined) {
-                tier = []
-                tierMap.set(item.tier, tier)
-            }
-            tier.push(item)
-        }
         this.recipes = recipes
+        this.planets = planets
         this.modules = modules
         this.buildings = getBuildingGroups(buildings)
         this.buildingKeys = new Map()
@@ -194,10 +190,10 @@ class FactorySpecification {
     setDefaultDisable() {
         this.disable.clear()
     }
-    isDefaultDisable() {
-        return this.disable.size === 0
-    }
     setDisable(recipe) {
+        if (spec.disable.has(recipe)) {
+            return
+        }
         let candidates = new Set()
         let items = new Set()
         for (let ing of recipe.products) {
@@ -238,6 +234,9 @@ class FactorySpecification {
         }
     }
     setEnable(recipe) {
+        if (!spec.disable.has(recipe)) {
+            return
+        }
         // Enabling this recipe could potentially remove these items'
         // disableRecipe from the priority list. The item is only removed if it
         // goes from being disabled to not disabled, and is not ignored.
@@ -266,6 +265,80 @@ class FactorySpecification {
                 target.displayRecipes()
             }
         }
+    }
+    _syncPlanetDisable() {
+        let allDisable
+        if (this.selectedPlanets.size === 0) {
+            allDisable = new Set()
+        } else {
+            let planets = Array.from(this.selectedPlanets)
+            allDisable = new Set(planets[0].disable)
+            for (let i = 1; i < planets.length; i++) {
+                let p = planets[i]
+                let newDisable = new Set()
+                for (let r of p.disable) {
+                    if (allDisable.has(r)) {
+                        newDisable.add(r)
+                    }
+                }
+                allDisable = newDisable
+            }
+        }
+        this.planetaryBaseline = allDisable
+        let toEnable = new Set()
+        for (let r of this.disable) {
+            if (!allDisable.has(r)) {
+                toEnable.add(r)
+            }
+        }
+        for (let r of toEnable) {
+            this.setEnable(r)
+        }
+        for (let r of allDisable) {
+            if (!this.disable.has(r)) {
+                this.setDisable(r)
+            }
+        }
+    }
+    isDefaultPlanet() {
+        if (!this.planets || this.planets.size === 1) {
+            return true
+        }
+        let a = Array.from(this.selectedPlanets)
+        if (a.length !== 1 || a[0].key !== DEFAULT_PLANET) {
+            return false
+        }
+        return true
+    }
+    getNetDisable() {
+        if (!this.planetaryBaseline) {
+            return {disable: this.disable, enable: new Set()}
+        }
+        let disable = new Set()
+        let enable = new Set()
+        for (let r of this.disable) {
+            if (!this.planetaryBaseline.has(r)) {
+                disable.add(r)
+            }
+        }
+        for (let r of this.planetaryBaseline) {
+            if (!this.disable.has(r)) {
+                enable.add(r)
+            }
+        }
+        return {disable, enable}
+    }
+    selectOnePlanet(planet) {
+        this.selectedPlanets.clear()
+        this.selectPlanet(planet)
+    }
+    selectPlanet(planet) {
+        this.selectedPlanets.add(planet)
+        this._syncPlanetDisable()
+    }
+    unselectPlanet(planet) {
+        this.selectedPlanets.delete(planet)
+        this._syncPlanetDisable()
     }
     getDefaultPriorityArray() {
         let a = []

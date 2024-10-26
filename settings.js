@@ -14,7 +14,7 @@ limitations under the License.*/
 import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT, longRateNames } from "./align.js"
 import { colorSchemes } from "./color.js"
 import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender, visualizerDirection, getDefaultVisDirection, setVisualizerDirection } from "./events.js"
-import { spec, DEFAULT_BELT, DEFAULT_FUEL, buildingSort } from "./factory.js"
+import { spec, DEFAULT_PLANET, DEFAULT_BELT, DEFAULT_FUEL, buildingSort } from "./factory.js"
 import { getRecipeGroups } from "./groups.js"
 import { changeMod } from "./init.js"
 import { shortModules, moduleRows, moduleDropdown } from "./module.js"
@@ -34,18 +34,19 @@ class Modification {
 }
 
 export let MODIFICATIONS = new Map([
-    ["2-0-7", new Modification("Vanilla 2.0.7", "vanilla-2.0.7.json", false)],
+    ["2-0-10", new Modification("Vanilla 2.0.10", "vanilla-2.0.10.json", false)],
     ["1-1-110", new Modification("Vanilla 1.1.110", "vanilla-1.1.110.json", true)],
     ["1-1-110x", new Modification("Vanilla 1.1.110 - Expensive", "vanilla-1.1.110-expensive.json", true)],
-    //["space-age", new Modification("Space Age 2.0.6", "space-age-2.0.6.json", false)],
+    ["space-age-2-0-10", new Modification("Space Age 2.0.10 (WORK IN PROGRESS)", "space-age-2.0.10.json", false)],
 ])
 
-let DEFAULT_MODIFICATION = "2-0-7"
+let DEFAULT_MODIFICATION = "2-0-10"
 
 // Ideally we'd write this as a generalized function, but for now we can hard-
 // code these version upgrades.
 var modUpdates = new Map([
-    ["2-0-6", "2-0-7"],
+    ["2-0-6", "2-0-10"],
+    ["2-0-7", "2-0-10"],
     ["1-1-19", "1-1-110"],
     ["1-1-19x", "1-1-110x"],
 ])
@@ -696,16 +697,81 @@ function renderDefaultBeacon(settings) {
 // recipe disabling
 
 function renderRecipes(settings) {
-    if (settings.has("disable")) {
-        let keys = settings.get("disable").split(",")
-        for (let k of keys) {
-            let recipe = spec.recipes.get(k)
-            if (recipe) {
-                spec.setDisable(recipe)
+    let havePlanets = spec.planets && spec.planets.size > 1
+    let planetRow = d3.select("#planet_setting_row")
+    if (havePlanets) {
+        planetRow.style("display", null)
+        let planetKeys = []
+        if (settings.has("planet")) {
+            let s = settings.get("planet")
+            if (s !== "") {
+                planetKeys = s.split(",")
+            }
+        } else {
+            planetKeys = [DEFAULT_PLANET]
+        }
+        for (let key of planetKeys) {
+            if (spec.planets.has(key)) {
+                spec.selectPlanet(spec.planets.get(key))
             }
         }
     } else {
+        planetRow.style("display", "none")
+    }
+
+    if (settings.has("disable") || settings.has("enable")) {
+        if (settings.has("disable")) {
+            let keys = settings.get("disable").split(",")
+            for (let k of keys) {
+                let recipe = spec.recipes.get(k)
+                if (recipe) {
+                    spec.setDisable(recipe)
+                }
+            }
+        }
+        if (settings.has("enable")) {
+            let keys = settings.get("enable").split(",")
+            for (let k of keys) {
+                let recipe = spec.recipes.get(k)
+                if (recipe) {
+                    spec.setEnable(recipe)
+                }
+            }
+        }
+    } else if (!havePlanets) {
         spec.setDefaultDisable()
+    }
+
+    let planetDiv = d3.select("#planet_selector")
+        .classed("toggle-list", true)
+    planetDiv.selectAll("*").remove()
+    if (havePlanets) {
+        let planets = sorted(spec.planets.values(), p => p.order)
+        planetDiv.selectAll("div")
+            .data(planets)
+            .join("div")
+                .classed("toggle", true)
+                .classed("selected", d => spec.selectedPlanets.has(d))
+                .on("click", function(event, d) {
+                    if (event.shiftKey) {
+                        event.preventDefault()
+                        let selected = spec.selectedPlanets.has(d)
+                        d3.select(this).classed("selected", !selected)
+                        if (selected) {
+                            spec.unselectPlanet(d)
+                        } else {
+                            spec.selectPlanet(d)
+                        }
+                    } else {
+                        spec.selectOnePlanet(d)
+                        d3.selectAll("#planet_selector .toggle")
+                            .classed("selected", d => spec.selectedPlanets.has(d))
+                    }
+                    d3.selectAll("#recipe_toggles .toggle")
+                        .classed("selected", d => !spec.disable.has(d))
+                    spec.updateSolution()
+                })
+                .append(d => d.icon.make(32))
     }
 
     let allGroups = getRecipeGroups(new Set(spec.recipes.values()))
@@ -717,6 +783,7 @@ function renderRecipes(settings) {
     }
 
     let div = d3.select("#recipe_toggles")
+        .classed("toggle-list", true)
     div.selectAll("*").remove()
     let recipe = div.selectAll("div")
         .data(groups)

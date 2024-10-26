@@ -186,7 +186,7 @@ input.prec, input.mprod {
 .radio-setting input[type="radio"]:checked + label {
     background: var(--accent);
 }
-#recipe_toggles .toggle {
+.toggle-list .toggle {
     cursor: pointer;
     display: inline-block;
     border-radius: 4px;
@@ -195,13 +195,13 @@ input.prec, input.mprod {
     padding: 2px;
     background-color: var(--dark);
 }
-#recipe_toggles .toggle:hover {
+.toggle-list .toggle:hover {
     border-color: var(--bright);
 }
-#recipe_toggles .selected {
+.toggle-list .selected {
     border-color: var(--accent);
 }
-#recipe_toggles .selected:hover {
+.toggle-list .selected:hover {
     /*border-color: var(--accent);*/
 }
 #resource_settings {

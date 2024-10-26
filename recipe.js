@@ -22,8 +22,16 @@ export class Ingredient {
     }
 }
 
+class SurfaceCondition {
+    constructor(property, min, max) {
+        this.property = property
+        this.min = min
+        this.max = max
+    }
+}
+
 class Recipe {
-    constructor(key, name, order, col, row, allow_prod, category, time, ingredients, products) {
+    constructor(key, name, order, col, row, allow_prod, category, time, ingredients, products, conditions) {
         this.key = key
         this.name = name
         this.order = order
@@ -38,6 +46,11 @@ class Recipe {
         for (let ing of products) {
             ing.item.addRecipe(this)
         }
+
+        if (conditions === undefined || conditions === null) {
+            conditions = []
+        }
+        this.conditions = conditions
 
         this.icon_col = col
         this.icon_row = row
@@ -207,7 +220,16 @@ function makeRecipe(data, items, d) {
     let ingredients = []
     for (let {name, amount} of d.ingredients) {
         let item = items.get(name)
+        if (!item) {
+            return null
+        }
         ingredients.push(new Ingredient(item, Rational.from_float_approximate(amount)))
+    }
+    let conditions = []
+    if (d.surface_conditions) {
+        for (let {property, min, max} of d.surface_conditions) {
+            conditions.push(new SurfaceCondition(property, min, max))
+        }
     }
     return new Recipe(
         d.key,
@@ -219,7 +241,8 @@ function makeRecipe(data, items, d) {
         d.category,
         time,
         ingredients,
-        products
+        products,
+        conditions,
     )
 }
 
@@ -235,7 +258,8 @@ class ResourceRecipe extends Recipe {
             category,
             zero,
             [],
-            [new Ingredient(item, one)]
+            [new Ingredient(item, one)],
+            [],
         )
         this.defaultPriority = priority
         this.defaultWeight = weight
@@ -250,10 +274,47 @@ class MiningRecipe extends Recipe {
         if (!ingredients) {
             ingredients = []
         }
-        super(key, name, order, col, row, true, category, zero, ingredients, products)
+        super(key, name, order, col, row, true, category, zero, ingredients, products, [])
         this.miningTime = miningTime
 
         this.defaultPriority = 1
+        this.defaultWeight = Rational.from_float(100)
+    }
+    isResource() {
+        return true
+    }
+}
+
+// XXX: Still a hack.
+class PumpjackRecipe extends Recipe {
+    constructor(key, name, col, row, category, product) {
+        super(
+            key,
+            name,
+            undefined,
+            col,
+            row,
+            false,
+            category,
+            zero,
+            [],
+            [new Ingredient(product, one)],
+            [],
+        )
+        this.defaultPriority = 1
+        this.defaultWeight = Rational.from_float(100)
+    }
+    isResource() {
+        return true
+    }
+}
+
+class OffshorePumpRecipe extends Recipe {
+    //constructor(key, name, order, col, row, allow_prod, category, time, ingredients, products) {
+    constructor(key, name, order, col, row, product) {
+        super(key, name, order, col, row, false, "offshore-pumping", zero, [], [new Ingredient(product, one)], [])
+
+        this.defaultPriority = 0
         this.defaultWeight = Rational.from_float(100)
     }
     isResource() {
@@ -297,28 +358,6 @@ function getSteam(data) {
 export function getRecipes(data, items) {
     let hundred = Rational.from_float(100)
     let recipes = new Map()
-    let water = items.get("water")
-    // XXX: There's only one offshore pump in the game data, but maybe we can
-    // do this better later.
-    let pumpDef = data.offshore_pumps[0]
-    // Pumping speed is given in water/tick. We want seconds/water.
-    let pumpingSpeed = Rational.from_float_approximate(pumpDef.pumping_speed)
-    let craftTime = Rational.from_float(60).mul(pumpingSpeed).reciprocate()
-    let waterRecipe = new Recipe(
-        "water",
-        "Water",
-        water.order,
-        water.icon_col,
-        water.icon_row,
-        false,
-        "water",
-        craftTime,
-        [],
-        [new Ingredient(water, one)]
-    )
-    recipes.set("water", waterRecipe)
-    waterRecipe.defaultPriority = 0
-    waterRecipe.defaultWeight = hundred
     let reactor = items.get("nuclear-reactor")
     let used_cell_name = "used-up-uranium-fuel-cell"
     if (!items.has(used_cell_name)) {
@@ -374,14 +413,27 @@ export function getRecipes(data, items) {
         if (d.key.endsWith("-recycling")) {
             continue
         }
-        recipes.set(d.key, makeRecipe(data, items, d))
+        let r = makeRecipe(data, items, d)
+        if (r) {
+            recipes.set(d.key, r)
+        }
     }
     for (let d of data.resources) {
         let category = d.category
         if (!category) {
             category = "basic-solid"
         }
-        if (category !== "basic-solid") {
+        if (category === "basic-fluid") {
+            // XXX: Do something about pumpjacks.
+            let item = items.get(d.results[0].name)
+            recipes.set(d.key, new PumpjackRecipe(
+                d.key,
+                d.localized_name.en,
+                d.icon_col,
+                d.icon_row,
+                null,
+                item,
+            ))
             continue
         }
         let ingredients = null
@@ -406,11 +458,36 @@ export function getRecipes(data, items) {
             d.order,  // this may be undefined
             d.icon_col,
             d.icon_row,
-            "mining-" + category,
+            category,
             Rational.from_float_approximate(d.mining_time),
             ingredients,
             products,
         ))
+    }
+    let offshoreItems = new Set()
+    if (data.planets) {
+        for (let planet of data.planets) {
+            for (let key of planet.resources.offshore) {
+                offshoreItems.add(key)
+            }
+        }
+    } else {
+        offshoreItems.add("water")
+    }
+    for (let key of offshoreItems) {
+        let item = items.get(key)
+        let r = new OffshorePumpRecipe(
+            key,
+            item.name,
+            item.order,
+            item.icon_col,
+            item.icon_row,
+            item
+        )
+        if (recipes.has(key)) {
+            console.log("duplicate key:", key)
+        }
+        recipes.set(key, r)
     }
     // Reap items both produced by no recipes and consumed by no recipes.
     let reapItems = []
@@ -426,8 +503,5 @@ export function getRecipes(data, items) {
     for (let key of reapItems) {
         items.delete(key)
     }
-    // XXX: There's gotta be a better way to do this...
-    let crudeOilRecipe = recipes.get("crude-oil")
-    crudeOilRecipe.defaultPriority = 1
     return recipes
 }
