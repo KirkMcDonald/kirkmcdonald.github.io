@@ -410,9 +410,9 @@ export function getRecipes(data, items) {
         [new Ingredient(items.get("steam"), steamRate)],
     ))
     for (let d of data.recipes) {
-        if (d.key.endsWith("-recycling")) {
+        /*if (d.key.endsWith("-recycling")) {
             continue
-        }
+        }*/
         let r = makeRecipe(data, items, d)
         if (r) {
             recipes.set(d.key, r)

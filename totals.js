@@ -37,6 +37,7 @@ export class Totals {
         this.products = products
         this.rates = rates
         this.surplus = surplus
+        this.extra = extraRecipes
 
         // Construct the rest of the solution-graph. This graph consists of
         // recipe nodes, which point to item nodes, which in turn point to

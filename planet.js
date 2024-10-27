@@ -48,6 +48,21 @@ class Planet {
 
 let defaultProperties
 
+const RECYCLING_ROOT_KEYS = new Set(["scrap"])
+
+function traverseRecycling(recipe, found) {
+    for (let {item} of recipe.products) {
+        for (let subrecipe of item.uses) {
+            if (subrecipe.key.endsWith("-recycling")) {
+                if (!found.has(subrecipe)) {
+                    found.add(subrecipe)
+                    traverseRecycling(subrecipe, found)
+                }
+            }
+        }
+    }
+}
+
 export function getPlanets(data, recipes) {
     if (!data.planets) {
         // For legacy 1.1 datasets.
@@ -61,8 +76,13 @@ export function getPlanets(data, recipes) {
     let planets = new Map()
     for (let d of data.planets) {
         let resources = new Set()
+        let roots = new Set()
         for (let key of d.resources.resource.concat(d.resources.offshore)) {
-            resources.add(recipes.get(key))
+            let r = recipes.get(key)
+            resources.add(r)
+            if (RECYCLING_ROOT_KEYS.has(key)) {
+                roots.add(r)
+            }
         }
         let properties = new Map()
         for (let key in d.surface_properties) {
@@ -79,8 +99,17 @@ export function getPlanets(data, recipes) {
             properties,
         )
         for (let recipe of recipes.values()) {
-            if (!planet.allows(recipe)) {
+            if (!planet.allows(recipe) || recipe.key.endsWith("-recycling")) {
                 planet.disable.add(recipe)
+            }
+            if (roots.size > 0) {
+                let recycling = new Set()
+                for (let root of roots) {
+                    traverseRecycling(root, recycling)
+                }
+                for (let recycle of recycling) {
+                    planet.disable.delete(recycle)
+                }
             }
         }
         planets.set(planet.key, planet)

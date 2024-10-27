@@ -190,8 +190,29 @@ class FactorySpecification {
     setDefaultDisable() {
         this.disable.clear()
     }
+    _addItemToMaxPriority(item) {
+        let resource = this.priority.getResource(item.disableRecipe)
+        // The item might already be in the priority list due to being
+        // ignored. In this case, do nothing.
+        if (resource === null) {
+            let level = this.priority.getLastLevel()
+            let makeNew = true
+            for (let r of level) {
+                if (r.recipe.isDisable()) {
+                    makeNew = false
+                    break
+                }
+            }
+            if (makeNew) {
+                level = this.priority.addPriorityBefore(null)
+            }
+            let hundred = Rational.from_float(100)
+            this.priority.addRecipe(item.disableRecipe, hundred, level)
+        }
+    }
     setDisable(recipe) {
         if (spec.disable.has(recipe)) {
+            console.log("disabling already-disabled recipe:", recipe)
             return
         }
         let candidates = new Set()
@@ -206,24 +227,7 @@ class FactorySpecification {
         this.disable.add(recipe)
         for (let item of candidates) {
             if (this.isItemDisabled(item)) {
-                let resource = this.priority.getResource(item.disableRecipe)
-                // The item might already be in the priority list due to being
-                // ignored. In this case, do nothing.
-                if (resource === null) {
-                    let level = this.priority.getLastLevel()
-                    let makeNew = true
-                    for (let r of level) {
-                        if (r.recipe.isDisable()) {
-                            makeNew = false
-                            break
-                        }
-                    }
-                    if (makeNew) {
-                        level = this.priority.addPriorityBefore(null)
-                    }
-                    let hundred = Rational.from_float(100)
-                    this.priority.addRecipe(item.disableRecipe, hundred, level)
-                }
+                this._addItemToMaxPriority(item)
             }
         }
         // Update build targets.
@@ -361,6 +365,13 @@ class FactorySpecification {
     }
     setDefaultPriority() {
         this.priority = PriorityList.fromArray(this.defaultPriority)
+        // It is possible that an item has no net producers at all. Ensure it
+        // is placed at the proper priority level.
+        for (let item of this.items.values()) {
+            if (this.isItemDisabled(item)) {
+                this._addItemToMaxPriority(item)
+            }
+        }
     }
     isValidPriorityKey(key) {
         if (key.startsWith(DISABLED_RECIPE_PREFIX)) {
