@@ -1,4 +1,19 @@
 {
+    "agricultural_tower": [ {
+        "energy_source": {
+            "emissions_per_minute": {
+                "spores": 4
+            },
+            "type": "electric"
+        },
+        "energy_usage": 100000,
+        "icon_col": 12,
+        "icon_row": 0,
+        "key": "agricultural-tower",
+        "localized_name": {
+            "en": "Agricultural tower"
+        }
+    } ],
     "beacon": {
         "allowed_effects": [ "consumption", "speed", "pollution" ],
         "distribution_effectivity": 1.5,
@@ -22,7 +37,7 @@
         },
         "speed": 0.0625
     }, {
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 26,
         "key": "transport-belt",
         "localized_name": {
@@ -30,7 +45,7 @@
         },
         "speed": 0.03125
     }, {
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 26,
         "key": "turbo-transport-belt",
         "localized_name": {
@@ -300,7 +315,7 @@
             "type": "electric"
         },
         "energy_usage": 420000,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 9,
         "key": "oil-refinery",
         "localized_name": {
@@ -338,7 +353,7 @@
             "type": "electric"
         },
         "energy_usage": 180000,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 11,
         "key": "recycler",
         "localized_name": {
@@ -358,7 +373,7 @@
             "type": "burner"
         },
         "energy_usage": 90000,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 25,
         "key": "steel-furnace",
         "localized_name": {
@@ -382,7 +397,7 @@
             "type": "burner"
         },
         "energy_usage": 90000,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 25,
         "key": "stone-furnace",
         "localized_name": {
@@ -798,7 +813,7 @@
     },
     "items": [ {
         "group": "other",
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 9,
         "key": "parameter-0",
         "localized_name": {
@@ -809,7 +824,7 @@
         "type": "fluid"
     }, {
         "group": "other",
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 9,
         "key": "parameter-1",
         "localized_name": {
@@ -821,7 +836,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 9,
         "key": "parameter-0",
         "localized_name": {
@@ -833,7 +848,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 10,
         "key": "parameter-8",
         "localized_name": {
@@ -844,7 +859,7 @@
         "type": "fluid"
     }, {
         "group": "other",
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 9,
         "key": "parameter-2",
         "localized_name": {
@@ -856,8 +871,8 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 25,
-        "icon_row": 9,
+        "icon_col": 0,
+        "icon_row": 10,
         "key": "parameter-3",
         "localized_name": {
             "en": "Parameter 3"
@@ -868,7 +883,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 10,
         "key": "parameter-7",
         "localized_name": {
@@ -879,7 +894,7 @@
         "type": "fluid"
     }, {
         "group": "other",
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 9,
         "key": "parameter-1",
         "localized_name": {
@@ -890,7 +905,7 @@
         "type": "fluid"
     }, {
         "group": "other",
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 9,
         "key": "parameter-2",
         "localized_name": {
@@ -901,7 +916,7 @@
         "type": "fluid"
     }, {
         "group": "other",
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 10,
         "key": "parameter-6",
         "localized_name": {
@@ -912,8 +927,8 @@
         "type": "fluid"
     }, {
         "group": "other",
-        "icon_col": 25,
-        "icon_row": 9,
+        "icon_col": 0,
+        "icon_row": 10,
         "key": "parameter-3",
         "localized_name": {
             "en": "Parameter 3"
@@ -923,7 +938,7 @@
         "type": "fluid"
     }, {
         "group": "other",
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 10,
         "key": "parameter-4",
         "localized_name": {
@@ -934,7 +949,7 @@
         "type": "fluid"
     }, {
         "group": "other",
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 10,
         "key": "parameter-4",
         "localized_name": {
@@ -946,7 +961,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 10,
         "key": "parameter-5",
         "localized_name": {
@@ -957,7 +972,7 @@
         "type": "fluid"
     }, {
         "group": "other",
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 10,
         "key": "parameter-6",
         "localized_name": {
@@ -969,7 +984,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 10,
         "key": "parameter-5",
         "localized_name": {
@@ -981,7 +996,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 10,
         "key": "parameter-9",
         "localized_name": {
@@ -992,7 +1007,7 @@
         "type": "fluid"
     }, {
         "group": "other",
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 10,
         "key": "parameter-8",
         "localized_name": {
@@ -1004,7 +1019,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 10,
         "key": "parameter-9",
         "localized_name": {
@@ -1016,7 +1031,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 10,
         "key": "parameter-7",
         "localized_name": {
@@ -1076,7 +1091,7 @@
         "type": "ammo"
     }, {
         "group": "combat",
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 10,
         "key": "pistol",
         "localized_name": {
@@ -1088,7 +1103,7 @@
         "type": "gun"
     }, {
         "group": "combat",
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 10,
         "key": "piercing-rounds-magazine",
         "localized_name": {
@@ -1100,7 +1115,7 @@
         "type": "ammo"
     }, {
         "group": "combat",
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 25,
         "key": "submachine-gun",
         "localized_name": {
@@ -1112,7 +1127,7 @@
         "type": "gun"
     }, {
         "group": "combat",
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 25,
         "key": "tank-machine-gun",
         "localized_name": {
@@ -1124,7 +1139,7 @@
         "type": "gun"
     }, {
         "group": "combat",
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 25,
         "key": "vehicle-machine-gun",
         "localized_name": {
@@ -1136,7 +1151,7 @@
         "type": "gun"
     }, {
         "group": "combat",
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 27,
         "key": "uranium-rounds-magazine",
         "localized_name": {
@@ -1148,7 +1163,7 @@
         "type": "ammo"
     }, {
         "group": "combat",
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 11,
         "key": "railgun",
         "localized_name": {
@@ -1160,7 +1175,7 @@
         "type": "gun"
     }, {
         "group": "combat",
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 26,
         "key": "teslagun",
         "localized_name": {
@@ -1256,7 +1271,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 24,
         "key": "solar-panel-equipment",
         "localized_name": {
@@ -1292,7 +1307,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 24,
         "key": "small-electric-pole",
         "localized_name": {
@@ -1304,7 +1319,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 8,
         "key": "medium-electric-pole",
         "localized_name": {
@@ -1328,7 +1343,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 25,
         "key": "substation",
         "localized_name": {
@@ -1340,7 +1355,7 @@
         "type": "item"
     }, {
         "group": "fluids",
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 27,
         "key": "water",
         "localized_name": {
@@ -1363,7 +1378,7 @@
         "type": "item"
     }, {
         "group": "fluids",
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 25,
         "key": "steam",
         "localized_name": {
@@ -1397,7 +1412,7 @@
         "type": "fluid"
     }, {
         "group": "fluids",
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 10,
         "key": "petroleum-gas",
         "localized_name": {
@@ -1420,7 +1435,7 @@
         "type": "item"
     }, {
         "group": "fluids",
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 8,
         "key": "light-oil",
         "localized_name": {
@@ -1478,7 +1493,7 @@
         "type": "item"
     }, {
         "group": "fluids",
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 8,
         "key": "lubricant",
         "localized_name": {
@@ -1489,7 +1504,7 @@
         "type": "fluid"
     }, {
         "group": "fluids",
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 25,
         "key": "sulfuric-acid",
         "localized_name": {
@@ -1548,7 +1563,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 8,
         "key": "linked-chest",
         "localized_name": {
@@ -1560,7 +1575,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 27,
         "key": "wooden-chest",
         "localized_name": {
@@ -1608,7 +1623,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 25,
         "key": "steel-chest",
         "localized_name": {
@@ -1620,7 +1635,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 8,
         "key": "light-armor",
         "localized_name": {
@@ -1632,7 +1647,7 @@
         "type": "armor"
     }, {
         "group": "logistics",
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 24,
         "key": "small-lamp",
         "localized_name": {
@@ -1644,7 +1659,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 8,
         "key": "lightning-rod",
         "localized_name": {
@@ -1668,7 +1683,7 @@
         "type": "item"
     }, {
         "group": "space",
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 8,
         "key": "metallic-asteroid-chunk",
         "localized_name": {
@@ -1692,7 +1707,7 @@
         "type": "capsule"
     }, {
         "group": "intermediate-products",
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 27,
         "key": "yumako-mash",
         "localized_name": {
@@ -1728,7 +1743,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 10,
         "key": "pipe",
         "localized_name": {
@@ -1740,7 +1755,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 10,
         "key": "pipe-to-ground",
         "localized_name": {
@@ -1752,7 +1767,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 11,
         "key": "rail",
         "localized_name": {
@@ -1764,7 +1779,7 @@
         "type": "rail-planner"
     }, {
         "group": "logistics",
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 11,
         "key": "rail-ramp",
         "localized_name": {
@@ -1776,7 +1791,7 @@
         "type": "rail-planner"
     }, {
         "group": "logistics",
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 11,
         "key": "rail-support",
         "localized_name": {
@@ -1788,7 +1803,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 8,
         "key": "logistic-robot",
         "localized_name": {
@@ -1812,7 +1827,7 @@
         "type": "item"
     }, {
         "group": "space",
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 24,
         "key": "rocket-silo",
         "localized_name": {
@@ -1824,7 +1839,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 24,
         "key": "scrap",
         "localized_name": {
@@ -1836,7 +1851,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 27,
         "key": "yumako-seed",
         "localized_name": {
@@ -1860,7 +1875,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 26,
         "key": "tree-seed",
         "localized_name": {
@@ -1920,7 +1935,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 25,
         "key": "steel-plate",
         "localized_name": {
@@ -1932,7 +1947,7 @@
         "type": "item"
     }, {
         "group": "space",
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 24,
         "key": "space-platform-foundation",
         "localized_name": {
@@ -1944,8 +1959,8 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 25,
-        "icon_row": 24,
+        "icon_col": 0,
+        "icon_row": 25,
         "key": "speed-module",
         "localized_name": {
             "en": "Speed module"
@@ -1956,7 +1971,7 @@
         "type": "module"
     }, {
         "group": "production",
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 25,
         "key": "speed-module-2",
         "localized_name": {
@@ -1968,7 +1983,7 @@
         "type": "module"
     }, {
         "group": "production",
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 25,
         "key": "speed-module-3",
         "localized_name": {
@@ -1980,7 +1995,7 @@
         "type": "module"
     }, {
         "group": "logistics",
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 25,
         "key": "stone-brick",
         "localized_name": {
@@ -1992,7 +2007,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 25,
         "key": "stone-furnace",
         "localized_name": {
@@ -2004,7 +2019,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 27,
         "key": "stone-wall",
         "localized_name": {
@@ -2016,7 +2031,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 26,
         "key": "transport-belt",
         "localized_name": {
@@ -2052,7 +2067,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 26,
         "key": "turbo-transport-belt",
         "localized_name": {
@@ -2064,7 +2079,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 26,
         "key": "uranium-235",
         "localized_name": {
@@ -2076,7 +2091,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 26,
         "key": "uranium-238",
         "localized_name": {
@@ -2100,7 +2115,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 27,
         "key": "wood",
         "localized_name": {
@@ -2112,7 +2127,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 10,
         "key": "personal-laser-defense-equipment",
         "localized_name": {
@@ -2148,7 +2163,7 @@
         "type": "capsule"
     }, {
         "group": "intermediate-products",
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 27,
         "key": "yumako",
         "localized_name": {
@@ -2280,7 +2295,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 24,
         "key": "solid-fuel",
         "localized_name": {
@@ -2292,7 +2307,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 10,
         "key": "plastic-bar",
         "localized_name": {
@@ -2304,7 +2319,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 25,
         "key": "sulfur",
         "localized_name": {
@@ -2376,7 +2391,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 10,
         "key": "processing-unit",
         "localized_name": {
@@ -2424,7 +2439,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 23,
         "key": "refined-concrete",
         "localized_name": {
@@ -2436,7 +2451,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 23,
         "key": "refined-hazard-concrete",
         "localized_name": {
@@ -2460,7 +2475,7 @@
         "type": "gun"
     }, {
         "group": "logistics",
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 25,
         "key": "storage-tank",
         "localized_name": {
@@ -2472,7 +2487,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 9,
         "key": "offshore-pump",
         "localized_name": {
@@ -2484,7 +2499,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 11,
         "key": "pumpjack",
         "localized_name": {
@@ -2544,8 +2559,8 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 25,
-        "icon_row": 25,
+        "icon_col": 0,
+        "icon_row": 26,
         "key": "superconductor",
         "localized_name": {
             "en": "Superconductor"
@@ -2556,7 +2571,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 25,
         "key": "supercapacitor",
         "localized_name": {
@@ -2580,7 +2595,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 25,
         "key": "lane-splitter",
         "localized_name": {
@@ -2592,7 +2607,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 8,
         "key": "linked-belt",
         "localized_name": {
@@ -2604,7 +2619,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 8,
         "key": "lightning-collector",
         "localized_name": {
@@ -2616,7 +2631,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 8,
         "key": "logistic-science-pack",
         "localized_name": {
@@ -2628,7 +2643,7 @@
         "type": "tool"
     }, {
         "group": "fluids",
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 26,
         "key": "thruster-fuel",
         "localized_name": {
@@ -2639,7 +2654,7 @@
         "type": "fluid"
     }, {
         "group": "fluids",
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 26,
         "key": "thruster-oxidizer",
         "localized_name": {
@@ -2650,8 +2665,8 @@
         "type": "fluid"
     }, {
         "group": "fluids",
-        "icon_col": 25,
-        "icon_row": 7,
+        "icon_col": 0,
+        "icon_row": 8,
         "key": "lava",
         "localized_name": {
             "en": "Lava"
@@ -2661,7 +2676,7 @@
         "type": "fluid"
     }, {
         "group": "fluids",
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 9,
         "key": "molten-iron",
         "localized_name": {
@@ -2672,7 +2687,7 @@
         "type": "fluid"
     }, {
         "group": "fluids",
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 9,
         "key": "molten-copper",
         "localized_name": {
@@ -2784,7 +2799,7 @@
         "type": "fluid"
     }, {
         "group": "fluids",
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 8,
         "key": "lithium-brine",
         "localized_name": {
@@ -2818,7 +2833,7 @@
         "type": "item-with-entity-data"
     }, {
         "group": "logistics",
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 26,
         "key": "tank",
         "localized_name": {
@@ -2830,7 +2845,7 @@
         "type": "item-with-entity-data"
     }, {
         "group": "logistics",
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 25,
         "key": "spidertron",
         "localized_name": {
@@ -2842,7 +2857,7 @@
         "type": "item-with-entity-data"
     }, {
         "group": "logistics",
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 11,
         "key": "pump",
         "localized_name": {
@@ -2854,7 +2869,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 10,
         "key": "poison-capsule",
         "localized_name": {
@@ -2866,7 +2881,7 @@
         "type": "capsule"
     }, {
         "group": "production",
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 23,
         "key": "repair-pack",
         "localized_name": {
@@ -2878,7 +2893,7 @@
         "type": "repair-tool"
     }, {
         "group": "combat",
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 24,
         "key": "shotgun-shell",
         "localized_name": {
@@ -2890,7 +2905,7 @@
         "type": "ammo"
     }, {
         "group": "combat",
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 24,
         "key": "shotgun",
         "localized_name": {
@@ -2914,7 +2929,7 @@
         "type": "gun"
     }, {
         "group": "combat",
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 10,
         "key": "piercing-shotgun-shell",
         "localized_name": {
@@ -2938,7 +2953,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 25,
         "key": "steam-engine",
         "localized_name": {
@@ -2950,7 +2965,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 25,
         "key": "steel-furnace",
         "localized_name": {
@@ -2974,7 +2989,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 10,
         "key": "passive-provider-chest",
         "localized_name": {
@@ -2986,7 +3001,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 25,
         "key": "storage-chest",
         "localized_name": {
@@ -3010,7 +3025,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 23,
         "key": "requester-chest",
         "localized_name": {
@@ -3022,7 +3037,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 26,
         "key": "train-stop",
         "localized_name": {
@@ -3034,7 +3049,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 11,
         "key": "rail-signal",
         "localized_name": {
@@ -3046,7 +3061,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 11,
         "key": "rail-chain-signal",
         "localized_name": {
@@ -3070,7 +3085,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 7,
         "key": "laser-turret",
         "localized_name": {
@@ -3118,7 +3133,7 @@
         "type": "capsule"
     }, {
         "group": "combat",
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 24,
         "key": "rocket-turret",
         "localized_name": {
@@ -3130,7 +3145,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 26,
         "key": "tesla-turret",
         "localized_name": {
@@ -3142,7 +3157,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 11,
         "key": "railgun-turret",
         "localized_name": {
@@ -3154,7 +3169,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 26,
         "key": "underground-belt",
         "localized_name": {
@@ -3190,7 +3205,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 26,
         "key": "turbo-underground-belt",
         "localized_name": {
@@ -3202,7 +3217,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 26,
         "key": "uranium-fuel-cell",
         "localized_name": {
@@ -3358,7 +3373,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 24,
         "key": "selector-combinator",
         "localized_name": {
@@ -3430,7 +3445,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 10,
         "key": "pentapod-egg",
         "localized_name": {
@@ -3478,7 +3493,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 7,
         "key": "landfill",
         "localized_name": {
@@ -3502,7 +3517,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 9,
         "key": "overgrowth-yumako-soil",
         "localized_name": {
@@ -3526,7 +3541,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 9,
         "key": "overgrowth-jellynut-soil",
         "localized_name": {
@@ -3562,7 +3577,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 8,
         "key": "lithium",
         "localized_name": {
@@ -3574,7 +3589,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 8,
         "key": "lithium-plate",
         "localized_name": {
@@ -3586,7 +3601,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 11,
         "key": "quantum-processor",
         "localized_name": {
@@ -3610,7 +3625,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 8,
         "key": "long-handed-inserter",
         "localized_name": {
@@ -3622,7 +3637,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 8,
         "key": "military-science-pack",
         "localized_name": {
@@ -3634,8 +3649,8 @@
         "type": "tool"
     }, {
         "group": "combat",
-        "icon_col": 25,
-        "icon_row": 8,
+        "icon_col": 0,
+        "icon_row": 9,
         "key": "modular-armor",
         "localized_name": {
             "en": "Modular armor"
@@ -3646,7 +3661,7 @@
         "type": "armor"
     }, {
         "group": "intermediate-products",
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 25,
         "key": "spoilage",
         "localized_name": {
@@ -3658,7 +3673,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 9,
         "key": "nutrients",
         "localized_name": {
@@ -3670,7 +3685,7 @@
         "type": "item"
     }, {
         "group": "space",
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 9,
         "key": "oxide-asteroid-chunk",
         "localized_name": {
@@ -3682,7 +3697,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 11,
         "key": "productivity-module",
         "localized_name": {
@@ -3694,7 +3709,7 @@
         "type": "module"
     }, {
         "group": "production",
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 11,
         "key": "productivity-module-2",
         "localized_name": {
@@ -3706,7 +3721,7 @@
         "type": "module"
     }, {
         "group": "production",
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 11,
         "key": "productivity-module-3",
         "localized_name": {
@@ -3718,7 +3733,7 @@
         "type": "module"
     }, {
         "group": "logistics",
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 8,
         "key": "locomotive",
         "localized_name": {
@@ -3766,7 +3781,7 @@
         "type": "item-with-entity-data"
     }, {
         "group": "logistics",
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 23,
         "key": "roboport",
         "localized_name": {
@@ -3778,7 +3793,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 24,
         "key": "slowdown-capsule",
         "localized_name": {
@@ -3790,7 +3805,7 @@
         "type": "capsule"
     }, {
         "group": "logistics",
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 25,
         "key": "splitter",
         "localized_name": {
@@ -3826,7 +3841,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 26,
         "key": "turbo-splitter",
         "localized_name": {
@@ -3838,7 +3853,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 26,
         "key": "tungsten-ore",
         "localized_name": {
@@ -3850,7 +3865,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 26,
         "key": "tungsten-carbide",
         "localized_name": {
@@ -3862,7 +3877,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 26,
         "key": "tungsten-plate",
         "localized_name": {
@@ -3910,7 +3925,7 @@
         "type": "ammo"
     }, {
         "group": "combat",
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 26,
         "key": "uranium-cannon-shell",
         "localized_name": {
@@ -4018,7 +4033,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 10,
         "key": "infinity-pipe",
         "localized_name": {
@@ -4030,7 +4045,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 8,
         "key": "loader",
         "localized_name": {
@@ -4066,7 +4081,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 26,
         "key": "turbo-loader",
         "localized_name": {
@@ -4078,7 +4093,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 10,
         "key": "power-switch",
         "localized_name": {
@@ -4090,7 +4105,7 @@
         "type": "item"
     }, {
         "group": "logistics",
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 11,
         "key": "programmable-speaker",
         "localized_name": {
@@ -4102,7 +4117,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 10,
         "key": "power-armor",
         "localized_name": {
@@ -4114,7 +4129,7 @@
         "type": "armor"
     }, {
         "group": "space",
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 11,
         "key": "promethium-asteroid-chunk",
         "localized_name": {
@@ -4126,7 +4141,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 11,
         "key": "quality-module",
         "localized_name": {
@@ -4138,7 +4153,7 @@
         "type": "module"
     }, {
         "group": "production",
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 11,
         "key": "quality-module-2",
         "localized_name": {
@@ -4150,7 +4165,7 @@
         "type": "module"
     }, {
         "group": "production",
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 11,
         "key": "quality-module-3",
         "localized_name": {
@@ -4162,7 +4177,7 @@
         "type": "module"
     }, {
         "group": "combat",
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 11,
         "key": "radar",
         "localized_name": {
@@ -4174,7 +4189,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 11,
         "key": "recycler",
         "localized_name": {
@@ -4186,7 +4201,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 9,
         "key": "oil-refinery",
         "localized_name": {
@@ -4198,7 +4213,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 24,
         "key": "rocket-launcher",
         "localized_name": {
@@ -4210,8 +4225,8 @@
         "type": "gun"
     }, {
         "group": "combat",
-        "icon_col": 25,
-        "icon_row": 23,
+        "icon_col": 0,
+        "icon_row": 24,
         "key": "rocket",
         "localized_name": {
             "en": "Rocket"
@@ -4258,7 +4273,7 @@
         "type": "ammo"
     }, {
         "group": "intermediate-products",
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 8,
         "key": "low-density-structure",
         "localized_name": {
@@ -4270,7 +4285,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 24,
         "key": "rocket-fuel",
         "localized_name": {
@@ -4282,7 +4297,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 24,
         "key": "rocket-part",
         "localized_name": {
@@ -4294,7 +4309,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 24,
         "key": "solar-panel",
         "localized_name": {
@@ -4306,7 +4321,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 25,
         "key": "stone",
         "localized_name": {
@@ -4402,7 +4417,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 10,
         "key": "power-armor-mk2",
         "localized_name": {
@@ -4414,8 +4429,8 @@
         "type": "armor"
     }, {
         "group": "intermediate-products",
-        "icon_col": 25,
-        "icon_row": 10,
+        "icon_col": 0,
+        "icon_row": 11,
         "key": "production-science-pack",
         "localized_name": {
             "en": "Production science pack"
@@ -4426,7 +4441,7 @@
         "type": "tool"
     }, {
         "group": "combat",
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 26,
         "key": "tesla-ammo",
         "localized_name": {
@@ -4438,7 +4453,7 @@
         "type": "ammo"
     }, {
         "group": "combat",
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 11,
         "key": "railgun-ammo",
         "localized_name": {
@@ -4450,7 +4465,7 @@
         "type": "ammo"
     }, {
         "group": "combat",
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 10,
         "key": "personal-roboport-equipment",
         "localized_name": {
@@ -4462,7 +4477,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 10,
         "key": "personal-roboport-mk2-equipment",
         "localized_name": {
@@ -4522,7 +4537,7 @@
         "type": "capsule"
     }, {
         "group": "combat",
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 7,
         "key": "land-mine",
         "localized_name": {
@@ -4534,7 +4549,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 8,
         "key": "mech-armor",
         "localized_name": {
@@ -4546,7 +4561,7 @@
         "type": "armor"
     }, {
         "group": "combat",
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 9,
         "key": "night-vision-equipment",
         "localized_name": {
@@ -4558,7 +4573,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 9,
         "key": "nuclear-reactor",
         "localized_name": {
@@ -4594,7 +4609,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 25,
         "key": "steam-turbine",
         "localized_name": {
@@ -4606,7 +4621,7 @@
         "type": "item"
     }, {
         "group": "space",
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 26,
         "key": "thruster",
         "localized_name": {
@@ -4618,7 +4633,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 27,
         "key": "utility-science-pack",
         "localized_name": {
@@ -4666,7 +4681,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 24,
         "key": "space-science-pack",
         "localized_name": {
@@ -4678,7 +4693,7 @@
         "type": "tool"
     }, {
         "group": "combat",
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 26,
         "key": "toolbelt-equipment",
         "localized_name": {
@@ -4690,8 +4705,8 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 25,
-        "icon_row": 26,
+        "icon_col": 0,
+        "icon_row": 27,
         "key": "uranium-ore",
         "localized_name": {
             "en": "Uranium ore"
@@ -4702,7 +4717,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 8,
         "key": "metallurgic-science-pack",
         "localized_name": {
@@ -4738,7 +4753,7 @@
         "type": "capsule"
     }, {
         "group": "logistics",
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 25,
         "key": "stack-inserter",
         "localized_name": {
@@ -4798,7 +4813,7 @@
         "type": "tool"
     }, {
         "group": "intermediate-products",
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 11,
         "key": "promethium-science-pack",
         "localized_name": {
@@ -4810,7 +4825,7 @@
         "type": "tool"
     }, {
         "group": "intermediate-products",
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 9,
         "key": "nuclear-fuel",
         "localized_name": {
@@ -4834,7 +4849,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 25,
         "key": "simple-entity-with-force",
         "localized_name": {
@@ -4846,7 +4861,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 27,
         "key": "simple-entity-with-owner",
         "localized_name": {
@@ -4858,7 +4873,7 @@
         "type": "item"
     }, {
         "group": "other",
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 25,
         "key": "burner-generator",
         "localized_name": {
@@ -4882,7 +4897,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 26,
         "key": "artillery-wagon-cannon",
         "localized_name": {
@@ -4906,7 +4921,7 @@
         "type": "item"
     }, {
         "group": "production",
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 7,
         "key": "lab",
         "localized_name": {
@@ -4930,7 +4945,7 @@
         "type": "item"
     }, {
         "group": "combat",
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 24,
         "key": "spidertron-rocket-launcher-2",
         "localized_name": {
@@ -4942,7 +4957,7 @@
         "type": "gun"
     }, {
         "group": "combat",
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 24,
         "key": "spidertron-rocket-launcher-1",
         "localized_name": {
@@ -4954,7 +4969,7 @@
         "type": "gun"
     }, {
         "group": "combat",
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 24,
         "key": "spidertron-rocket-launcher-4",
         "localized_name": {
@@ -4966,7 +4981,7 @@
         "type": "gun"
     }, {
         "group": "combat",
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 24,
         "key": "spidertron-rocket-launcher-3",
         "localized_name": {
@@ -4978,7 +4993,7 @@
         "type": "gun"
     }, {
         "group": "combat",
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 26,
         "key": "tank-cannon",
         "localized_name": {
@@ -5002,7 +5017,7 @@
         "type": "item"
     }, {
         "group": "intermediate-products",
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 24,
         "key": "science",
         "localized_name": {
@@ -5078,7 +5093,7 @@
             "type": "electric"
         },
         "energy_usage": 90000,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 11,
         "key": "pumpjack",
         "localized_name": {
@@ -5175,7 +5190,7 @@
         "item_key": "speed-module-3"
     } ],
     "offshore_pumps": [ {
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 9,
         "key": "offshore-pump",
         "localized_name": {
@@ -5193,6 +5208,7 @@
         "order": "e[aquilo]",
         "resources": {
             "offshore": [ "ammoniacal-solution" ],
+            "plants": [],
             "resource": [ "crude-oil", "fluorine-vent", "lithium-brine" ]
         },
         "surface_properties": {
@@ -5212,6 +5228,7 @@
         "order": "d[fulgora]",
         "resources": {
             "offshore": [ "heavy-oil" ],
+            "plants": [],
             "resource": [ "scrap" ]
         },
         "surface_properties": {
@@ -5231,6 +5248,7 @@
         "order": "c[gleba]",
         "resources": {
             "offshore": [ "water" ],
+            "plants": [ "jellystem", "yumako-tree" ],
             "resource": [ "stone" ]
         },
         "surface_properties": {
@@ -5241,7 +5259,7 @@
             "solar-power": 50
         }
     }, {
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 9,
         "key": "nauvis",
         "localized_name": {
@@ -5250,13 +5268,14 @@
         "order": "a[nauvis]",
         "resources": {
             "offshore": [ "water" ],
+            "plants": [],
             "resource": [ "coal", "copper-ore", "crude-oil", "iron-ore", "stone", "uranium-ore" ]
         },
         "surface_properties": {
             "day-night-cycle": 25200
         }
     }, {
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 27,
         "key": "vulcanus",
         "localized_name": {
@@ -5265,6 +5284,7 @@
         "order": "b[vulcanus]",
         "resources": {
             "offshore": [ "lava" ],
+            "plants": [],
             "resource": [ "calcite", "coal", "sulfuric-acid-geyser", "tungsten-ore" ]
         },
         "surface_properties": {
@@ -5275,7 +5295,7 @@
             "solar-power": 400
         }
     }, {
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 24,
         "key": "space-platform",
         "localized_name": {
@@ -5284,6 +5304,7 @@
         "order": "a[space-platform]",
         "resources": {
             "offshore": [],
+            "plants": [],
             "resource": []
         },
         "surface_properties": {
@@ -5292,6 +5313,54 @@
             "magnetic-field": 0,
             "pressure": 0
         }
+    } ],
+    "plants": [ {
+        "growth_ticks": 18000,
+        "icon_col": 20,
+        "icon_row": 7,
+        "key": "jellystem",
+        "localized_name": {
+            "en": "Jellystem"
+        },
+        "order": "a[tree]-c[gleba]-a[seedable]-b[jellystem]",
+        "results": [ {
+            "amount": 50,
+            "name": "jellynut"
+        } ],
+        "seed": "jellynut-seed"
+    }, {
+        "growth_ticks": 36000,
+        "icon_col": 12,
+        "icon_row": 26,
+        "key": "tree-plant",
+        "localized_name": {
+            "en": "Tree"
+        },
+        "order": "a[tree]-a[nauvis]-a[regular]-j[tree-08]",
+        "results": [ {
+            "amount": 4,
+            "name": "wood"
+        } ],
+        "seed": "tree-seed",
+        "surface_conditions": [ {
+            "max": 1000,
+            "min": 1000,
+            "property": "pressure"
+        } ]
+    }, {
+        "growth_ticks": 18000,
+        "icon_col": 13,
+        "icon_row": 27,
+        "key": "yumako-tree",
+        "localized_name": {
+            "en": "Yumako tree"
+        },
+        "order": "a[tree]-c[gleba]-a[seedable]-a[yumako-tree]",
+        "results": [ {
+            "amount": 50,
+            "name": "yumako"
+        } ],
+        "seed": "yumako-seed"
     } ],
     "recipes": [ {
         "allow_productivity": false,
@@ -5320,7 +5389,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 1,
@@ -5396,7 +5465,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 1,
@@ -5474,8 +5543,8 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.375,
-        "icon_col": 25,
-        "icon_row": 11,
+        "icon_col": 0,
+        "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
             "name": "advanced-circuit"
@@ -5672,7 +5741,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.25,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -5722,7 +5791,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -5822,7 +5891,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -5875,7 +5944,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -5931,7 +6000,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -5985,7 +6054,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6013,7 +6082,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6063,7 +6132,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 2.5,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6123,7 +6192,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -6144,7 +6213,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.25,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6201,7 +6270,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6255,7 +6324,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6306,7 +6375,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6354,7 +6423,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -6405,7 +6474,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 3.125,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6453,7 +6522,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.3125,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6494,7 +6563,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -6583,7 +6652,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6631,7 +6700,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6679,7 +6748,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -6701,7 +6770,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.25,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6752,7 +6821,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6803,7 +6872,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6851,7 +6920,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -6913,7 +6982,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -6978,7 +7047,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.25,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -7032,8 +7101,8 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.375,
-        "icon_col": 25,
-        "icon_row": 20,
+        "icon_col": 0,
+        "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
             "name": "bioflux"
@@ -7085,7 +7154,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -7189,7 +7258,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -7210,7 +7279,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -7231,7 +7300,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -7275,7 +7344,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -7323,7 +7392,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -7377,7 +7446,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -7405,7 +7474,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -7449,7 +7518,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -7497,7 +7566,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -7542,7 +7611,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -7589,7 +7658,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -7643,7 +7712,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -7693,7 +7762,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -7747,7 +7816,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -7818,7 +7887,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.3125,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -7839,7 +7908,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -7860,7 +7929,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -7960,7 +8029,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -8011,8 +8080,8 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 25,
-        "icon_row": 12,
+        "icon_col": 0,
+        "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
             "name": "cargo-landing-pad"
@@ -8062,7 +8131,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -8305,7 +8374,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.25,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -8362,7 +8431,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.3125,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -8416,7 +8485,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.5,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -8466,7 +8535,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -8520,7 +8589,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -8577,7 +8646,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -8624,7 +8693,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -8674,7 +8743,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -8754,7 +8823,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -8799,7 +8868,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -8844,7 +8913,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -8923,7 +8992,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -8964,7 +9033,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -8984,7 +9053,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -9025,7 +9094,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.2,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -9046,7 +9115,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -9066,7 +9135,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -9086,7 +9155,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0125,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -9132,7 +9201,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -9191,7 +9260,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -9253,7 +9322,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.25,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -9274,7 +9343,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -9317,7 +9386,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -9339,7 +9408,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -9386,7 +9455,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -9411,7 +9480,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -9458,7 +9527,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -9509,7 +9578,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -9534,7 +9603,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 13,
         "ingredients": [ {
             "amount": 1,
@@ -9578,8 +9647,8 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 25,
-        "icon_row": 13,
+        "icon_col": 0,
+        "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
             "name": "display-panel"
@@ -9623,7 +9692,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -9694,7 +9763,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -9748,7 +9817,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 3.75,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -9776,7 +9845,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -9798,7 +9867,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 1,
@@ -9845,7 +9914,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -9893,7 +9962,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.3125,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -9944,7 +10013,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10028,7 +10097,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -10090,7 +10159,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -10134,7 +10203,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10156,7 +10225,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -10200,7 +10269,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10248,7 +10317,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10299,7 +10368,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10350,7 +10419,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10401,7 +10470,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10449,7 +10518,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10494,7 +10563,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.75,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10542,7 +10611,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.25,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10586,7 +10655,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10637,7 +10706,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10688,7 +10757,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10736,7 +10805,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10784,7 +10853,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10832,7 +10901,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.1875,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10880,7 +10949,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10928,7 +10997,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -10973,7 +11042,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 14,
         "ingredients": [ {
             "amount": 1,
@@ -11015,8 +11084,8 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 25,
-        "icon_row": 14,
+        "icon_col": 0,
+        "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
             "name": "firearm-magazine"
@@ -11092,7 +11161,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -11163,7 +11232,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.375,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -11184,7 +11253,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -11235,7 +11304,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.25,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -11292,7 +11361,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.09375,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -11349,7 +11418,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0125,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -11389,7 +11458,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0125,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -11438,7 +11507,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.25,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -11498,7 +11567,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -11563,7 +11632,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -11622,7 +11691,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -11673,7 +11742,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -11760,7 +11829,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -11794,7 +11863,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 3.75,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -11845,7 +11914,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -11870,7 +11939,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -11913,7 +11982,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -11961,7 +12030,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -12006,7 +12075,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.015625,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -12052,7 +12121,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.1875,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -12100,7 +12169,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.03125,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -12145,7 +12214,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -12193,7 +12262,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -12241,8 +12310,8 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 25,
-        "icon_row": 15,
+        "icon_col": 0,
+        "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
             "name": "heavy-armor"
@@ -12263,7 +12332,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0125,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -12306,7 +12375,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -12347,7 +12416,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -12437,7 +12506,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 21,
         "ingredients": [ {
             "amount": 1,
@@ -12457,8 +12526,8 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 25,
-        "icon_row": 21,
+        "icon_col": 0,
+        "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
             "name": "ice"
@@ -12501,7 +12570,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.03125,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -12523,7 +12592,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 1,
@@ -12546,7 +12615,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.03125,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -12594,7 +12663,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -12676,7 +12745,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -12717,7 +12786,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -12757,7 +12826,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -12777,7 +12846,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -12818,7 +12887,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.2,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -12859,7 +12928,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -12879,7 +12948,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -12899,7 +12968,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -12944,7 +13013,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -12965,7 +13034,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -12986,7 +13055,7 @@
         "allow_productivity": true,
         "category": "centrifuging",
         "energy_required": 60,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 7,
         "ingredients": [ {
             "amount": 40,
@@ -13012,7 +13081,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 2,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 7,
         "ingredients": [ {
             "amount": 10,
@@ -13038,7 +13107,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -13063,7 +13132,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 5,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 7,
         "ingredients": [ {
             "amount": 1,
@@ -13086,7 +13155,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.3125,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -13108,7 +13177,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 7,
         "ingredients": [ {
             "amount": 50,
@@ -13128,7 +13197,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.03125,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -13149,7 +13218,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -13170,7 +13239,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 20,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 7,
         "ingredients": [ {
             "amount": 20,
@@ -13196,7 +13265,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.25,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -13221,7 +13290,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 3,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 40,
@@ -13241,7 +13310,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.1875,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -13261,7 +13330,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0125,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -13281,7 +13350,7 @@
         "allow_productivity": true,
         "category": "organic-or-chemistry",
         "energy_required": 2,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 30,
@@ -13304,7 +13373,7 @@
         "allow_productivity": false,
         "category": "electromagnetics",
         "energy_required": 5,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 1,
@@ -13338,7 +13407,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.3125,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -13363,7 +13432,7 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 5,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 12,
@@ -13394,7 +13463,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.3125,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -13419,7 +13488,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -13440,7 +13509,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -13461,7 +13530,7 @@
         "allow_productivity": true,
         "category": "chemistry-or-cryogenics",
         "energy_required": 20,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 1,
@@ -13487,7 +13556,7 @@
         "allow_productivity": true,
         "category": "smelting",
         "energy_required": 6.4,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 1,
@@ -13507,7 +13576,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.4,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -13528,7 +13597,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.25,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -13549,7 +13618,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 1,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 5,
@@ -13581,7 +13650,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -13612,7 +13681,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 4,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 20,
@@ -13638,7 +13707,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.25,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -13663,7 +13732,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 1,
@@ -13686,7 +13755,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -13708,7 +13777,7 @@
         "allow_productivity": true,
         "category": "crafting",
         "energy_required": 6,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 1,
@@ -13731,7 +13800,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.375,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -13752,7 +13821,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 1,
@@ -13778,7 +13847,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -13803,7 +13872,7 @@
         "allow_productivity": true,
         "category": "crafting",
         "energy_required": 15,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 2,
@@ -13829,7 +13898,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -13854,7 +13923,7 @@
         "allow_productivity": true,
         "category": "chemistry",
         "energy_required": 1,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 10,
@@ -13874,7 +13943,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0125,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -13894,7 +13963,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 60,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 1,
@@ -13926,7 +13995,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 3.75,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -13957,7 +14026,7 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 0.5,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 4,
@@ -13983,7 +14052,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -14008,7 +14077,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -14029,7 +14098,7 @@
         "allow_productivity": true,
         "category": "crushing",
         "energy_required": 2,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 1,
@@ -14053,7 +14122,7 @@
         "allow_productivity": false,
         "category": "crushing",
         "energy_required": 2,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 1,
@@ -14082,7 +14151,7 @@
         "allow_productivity": true,
         "category": "metallurgy",
         "energy_required": 10,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 3,
@@ -14113,7 +14182,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -14134,7 +14203,7 @@
         "allow_productivity": true,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 8,
         "ingredients": [ {
             "amount": 1,
@@ -14160,7 +14229,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -14181,8 +14250,8 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 15,
-        "icon_col": 25,
-        "icon_row": 8,
+        "icon_col": 0,
+        "icon_row": 9,
         "ingredients": [ {
             "amount": 30,
             "name": "advanced-circuit"
@@ -14204,7 +14273,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -14226,7 +14295,7 @@
         "allow_productivity": true,
         "category": "metallurgy",
         "energy_required": 32,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 50,
@@ -14249,7 +14318,7 @@
         "allow_productivity": true,
         "category": "metallurgy",
         "energy_required": 16,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 500,
@@ -14275,7 +14344,7 @@
         "allow_productivity": true,
         "category": "metallurgy",
         "energy_required": 32,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 50,
@@ -14298,7 +14367,7 @@
         "allow_productivity": true,
         "category": "metallurgy",
         "energy_required": 16,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 500,
@@ -14324,7 +14393,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 5,
@@ -14347,7 +14416,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -14369,7 +14438,7 @@
         "allow_productivity": true,
         "category": "centrifuging",
         "energy_required": 90,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 1,
@@ -14392,7 +14461,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 5.625,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 16,
         "ingredients": [ {
             "amount": 1,
@@ -14414,7 +14483,7 @@
         "allow_productivity": true,
         "category": "centrifuging",
         "energy_required": 60,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 5,
@@ -14434,7 +14503,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 8,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 500,
@@ -14463,8 +14532,8 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 25,
-        "icon_row": 16,
+        "icon_col": 0,
+        "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
             "name": "nuclear-reactor"
@@ -14491,7 +14560,7 @@
         "allow_productivity": true,
         "category": "organic",
         "energy_required": 2,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 5,
@@ -14511,7 +14580,7 @@
         "allow_productivity": true,
         "category": "organic-or-assembling",
         "energy_required": 2,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 1,
@@ -14531,7 +14600,7 @@
         "allow_productivity": false,
         "category": "organic-or-assembling",
         "energy_required": 2,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 1,
@@ -14551,7 +14620,7 @@
         "allow_productivity": true,
         "category": "organic-or-assembling",
         "energy_required": 2,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 10,
@@ -14571,7 +14640,7 @@
         "allow_productivity": true,
         "category": "organic",
         "energy_required": 4,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 4,
@@ -14591,7 +14660,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -14611,7 +14680,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 3,
@@ -14634,7 +14703,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -14656,7 +14725,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 8,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 15,
@@ -14688,7 +14757,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -14719,7 +14788,7 @@
         "allow_productivity": true,
         "category": "crafting-with-fluid",
         "energy_required": 10,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 2,
@@ -14756,7 +14825,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -14784,7 +14853,7 @@
         "allow_productivity": true,
         "category": "crafting-with-fluid",
         "energy_required": 10,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 2,
@@ -14821,7 +14890,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -14849,7 +14918,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -14870,7 +14939,7 @@
         "allow_productivity": true,
         "category": "crushing",
         "energy_required": 2,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 1,
@@ -14894,7 +14963,7 @@
         "allow_productivity": false,
         "category": "crushing",
         "energy_required": 1,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 9,
         "ingredients": [ {
             "amount": 1,
@@ -14923,7 +14992,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 1,
@@ -14949,7 +15018,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -14974,7 +15043,7 @@
         "allow_productivity": true,
         "category": "organic",
         "energy_required": 15,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 1,
@@ -15005,7 +15074,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -15026,7 +15095,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 20,
@@ -15052,7 +15121,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15077,7 +15146,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 10,
@@ -15106,7 +15175,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15134,7 +15203,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 20,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 5,
@@ -15160,7 +15229,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.25,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15185,7 +15254,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0125,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -15205,7 +15274,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 3,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 1,
@@ -15231,7 +15300,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.1875,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15256,7 +15325,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 8,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 2,
@@ -15282,7 +15351,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15307,7 +15376,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 1,
@@ -15327,7 +15396,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15347,7 +15416,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 10,
@@ -15370,7 +15439,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15392,7 +15461,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 5,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 5,
@@ -15415,7 +15484,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.3125,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15437,7 +15506,7 @@
         "allow_productivity": true,
         "category": "chemistry-or-cryogenics",
         "energy_required": 1,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 20,
@@ -15460,7 +15529,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15481,7 +15550,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 8,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 3,
@@ -15507,7 +15576,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15532,7 +15601,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 20,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 40,
@@ -15558,7 +15627,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 25,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 100,
@@ -15590,7 +15659,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.5625,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15621,7 +15690,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.25,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15646,7 +15715,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 2,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 5,
@@ -15672,7 +15741,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15697,7 +15766,7 @@
         "allow_productivity": true,
         "category": "electronics-with-fluid",
         "energy_required": 10,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 10,
         "ingredients": [ {
             "amount": 20,
@@ -15723,7 +15792,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15745,8 +15814,8 @@
         "allow_productivity": true,
         "category": "crafting",
         "energy_required": 21,
-        "icon_col": 25,
-        "icon_row": 10,
+        "icon_col": 0,
+        "icon_row": 11,
         "ingredients": [ {
             "amount": 1,
             "name": "electric-furnace"
@@ -15771,7 +15840,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.3125,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15792,7 +15861,7 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 15,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 5,
@@ -15815,7 +15884,7 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 30,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 4,
@@ -15841,7 +15910,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15866,7 +15935,7 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 60,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 4,
@@ -15895,7 +15964,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 3.75,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15923,7 +15992,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -15945,7 +16014,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 2,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 3,
@@ -15974,7 +16043,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -16002,7 +16071,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -16023,7 +16092,7 @@
         "allow_productivity": true,
         "category": "cryogenics",
         "energy_required": 5,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 25,
@@ -16054,7 +16123,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.3125,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -16075,7 +16144,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 2,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 1,
@@ -16101,7 +16170,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -16126,7 +16195,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 5,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 5,
@@ -16155,7 +16224,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.3125,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 17,
         "ingredients": [ {
             "amount": 1,
@@ -16183,7 +16252,7 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 15,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 5,
@@ -16206,7 +16275,7 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 30,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 4,
@@ -16232,7 +16301,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -16257,7 +16326,7 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 60,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 4,
@@ -16286,7 +16355,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 3.75,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -16314,7 +16383,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -16336,7 +16405,7 @@
         "allow_productivity": true,
         "category": "electromagnetics",
         "energy_required": 30,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 1,
@@ -16378,7 +16447,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -16409,7 +16478,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 5,
@@ -16435,8 +16504,8 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 25,
-        "icon_row": 17,
+        "icon_col": 0,
+        "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
             "name": "radar"
@@ -16460,7 +16529,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 1,
@@ -16486,7 +16555,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 1,
@@ -16509,7 +16578,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -16531,7 +16600,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 100,
@@ -16557,7 +16626,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -16582,7 +16651,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -16607,7 +16676,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 1,
@@ -16630,7 +16699,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -16652,7 +16721,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 20,
@@ -16675,7 +16744,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -16697,7 +16766,7 @@
         "allow_productivity": false,
         "category": "cryogenics",
         "energy_required": 10,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 10,
@@ -16726,7 +16795,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 25,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 5,
@@ -16752,7 +16821,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.5625,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -16777,7 +16846,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -16802,7 +16871,7 @@
         "allow_productivity": false,
         "category": "cryogenics",
         "energy_required": 10,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 100,
@@ -16834,7 +16903,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -16862,7 +16931,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -16883,7 +16952,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 3,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 11,
         "ingredients": [ {
             "amount": 6,
@@ -16917,7 +16986,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.1875,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -16945,7 +17014,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -16965,7 +17034,7 @@
         "allow_productivity": false,
         "category": "crafting-with-fluid",
         "energy_required": 15,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 20,
@@ -16994,7 +17063,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17019,7 +17088,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.25,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 10,
@@ -17039,7 +17108,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.015625,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17059,7 +17128,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 2,
@@ -17082,7 +17151,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17104,7 +17173,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -17130,7 +17199,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17155,7 +17224,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 5,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 45,
@@ -17181,7 +17250,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.3125,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17206,8 +17275,8 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 4,
-        "icon_col": 25,
-        "icon_row": 23,
+        "icon_col": 0,
+        "icon_row": 24,
         "ingredients": [ {
             "amount": 1,
             "name": "explosives"
@@ -17229,7 +17298,7 @@
         "allow_productivity": true,
         "category": "organic-or-assembling",
         "energy_required": 15,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 10,
@@ -17252,7 +17321,7 @@
         "allow_productivity": true,
         "category": "organic",
         "energy_required": 10,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 30,
@@ -17278,7 +17347,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17298,7 +17367,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 5,
@@ -17324,7 +17393,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17349,7 +17418,7 @@
         "allow_productivity": true,
         "category": "rocket-building",
         "energy_required": 3,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 1,
@@ -17375,7 +17444,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.1875,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17400,7 +17469,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.25,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17422,7 +17491,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 30,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 1000,
@@ -17454,7 +17523,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17485,7 +17554,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 4,
@@ -17517,7 +17586,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -17548,7 +17617,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17569,7 +17638,7 @@
         "allow_productivity": false,
         "category": "recycling-or-hand-crafting",
         "energy_required": 0.2,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -17634,7 +17703,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 12,
         "ingredients": [ {
             "amount": 1,
@@ -17654,7 +17723,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 2,
@@ -17677,7 +17746,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17699,7 +17768,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 15,
@@ -17728,7 +17797,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17756,7 +17825,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 3,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 2,
@@ -17779,7 +17848,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.1875,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17801,7 +17870,7 @@
         "allow_productivity": true,
         "category": "oil-processing",
         "energy_required": 5,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 10,
@@ -17827,7 +17896,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -17848,7 +17917,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -17869,7 +17938,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 8,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 2,
@@ -17895,7 +17964,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.5,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17920,7 +17989,7 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 0.5,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 1,
@@ -17943,7 +18012,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -17965,7 +18034,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 1,
@@ -17991,7 +18060,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -18016,7 +18085,7 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 10,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 5,
@@ -18042,7 +18111,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 1,
@@ -18068,7 +18137,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -18093,7 +18162,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -18118,7 +18187,7 @@
         "allow_productivity": true,
         "category": "chemistry-or-cryogenics",
         "energy_required": 1,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 50,
@@ -18141,7 +18210,7 @@
         "allow_productivity": true,
         "category": "chemistry",
         "energy_required": 1,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 20,
@@ -18161,7 +18230,7 @@
         "allow_productivity": true,
         "category": "chemistry",
         "energy_required": 1,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 10,
@@ -18181,7 +18250,7 @@
         "allow_productivity": true,
         "category": "chemistry",
         "energy_required": 1,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 20,
@@ -18201,7 +18270,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -18222,7 +18291,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 20,
@@ -18245,7 +18314,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 22,
         "ingredients": [ {
             "amount": 1,
@@ -18267,8 +18336,8 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 25,
-        "icon_row": 22,
+        "icon_col": 0,
+        "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
             "name": "space-platform-hub"
@@ -18287,8 +18356,8 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 3.75,
-        "icon_col": 25,
-        "icon_row": 22,
+        "icon_col": 0,
+        "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
             "name": "space-platform-starter-pack"
@@ -18312,7 +18381,7 @@
         "allow_productivity": true,
         "category": "crafting",
         "energy_required": 15,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 24,
         "ingredients": [ {
             "amount": 2,
@@ -18343,7 +18412,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -18364,8 +18433,8 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 15,
-        "icon_col": 25,
-        "icon_row": 24,
+        "icon_col": 0,
+        "icon_row": 25,
         "ingredients": [ {
             "amount": 5,
             "name": "advanced-circuit"
@@ -18387,7 +18456,7 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 30,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 4,
@@ -18413,8 +18482,8 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 25,
-        "icon_row": 18,
+        "icon_col": 0,
+        "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
             "name": "speed-module-2"
@@ -18438,7 +18507,7 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 60,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 4,
@@ -18467,7 +18536,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 3.75,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -18495,7 +18564,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.9375,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -18517,7 +18586,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 4,
@@ -18549,7 +18618,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -18580,7 +18649,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -18600,7 +18669,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -18621,7 +18690,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -18642,7 +18711,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -18663,7 +18732,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 18,
         "ingredients": [ {
             "amount": 1,
@@ -18684,7 +18753,7 @@
         "allow_productivity": false,
         "category": "pressing",
         "energy_required": 1,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 5,
@@ -18710,7 +18779,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -18735,7 +18804,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -18756,7 +18825,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 1,
@@ -18785,7 +18854,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.03125,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -18813,7 +18882,7 @@
         "allow_productivity": false,
         "category": "chemistry-or-cryogenics",
         "energy_required": 1,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 1000,
@@ -18833,7 +18902,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 8,
@@ -18859,7 +18928,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -18884,7 +18953,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 3,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 50,
@@ -18910,7 +18979,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.1875,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -18935,7 +19004,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 8,
@@ -18955,7 +19024,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -18975,7 +19044,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 3,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 6,
@@ -18998,7 +19067,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.1875,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -19020,7 +19089,7 @@
         "allow_productivity": true,
         "category": "smelting",
         "energy_required": 16,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 5,
@@ -19040,7 +19109,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.0,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -19061,7 +19130,7 @@
         "allow_productivity": true,
         "category": "smelting",
         "energy_required": 3.2,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 2,
@@ -19081,7 +19150,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.2,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -19102,7 +19171,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 5,
@@ -19122,7 +19191,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -19142,7 +19211,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -19163,7 +19232,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 27,
         "ingredients": [ {
             "amount": 5,
@@ -19183,7 +19252,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -19203,7 +19272,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 1,
@@ -19229,7 +19298,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -19254,7 +19323,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 3,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 20,
@@ -19277,7 +19346,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.1875,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -19299,7 +19368,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 10,
@@ -19325,7 +19394,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -19350,7 +19419,7 @@
         "allow_productivity": false,
         "category": "electronics",
         "energy_required": 0.5,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 10,
@@ -19376,7 +19445,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -19401,7 +19470,7 @@
         "allow_productivity": true,
         "category": "chemistry-or-cryogenics",
         "energy_required": 1,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 30,
@@ -19424,7 +19493,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -19445,7 +19514,7 @@
         "allow_productivity": true,
         "category": "chemistry-or-cryogenics",
         "energy_required": 1,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 5,
@@ -19471,7 +19540,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0125,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -19491,7 +19560,7 @@
         "allow_productivity": true,
         "category": "electromagnetics",
         "energy_required": 10,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 25,
         "ingredients": [ {
             "amount": 2,
@@ -19523,7 +19592,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -19551,8 +19620,8 @@
         "allow_productivity": true,
         "category": "electromagnetics",
         "energy_required": 5,
-        "icon_col": 25,
-        "icon_row": 25,
+        "icon_col": 0,
+        "icon_row": 26,
         "ingredients": [ {
             "amount": 1,
             "name": "holmium-plate"
@@ -19580,7 +19649,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.3125,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -19601,7 +19670,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 5,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 32,
@@ -19630,7 +19699,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -19651,7 +19720,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -19672,7 +19741,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -19693,7 +19762,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.3125,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -19721,7 +19790,7 @@
         "allow_productivity": false,
         "category": "electromagnetics",
         "energy_required": 30,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 1,
@@ -19747,7 +19816,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -19769,7 +19838,7 @@
         "allow_productivity": false,
         "category": "electromagnetics",
         "energy_required": 30,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 1,
@@ -19801,7 +19870,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -19829,7 +19898,7 @@
         "allow_productivity": false,
         "category": "electromagnetics",
         "energy_required": 30,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 10,
@@ -19858,7 +19927,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.875,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -19883,7 +19952,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 10,
@@ -19909,7 +19978,7 @@
         "allow_productivity": true,
         "category": "chemistry",
         "energy_required": 2,
-        "icon_col": 6,
+        "icon_col": 7,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 2,
@@ -19937,7 +20006,7 @@
         "allow_productivity": true,
         "category": "chemistry",
         "energy_required": 2,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 2,
@@ -19965,7 +20034,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -19990,7 +20059,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 3,
@@ -20013,7 +20082,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -20035,7 +20104,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 5,
@@ -20064,7 +20133,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 21,
+        "icon_col": 22,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -20092,7 +20161,7 @@
         "allow_productivity": false,
         "category": "pressing",
         "energy_required": 0.5,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 1,
@@ -20115,7 +20184,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 22,
+        "icon_col": 23,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -20137,7 +20206,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -20158,7 +20227,7 @@
         "allow_productivity": true,
         "category": "crafting-with-fluid",
         "energy_required": 1,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 2,
@@ -20184,7 +20253,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -20205,7 +20274,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -20226,7 +20295,7 @@
         "allow_productivity": true,
         "category": "metallurgy",
         "energy_required": 10,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 4,
@@ -20249,7 +20318,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 12,
+        "icon_col": 13,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -20270,7 +20339,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 20,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 5,
@@ -20293,7 +20362,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.25,
-        "icon_col": 13,
+        "icon_col": 14,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -20315,7 +20384,7 @@
         "allow_productivity": false,
         "category": "metallurgy",
         "energy_required": 2,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 1,
@@ -20349,7 +20418,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -20374,7 +20443,7 @@
         "allow_productivity": false,
         "category": "metallurgy",
         "energy_required": 0.5,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 5,
@@ -20405,7 +20474,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 15,
+        "icon_col": 16,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -20427,7 +20496,7 @@
         "allow_productivity": false,
         "category": "metallurgy",
         "energy_required": 2,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 40,
@@ -20458,7 +20527,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.125,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -20480,7 +20549,7 @@
         "allow_productivity": false,
         "category": "pressing",
         "energy_required": 1,
-        "icon_col": 20,
+        "icon_col": 21,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 10,
@@ -20503,7 +20572,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -20525,7 +20594,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -20545,8 +20614,8 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 25,
-        "icon_row": 19,
+        "icon_col": 0,
+        "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
             "name": "uranium-235"
@@ -20566,7 +20635,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -20587,7 +20656,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 12,
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 1,
@@ -20610,7 +20679,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.75,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -20632,7 +20701,7 @@
         "allow_productivity": true,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 24,
+        "icon_col": 25,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 10,
@@ -20658,7 +20727,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -20679,7 +20748,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 3,
+        "icon_col": 4,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -20700,7 +20769,7 @@
         "allow_productivity": true,
         "category": "centrifuging",
         "energy_required": 12,
-        "icon_col": 0,
+        "icon_col": 1,
         "icon_row": 27,
         "ingredients": [ {
             "amount": 10,
@@ -20725,7 +20794,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 10,
-        "icon_col": 1,
+        "icon_col": 2,
         "icon_row": 27,
         "ingredients": [ {
             "amount": 1,
@@ -20748,7 +20817,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.625,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -20770,7 +20839,7 @@
         "allow_productivity": true,
         "category": "crafting",
         "energy_required": 21,
-        "icon_col": 2,
+        "icon_col": 3,
         "icon_row": 27,
         "ingredients": [ {
             "amount": 3,
@@ -20796,7 +20865,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 1.3125,
-        "icon_col": 5,
+        "icon_col": 6,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -20817,7 +20886,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 16,
+        "icon_col": 17,
         "icon_row": 19,
         "ingredients": [ {
             "amount": 1,
@@ -20838,7 +20907,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0125,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 15,
         "ingredients": [ {
             "amount": 1,
@@ -20858,7 +20927,7 @@
         "allow_productivity": true,
         "category": "organic-or-assembling",
         "energy_required": 2,
-        "icon_col": 11,
+        "icon_col": 12,
         "icon_row": 26,
         "ingredients": [ {
             "amount": 2,
@@ -20883,7 +20952,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -20904,7 +20973,7 @@
         "allow_productivity": false,
         "category": "crafting",
         "energy_required": 0.5,
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 27,
         "ingredients": [ {
             "amount": 2,
@@ -20924,7 +20993,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 8,
+        "icon_col": 9,
         "icon_row": 20,
         "ingredients": [ {
             "amount": 1,
@@ -20944,7 +21013,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 17,
+        "icon_col": 18,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -20965,7 +21034,7 @@
         "allow_productivity": true,
         "category": "organic-or-hand-crafting",
         "energy_required": 1,
-        "icon_col": 10,
+        "icon_col": 11,
         "icon_row": 27,
         "ingredients": [ {
             "amount": 1,
@@ -20989,7 +21058,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 19,
+        "icon_col": 20,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -21010,7 +21079,7 @@
         "allow_productivity": false,
         "category": "recycling",
         "energy_required": 0.0625,
-        "icon_col": 18,
+        "icon_col": 19,
         "icon_row": 23,
         "ingredients": [ {
             "amount": 1,
@@ -21108,7 +21177,7 @@
         } ]
     }, {
         "category": "basic-fluid",
-        "icon_col": 9,
+        "icon_col": 10,
         "icon_row": 8,
         "key": "lithium-brine",
         "localized_name": {
@@ -21122,7 +21191,7 @@
             "probability": 1
         } ]
     }, {
-        "icon_col": 7,
+        "icon_col": 8,
         "icon_row": 24,
         "key": "scrap",
         "localized_name": {
@@ -21134,7 +21203,7 @@
             "name": "scrap"
         } ]
     }, {
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 25,
         "key": "stone",
         "localized_name": {
@@ -21147,7 +21216,7 @@
         } ]
     }, {
         "category": "basic-fluid",
-        "icon_col": 23,
+        "icon_col": 24,
         "icon_row": 25,
         "key": "sulfuric-acid-geyser",
         "localized_name": {
@@ -21162,7 +21231,7 @@
         } ]
     }, {
         "category": "hard-solid",
-        "icon_col": 14,
+        "icon_col": 15,
         "icon_row": 26,
         "key": "tungsten-ore",
         "localized_name": {
@@ -21175,8 +21244,8 @@
         } ]
     }, {
         "fluid_amount": 10,
-        "icon_col": 25,
-        "icon_row": 26,
+        "icon_col": 0,
+        "icon_row": 27,
         "key": "uranium-ore",
         "localized_name": {
             "en": "Uranium ore"
@@ -21193,13 +21262,54 @@
         "crafting_categories": [ "rocket-building" ],
         "crafting_speed": 1,
         "energy_usage": 250000,
-        "icon_col": 4,
+        "icon_col": 5,
         "icon_row": 24,
         "key": "rocket-silo",
         "localized_name": {
             "en": "Rocket silo"
         },
         "module_slots": 4
+    } ],
+    "spoilage": [ {
+        "from_item": "bioflux",
+        "time": 432000,
+        "to_item": "spoilage"
+    }, {
+        "from_item": "jelly",
+        "time": 14400,
+        "to_item": "spoilage"
+    }, {
+        "from_item": "jellynut",
+        "time": 216000,
+        "to_item": "spoilage"
+    }, {
+        "from_item": "raw-fish",
+        "time": 453000,
+        "to_item": "spoilage"
+    }, {
+        "from_item": "yumako",
+        "time": 216000,
+        "to_item": "spoilage"
+    }, {
+        "from_item": "yumako-mash",
+        "time": 10800,
+        "to_item": "spoilage"
+    }, {
+        "from_item": "copper-bacteria",
+        "time": 3600,
+        "to_item": "copper-ore"
+    }, {
+        "from_item": "iron-bacteria",
+        "time": 3600,
+        "to_item": "iron-ore"
+    }, {
+        "from_item": "nutrients",
+        "time": 18000,
+        "to_item": "spoilage"
+    }, {
+        "from_item": "agricultural-science-pack",
+        "time": 216000,
+        "to_item": "spoilage"
     } ],
     "sprites": {
         "extra": {
@@ -21214,7 +21324,7 @@
                 "name": "no module"
             }
         },
-        "hash": "7a609dc5522bbd7c9baf60bdb54e1298",
+        "hash": "5f175182584462b81d846634ffbb5e84",
         "height": 896,
         "width": 832
     },

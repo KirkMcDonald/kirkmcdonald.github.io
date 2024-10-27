@@ -269,6 +269,52 @@ class ResourceRecipe extends Recipe {
     }
 }
 
+class SpoilageRecipe extends Recipe {
+    constructor(from_item, to_item) {
+        let key = `${from_item.key}-spoilage`
+        let name = `${from_item.name} to ${to_item.name} (Spoilage)`
+        super(
+            key,
+            name,
+            null,
+            to_item.icon_col,
+            to_item.icon_row,
+            false,
+            null,
+            zero,
+            [new Ingredient(from_item, one)],
+            [new Ingredient(to_item, one)],
+            [],
+        )
+    }
+}
+
+class PlantRecipe extends Recipe {
+    constructor(key, name, order, col, row, seed, results, conditions) {
+        super(
+            key,
+            name,
+            order,
+            col,
+            row,
+            false,
+            null,
+            zero,
+            [new Ingredient(seed, one)],
+            //[new Ingredient(item, quantity)],
+            results,
+            conditions,
+        )
+        if (this.isResource()) {
+            this.defaultPriority = 1
+            this.defaultWeight = Rational.from_float(100)
+        }
+    }
+    isResource() {
+        return this.conditions.length === 0
+    }
+}
+
 class MiningRecipe extends Recipe {
     constructor(key, name, order, col, row, category, miningTime, ingredients, products) {
         if (!ingredients) {
@@ -488,6 +534,42 @@ export function getRecipes(data, items) {
             console.log("duplicate key:", key)
         }
         recipes.set(key, r)
+    }
+    if (data.plants) {
+        for (let plant of data.plants) {
+            let results = []
+            for (let {amount, name} of plant.results) {
+                results.push(new Ingredient(
+                    items.get(name),
+                    Rational.from_float_approximate(amount),
+                ))
+            }
+            let conditions = []
+            if (plant.surface_conditions) {
+                for (let {property, min, max} of plant.surface_conditions) {
+                    conditions.push(new SurfaceCondition(property, min, max))
+                }
+            }
+            let r = new PlantRecipe(
+                plant.key,
+                plant.localized_name.en,
+                plant.order,
+                plant.icon_col,
+                plant.icon_row,
+                items.get(plant.seed),
+                results,
+                conditions,
+            )
+            recipes.set(plant.key, r)
+        }
+    }
+    if (data.spoilage) {
+        for (let spoil of data.spoilage) {
+            let from_item = items.get(spoil.from_item)
+            let to_item = items.get(spoil.to_item)
+            let r = new SpoilageRecipe(from_item, to_item)
+            recipes.set(r.key, r)
+        }
     }
     // Reap items both produced by no recipes and consumed by no recipes.
     let reapItems = []

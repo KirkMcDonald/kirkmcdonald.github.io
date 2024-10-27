@@ -77,7 +77,7 @@ export function getPlanets(data, recipes) {
     for (let d of data.planets) {
         let resources = new Set()
         let roots = new Set()
-        for (let key of d.resources.resource.concat(d.resources.offshore)) {
+        for (let key of d.resources.resource.concat(d.resources.offshore).concat(d.resources.plants)) {
             let r = recipes.get(key)
             resources.add(r)
             if (RECYCLING_ROOT_KEYS.has(key)) {
