@@ -15,7 +15,7 @@ import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_
 import { colorSchemes } from "./color.js"
 import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender, visualizerDirection, getDefaultVisDirection, setVisualizerDirection } from "./events.js"
 import { spec, DEFAULT_PLANET, DEFAULT_BELT, DEFAULT_FUEL, buildingSort } from "./factory.js"
-import { getRecipeGroups } from "./groups.js"
+import { getRecipeGroups, titleCase } from "./groups.js"
 import { changeMod } from "./init.js"
 import { shortModules, moduleRows, moduleDropdown } from "./module.js"
 import { Rational, zero } from "./rational.js"
@@ -743,6 +743,15 @@ function renderRecipes(settings) {
         spec.setDefaultDisable()
     }
 
+    let allGroups = getRecipeGroups(new Set(spec.recipes.values()))
+    let groups = new Map();
+    for (let group of allGroups) {
+        if (group.size > 1) {
+            let category = group.values().next().value.category
+            groups.set(category, sorted(group, d => d.order))
+        }
+    }
+
     let planetDiv = d3.select("#planet_selector")
         .classed("toggle-list", true)
     planetDiv.selectAll("*").remove()
@@ -770,42 +779,88 @@ function renderRecipes(settings) {
                     }
                     d3.selectAll("#recipe_toggles .toggle")
                         .classed("selected", d => !spec.disable.has(d))
+
+                    d3.selectAll("#recipe_toggles .category-label.toggle ")
+                        .each(function() {
+                            let categoryId = d3.select(this).attr("id")
+                            let isSelected = groups.get(categoryId)
+                                .some(recipe => !spec.disable.has(recipe))
+
+                            d3.select(this).classed("selected", isSelected);
+                        })
+
                     spec.updateSolution()
                 })
                 .append(d => d.icon.make(32))
     }
 
-    let allGroups = getRecipeGroups(new Set(spec.recipes.values()))
-    let groups = []
-    for (let group of allGroups) {
-        if (group.size > 1) {
-            groups.push(sorted(group, d => d.order))
-        }
-    }
-
     let div = d3.select("#recipe_toggles")
         .classed("toggle-list", true)
     div.selectAll("*").remove()
-    let recipe = div.selectAll("div")
-        .data(groups)
-        .join("div")
-            .classed("toggle-row", true)
-            .selectAll("div")
-            .data(d => d)
-            .join("div")
-                .classed("toggle recipe", true)
-                .classed("selected", d => !spec.disable.has(d))
-                .on("click", function(event, d) {
-                    let disabled = spec.disable.has(d)
-                    d3.select(this).classed("selected", disabled)
-                    if (disabled) {
-                        spec.setEnable(d)
-                    } else {
-                        spec.setDisable(d)
+
+    for (const [category, recipes] of groups) {
+        let categoryDiv = div.append("div")
+            .attr("class", "toggle-row category")
+
+        categoryDiv.append("div")
+            .text(titleCase(category))
+            .attr("class", "category-label toggle")
+            .attr("id", category)
+            .classed("selected", _ => recipes.some(recipe => !spec.disable.has(recipe)))
+            .on("click", function(event, d) {
+                let disabled = true
+                recipes.forEach(recipe => {
+                    if (!spec.disable.has(recipe)) {
+                        disabled = false
                     }
-                    spec.updateSolution()
                 })
-    recipe.append(d => d.icon.make(32))
+
+                if (disabled) {
+                    recipes.forEach(recipe => {
+                        if (spec.disable.has(recipe)) {
+                            spec.setEnable(recipe)
+                        }
+                    })
+                } else {
+                    recipes.forEach(recipe => {
+                        if (!spec.disable.has(recipe)) {
+                            spec.setDisable(recipe)
+                        }
+                    })
+                }
+
+                d3.selectAll("#recipe_toggles .toggle.recipe")
+                    .classed("selected", d => !spec.disable.has(d))
+
+                d3.select(this).classed("selected", disabled)
+
+                spec.updateSolution()
+            })
+
+        categoryDiv.append("div")
+
+        let recipeGroup = categoryDiv.selectAll("div.recipe")
+            .data(recipes)
+
+        recipeGroup.enter()
+            .append("div")
+            .attr("class", "toggle recipe")
+            .classed("selected", d => !spec.disable.has(d))
+            .on("click", function(event, d) {
+                let disabled = spec.disable.has(d)
+                d3.select(this).classed("selected", disabled)
+                if (disabled) {
+                    spec.setEnable(d)
+                } else {
+                    spec.setDisable(d)
+                }
+
+                spec.updateSolution()
+            })
+            .append("div")
+            .attr("class", "recipe-icon")
+            .append(d => d.icon.make(32))
+    }
 }
 
 // resource priority
