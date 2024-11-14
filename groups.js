@@ -62,39 +62,48 @@ export function topoSort(groups) {
     return result
 }
 
+export function titleCase(str) {
+    if (str === null || str == undefined) {
+        return "Other"
+    }
+
+    let words = capitalizeFirstLetter(str).split('-')
+    return words.join(' ')
+}
+
+function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
 export function getRecipeGroups(recipes) {
     let groups = new Map()
-    let items = new Set()
     for (let recipe of recipes) {
-        if (recipe.products.length > 0) {
-            groups.set(recipe, new Set([recipe]))
-            for (let ing of recipe.products) {
-                items.add(ing.item)
-            }
+        let category = recipe.category;
+        if (category === null) {
+            category = "other"
         }
-    }
-    for (let item of items) {
-        let itemRecipes = []
-        for (let recipe of item.allRecipes()) {
-            if (recipes.has(recipe)) {
-                itemRecipes.push(recipe)
-            }
+
+        if (!groups.has(category)) {
+            groups.set(category, new Set())
         }
-        if (itemRecipes.length > 1) {
-            let combined = new Set()
-            for (let recipe of itemRecipes) {
-                for (let r of groups.get(recipe)) {
-                    combined.add(r)
-                }
-            }
-            for (let recipe of combined) {
-                groups.set(recipe, combined)
-            }
+        groups.get(category).add(recipe)
+    }
+
+    // Move "recycling" and "other" to the end
+    let sortedGroups = new Map();
+    Array.from(groups.entries()).sort((a, b) => {
+        if (['recycling', "other"].includes(a[0]) && !['recycling', "other"].includes(b[0])) {
+            return 1
         }
-    }
-    let groupObjects = new Set()
-    for (let [r, group] of groups) {
-        groupObjects.add(group)
-    }
-    return groupObjects
+
+        if (!['recycling', "other"].includes(a[0]) && ['recycling', "other"].includes(b[0])) {
+            return -1
+        }
+
+        return 0;
+    }).forEach(([category, recipes]) => {
+        sortedGroups.set(category, new Set(recipes))
+    })
+
+    return Array.from(sortedGroups.values());
 }
