@@ -776,12 +776,47 @@ function renderRecipes(settings) {
     }
 
     let allGroups = getRecipeGroups(new Set(spec.recipes.values()))
+
     let groups = []
     for (let group of allGroups) {
         if (group.size > 1) {
             groups.push(sorted(group, d => d.order))
         }
     }
+
+    const toAddSearch = d3.select(".setting-section.recipes td span")
+    toAddSearch.append("input")
+        .classed("search", true)
+        .attr("placeholder", "Search")
+        .on("keyup", searchTargets)
+
+
+    function resetSearch(elems) {
+        elems.each(function(_item) {
+            this.style.display = ""
+        })
+    }
+    function searchTargets(event) {
+        let search = this
+        let search_text = search.value.toLowerCase().replace(/[^a-z0-9\s]+/g, "")
+        let elems = d3.selectAll(".toggle.recipe")
+
+        if (!search_text) {
+            resetSearch(elems)
+            return
+        }
+
+        elems.each(function(item) {
+            let title = item.name.toLowerCase()
+            if (title.indexOf(search_text) === -1) {
+                this.style.display = "none"
+            } else {
+                this.style.display = ""
+                currentHrHasContent = true
+            }
+        })
+    }
+
 
     let div = d3.select("#recipe_toggles")
         .classed("toggle-list", true)
