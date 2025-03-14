@@ -23,7 +23,8 @@ import { getItems } from "./item.js"
 import { getModules } from "./module.js"
 import { getPlanets } from "./planet.js"
 import { getRecipes } from "./recipe.js"
-import { currentMod, MODIFICATIONS, renderDataSetOptions, renderSettings } from "./settings.js"
+import { currentMod, MODIFICATIONS, addOverrideOptions, renderDataSetOptions, renderSettings } from "./settings.js"
+import { OVERRIDE } from "./override.js"
 
 function reset() {
     window.location.hash = ""
@@ -109,6 +110,9 @@ function loadData(modName, settings) {
 
 export function init() {
     let settings = loadSettings(window.location.hash)
+    if (OVERRIDE != null) {
+        addOverrideOptions(OVERRIDE)
+    }
     renderDataSetOptions(settings)
     loadData(currentMod(), settings)
 }
