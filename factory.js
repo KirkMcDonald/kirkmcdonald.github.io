@@ -489,7 +489,11 @@ class FactorySpecification {
         if (recipe.category === null || recipe.category === undefined) {
             return null
         } else {
-            return this.buildings.get(recipe.category).getBuilding(recipe)
+            let buildingsForCategory = this.buildings.get(recipe.category)
+            if (buildingsForCategory == null) {
+                return null
+            }
+            return buildingsForCategory.getBuilding(recipe)
         }
     }
     getBuildingGroup(building) {

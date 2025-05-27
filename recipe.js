@@ -280,7 +280,7 @@ class SpoilageRecipe extends Recipe {
             to_item.icon_col,
             to_item.icon_row,
             false,
-            null,
+            "spoilage",
             zero,
             [new Ingredient(from_item, one)],
             [new Ingredient(to_item, one)],
@@ -578,7 +578,9 @@ export function getRecipes(data, items) {
             //console.log("item with no recipes or uses:", item)
             reapItems.push(itemKey)
         } else if (item.recipes.length === 0) {
-            console.log("item with no recipes:", item)
+            if (!item.key.endsWith("-barrel")) {
+                console.log("item with no recipes:", item)
+            }
             recipes.set(itemKey, new ResourceRecipe(item, null, 2, hundred))
         }
     }
