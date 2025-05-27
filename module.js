@@ -198,6 +198,10 @@ export class ModuleSpec {
                 speed = speed.add(beacon)
             }
         }
+        let minimum = Rational.from_floats(1, 5)
+        if (speed.less(minimum)) {
+            speed = minimum
+        }
         return speed
     }
     prodEffect(spec) {
