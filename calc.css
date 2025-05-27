@@ -172,7 +172,7 @@ input.prec, input.mprod {
 .radio-setting input[type="radio"] {
     display: none;
 }
-.radio-setting input[type="radio"] + label {
+.radio-setting input[type="radio"] + label, .toggle-building {
     cursor: pointer;
     background: var(--light);
     border-radius: 4px;
@@ -180,10 +180,10 @@ input.prec, input.mprod {
     margin: 2px;
     padding: 2px;
 }
-.radio-setting input[type="radio"] + label:hover {
+.radio-setting input[type="radio"] + label:hover, .toggle-building:hover {
     background: var(--bright);
 }
-.radio-setting input[type="radio"]:checked + label {
+.radio-setting input[type="radio"]:checked + label, .toggle-building.selected {
     background: var(--accent);
 }
 .toggle-list .toggle {

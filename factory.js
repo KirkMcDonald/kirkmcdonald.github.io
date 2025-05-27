@@ -36,29 +36,6 @@ let DEFAULT_BUILDINGS = new Set([
     "electric-mining-drill",
 ])
 
-class BuildingSet {
-    constructor(building) {
-        this.categories = new Set(building.categories)
-        this.buildings = new Set([building])
-    }
-    merge(other) {
-        for (let category of other.categories) {
-            this.categories.add(category)
-        }
-        for (let building of other.buildings) {
-            this.buildings.add(building)
-        }
-    }
-    overlap(other) {
-        for (let category of this.categories) {
-            if (other.categories.has(category)) {
-                return true
-            }
-        }
-        return false
-    }
-}
-
 export function buildingSort(buildings) {
     buildings.sort(function(a, b) {
         if (a.less(b)) {
@@ -99,23 +76,18 @@ class BuildingGroup {
 }
 
 function getBuildingGroups(buildings) {
-    let sets = new Set()
+    let sets = new Map()
     for (let building of buildings) {
-        let set = new BuildingSet(building)
-        for (let s of Array.from(sets)) {
-            if (set.overlap(s)) {
-                set.merge(s)
-                sets.delete(s)
+        for (let cat of building.categories) {
+            if (!sets.has(cat)) {
+                sets.set(cat, new Set())
             }
+            sets.get(cat).add(building)
         }
-        sets.add(set)
     }
     let groups = new Map()
-    for (let {categories, buildings} of sets) {
-        let group = new BuildingGroup(buildings)
-        for (let cat of categories) {
-            groups.set(cat, group)
-        }
+    for (let [cat, buildingSet] of sets.entries()) {
+        groups.set(cat, new BuildingGroup(buildingSet))
     }
     return groups
 }
@@ -129,6 +101,7 @@ class FactorySpecification {
         this.planets = null
         this.buildings = null
         this.buildingKeys = null
+        this.advancedBuildings = new Set()
         this.belts = null
         this.fuels = null
 
@@ -500,15 +473,35 @@ class FactorySpecification {
         let cat = Array.from(building.categories)[0]
         return this.buildings.get(cat)
     }
-    setMinimumBuilding(building) {
-        let group = this.getBuildingGroup(building)
-        group.building = building
+    setMinimumBuilding(building, setBefore = false) {
+        for (let cat of building.categories) {
+            let group = this.buildings.get(cat)
+            let groupIndex = group.buildings.indexOf(building)
+            if (setBefore && groupIndex > 0) {
+                // This probably won't work well if there start to be more than two tiers in a category,
+                // but... in that case probably the whole BuildingGroup abstraction needs a rework.
+                group.building = group.buildings[groupIndex - 1]
+            } else {
+                group.building = building
+            }
+        }
         for (let [recipe, moduleSpec] of this.spec) {
-            let g = this.buildings.get(recipe.category)
-            if (group === g) {
+            if (building.categories.has(recipe.category)) {
                 let b = this.getBuilding(recipe)
                 moduleSpec.setBuilding(b, this)
             }
+        }
+    }
+    hasAdvancedBuildingEnabled(building) {
+        return this.advancedBuildings.has(building)
+    }
+    setAdvancedBuildingEnabled(building, enabled) {
+        if (enabled) {
+            this.advancedBuildings.add(building)
+            this.setMinimumBuilding(building, false)
+        } else {
+            this.advancedBuildings.delete(building)
+            this.setMinimumBuilding(building, true)
         }
     }
     initModuleSpec(recipe, building) {
