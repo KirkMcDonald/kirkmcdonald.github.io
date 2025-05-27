@@ -67,7 +67,7 @@ function normalizeDataSetName(modName) {
 // initialization, and so does not need to wipe and re-render its UI elements.
 export function renderDataSetOptions(settings) {
     let modSelector = document.getElementById("data_set")
-    d3.select(modSelector).on("change", function(event) {
+    d3.select(modSelector).on("change", function (event) {
         changeMod()
     })
     let configuredMod = normalizeDataSetName(settings.get("data"))
@@ -281,7 +281,7 @@ function renderRateOptions(settings) {
     spec.format.setDisplayRate(rateName)
     let rates = []
     for (let [rateName, longRateName] of longRateNames) {
-        rates.push({rateName, longRateName})
+        rates.push({ rateName, longRateName })
     }
     let form = d3.select("#display_rate")
     form.selectAll("*").remove()
@@ -356,16 +356,16 @@ function renderColorScheme(settings) {
     }
     setColorScheme(color)
     d3.select("#color_scheme")
-        .on("change", function(event, d) {
+        .on("change", function (event, d) {
             setColorScheme(event.target.value)
             spec.display()
         })
         .selectAll("option")
         .data(colorSchemes)
         .join("option")
-            .attr("value", d => d.key)
-            .property("selected", d => d.key === color)
-            .text(d => d.name)
+        .attr("value", d => d.key)
+        .property("selected", d => d.key === color)
+        .text(d => d.name)
 }
 
 function setColorScheme(schemeKey) {
@@ -381,15 +381,13 @@ function setColorScheme(schemeKey) {
 // buildings
 
 function renderBuildings(settings) {
-    let groupSet = new Set()
-    for (let [cat, group] of spec.buildings) {
-        if (group.buildings.length > 1) {
-            groupSet.add(group)
-        }
-    }
-    for (let group of groupSet) {
-        group.building = group.getDefault()
-    }
+    const singleSelectCategories = [
+        "crafting",
+        "smelting",
+        "basic-solid",
+    ]
+    let groups = singleSelectCategories.map(cat => spec.buildings.get(cat))
+    groups.forEach(group => group.building = group.getDefault())
     if (settings.has("buildings")) {
         let buildingKeys = settings.get("buildings").split(",")
         for (let key of buildingKeys) {
@@ -402,9 +400,6 @@ function renderBuildings(settings) {
         }
     }
 
-    // It doesn't really matter how we order these, but pick something just to
-    // make it consistent.
-    let groups = sorted(groupSet, g => g.getDefault().name)
     let groupIndex = new Map()
     for (let [i, g] of groups.entries()) {
         for (let building of g.buildings) {
@@ -416,7 +411,7 @@ function renderBuildings(settings) {
     let set = div.selectAll("div")
         .data(groups)
         .join("div")
-            .classed("radio-setting", true)
+        .classed("radio-setting", true)
     radioSetting(
         set,
         d => `building_selector_${groupIndex.get(d)}`,
@@ -427,6 +422,53 @@ function renderBuildings(settings) {
             spec.updateSolution()
         },
     )
+}
+
+function renderAdvancedBuildings(settings) {
+    // In Space Age, these buildings have significant caveats and unlock conditions.
+    // So we separate them out into their own group to allow multiple-selection of
+    // the buildings the user wants to allow building with.
+    const multiSelectCategories = [
+        "metallurgy",
+        "electromagnetics",
+        "organic",
+        "cryogenics",
+    ]
+    let buildings = multiSelectCategories
+        .map(cat => spec.buildings.get(cat))
+        .filter(categoryBuildings => categoryBuildings != undefined)
+        .flatMap(categoryBuildings => categoryBuildings.buildings)
+    buildingSort(buildings)
+
+    if (settings.has("advancedbuildings")) {
+        let buildingKeys = settings.get("advancedbuildings").split(",")
+        for (let key of buildingKeys) {
+            let building = spec.buildingKeys.get(key)
+            if (building === undefined) {
+                console.log("unknown building:", key)
+                continue
+            }
+            spec.setAdvancedBuildingEnabled(building, true)
+        }
+    }
+
+    d3.select("#advanced_building_row")
+        .style("display", buildings.length == 0 ? "none" : null)
+
+    let div = d3.select("#advanced_building_selector")
+    div.selectAll("*").remove()
+    let building = div.selectAll("div")
+        .data(buildings)
+        .join("div")
+        .classed("toggle-building", true)
+        .classed("selected", d => spec.hasAdvancedBuildingEnabled(d))
+        .on("click", function (event, d) {
+            let enabled = spec.hasAdvancedBuildingEnabled(d)
+            d3.select(this).classed("selected", !enabled)
+            spec.setAdvancedBuildingEnabled(d, !enabled)
+            spec.updateSolution()
+        })
+    building.append(d => d.icon.make(32))
 }
 
 // belt
@@ -751,28 +793,28 @@ function renderRecipes(settings) {
         planetDiv.selectAll("div")
             .data(planets)
             .join("div")
-                .classed("toggle", true)
-                .classed("selected", d => spec.selectedPlanets.has(d))
-                .on("click", function(event, d) {
-                    if (event.shiftKey) {
-                        event.preventDefault()
-                        let selected = spec.selectedPlanets.has(d)
-                        d3.select(this).classed("selected", !selected)
-                        if (selected) {
-                            spec.unselectPlanet(d)
-                        } else {
-                            spec.selectPlanet(d)
-                        }
+            .classed("toggle", true)
+            .classed("selected", d => spec.selectedPlanets.has(d))
+            .on("click", function (event, d) {
+                if (event.shiftKey) {
+                    event.preventDefault()
+                    let selected = spec.selectedPlanets.has(d)
+                    d3.select(this).classed("selected", !selected)
+                    if (selected) {
+                        spec.unselectPlanet(d)
                     } else {
-                        spec.selectOnePlanet(d)
-                        d3.selectAll("#planet_selector .toggle")
-                            .classed("selected", d => spec.selectedPlanets.has(d))
+                        spec.selectPlanet(d)
                     }
-                    d3.selectAll("#recipe_toggles .toggle")
-                        .classed("selected", d => !spec.disable.has(d))
-                    spec.updateSolution()
-                })
-                .append(d => d.icon.make(32))
+                } else {
+                    spec.selectOnePlanet(d)
+                    d3.selectAll("#planet_selector .toggle")
+                        .classed("selected", d => spec.selectedPlanets.has(d))
+                }
+                d3.selectAll("#recipe_toggles .toggle")
+                    .classed("selected", d => !spec.disable.has(d))
+                spec.updateSolution()
+            })
+            .append(d => d.icon.make(32))
     }
 
     let allGroups = getRecipeGroups(new Set(spec.recipes.values()))
@@ -789,22 +831,22 @@ function renderRecipes(settings) {
     let recipe = div.selectAll("div")
         .data(groups)
         .join("div")
-            .classed("toggle-row", true)
-            .selectAll("div")
-            .data(d => d)
-            .join("div")
-                .classed("toggle recipe", true)
-                .classed("selected", d => !spec.disable.has(d))
-                .on("click", function(event, d) {
-                    let disabled = spec.disable.has(d)
-                    d3.select(this).classed("selected", disabled)
-                    if (disabled) {
-                        spec.setEnable(d)
-                    } else {
-                        spec.setDisable(d)
-                    }
-                    spec.updateSolution()
-                })
+        .classed("toggle-row", true)
+        .selectAll("div")
+        .data(d => d)
+        .join("div")
+        .classed("toggle recipe", true)
+        .classed("selected", d => !spec.disable.has(d))
+        .on("click", function (event, d) {
+            let disabled = spec.disable.has(d)
+            d3.select(this).classed("selected", disabled)
+            if (disabled) {
+                spec.setEnable(d)
+            } else {
+                spec.setDisable(d)
+            }
+            spec.updateSolution()
+        })
     recipe.append(d => d.icon.make(32))
 }
 
@@ -856,6 +898,7 @@ export function renderSettings(settings) {
     renderMiningProd(settings)
     renderColorScheme(settings)
     renderBuildings(settings)
+    renderAdvancedBuildings(settings)
     renderBelts(settings)
     renderFuel(settings)
     renderVisualizer(settings)
