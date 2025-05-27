@@ -440,6 +440,8 @@ function renderAdvancedBuildings(settings) {
         .flatMap(categoryBuildings => categoryBuildings.buildings)
     buildingSort(buildings)
 
+    buildings.forEach(b => spec.setAdvancedBuildingEnabled(b, false))
+
     if (settings.has("advancedbuildings")) {
         let buildingKeys = settings.get("advancedbuildings").split(",")
         for (let key of buildingKeys) {
