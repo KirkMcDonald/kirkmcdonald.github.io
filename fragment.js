@@ -71,6 +71,12 @@ export function formatSettings(excludeTitle, overrideTab, targets) {
     if (buildings.length > 0) {
         settings += "buildings=" + buildings.join(",") + "&"
     }
+    if (spec.advancedBuildings.size > 0) {
+        let advancedKeys = Array.from(spec.advancedBuildings)
+            .map(b => b.key)
+            .join(",")
+        settings += "advancedbuildings=" + advancedKeys + "&"
+    }
     if (spec.belt.key !== DEFAULT_BELT) {
         settings += "belt=" + spec.belt.key + "&"
     }
@@ -144,7 +150,7 @@ export function formatSettings(excludeTitle, overrideTab, targets) {
         }
         settings += "&planet=" + planets.join(",")
     }
-    let {disable, enable} = spec.getNetDisable()
+    let { disable, enable } = spec.getNetDisable()
     if (disable.size !== 0) {
         let parts = []
         for (let d of disable) {
@@ -198,7 +204,7 @@ export function formatSettings(excludeTitle, overrideTab, targets) {
         let priority = []
         for (let level of spec.priority) {
             let keys = []
-            for (let {recipe, weight} of level) {
+            for (let { recipe, weight } of level) {
                 keys.push(`${recipe.key}=${weight.toString()}`)
             }
             priority.push(keys.join(","))
@@ -233,7 +239,7 @@ export function loadSettings(fragment) {
     if (settings.has("zip")) {
         let z = window.atob(settings.get("zip"))
         let a = z.split("").map(c => c.charCodeAt(0))
-        let unzip = pako.inflateRaw(a, {to: "string"})
+        let unzip = pako.inflateRaw(a, { to: "string" })
         return loadSettings("#" + unzip)
     }
     return settings
