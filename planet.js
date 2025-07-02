@@ -38,7 +38,15 @@ class Planet {
             if (value === undefined) {
                 value = defaultProperties.get(condition.property)
             }
-            if (!(condition.min <= value && value <= condition.max)) {
+            let aboveMinimum = true
+            let belowMaximum = true
+            if (condition.min !== undefined) {
+                aboveMinimum = value >= condition.min
+            }
+            if (condition.max !== undefined) {
+                belowMaximum = value <= condition.max
+            }
+            if (!(aboveMinimum && belowMaximum)) {
                 return false
             }
         }
