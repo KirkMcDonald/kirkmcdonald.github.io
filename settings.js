@@ -42,6 +42,14 @@ export let MODIFICATIONS = new Map([
 
 let DEFAULT_MODIFICATION = "2-0-10"
 
+export function addOverrideOptions(version) {
+    var tag = "local-" + version.replace(/\./g, "-")
+    MODIFICATIONS.set(tag, new Modification("Local game data " + version, "local-" + version + ".json", false))
+    MODIFICATIONS.set(tag + "x", new Modification("Local game data " + version + " - Expensive", "local-" + version + "-expensive.json", false))
+    DEFAULT_MODIFICATION = tag
+}
+
+
 // Ideally we'd write this as a generalized function, but for now we can hard-
 // code these version upgrades.
 var modUpdates = new Map([
