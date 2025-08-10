@@ -33,10 +33,10 @@ class Building {
         this.icon = new Icon(this)
     }
     less(other) {
-        if (!this.speed.equal(other.speed)) {
-            return this.speed.less(other.speed)
+        if (this.moduleSlots != other.moduleSlots) {
+            return this.moduleSlots < other.moduleSlots
         }
-        return this.moduleSlots < other.moduleSlots
+        return this.speed.less(other.speed)
     }
     getCount(spec, recipe, rate) {
         return rate.div(this.getRecipeRate(spec, recipe))
