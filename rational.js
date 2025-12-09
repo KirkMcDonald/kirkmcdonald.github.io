@@ -178,7 +178,13 @@ export class Rational {
         let integerPart = new Rational(bigInt(s.slice(0, i)), bigInt.one)
         let numerator = bigInt(s.slice(i + 1))
         let denominator = bigInt(10).pow(s.length - i - 1)
-        return integerPart.add(new Rational(numerator, denominator))
+
+        const fraction = new Rational(numerator, denominator)
+        if (s[0] === "-") {
+            const absInteger = new Rational(bigInt(s.slice(1, i)), bigInt.one)
+            return new Rational(bigInt(0), bigInt.one).sub(absInteger.add(fraction))
+        }
+        return integerPart.add(fraction)
     }
 
     static from_string(s) {
