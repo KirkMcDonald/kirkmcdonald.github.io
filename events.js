@@ -15,12 +15,17 @@ import { spec } from "./factory.js"
 import { Rational } from "./rational.js"
 import { setTitle } from "./settings.js"
 import { renderTotals } from "./visualize.js"
+import { importBlueprintFromDocument } from "./blueprint.js"
 
 // build target events
 
 export function plusHandler() {
     spec.addTarget()
     spec.updateSolution()
+}
+
+export function importBlueprint() {
+    importBlueprintFromDocument(spec)
 }
 
 // tab events

@@ -134,6 +134,40 @@ label.selected {
     font-weight: bold;
     color: var(--bright);
 }
+/* blueprint import */
+.blueprint-import {
+    margin: 1em;
+}
+#blueprint_string {
+    box-sizing: border-box;
+    width: min(80em, 100%);
+    color: var(--foreground);
+    background-color: var(--light);
+    padding: 0.5em;
+    border: 1px solid var(--light);
+    border-radius: 0.4em;
+    font-family: monospace;
+}
+#blueprint_string:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+.blueprint-options {
+    margin: 0.75em 0;
+}
+.blueprint-options label {
+    margin-right: 1.5em;
+}
+.blueprint-status {
+    min-height: 1.5em;
+    white-space: pre-line;
+}
+.blueprint-error {
+    color: #ff9b8f;
+}
+.blueprint-warning {
+    color: #ffd37a;
+}
 /* settings */
 table#settings {
     border-collapse: collapse;

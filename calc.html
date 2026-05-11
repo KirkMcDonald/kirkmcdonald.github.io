@@ -26,9 +26,10 @@
         var handlers = {}
     </script>
     <script type="module">
-        import { plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeMprod, changeVisType, changeVisRender, changeVisDir, toggleDebug } from "./events.js"
+        import { plusHandler, importBlueprint, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeMprod, changeVisType, changeVisRender, changeVisDir, toggleDebug } from "./events.js"
         import { init } from "./init.js"
         handlers.plusHandler = plusHandler
+        handlers.importBlueprint = importBlueprint
         handlers.clickTab = clickTab
         handlers.clickVisualize = clickVisualize
         handlers.changeTitle = changeTitle
@@ -80,6 +81,7 @@ limitations under the License.-->
 
     <div class="tabs">
         <button class="tab_button" id="totals_button" onclick="handlers.clickTab('totals')">Factory</button>
+        <button class="tab_button" id="blueprint_button" onclick="handlers.clickTab('blueprint')">Blueprint</button>
         <button class="tab_button" id="graph_button" onclick="handlers.clickVisualize()">Visualize</button>
         <button class="tab_button" id="resources_button" onclick="handlers.clickTab('resources')">Resources</button>
         <button class="tab_button" id="settings_button" onclick="handlers.clickTab('settings')">Settings</button>
@@ -144,6 +146,29 @@ limitations under the License.-->
             </tr>
         </tfoot>
         </table>
+    </div>
+
+    <div id="blueprint_tab" class="tab">
+        <div class="blueprint-import">
+            <label for="blueprint_string">Blueprint string:</label><br>
+            <textarea id="blueprint_string" rows="8" spellcheck="false"></textarea>
+            <div class="blueprint-options">
+                <label>
+                    <input id="blueprint_include_entities" type="checkbox" checked>
+                    Entities
+                </label>
+                <label>
+                    <input id="blueprint_include_tiles" type="checkbox" checked>
+                    Tiles
+                </label>
+                <label>
+                    <input id="blueprint_include_modules" type="checkbox" checked>
+                    Modules
+                </label>
+                <button class="ui" onclick="handlers.importBlueprint()">Import</button>
+            </div>
+            <div id="blueprint_status" class="blueprint-status"></div>
+        </div>
     </div>
 
     <div id="settings_tab" class="tab">
